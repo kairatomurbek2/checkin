@@ -1,10 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Services</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block head %}{% endblock %}
 </head>
 <body>
+<div class="modal">
+    <div class="m_register">
+        <p>Зарегистрироваться</p>
+        <ul class="r_type">
+            <li>
+                <img src=" {% static 'img/register1.png' %}" alt="image">
+                <p>Как специалист</p>
+            </li>
+            <li>
+                <img src="{% static 'img/register2.png' %}" alt="image">
+                <p>Как учреждение</p>
+            </li>
+        </ul>
+    </div>
+</div>
 
+<div class="modal s_modal">
+    <div class="s_register">
+        <p>Зарегистрироваться</p>
+        <form action="#" method="post">
+            <label for="name">
+                <input type="text" id="name" placeholder="Имя">
+            </label>
+
+            <label for="surname">
+                <input type="text" id="surname" placeholder="Фамилия">
+            </label>
+
+            <p>Каким специалистом вы являетесь?</p>
+
+            <label for="profession">
+                <select name="profession" id="profession">
+                    <option>Медицинский работник</option>
+                    <option>Медицинский</option>
+                    <option>Медицинский</option>
+                    <option>Медицинский</option>
+                </select>
+            </label>
+
+            <label for="email">
+                <input type="email" placeholder="E-mail">
+            </label>
+
+            <label for="number">
+                <input type="number" placeholder="Контактный телефон">
+            </label>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal s_modal c_modal">
+    <div class="s_register c_register">
+        <p>Зарегистрироваться</p>
+        <form action="#" method="post">
+            <label for="name">
+                <input type="text" id="name" placeholder="Название учреждения">
+            </label>
+
+            <label for="surname">
+                <input type="text" id="surname" placeholder="Адрес">
+            </label>
+
+            <p>Каким учреждением вы являетесь?</p>
+
+            <label for="profession">
+                <select name="profession" id="profession">
+                    <option>Медицинский работник</option>
+                    <option>Медицинский</option>
+                    <option>Медицинский</option>
+                    <option>Медицинский</option>
+                </select>
+            </label>
+
+            <label for="email">
+                <input type="email" placeholder="E-mail">
+            </label>
+
+            <label for="number">
+                <input type="number" placeholder="Контактный телефон">
+            </label>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+<div class="blur">
+    <header>
+        <div class="grid">
+            <div>
+                <a href="#"><img src="{% static 'img/logo.png' %}" alt="logotype"></a>
+                <ul class="menu">
+                    <li><a href="#">Вход</a></li>
+                    <li><a href="#">Регистрация</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+    <footer>
+        <div class="grid">
+            <div class="logo">
+                <a href="#">
+                    <img src="{% static 'img/f_logo.png' %}" alt="image">
+                </a>
+            </div>
+
+            <div class="f_block">
+                <ul class="f_menu">
+                    <li><a href="#">Медицина</a></li>
+                    <li><a href="#">Транспорт</a></li>
+                    <li><a href="#">Красота</a></li>
+                    <li><a href="#">Спорт</a></li>
+                    <li><a href="#">Юридические услуги</a></li>
+                    <li><a href="#">Образоваие</a></li>
+                    <li><a href="#">Кафе</a></li>
+                    <li><a href="#">Отели</a></li>
+                </ul>
+
+                <div>
+                    <ul class="contacts">
+                        <li>+ 996 780 977 677<br><br>+ 996 780 977 674</li>
+                        <li>info@services.kg</li>
+                    </ul>
+
+                    <ul class="share">
+                        <li><a href="#"></a></li>
+                        <li><a href="#"></a></li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% block js %}{% endblock %}
 </body>
 </html>
