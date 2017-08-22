@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -10,7 +11,7 @@ from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from main.choices import STATUS_CHOICES
-from main.media_path import category_image_upload_path, company_path, certificate_path
+from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
 
 
 class CategoryManager(models.Manager):
@@ -45,7 +46,7 @@ class CompanyManager(models.Manager):
 
 
 class Company(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='companies', verbose_name=_('Пользователь'))
+    user = models.ForeignKey(User, related_name='companies', verbose_name=_('Пользователь'))
     logo = models.ImageField(verbose_name=_('Логотип'), upload_to=company_path, blank=True, null=True)
     name = models.CharField(verbose_name=_('Название'), max_length=200)
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=150)
@@ -59,7 +60,7 @@ class Company(models.Model):
     categories = models.ManyToManyField(Category, related_name='categories', verbose_name=_('Категории'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
-    edited_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, verbose_name=_('Кем редактирован'))
+    edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='MD', verbose_name=_('Статус'))
     all_objects = models.Manager()
     objects = CompanyManager()
@@ -70,6 +71,36 @@ class Company(models.Model):
     class Meta:
         verbose_name = _('Учреждение')
         verbose_name_plural = _('Учреждения')
+
+
+class SpecialistManager(models.Manager):
+    def get_queryset(self):
+        return super(SpecialistManager, self).get_queryset().order_by('-photo', '-short_info', '-created_at')
+
+
+class Specialist(models.Model):
+    user = models.ForeignKey(User, related_name='user_specialists', verbose_name=_('Пользователь'))
+    company = models.ForeignKey(Company, related_name='company_specialists', verbose_name=_('Учреждение'), blank=True,
+                                null=True)
+    photo = models.ImageField(verbose_name=_('Фото'), upload_to=specialist_path)
+    full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
+    slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=250)
+    street_address = models.CharField(verbose_name=_('Адрес'), max_length=250, blank=True, null=True)
+    short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
+    info = RedactorField(verbose_name=_('Подробная информация'))
+    categories = models.ManyToManyField(Category, related_name='specialist_categories', verbose_name=_('Категории'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
+    edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
+    edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
+    all_objects = models.Manager()
+    objects = SpecialistManager()
+
+    def __str__(self):
+        return self.full_name
+
+    class Meta:
+        verbose_name = _('Специалист')
+        verbose_name_plural = _('Специалисты')
 
 
 class Certificate(models.Model):
@@ -92,3 +123,12 @@ class CompanyContact(models.Model):
     class Meta:
         verbose_name = _('Контакт')
         verbose_name_plural = _('Контакты')
+
+
+class SpecialistContact(models.Model):
+    specialist = models.ForeignKey(Specialist, related_name='specialist_contacts', verbose_name=_('Специалист'))
+    phone = PhoneNumberField(verbose_name=_('Номер телефона'))
+
+    class Meta:
+        verbose_name = _('Контакт специалиста')
+        verbose_name_plural = _('Контакты специалистов')

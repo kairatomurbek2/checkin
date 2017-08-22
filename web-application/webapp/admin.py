@@ -1,6 +1,6 @@
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
-from webapp.models import Category, Company, Certificate, CompanyContact
+from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 
@@ -43,6 +43,22 @@ class CompanyAdmin(admin.ModelAdmin):
         obj.save()
 
 
+class SpecialistContactInline(admin.TabularInline):
+    model = SpecialistContact
+    fields = ['phone']
+    extra = 1
+
+
+class SpecialistAdmin(admin.ModelAdmin):
+    list_per_page = 50
+    prepopulated_fields = {"slug": ("full_name",)}
+    search_fields = ['full_name', 'slug']
+    list_filter = ['company']
+    list_display = ['full_name', 'slug']
+    readonly_fields = ('created_at', 'edited_at', 'edited_by')
+    inlines = [SpecialistContactInline]
+
+
 class CertificateAdmin(admin.ModelAdmin):
     list_display = ['name', 'company']
 
@@ -50,3 +66,4 @@ class CertificateAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Certificate, CertificateAdmin)
+admin.site.register(Specialist, SpecialistAdmin)

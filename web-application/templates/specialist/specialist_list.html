@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="grid">
+        {% for object in object_list %}
+            <section>
+                <p>{{ object.full_name }}</p>
+                <p>{{ object.short_info }}</p>
+                <p>{{ object.street_address }}</p>
+                {% for contact in object.contacts.all %}
+                    {{ contact.phone }}
+                {% endfor %}
+            </section>
+            <br>
+        {% endfor %}
+    </div>
+{% endblock %}
