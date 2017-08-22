@@ -1,0 +1,17 @@
+{% load staticfiles %}
+<header>
+    <div class="grid">
+        <div>
+            <a href="/"><img src="{% static 'img/logo.png' %}" alt="logotype"></a>
+            <ul class="menu">
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'account_logout' %}">Выйти</a></li>
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <li id="log-in"><a href="#">Вход</a></li>
+                    <li id="sign-up"><a href="#">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</header>

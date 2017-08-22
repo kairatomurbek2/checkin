@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
 {% block content %}
     <section class="search_block">
         <div class="grid">
@@ -214,54 +214,19 @@
     <section class="category_block">
         <div class="grid">
             <ul class="category">
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category1.png' %}" alt="image">
-                        <span>Медицина</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category2.png' %}" alt="image">
-                        <span>Транспорт</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category3.png' %}" alt="image">
-                        <span>Красота</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category4.png' %}" alt="image">
-                        <span>Спорт</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category5.png' %}" alt="image">
-                        <span>Юридические<br>услуги</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category6.png' %}" alt="image">
-                        <span>Образование</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category7.png' %}" alt="image">
-                        <span>Кафе</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="{% static 'img/category8.png' %}" alt="image">
-                        <span>Отели</span>
-                    </a>
-                </li>
+
+                {% for category in categories %}
+                    <li>
+                        <a href="{{ category.slug }}">
+                            {% if category.image %}
+                                {% thumbnail category.image "55x26" as im %}
+                                <img src="{{ im.url }}" alt={{ category.name }}>
+                                {% endthumbnail %}
+                            {% endif %}
+                            <span>{{ category.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </section>

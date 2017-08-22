@@ -1,6 +1,7 @@
-{% load staticfiles %}
+{% load i18n staticfiles widget_tweaks account %}
+{% get_current_language as LANGUAGE_CODE %}
 <!doctype html>
-<html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,141 +13,55 @@
 </head>
 <body>
 <div class="modal">
-    <div class="m_register">
-        <p>Зарегистрироваться</p>
-        <ul class="r_type">
-            <li>
-                <img src=" {% static 'img/register1.png' %}" alt="image">
-                <p>Как специалист</p>
-            </li>
-            <li>
-                <img src="{% static 'img/register2.png' %}" alt="image">
-                <p>Как учреждение</p>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div class="modal s_modal">
     <div class="s_register">
-        <p>Зарегистрироваться</p>
-        <form action="#" method="post">
-            <label for="name">
-                <input type="text" id="name" placeholder="Имя">
+        <p>РЕГИСТРАЦИЯ</p>
+        <span></span>
+        <form action="{% url 'account_signup' %}" method="post">
+            {% csrf_token %}
+            <label>
+                <input type="text" placeholder="Имя пользователя" name="username" required>
+            </label>
+            <label>
+                <input type="email" placeholder="e-mail" name="email" required>
             </label>
 
-            <label for="surname">
-                <input type="text" id="surname" placeholder="Фамилия">
+            <label>
+                <input type="password" placeholder="Пароль" id="password" required name="password1">
             </label>
 
-            <p>Каким специалистом вы являетесь?</p>
-
-            <label for="profession">
-                <select name="profession" id="profession">
-                    <option>Медицинский работник</option>
-                    <option>Медицинский</option>
-                    <option>Медицинский</option>
-                    <option>Медицинский</option>
-                </select>
-            </label>
-
-            <label for="email">
-                <input type="email" placeholder="E-mail">
-            </label>
-
-            <label for="number">
-                <input type="number" placeholder="Контактный телефон">
+            <label>
+                <input type="password" placeholder="Повторите пароль" id="confirm_password" required name="password2">
             </label>
 
             <button type="submit">Зарегистрироваться</button>
+            <span class="r_user">Уже есть аккаунт?</span>
+
         </form>
+
     </div>
 </div>
 
-<div class="modal s_modal c_modal">
+<div class="modal c_modal">
     <div class="s_register c_register">
-        <p>Зарегистрироваться</p>
-        <form action="#" method="post">
-            <label for="name">
-                <input type="text" id="name" placeholder="Название учреждения">
+        <p>ВХОД</p>
+        <span></span>
+        <form action="{% url 'account_login' %}" method="POST">
+            {% csrf_token %}
+            <label>
+                <input type="email" placeholder="e-mail" name="login" required>
             </label>
-
-            <label for="surname">
-                <input type="text" id="surname" placeholder="Адрес">
+            <label>
+                <input type="password" placeholder="Пароль" name="password" required>
             </label>
-
-            <p>Каким учреждением вы являетесь?</p>
-
-            <label for="profession">
-                <select name="profession" id="profession">
-                    <option>Медицинский работник</option>
-                    <option>Медицинский</option>
-                    <option>Медицинский</option>
-                    <option>Медицинский</option>
-                </select>
-            </label>
-
-            <label for="email">
-                <input type="email" placeholder="E-mail">
-            </label>
-
-            <label for="number">
-                <input type="number" placeholder="Контактный телефон">
-            </label>
-
-            <button type="submit">Зарегистрироваться</button>
+            <button type="submit">Войти</button>
+            <span class="n_user">Нет аккаунта?</span>
         </form>
     </div>
 </div>
 <div class="blur">
-    <header>
-        <div class="grid">
-            <div>
-                <a href="#"><img src="{% static 'img/logo.png' %}" alt="logotype"></a>
-                <ul class="menu">
-                    <li><a href="#">Вход</a></li>
-                    <li><a href="#">Регистрация</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
+    {% include 'header.html' %}
     {% block content %}{% endblock %}
-    <footer>
-        <div class="grid">
-            <div class="logo">
-                <a href="#">
-                    <img src="{% static 'img/f_logo.png' %}" alt="image">
-                </a>
-            </div>
-
-            <div class="f_block">
-                <ul class="f_menu">
-                    <li><a href="#">Медицина</a></li>
-                    <li><a href="#">Транспорт</a></li>
-                    <li><a href="#">Красота</a></li>
-                    <li><a href="#">Спорт</a></li>
-                    <li><a href="#">Юридические услуги</a></li>
-                    <li><a href="#">Образоваие</a></li>
-                    <li><a href="#">Кафе</a></li>
-                    <li><a href="#">Отели</a></li>
-                </ul>
-
-                <div>
-                    <ul class="contacts">
-                        <li>+ 996 780 977 677<br><br>+ 996 780 977 674</li>
-                        <li>info@services.kg</li>
-                    </ul>
-
-                    <ul class="share">
-                        <li><a href="#"></a></li>
-                        <li><a href="#"></a></li>
-                    </ul>
-                </div>
-
-
-            </div>
-        </div>
-    </footer>
+    {% include 'footer.html' %}
 </div>
 
 <script src="{% static 'js/main.js' %}"></script>
