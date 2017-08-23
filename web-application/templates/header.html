@@ -2,15 +2,31 @@
 <header>
     <div class="grid">
         <div>
+            <ul class="menu" id="menu">
+                <li><a href="#">Специалисты</a></li>
+                <li><a href="#">Учреждения</a></li>
+                <li><a href="#">О нас</a></li>
+            </ul>
             <a href="/"><img src="{% static 'img/logo.png' %}" alt="logotype"></a>
-            <ul class="menu">
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'account_logout' %}">Выйти</a></li>
-                {% endif %}
-                {% if not request.user.is_authenticated %}
+            {% if not request.user.is_authenticated %}
+                <ul class="menu">
                     <li id="log-in"><a href="#">Вход</a></li>
                     <li id="sign-up"><a href="#">Регистрация</a></li>
-                {% endif %}
+                </ul>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                <ul class="authorised_user">
+                <li><a href="#">Стать специалистом</a></li>
+                <li><a href="#">Стать учреждением</a></li>
+                <li>
+                    <img src="{% static 'img/user-icon.svg' %}" alt="image">
+                    <ul class="sub_menu">
+                        <li><a href="#">Мой профиль</a></li>
+                        <li><a href="#">Личный кабинет</a></li>
+                        <li id="log-out"><a href="#">Выход</a></li>
+                    </ul>
+                </li>
+            {% endif %}
             </ul>
         </div>
     </div>

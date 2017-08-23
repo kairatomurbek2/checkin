@@ -58,6 +58,18 @@
         </form>
     </div>
 </div>
+
+<div class="modal logout_modal">
+        <div>
+            <p>Вы уверены что хотите выйти?</p>
+            <form action="{% url 'account_logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Да</button>
+            </form>
+            <button class="no">Нет</button>
+        </div>
+    </div>
+
 <div class="blur">
     {% include 'header.html' %}
     {% block content %}{% endblock %}

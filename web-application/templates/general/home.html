@@ -2,213 +2,49 @@
 {% load staticfiles thumbnail %}
 {% block content %}
     <section class="search_block">
+
         <div class="grid">
-            <form action="#" method="post" class="filter_form">
-                <select class="select" name="service">
-                    <option selected disabled>Найти сферу, специалиста, учреждение...</option>
-                    <option>Бишкек</option>
-                    <option>Каракол</option>
-                </select>
-                <div class="filter"></div>
-                <button type="submit"></button>
-                <div class="filters">
-                    <!-- <span class="triangle"></span> -->
-                    <ul class="tabs-nav">
-                        <li>
-                            <a href="#tab-1">Сфера</a>
-                        </li>
-                        <li>
-                            <a href="#tab-2">Специализация</a>
-                        </li>
-                        <li>
-                            <a href="#tab-3">Учреждение</a>
-                        </li>
-                        <li>
-                            <a href="#tab-4">Услуги</a>
-                        </li>
-                    </ul>
 
-                    <div class="tabs-stage">
-                        <div id="tab-1">
-                            <div class="control-group">
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                            </div>
-                        </div>
-                        <div id="tab-2">
-                            <div class="control-group">
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                            </div>
-                        </div>
-                        <div id="tab-3">
-                            <div class="control-group">
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
+            <div class="search_container">
+                <form action="#" method="post" class="filter_form">
+                    <label>
+                        <input type="text" placeholder="Найти специалиста, учреждение или услугу...">
+                    </label>
+                    <button type="submit"></button>
+                </form>
 
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
+                <div class="result_block">
+                    <div>
+                        <span>Специалисты</span>
+                        <ul>
+                            <li><a href="#">Психиатр</a></li>
+                            <li><a href="#">Психолог</a></li>
+                            <li><a href="#">Психотерапевт</a></li>
+                        </ul>
+                    </div>
 
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
+                    <div>
+                        <span>Учреждения</span>
+                        <ul>
+                            <li><a href="#">Психотерапевтический центр Радуга</a></li>
+                            <li><a href="#">Центр психологической помощи</a></li>
+                        </ul>
+                    </div>
 
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-
-                            </div>
-                        </div>
-                        <div id="tab-4">
-                            <div class="control-group">
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                                <label class="control control--checkbox">Образование
-                                    <input type="checkbox">
-                                    <div class="control__indicator"></div>
-                                </label>
-                            </div>
-                        </div>
+                    <div>
+                        <span>Услуги</span>
+                        <ul>
+                            <li><a href="#">Психотерапия</a></li>
+                            <li><a href="#">Психологическое тестирование</a></li>
+                            <li><a href="#">Психологические приемы </a></li>
+                            <li><a href="#">Психологические приемы </a></li>
+                        </ul>
                     </div>
                 </div>
-            </form>
+
+            </div>
         </div>
+
     </section>
 
     <section class="category_block">
@@ -220,7 +56,7 @@
                         <a href="{{ category.slug }}">
                             {% if category.image %}
                                 {% thumbnail category.image "55x26" as im %}
-                                <img src="{{ im.url }}" alt={{ category.name }}>
+                                    <span class="img_container"><img src="{{ im.url }}" alt={{ category.name }}></span>
                                 {% endthumbnail %}
                             {% endif %}
                             <span>{{ category.name }}</span>
