@@ -7,3 +7,6 @@ virtualenv
 settings_local.py
 web-application/static
 web-application/media
+node_modules/
+web-application/staticfiles/bower_components/
+
