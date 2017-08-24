@@ -21,9 +21,9 @@
                 <li>
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
-                        <li><a href="#">Мой профиль</a></li>
+                        <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
                         <li><a href="#">Личный кабинет</a></li>
-                        <li id="log-out"><a href="#">Выход</a></li>
+                        <li class="log-out"><a href="#">Выход</a></li>
                     </ul>
                 </li>
             {% endif %}

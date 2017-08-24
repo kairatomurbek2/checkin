@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <main class="edit_information">
+        <div class="grid">
+            <h4>Мой профиль</h4>
+
+            <form action="#" method="post">
+                {% csrf_token %}
+                {{ form.first_name }}
+                {{ form.last_name }}
+                {#                <label>#}
+                {#                    Сменить адрес электронной почты#}
+                {#                    <input type="email" value="Musefuse.m@gmail.com">#}
+                {#                </label>#}
+                <button type="submit" class="button">Сохранить</button>
+            </form>
+
+            <a href="{% url 'account_change_password' %}" class="button">Сменить пароль</a>
+        </div>
+    </main>
+{% endblock %}
