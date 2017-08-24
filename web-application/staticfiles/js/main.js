@@ -3387,7 +3387,7 @@
         e.stopPropagation(), $(".modal").css("display", "none"), $(".c_modal").fadeIn(350), $(".blur").css("filter", "blur(5px)")
     }), $("#sign-up, .n_user").click(function (e) {
         e.stopPropagation(), $(".modal").fadeIn(350), $(".c_modal").css("display", "none"), $(".logout_modal").css("display", "none"), $(".blur").css("filter", "blur(5px)")
-    }), $("#log-out").click(function (e) {
+    }), $(".log-out").click(function (e) {
         $(".modal").css("display", "none"), $(".logout_modal").fadeIn(350), $(".blur").css("filter", "blur(5px)")
     }), $(".s_register, .c_register, .registered_person, .book, .logout_modal > div").click(function (e) {
         e.stopPropagation()
