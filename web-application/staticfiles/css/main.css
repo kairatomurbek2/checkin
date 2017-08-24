@@ -2006,6 +2006,81 @@ h5 {
     cursor: pointer
 }
 
+.edit_information {
+    background-color: #F5F5F5
+}
+
+h4 {
+    font-size: 22px
+}
+
+.button, .edit_information form input {
+    font-family: GothamRegular, sans-serif;
+    font-size: 12px
+}
+
+.edit_information .grid {
+    padding: 50px 0 330px
+}
+
+.edit_information .grid h4 {
+    padding-bottom: 40px
+}
+
+.edit_information .grid .button {
+    line-height: 40px;
+    margin-top: 25px
+}
+
+.edit_information form input {
+    display: block;
+    width: 390px;
+    height: 35px;
+    border: 1px solid #E4E4E4;
+    border-radius: 3px;
+    outline: 0;
+    padding-left: 20px;
+    margin-bottom: 12px
+}
+
+.edit_information form input:focus, .edit_information form input:hover {
+    border-color: #11EBE6
+}
+
+.edit_information form label {
+    display: inline-block;
+    padding-top: 8px;
+    cursor: pointer
+}
+
+.edit_information form label input {
+    margin-top: 20px
+}
+
+.button {
+    width: 190px;
+    height: 40px;
+    border: 0;
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    text-align: center;
+    background: linear-gradient(to right, #1FFFD9, #17FFF8 20%);
+    cursor: pointer
+}
+
+.edit_password .grid form .button {
+    margin: 0
+}
+
+.edit_password .grid form input {
+    margin-bottom: 15px
+}
+
+.edit_password .grid form input:last-of-type {
+    margin-bottom: 70px
+}
+
 input::-webkit-inner-spin-button, input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
