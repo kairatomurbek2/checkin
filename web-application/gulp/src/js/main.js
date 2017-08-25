@@ -1,21 +1,21 @@
-//= ../../../staticfiles/bower_components/jquery/dist/jquery.js
-//= ../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
+//=../../../staticfiles/bower_components/jquery/dist/jquery.js
+//=../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
+
 
 
 $(function() {
 
-	// $('.tabs-stage > div').hide();
-	// $('.tabs-stage > div:nth-child(1)').show();
-	// $('.tabs-nav > li:first-child a').addClass('tab-active');
+	$('.tabs-stage > div').hide();
+	$('.tabs-stage > div:nth-child(1)').show();
+	$('.tabs-nav > li:first-child a').addClass('tab-active');
 
-	// $('.tabs-nav > li > a').on('click', function (event) {
-	// 	event.preventDefault();
-	// 	$('.tabs-nav > li a').removeClass('tab-active');
-	// 	$(this).addClass('tab-active');
-	// 	$('.tabs-stage > div').hide(400);
-	// 	$($(this).attr('href')).show(400);
-	// });
-
+	$('.tabs-nav > li > a').on('click', function (event) {
+		event.preventDefault();
+		$('.tabs-nav > li a').removeClass('tab-active');
+		$(this).addClass('tab-active');
+		$('.tabs-stage > div').hide(400);
+		$($(this).attr('href')).show(400);
+	});
 
 	$('.authorised_user > li:last-child').click(function (event) {
 		event.stopPropagation();
@@ -26,6 +26,8 @@ $(function() {
 			dropBlock.slideUp(250);
 		}
 	});
+
+
 
 
 	$(document).click( function() {
@@ -134,5 +136,32 @@ $(function() {
 			$('.blur').css('filter', 'none');
 	});
 
+	var major = $('.master_desc > span:first-of-type');
+    $(major).each(function (i, obj) {
+        if($(obj).text().length > 35) {
+            $(obj).text($(obj).text().substring(0,32)+'...')
+        }
+    });
+
+    var desc = $('.master_desc > p');
+    $(desc).each(function (i, obj) {
+        if($(obj).text().length > 145) {
+            $(obj).text($(obj).text().substring(0,142)+'...')
+        }
+    });
+
+    var location = $('.master_desc > ul > li:first-of-type');
+    $(location).each(function (i, obj) {
+        if($(obj).text().length > 70) {
+            $(obj).text($(obj).text().substring(0,67)+'...')
+        }
+    });
+
+    var p_number = $('.master_desc > ul > li:last-of-type');
+    $(p_number).each(function (i, obj) {
+        if($(obj).text().length > 35) {
+            $(obj).text($(obj).text().substring(0,32)+'...')
+        }
+    });
 
 });
