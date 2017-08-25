@@ -16,3 +16,14 @@ class CompanyFilter(django_filters.FilterSet):
         return queryset.filter(
             Q(name__icontains=value) | Q(short_info__icontains=value)
         ).distinct()
+
+
+class SpecialistFilter(django_filters.FilterSet):
+    search = django_filters.CharFilter(label=_('Поиск'),
+                                       widget=forms.TextInput(attrs={'placeholder': _('Найти специалиста...')}),
+                                       method='search_specialist')
+
+    def search_specialist(self, queryset, name, value):
+        return queryset.filter(
+            Q(full_name__icontains=value) | Q(short_info__icontains=value)
+        ).distinct()
