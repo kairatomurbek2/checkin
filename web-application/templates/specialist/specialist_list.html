@@ -20,10 +20,8 @@
                     <li></li>
                 </ul>
                 {% if is_paginated %}
-                    <div class="more-button" id="buttonShowMany">
-                        <div><input type='hidden' id='pagination-id' value='{{ page_obj.next_page_number }}'></div>
-                        <a id="load-id">Показать больше</a>
-                    </div>
+                    <div><input type='hidden' id='pagination-id' value='{{ page_obj.next_page_number }}'></div>
+                    <a id="load-id">Показать больше</a>
                 {% endif %}
             </div>
         </div>
