@@ -11,5 +11,8 @@ urlpatterns = [
     url(r'^masters/$', specialist_views.MastersList.as_view(), name='masters'),
     url(r'^companies/$', company_views.CompanyList.as_view(), name='company_list'),
     url(r'^(?P<slug>[-_\w]+)/$', company_views.CompanySpecialistList.as_view(), name='company_specialist_list'),
-    url(r'^profiles/(?P<slug>[-_\w]+)/$', user_profile_permission(profile_views.ProfileEditView.as_view()), name='profile_update')
+    url(r'^profiles/(?P<slug>[-_\w]+)/$', user_profile_permission(profile_views.ProfileEditView.as_view()),
+        name='profile_update'),
+    url(r'^masters/create/$', specialist_views.MasterCreateView.as_view(), name='new_master'),
+    url(r'^companies/create/$', company_views.CompanyCreateView.as_view(), name='new_company')
 ]

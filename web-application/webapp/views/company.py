@@ -1,4 +1,5 @@
 from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 from webapp.models import Company, Category
 
@@ -16,3 +17,7 @@ class CompanySpecialistList(ListView):
 class CompanyList(ListView):
     template_name = 'company/company_list.html'
     model = Company
+
+
+class CompanyCreateView(TemplateView):
+    template_name = 'company/new_company.html'
