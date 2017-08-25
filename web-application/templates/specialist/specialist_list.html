@@ -6,47 +6,36 @@
             <div class="masters">
                 <form method="get" class="filter_form" name="specialist_filter">
                     <label>
-                        {{ specialist_filter.form.search }}
+                        {{ specialist_filter.search }}
                     </label>
                     <button type="submit"></button>
                 </form>
                 <p>СПЕЦИАЛИСТЫ</p>
-                <div>
-                    {% for specialist in specialist_filter.qs %}
-                        <div class="master">
-                            <a href="#" class="master_img">
-							<span>
-                                {% if specialist.photo %}
-                                    {% thumbnail specialist.photo "154x154" as im %}
-                                        <img src="{{ im.url }}" alt={{ specialist.full_name }}>
-                                    {% endthumbnail %}
-                                {% endif %}
-							</span>
-                            </a>
-                            <div class="master_desc">
-                                <h4>{{ specialist.full_name }}</h4>
-                                <span>
-                                  {{ specialist.get_categories }}
-                                </span>
-                                <span></span>
-                                <p>{{ specialist.short_info }}</p>
-                                <ul>
-                                    <li>
-                                        {{ specialist.street_address }}
-                                    </li>
-                                    <li>
-                                        {% for contact in specialist.specialist_contacts.all %}
-                                            {{ contact.phone }}
-                                        {% endfor %}
-                                    </li>
-                                </ul>
-                            </div>
-                            <a href="#">ПОСМОТРЕТЬ</a>
-                        </div>
-                    {% endfor %}
+                <div id="pagediv-id">
+                    {% include 'specialist/object.html' %}
                 </div>
-                <a href="#">БОЛЬШЕ СПЕЦИАЛИСТОВ</a>
+                <ul class="loading" id="loading" style="display: none">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                {% if is_paginated %}
+                    <div class="more-button" id="buttonShowMany">
+                        <div><input type='hidden' id='pagination-id' value='{{ page_obj.next_page_number }}'></div>
+                        <a id="load-id">Показать больше</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/ajax-pagination.js' %}"></script>
+    <script>
+        var page_url = window.location.href;
+        $("#load-id").click(function () {
+            load_page(page_url, "#pagination-id", "#load-id", "#pagediv-id", function (callback) {
+            });
+        });
+    </script>
 {% endblock %}

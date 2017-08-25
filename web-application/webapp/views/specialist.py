@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import Http404
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
@@ -9,11 +11,27 @@ class MastersList(ListView):
     template_name = 'specialist/specialist_list.html'
     filterset_class = SpecialistFilter
     model = Specialist
+    paginate_by = 1
+
+    def get_queryset(self):
+        if self.request.is_ajax():
+            self.template_name = 'specialist/object.html'
+        return Specialist.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super(MastersList, self).get_context_data(**kwargs)
-        specialist_filter = self.filterset_class(self.request.GET, queryset=Specialist.objects.all())
-        context['specialist_filter'] = specialist_filter
+        specialist_list = self.filterset_class(self.request.GET, queryset=self.get_queryset())
+        context['specialist_filter'] = specialist_list.form
+        pagination = Paginator(specialist_list.qs, self.paginate_by)
+        page = self.request.GET.get('page')
+        try:
+            specialist_list = pagination.page(page)
+        except PageNotAnInteger:
+            specialist_list = pagination.page(1)
+        except EmptyPage:
+            raise Http404("That page contains no results")
+        context['specialist_list'] = specialist_list.object_list
+        context['is_paginated'] = specialist_list.has_next()
         return context
 
 
