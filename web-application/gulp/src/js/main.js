@@ -136,32 +136,4 @@ $(function() {
 			$('.blur').css('filter', 'none');
 	});
 
-	var major = $('.master_desc > span:first-of-type');
-    $(major).each(function (i, obj) {
-        if($(obj).text().length > 35) {
-            $(obj).text($(obj).text().substring(0,32)+'...')
-        }
-    });
-
-    var desc = $('.master_desc > p');
-    $(desc).each(function (i, obj) {
-        if($(obj).text().length > 145) {
-            $(obj).text($(obj).text().substring(0,142)+'...')
-        }
-    });
-
-    var location = $('.master_desc > ul > li:first-of-type');
-    $(location).each(function (i, obj) {
-        if($(obj).text().length > 70) {
-            $(obj).text($(obj).text().substring(0,67)+'...')
-        }
-    });
-
-    var p_number = $('.master_desc > ul > li:last-of-type');
-    $(p_number).each(function (i, obj) {
-        if($(obj).text().length > 35) {
-            $(obj).text($(obj).text().substring(0,32)+'...')
-        }
-    });
-
 });

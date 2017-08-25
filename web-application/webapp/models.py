@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
@@ -68,6 +69,13 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    def get_categories(self):
+        try:
+            return ', '.join(
+                [i.get('name', None) for i in self.categories.values('name')])
+        except TypeError:
+            return ''
+
     class Meta:
         verbose_name = _('Учреждение')
         verbose_name_plural = _('Учреждения')
@@ -97,6 +105,13 @@ class Specialist(models.Model):
 
     def __str__(self):
         return self.full_name
+
+    def get_categories(self):
+        try:
+            return ', '.join(
+                [i.get('name', None) for i in self.categories.values('name')])
+        except TypeError:
+            return ''
 
     class Meta:
         verbose_name = _('Специалист')

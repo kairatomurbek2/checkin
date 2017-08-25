@@ -1,255 +1,50 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
 {% block content %}
-    <div class="grid">
-        {% for object in object_list %}
-            <section>
-                <p>{{ object.name }}</p>
-                <p>{{ object.short_info }}</p>
-                <p>{{ object.street_address }}</p>
-                {% for contact in object.contacts.all %}
-                    {{ contact.phone }}
-                {% endfor %}
-            </section>
-            <br>
-        {% endfor %}
-    </div>
-
     <main class="all_specialists">
-	<div class="grid">
-
-
-		<div class="masters">
-			<form action="#" method="post" class="filter_form">
-			<label>
-				<input type="text" placeholder="Найти учреждение...">
-			</label>
-			<button type="submit"></button>
-		</form>
-			<p>УЧРЕЖДЕНИЯ</p>
-
-			<div>
-					<div class="master">
-						<a href="#" class="master_img">
+        <div class="grid">
+            <div class="masters">
+                <form action="#" method="get" class="filter_form">
+                    <label>
+                        <input type="text" placeholder="Найти учреждение...">
+                    </label>
+                    <button type="submit"></button>
+                </form>
+                <p>учреждения</p>
+                <div>
+                    {% for company in company_list %}
+                        <div class="master">
+                            <a href="#" class="master_img">
 							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
+                                  {% if company.logo %}
+                                      {% thumbnail company.logo "154x154" as im %}
+                                          <img src="{{ im.url }}" alt={{ logo.name }}>
+                                      {% endthumbnail %}
+                                  {% endif %}
 							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-					<div class="master">
-						<a href="#" class="master_img">
-							<span>
-								<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-							</span>
-						</a>
-
-						<div class="master_desc">
-							<h4>Джонни Депп</h4>
-							<span>Педиатр, детский лор, аллерголог...</span>
-							<span></span>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-							<ul>
-								<li>
-									г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37
-								</li>
-								<li>
-									+996 705 578 842
-								</li>
-							</ul>
-						</div>
-						<a href="#">ПОСМОТРЕТЬ</a>
-					</div>
-
-
-			</div>
-
-			<a href="#">БОЛЬШЕ СПЕЦИАЛИСТОВ</a>
-		</div>
-	</div>
-</main>
+                            </a>
+                            <div class="master_desc">
+                                <h4>{{ company.name }}</h4>
+                                <span>{{ company.get_categories }}</span>
+                                <span></span>
+                                <p>{{ company.short_info }}</p>
+                                <ul>
+                                    <li>
+                                        {{ company.street_address }}
+                                    </li>
+                                    <li>
+                                        {% for contact in company.contacts.all %}
+                                            {{ contact.phone }}
+                                        {% endfor %}
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="#">посмотреть</a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="#">БОЛЬШЕ СПЕЦИАЛИСТОВ</a>
+            </div>
+        </div>
+    </main>
 {% endblock %}
