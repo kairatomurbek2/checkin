@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'redactor',
     'widget_tweaks',
+    'django_filters',
     'webapp'
 ]
 

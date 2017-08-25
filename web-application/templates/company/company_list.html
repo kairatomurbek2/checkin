@@ -4,15 +4,15 @@
     <main class="all_specialists">
         <div class="grid">
             <div class="masters">
-                <form action="#" method="get" class="filter_form">
+                <form method="get" class="filter_form" name="company_filter">
                     <label>
-                        <input type="text" placeholder="Найти учреждение...">
+                        {{ company_filter.form.search }}
                     </label>
                     <button type="submit"></button>
                 </form>
                 <p>учреждения</p>
                 <div>
-                    {% for company in company_list %}
+                    {% for company in company_filter.qs %}
                         <div class="master">
                             <a href="#" class="master_img">
 							<span>
