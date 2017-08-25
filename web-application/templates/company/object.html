@@ -1,0 +1,31 @@
+{% load staticfiles thumbnail %}
+{% for company in company_list %}
+    <div class="master">
+        <a href="#" class="master_img">
+            <span>
+                {% if company.logo %}
+                    {% thumbnail company.logo "154x154" as im %}
+                        <img src="{{ im.url }}" alt={{ logo.name }}>
+                    {% endthumbnail %}
+                {% endif %}
+            </span>
+        </a>
+        <div class="master_desc">
+            <h4>{{ company.name }}</h4>
+            <span>{{ company.get_categories }}</span>
+            <span></span>
+            <p>{{ company.short_info }}</p>
+            <ul>
+                <li>
+                    {{ company.street_address }}
+                </li>
+                <li>
+                    {% for contact in company.contacts.all %}
+                        {{ contact.phone }}
+                    {% endfor %}
+                </li>
+            </ul>
+        </div>
+        <a href="#">посмотреть</a>
+    </div>
+{% endfor %}
