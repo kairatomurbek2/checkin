@@ -9,7 +9,6 @@ setTimeout(function () {
 }, 200);
 
 
-
 //get parameters for category, check after reload
 $(document).ready(function () {
     var chosenCategories = getParameter("categories");

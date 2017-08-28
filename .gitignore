@@ -9,4 +9,5 @@ web-application/static
 web-application/media
 node_modules/
 web-application/staticfiles/bower_components/
-
+web-application/staticfiles/js/
+web-application/staticfiles/css/
