@@ -3,6 +3,2073 @@
 {% block content %}
     <main class="all_specialists">
         <div class="grid">
+            <div class="base-filter">
+                <form action="" method="get" name="base_filter" id="base_filter">
+                    <div class="filter-item no-selection filter-categories mrg-b-10">
+                        <div class="categories-wrap">
+                            <div class="live-search">
+                                <input type="text" id="live-search-input" placeholder="Найти...">
+                                <!-- <button id="categorySearchBtn" class="btn btn-default filter-search-btn" type="button">
+                                    <i class="qv qv-search qv-blue qv-2x"></i>
+                                </button> -->
+                            </div>
+
+
+                            <ul class="categories">
+
+                                <li class="main-category input root">
+                                    <i class="qv qv-down3 qv-gray"></i>
+                                    <input type="checkbox" name="categories" id="category-1"
+                                           value="vse-dlya-doma-i-ofisa">
+                                    <label for="category-1">
+                                        <span class="box"></span>
+                                        <span class="name">Все для дома и офиса</span>
+                                    </label>
+                                    <ul class="children">
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-325"#}
+                                                   value="prinadlezhnosti-dlya-doma-i-ofisa">
+                                            <label for="category-325">
+                                                <span class="box"></span>
+                                                <span class="name">Принадлежности для дома и офиса</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-447"#}
+                                                           value="reklama-i-poligrafiya">
+                                                    <label for="category-447">
+                                                        <span class="box"></span>
+                                                        <span class="name">Реклама и полиграфия</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-537"#}
+                                                           value="zhalyuzi-shtory-i-zatvory">
+                                                    <label for="category-537">
+                                                        <span class="box"></span>
+                                                        <span class="name">Жалюзи, шторы и затворы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-459"#}
+                                                           value="vse-dlya-magazina">
+                                                    <label for="category-459">
+                                                        <span class="box"></span>
+                                                        <span class="name">Все для магазина</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-557"#}
+                                                           value="vystavochnie-stendy">
+                                                    <label for="category-557">
+                                                        <span class="box"></span>
+                                                        <span class="name">Выставочные стенды</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-552"#}
+                                                           value="tovary-dlya-prachechnyh">
+                                                    <label for="category-552">
+                                                        <span class="box"></span>
+                                                        <span class="name">Товары для прачечных</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-326"#}
+                                                           value="veshalki-i-plechiki">
+                                                    <label for="category-326">
+                                                        <span class="box"></span>
+                                                        <span class="name">Вешалки и плечики</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-471"#}
+                                                           value="lampy-osveshenie">
+                                                    <label for="category-471">
+                                                        <span class="box"></span>
+                                                        <span class="name">Лампы и освещение</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-444"#}
+                                                           value="muzykalnye-instrumenty">
+                                                    <label for="category-444">
+                                                        <span class="box"></span>
+                                                        <span class="name">Музыкальные инструменты</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-450"#}
+                                                           value="komplektuyushie-dlya-ofisa">
+                                                    <label for="category-450">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие для офиса</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-30"#}
+                                                   value="obrazovanie-tvorchestvo-i-dizajn">
+                                            <label for="category-30">
+                                                <span class="box"></span>
+                                                <span class="name">Образование, творчество и дизайн</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-171"#}
+                                                           value="knigi-dlya-detej">
+                                                    <label for="category-171">
+                                                        <span class="box"></span>
+                                                        <span class="name">Книги для детей</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-273"#}
+                                                           value="tvorchestvo-dlya-detej">
+                                                    <label for="category-273">
+                                                        <span class="box"></span>
+                                                        <span class="name">Творчество для детей</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-568"#}
+                                                           value="hudozhestvennaya-literatura">
+                                                    <label for="category-568">
+                                                        <span class="box"></span>
+                                                        <span class="name">Художественная литература</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-184"#}
+                                                           value="sredstva-i-sistemy-obrazovaniya-i-razvitiya">
+                                                    <label for="category-184">
+                                                        <span class="box"></span>
+                                                        <span class="name">Средства и системы образования и развития</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-567"#}
+                                                           value="nauchnaya-literatura">
+                                                    <label for="category-567">
+                                                        <span class="box"></span>
+                                                        <span class="name">Научная литература</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-33"#}
+                                                           value="kanctovary-i-shkolno-pismennye-prinadlezhnosti">
+                                                    <label for="category-33">
+                                                        <span class="box"></span>
+                                                        <span class="name">Канцтовары и школьно-письменные принадлежности</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-173"#}
+                                                           value="uchebniki-uchebnye-posobiya">
+                                                    <label for="category-173">
+                                                        <span class="box"></span>
+                                                        <span class="name">Учебники, учебные пособия</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-179"#}
+                                                   value="vse-dlya-kuhni">
+                                            <label for="category-179">
+                                                <span class="box"></span>
+                                                <span class="name">Все для кухни</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-180"#}
+                                                           value="detskaya-posuda">
+                                                    <label for="category-180">
+                                                        <span class="box"></span>
+                                                        <span class="name">Детская посуда</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-382"#}
+                                                           value="kuhonnye-pribory">
+                                                    <label for="category-382">
+                                                        <span class="box"></span>
+                                                        <span class="name">Кухонные приборы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-155"#}
+                                                   value="mebel">
+                                            <label for="category-155">
+                                                <span class="box"></span>
+                                                <span class="name">Мебель</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-270"#}
+                                                           value="korpusnaya-mebel">
+                                                    <label for="category-270">
+                                                        <span class="box"></span>
+                                                        <span class="name">Корпусная мебель</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-156"#}
+                                                           value="detskaya-mebel">
+                                                    <label for="category-156">
+                                                        <span class="box"></span>
+                                                        <span class="name">Детская мебель</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-168"#}
+                                                           value="mebel-i-oborudovanie-dlya-doshkolnyh-uchrezhdeniij">
+                                                    <label for="category-168">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мебель и оборудование для дошкольных учреждениий</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-351"#}
+                                                           value="mebelnaya-furnitura">
+                                                    <label for="category-351">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мебельная фурнитура</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-349"#}
+                                                           value="mebel-dlya-doma">
+                                                    <label for="category-349">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мебель для дома</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-352"#}
+                                                           value="mebel-dlya-ulicy-i-sada">
+                                                    <label for="category-352">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мебель для улицы и сада</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-350"#}
+                                                           value="ofisnaya-mebel">
+                                                    <label for="category-350">
+                                                        <span class="box"></span>
+                                                        <span class="name">Офисная мебель</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-181"#}
+                                                   value="tovary-dlya-doma-i-sada">
+                                            <label for="category-181">
+                                                <span class="box"></span>
+                                                <span class="name">Товары для дома и сада</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-182"#}
+                                                           value="detskie-chasy-budilniki">
+                                                    <label for="category-182">
+                                                        <span class="box"></span>
+                                                        <span class="name">Детские часы, будильники</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-253"#}
+                                                           value="kleenki-i-fartuki">
+                                                    <label for="category-253">
+                                                        <span class="box"></span>
+                                                        <span class="name">Клеенки и фартуки</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-530"#}
+                                                           value="tovary-dlya-sada-i-ogoroda">
+                                                    <label for="category-530">
+                                                        <span class="box"></span>
+                                                        <span class="name">Товары для сада и огорода</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-331"#}
+                                                           value="aksessuary-dlya-doma">
+                                                    <label for="category-331">
+                                                        <span class="box"></span>
+                                                        <span class="name">Аксессуары для дома</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-316"#}
+                                                           value="oformlenie-interiera">
+                                                    <label for="category-316">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оформление интерьера</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-555"#}
+                                                           value="zazhigalki-i-aksessuary-dlya-kureniya">
+                                                    <label for="category-555">
+                                                        <span class="box"></span>
+                                                        <span class="name">Зажигалки и аксессуары для курения</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-309"#}
+                                                           value="gobelen">
+                                                    <label for="category-309">
+                                                        <span class="box"></span>
+                                                        <span class="name">Гобелен</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-243"#}
+                                                   value="bytovaya-himiya">
+                                            <label for="category-243">
+                                                <span class="box"></span>
+                                                <span class="name">Бытовая химия</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-518"#}
+                                                           value="himicheskie-veshestva">
+                                                    <label for="category-518">
+                                                        <span class="box"></span>
+                                                        <span class="name">Химические вещества</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-271"#}
+                                                           value="sredstva-dlya-lichnoj-gigieny">
+                                                    <label for="category-271">
+                                                        <span class="box"></span>
+                                                        <span class="name">Средства для личной гигиены</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-245"#}
+                                                           value="bumazhnaya-produkciya">
+                                                    <label for="category-245">
+                                                        <span class="box"></span>
+                                                        <span class="name">Бумажная продукция</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-244"#}
+                                                           value="mylo-moyushie-sredstva">
+                                                    <label for="category-244">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мыло-моющие средства</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-334"#}
+                                                   value="hozyajstvennye-izdeliya">
+                                            <label for="category-334">
+                                                <span class="box"></span>
+                                                <span class="name">Хозяйственные изделия</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-469"#}
+                                                           value="hoz-tovary">
+                                                    <label for="category-469">
+                                                        <span class="box"></span>
+                                                        <span class="name">Хозяйственные товары</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-335"#}
+                                                           value="upakovochnye-izdeliya">
+                                                    <label for="category-335">
+                                                        <span class="box"></span>
+                                                        <span class="name">Упаковочные изделия</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <li class="main-category input root">
+                                    <i class="qv qv-down3 qv-gray"></i>
+                                    <input type="checkbox" name="categories" id="category-2"
+                                           value="oborudovanie-i-tehnika">
+                                    <label for="category-2">
+                                        <span class="box"></span>
+                                        <span class="name">Оборудование и техника</span>
+                                    </label>
+                                    <ul class="children">
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-56"#}
+                                                   value="selhoztehnika-i-oborudovanie">
+                                            <label for="category-56">
+                                                <span class="box"></span>
+                                                <span class="name">Сельхозтехника и оборудование</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-125"#}
+                                                           value="komplektuyushie-zapasnye-chasti-prinadlezhnosti">
+                                                    <label for="category-125">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие, запасные части, принадлежности</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-132"#}
+                                                           value="selskohozyajstvennaya-elektronika-oborudovanie-dlya-izmereniya-i-vzveshivaniya">
+                                                    <label for="category-132">
+                                                        <span class="box"></span>
+                                                        <span class="name">Сельскохозяйственная электроника, оборудование для измерения и взвешивания</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-134"#}
+                                                           value="avtomatizirovannye-sistemy-upravleniya-i-kontrolya-v-sh">
+                                                    <label for="category-134">
+                                                        <span class="box"></span>
+                                                        <span class="name">Автоматизированные системы управления и контроля в с/х</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-493"#}
+                                                           value="oborudovanie-dlya-pchelovodstva">
+                                                    <label for="category-493">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для пчеловодства</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-543"#}
+                                                           value="oborudovanie-dlya-razvedeniya-zhivotnyh">
+                                                    <label for="category-543">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для разведения животных</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-488"#}
+                                                           value="teplichnoe-oborudovanie">
+                                                    <label for="category-488">
+                                                        <span class="box"></span>
+                                                        <span class="name">Тепличное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-122"#}
+                                                           value="mashiny-i-oborudovanie-dlya-sortirovki-transportirovki-obrabotki-i-hraneniya-urozh">
+                                                    <label for="category-122">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для сортировки, транспортировки и обработки урожая</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-120"#}
+                                                           value="mashiny-i-oborudovanie-dlya-orosheniya-i-vodootvoda">
+                                                    <label for="category-120">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для орошения и водоотвода</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-119"#}
+                                                           value="mashiny-i-oborudovanie-dlya-zashity-rastenij">
+                                                    <label for="category-119">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для защиты растений</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-123"#}
+                                                           value="mashiny-i-oborudovanie-dlya-fruktov-ovoshej-i-drugih-kultur">
+                                                    <label for="category-123">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для фруктов, овощей и других культур</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-121"#}
+                                                           value="mashiny-i-oborudovanie-dlya-uborki-urozhaya">
+                                                    <label for="category-121">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для уборки урожая</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-117"#}
+                                                           value="mashiny-i-oborudovanie-dlya-poseva-i-ryadovogo-seva">
+                                                    <label for="category-117">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для посева и рядового сева</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-118"#}
+                                                           value="mashiny-i-oborudovanie-dlya-vneseniya-udobrenij">
+                                                    <label for="category-118">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины и оборудование для внесения удобрений</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-84"#}
+                                                           value="mobilnye-pogruzochnye-mashiny">
+                                                    <label for="category-84">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мобильные погрузочные машины</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-113"#}
+                                                           value="mashiny-dlya-obrabotki-pochvy-i-podgotovki-poseva">
+                                                    <label for="category-113">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машины для обработки почвы и подготовки посева</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-61"#}
+                                                           value="traktory">
+                                                    <label for="category-61">
+                                                        <span class="box"></span>
+                                                        <span class="name">Тракторы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-415"#}
+                                                   value="stroitelnaya-tehnika-i-oborudovanie">
+                                            <label for="category-415">
+                                                <span class="box"></span>
+                                                <span class="name">Строительная техника и оборудование</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-416"#}
+                                                           value="krany-podemniki-i-manipulyatory">
+                                                    <label for="category-416">
+                                                        <span class="box"></span>
+                                                        <span class="name">Строительное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-431"#}
+                                                           value="stroitelnaya-tehnika">
+                                                    <label for="category-431">
+                                                        <span class="box"></span>
+                                                        <span class="name">Строительная техника</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-449"#}
+                                                           value="oborudovanie-dlya-proizvodstva-stroitelnoj-tehniki">
+                                                    <label for="category-449">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для производства строительной техники</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-461"#}
+                                                           value="detali-i-zapchasti">
+                                                    <label for="category-461">
+                                                        <span class="box"></span>
+                                                        <span class="name">Детали и запчасти</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-115"#}
+                                                   value="oborudovanie-dlya-stroitelstva-dorog">
+                                            <label for="category-115">
+                                                <span class="box"></span>
+                                                <span class="name">Оборудование и техника для строительства дорог</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-131"#}
+                                                           value="mosty-i-tonneli-proektirovanie-stroitelstvo-ekspluataciya">
+                                                    <label for="category-131">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мосты и тоннели (проектирование, строительство, эксплуатация)</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-129"#}
+                                                           value="innovacii">
+                                                    <label for="category-129">
+                                                        <span class="box"></span>
+                                                        <span class="name">Инновации</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-130"#}
+                                                           value="intellektualnye-transportnye-sistemy">
+                                                    <label for="category-130">
+                                                        <span class="box"></span>
+                                                        <span class="name">Интеллектуальные транспортные системы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-133"#}
+                                                           value="drugaya-dorojno-stroitelnaya-tehnika">
+                                                    <label for="category-133">
+                                                        <span class="box"></span>
+                                                        <span class="name">Другая дорожно-строительная техника</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-128"#}
+                                                           value="izgotovlenie-dorozhnogo-pokrytiya-i-stroitelstva-dorog">
+                                                    <label for="category-128">
+                                                        <span class="box"></span>
+                                                        <span class="name">Изготовление дорожного покрытия и строительства дорог</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-127"#}
+                                                           value="dorozhno-stroitelnaya-tehnika-i-lizing">
+                                                    <label for="category-127">
+                                                        <span class="box"></span>
+                                                        <span class="name">Дорожно-строительная техника и лизинг</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-126"#}
+                                                           value="bezopasnost-dorozhnogo-dvizheniya-dorozhnyj-servis">
+                                                    <label for="category-126">
+                                                        <span class="box"></span>
+                                                        <span class="name">Безопасность дорожного движения, дорожный сервис</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-46"#}
+                                                   value="oborudovanie-i-tehnika-dlya-pishevoj-i-pererabatyvayushej-promyshlennosti">
+                                            <label for="category-46">
+                                                <span class="box"></span>
+                                                <span class="name">Оборудование и техника для пищевой и перерабатывающей промышленности</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-102"#}
+                                                           value="komplektuyushie-i-materialy-dlya-oborudovaniya-predpriyatij-pishevoj-promyshlennosti">
+                                                    <label for="category-102">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие и материалы для оборудования предприятий пищевой промышленности</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-124"#}
+                                                           value="ekologicheski-bezopasnye-tehnologii-v-agropromyshlennom-komplekse">
+                                                    <label for="category-124">
+                                                        <span class="box"></span>
+                                                        <span class="name">Экологически безопасные технологии в агропромышленном комплексе</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-116"#}
+                                                           value="oborudovanie-dlya-zhivotnovodcheskih-kompleksov">
+                                                    <label for="category-116">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для животноводческих комплексов</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-58"#}
+                                                           value="oborudovanie-dlya-proizvodstva-produktov-pitaniya">
+                                                    <label for="category-58">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для производства продуктов питания</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-64"#}
+                                                           value="oborudovanie-dlya-izgotovleniya-ingredientov-i-pishevyh-dobavok">
+                                                    <label for="category-64">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для изготовления ингредиентов и пищевых добавок</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-112"#}
+                                                           value="promyshlennaya-sanitariya-i-uborochnoe-oborudovanie">
+                                                    <label for="category-112">
+                                                        <span class="box"></span>
+                                                        <span class="name">Промышленная санитария и уборочное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-75"#}
+                                                           value="upakovochnoe-oborudovanie">
+                                                    <label for="category-75">
+                                                        <span class="box"></span>
+                                                        <span class="name">Упаковочное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-68"#}
+                                                           value="holodilnoe-oborudovanie">
+                                                    <label for="category-68">
+                                                        <span class="box"></span>
+                                                        <span class="name">Холодильное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-82"#}
+                                                           value="torgovoe-oborudovanie">
+                                                    <label for="category-82">
+                                                        <span class="box"></span>
+                                                        <span class="name">Торговое оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-79"#}
+                                                           value="skladskoe-oborudovanie">
+                                                    <label for="category-79">
+                                                        <span class="box"></span>
+                                                        <span class="name">Складское и подъёмно-погрузочное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-71"#}
+                                                           value="vesovoe-i-kontrolno-izmeritelnoe-oborudovanie">
+                                                    <label for="category-71">
+                                                        <span class="box"></span>
+                                                        <span class="name">Весовое и контрольно-измерительное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-201"#}
+                                                   value="oborudovanie-dlya-tekstilnoj-promyshlennosti">
+                                            <label for="category-201">
+                                                <span class="box"></span>
+                                                <span class="name">Оборудование для текстильной промышленности</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-575"#}
+                                                           value="komplektuyushie-dlya-tekstilnogo-oborudovaniya">
+                                                    <label for="category-575">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие для текстильного оборудования</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-322"#}
+                                                           value="vyshivalnye-oborudovaniya">
+                                                    <label for="category-322">
+                                                        <span class="box"></span>
+                                                        <span class="name">Вышивальное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-590"#}
+                                                           value="oborudovanie-dlya-nosochno-chulochnoj-produkcii">
+                                                    <label for="category-590">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для носочно-чулочной продукции</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-290"#}
+                                                           value="oborudovanie-dlya-proizvodstva-obuvi">
+                                                    <label for="category-290">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для производства обуви</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-574"#}
+                                                           value="oborudovanie-dlya-proizvodstva-netkanyh-materialov">
+                                                    <label for="category-574">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для производства нетканых материалов</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-323"#}
+                                                           value="oborudovaniya-dlya-vlazhno-teplovoj-obrabotki">
+                                                    <label for="category-323">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для влажно-тепловой обработки</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-287"#}
+                                                           value="vyazalnoe-oborudovanie">
+                                                    <label for="category-287">
+                                                        <span class="box"></span>
+                                                        <span class="name">Вязальное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-234"#}
+                                                           value="mnogoslojnye-raskrojnye-kompleksy">
+                                                    <label for="category-234">
+                                                        <span class="box"></span>
+                                                        <span class="name">многослойные раскройные комплексы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-231"#}
+                                                           value="plottery-i-digitajzery-i-oborudovaniya-dlya-pechati">
+                                                    <label for="category-231">
+                                                        <span class="box"></span>
+                                                        <span class="name">Плоттеры, дигитайзеры и оборудования для печати</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-229"#}
+                                                           value="odnoslojnye-raskrojnye-kompleksy">
+                                                    <label for="category-229">
+                                                        <span class="box"></span>
+                                                        <span class="name">Однослойные раскройные комплексы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-327"#}
+                                                           value="tekstilnoe-otdelochnoe-oborudovanie">
+                                                    <label for="category-327">
+                                                        <span class="box"></span>
+                                                        <span class="name">Текстильное отделочное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-185"#}
+                                                   value="promyshlennoe-oborudovanie">
+                                            <label for="category-185">
+                                                <span class="box"></span>
+                                                <span class="name">Промышленное оборудование</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-499"#}
+                                                           value="antimagnitnye-plomby-dlya-priborov-ucheta">
+                                                    <label for="category-499">
+                                                        <span class="box"></span>
+                                                        <span class="name">Антимагнитные пломбы для приборов учета</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-114"#}
+                                                           value="avtomatizaciya-i-programmnoe-obespechenye">
+                                                    <label for="category-114">
+                                                        <span class="box"></span>
+                                                        <span class="name">Автоматизация и программное обеспечение</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-453"#}
+                                                           value="komplektuyushie-i-materialy-dlya-promyshlennogo-oborudovaniya">
+                                                    <label for="category-453">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие и материалы для промышленного оборудования</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-491"#}
+                                                           value="oborudovanie-dlya-salonov-krasoty">
+                                                    <label for="category-491">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для салонов красоты</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-569"#}
+                                                           value="oborudovanie-dlya-filtracii">
+                                                    <label for="category-569">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для фильтрации</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-559"#}
+                                                           value="oborudovanie-dlya-promyshlennoj-okraski">
+                                                    <label for="category-559">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для промышленной окраски</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-570"#}
+                                                           value="oborudovanie-dlya-pererabotki-plastika">
+                                                    <label for="category-570">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для переработки пластика</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-272"#}
+                                                           value="oborudovanie-dlya-pechatnoj-produkcii">
+                                                    <label for="category-272">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для печатной продукции</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-591"#}
+                                                           value="oborudovanie-dlya-proizvodstva-mebeli">
+                                                    <label for="category-591">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для производства мебели</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-589"#}
+                                                           value="oborudovaniya-dlya-shinnoj-i-rezinotehnicheskoj-promyshlennosti">
+                                                    <label for="category-589">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудования для шинной и резинотехнической промышленности</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-562"#}
+                                                           value="vzryvozashishennoe-oborudovanie">
+                                                    <label for="category-562">
+                                                        <span class="box"></span>
+                                                        <span class="name">Взрывозащищенное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-587"#}
+                                                           value="oborudovanie-obshego-naznacheniya">
+                                                    <label for="category-587">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование общего назначения</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-558"#}
+                                                           value="oborudovanie-dlya-obrabotki-stekla">
+                                                    <label for="category-558">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для обработки стекла</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-583"#}
+                                                           value="promyshlennye-pribory">
+                                                    <label for="category-583">
+                                                        <span class="box"></span>
+                                                        <span class="name">Промышленные приборы</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-582"#}
+                                                           value="promyshlennye-sushilnye-mashiny">
+                                                    <label for="category-582">
+                                                        <span class="box"></span>
+                                                        <span class="name">Промышленные сушильные машины</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-476"#}
+                                                           value="liftovoe-oborudovanie">
+                                                    <label for="category-476">
+                                                        <span class="box"></span>
+                                                        <span class="name">Лифтовое оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-561"#}
+                                                           value="stankostroenie-i-komplectuyshie">
+                                                    <label for="category-561">
+                                                        <span class="box"></span>
+                                                        <span class="name">Станкостроение и комплектующие</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-581"#}
+                                                           value="mehanicheskie-detali">
+                                                    <label for="category-581">
+                                                        <span class="box"></span>
+                                                        <span class="name">Механические детали</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-462"#}
+                                                           value="prochee-oborudovanie">
+                                                    <label for="category-462">
+                                                        <span class="box"></span>
+                                                        <span class="name">Прочее оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-190"#}
+                                                           value="energeticheskoe-i-elektrotehnicheskoe-oborudovanie">
+                                                    <label for="category-190">
+                                                        <span class="box"></span>
+                                                        <span class="name">Энергетическое и электротехническое оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-516"#}
+                                                           value="vakuumnoe-oborudovanie">
+                                                    <label for="category-516">
+                                                        <span class="box"></span>
+                                                        <span class="name">Вакуумное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-187"#}
+                                                           value="svarochnoe-oborudovanie-i-tehnika">
+                                                    <label for="category-187">
+                                                        <span class="box"></span>
+                                                        <span class="name">Сварочное оборудование и техника</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-460"#}
+                                                           value="derevoobrabatyvayushee-obobrudovanie">
+                                                    <label for="category-460">
+                                                        <span class="box"></span>
+                                                        <span class="name">Деревообрабатывающее оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-312"#}
+                                                   value="medicinskoe-oborudovanie">
+                                            <label for="category-312">
+                                                <span class="box"></span>
+                                                <span class="name">Медицинское оборудование</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-535"#}
+                                                           value="stomatologicheskoe-oborudovanie">
+                                                    <label for="category-535">
+                                                        <span class="box"></span>
+                                                        <span class="name">Стоматологическое оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-519"#}
+                                                           value="diagnosticheskoe-oborudovanie">
+                                                    <label for="category-519">
+                                                        <span class="box"></span>
+                                                        <span class="name">Диагностическое оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-448"#}
+                                                           value="oborudovanie-dlya-sredstv-gigieny">
+                                                    <label for="category-448">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для средств гигиены</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-515"#}
+                                                           value="laboratornoe-oborudovanie">
+                                                    <label for="category-515">
+                                                        <span class="box"></span>
+                                                        <span class="name">Лабораторное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-536"#}
+                                                           value="massazhnoe-oborudovanie">
+                                                    <label for="category-536">
+                                                        <span class="box"></span>
+                                                        <span class="name">Массажное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-313"#}
+                                                           value="reabilitacionnoe-oborudovanie">
+                                                    <label for="category-313">
+                                                        <span class="box"></span>
+                                                        <span class="name">Реабилитационное оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-160"#}
+                                                   value="neftegazovoe-oborudovanie-i-tehnika">
+                                            <label for="category-160">
+                                                <span class="box"></span>
+                                                <span class="name">Нефтегазовое оборудование и техника</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-163"#}
+                                                           value="avtomatizaciya-programmnoe-obespechenie">
+                                                    <label for="category-163">
+                                                        <span class="box"></span>
+                                                        <span class="name">Автоматизация, программное обеспечение</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-169"#}
+                                                           value="zashita-ot-korrozii">
+                                                    <label for="category-169">
+                                                        <span class="box"></span>
+                                                        <span class="name">Защита от коррозии</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-167"#}
+                                                           value="obustrojstvo-i-ekspluataciya-mestorozhdenij">
+                                                    <label for="category-167">
+                                                        <span class="box"></span>
+                                                        <span class="name">Обустройство и эксплуатация месторождений</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-166"#}
+                                                           value="diagnostika-i-promyshlennaya-bezopasnost">
+                                                    <label for="category-166">
+                                                        <span class="box"></span>
+                                                        <span class="name">Диагностика и промышленная безопасность</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-165"#}
+                                                           value="burenie">
+                                                    <label for="category-165">
+                                                        <span class="box"></span>
+                                                        <span class="name">Бурение</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-176"#}
+                                                           value="oborudovanie-dlya-pererabotki-nefti-i-gaza">
+                                                    <label for="category-176">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для переработки нефти и газа</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-189"#}
+                                                           value="oborudovanie-dlya-transportirovki-i-hraneniya-nefti-i-gaza">
+                                                    <label for="category-189">
+                                                        <span class="box"></span>
+                                                        <span class="name">Оборудование для транспортировки и хранения нефти и газа</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-172"#}
+                                                           value="nasosy-kompressory-dlya-neftegaza">
+                                                    <label for="category-172">
+                                                        <span class="box"></span>
+                                                        <span class="name">Насосы, компрессоры для нефтегаза</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-178"#}
+                                                   value="pozharnaya-bezopasnost-i-ekologiya">
+                                            <label for="category-178">
+                                                <span class="box"></span>
+                                                <span class="name">Безопасность и экология</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-183"#}
+                                                           value="sredstva-individualnoj-zashity">
+                                                    <label for="category-183">
+                                                        <span class="box"></span>
+                                                        <span class="name">Средства индивидуальной защиты</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-492"#}
+                                                           value="produkciya-i-oborudovanie-dlya-promyshlennoj-ekologii">
+                                                    <label for="category-492">
+                                                        <span class="box"></span>
+                                                        <span class="name">Продукция и оборудование для промышленной экологии</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="input child ">
+                                            <i class="qv qv-down3 qv-gray"></i>
+                                            <input type="checkbox" name="categories" id="category-464"#}
+                                                   value="transportnye-sredstva-i-komplektuyshie">
+                                            <label for="category-464">
+                                                <span class="box"></span>
+                                                <span class="name">Транспортные средства и комплектующие</span>
+                                            </label>
+                                            <ul class="children children-children">
+
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-454"#}
+                                                           value="komplektuyushie-dlya-avtotransporta">
+                                                    <label for="category-454">
+                                                        <span class="box"></span>
+                                                        <span class="name">Комплектующие для автотранспорта</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-470"#}
+                                                           value="vozdushnyj-transport">
+                                                    <label for="category-470">
+                                                        <span class="box"></span>
+                                                        <span class="name">Воздушный транспорт</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-466"#}
+                                                           value="avto">
+                                                    <label for="category-466">
+                                                        <span class="box"></span>
+                                                        <span class="name">Авто</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-549"#}
+                                                           value="velotransport">
+                                                    <label for="category-549">
+                                                        <span class="box"></span>
+                                                        <span class="name">Велотранспорт</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-586"#}
+                                                           value="mashinostroenie">
+                                                    <label for="category-586">
+                                                        <span class="box"></span>
+                                                        <span class="name">Машиностроение и оборудование</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-477"#}
+                                                           value="moto">
+                                                    <label for="category-477">
+                                                        <span class="box"></span>
+                                                        <span class="name">Мото</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-513"#}
+                                                           value="zheleznodorozhnyj-transport">
+                                                    <label for="category-513">
+                                                        <span class="box"></span>
+                                                        <span class="name">Железнодорожный транспорт</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-188"#}
+                                                           value="spectehnika">
+                                                    <label for="category-188">
+                                                        <span class="box"></span>
+                                                        <span class="name">Спецтехника и комплектующие</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+                                                <li class="input  leaf">
+
+                                                    <input type="checkbox" name="categories" id="category-465"#}
+                                                           value="vodnyj-transport">
+                                                    <label for="category-465">
+                                                        <span class="box"></span>
+                                                        <span class="name">Водный транспорт</span>
+                                                    </label>
+                                                    <ul class="children children-children">
+
+                                                    </ul>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+
+                    <!-- <div class="filter-item mrg-t-40">
+                        <button id="filter-button" class="filter-btn filter-show mrg-b-20 btn waves" data-rippleria>Показать
+                        </button>
+                        <a class="filter-btn filter-reset mrg-b-10 btn waves" href="/ru/tenders/" data-rippleria>Сбросить фильтр</a>
+                      </div> -->
+
+                    <button type="submit" class="button">Показать результаты</button>
+
+                </form>
+            </div>
             <div class="masters">
                 <form method="get" class="filter_form" name="company_filter">
                     <label>
