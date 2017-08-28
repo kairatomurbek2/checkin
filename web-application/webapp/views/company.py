@@ -21,7 +21,8 @@ class CompanyList(ListView):
     template_name = 'company/company_list.html'
     filterset_class = CompanyFilter
     model = Company
-    paginate_by = 1
+    context_object_name = 'company_list'
+    paginate_by = 24
 
     def get_queryset(self):
         if self.request.is_ajax():
@@ -31,7 +32,7 @@ class CompanyList(ListView):
     def get_context_data(self, **kwargs):
         context = super(CompanyList, self).get_context_data(**kwargs)
         company_filter = self.filterset_class(self.request.GET, queryset=self.get_queryset())
-        context['company_filter'] = company_filter.form
+        context['filter'] = company_filter.form
         pagination = Paginator(company_filter.qs, self.paginate_by)
         page = self.request.GET.get('page')
         try:
