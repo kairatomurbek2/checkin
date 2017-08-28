@@ -20,7 +20,7 @@ var path = {
         css: 'web-application/staticfiles/css/'
     },
     src: {
-        js: 'web-application/gulp/src/js/main.js',
+        js: 'web-application/gulp/src/js/*.js',
         style: 'web-application/gulp/src/style/main.sass'
     },
     watch: {
