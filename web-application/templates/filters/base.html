@@ -1,0 +1,12 @@
+{% load widget_tweaks staticfiles extra_tags %}
+<div class="base-filter">
+    <form action="" method="get" name="base_filter" id="base_filter">
+        {% for field in filter %}
+            {% get_form_field request field as field_template %}
+            {% if field_template %}
+                {% include field_template %}
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="button">Показать результаты</button>
+    </form>
+</div>
