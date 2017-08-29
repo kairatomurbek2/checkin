@@ -3,4 +3,66 @@
 {% block content %}
     <div class="grid">
     </div>
+    <main class="become_specilalist">
+	<div class="grid">
+		<form action="#" method="post" class="form_inf">
+			<div class="control-group file-upload" id="file-upload">
+				<div class="image-box text-center">
+					<p>Фото профиля</p>
+					<img src="" alt="">
+				</div>
+				<div class="controls"><input type="file"></div>
+			</div>
+
+			<div class="general_information">
+				<p>Персональная информация</p>
+				<div class="first_block">
+					<div class="add_block">
+						<input type="text" placeholder="Имя фамилия">
+						<!-- <input type="text" placeholder="Фамилия"> -->
+						<div>
+							<!-- <label> -->
+								<input type="tel" placeholder="Телефон">
+							<!-- </label> -->
+						</div>
+						<span>Добавить дополнительный номер телефона +</span>
+					</div>
+
+					<div>
+						<textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
+						<textarea name="" cols="30" rows="10" placeholder="Краткая информация о себе..."></textarea>
+					</div>
+				</div>
+
+				<p>Ваши услуги</p>
+				<div class="second_block">
+					<select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
+							<option value="">Выбрать учреждение</option>
+							<optgroup label="Climbing">
+								<option value="pitons">Pitons</option>
+								<option value="cams">Cams</option>
+								<option value="nuts">Nuts</option>
+								<option value="bolts">Bolts</option>
+								<option value="stoppers">Stoppers</option>
+								<option value="sling">Sling</option>
+							</optgroup>
+							<optgroup label="Skiing">
+								<option value="skis">Skis</option>
+								<option value="skins">Skins</option>
+								<option value="poles">Poles</option>
+							</optgroup>
+						</select>
+
+						<input type="text">
+				</div>
+
+				<p>Подробная информация</p>
+
+				<textarea name="" cols="30" rows="10" placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+				<button type="submit" class="button">Сохранить</button>
+
+			</div>
+		</form>
+	</div>
+</main>
 {% endblock %}

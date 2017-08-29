@@ -127,7 +127,12 @@ $(function() {
 	});
 
 	$('.add_block > span').click(function (event) {
-		$(this).siblings('div').append('<input type="tel" placeholder="Контактный телефон">');
+		$(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
+		
+		$('.delete').click(function () {
+		$(this).parent('.delete_block').remove();
+	});
+
 	});
 
 
@@ -135,5 +140,30 @@ $(function() {
 			$('.logout_modal').fadeOut(250);
 			$('.blur').css('filter', 'none');
 	});
+
+
+
+
+
+$('.image-box').click(function(event) {
+  var imgg = $(this).children('img');
+  $(this).siblings().children("input").trigger('click');  
+
+  $(this).siblings().children("input").change(function() {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      var urll = e.target.result;
+      $(imgg).attr('src', urll);
+      imgg.parent().css('background','transparent');
+			imgg.show();
+      imgg.siblings('p').hide();
+			
+    }
+    reader.readAsDataURL(this.files[0]);
+  }); 
+});
+
+
 
 });
