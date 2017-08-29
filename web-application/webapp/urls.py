@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^profiles/(?P<slug>[-_\w]+)/$', user_profile_permission(profile_views.ProfileEditView.as_view()),
         name='profile_update'),
     url(r'^masters/create/$', specialist_views.MasterCreateView.as_view(), name='new_master'),
-    url(r'^companies/create/$', company_views.CompanyCreateView.as_view(), name='new_company')
+    url(r'^companies/create/$', company_views.CompanyCreateView.as_view(), name='new_company'),
+    url(r'^(?P<master_slug>[-_\w]+)/$', specialist_views.MasterDetailView.as_view(), name='master_detail')
 ]

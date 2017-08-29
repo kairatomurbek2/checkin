@@ -39,3 +39,7 @@ class MastersList(ListView):
 
 class MasterCreateView(TemplateView):
     template_name = 'specialist/new_specialist.html'
+
+
+class MasterDetailView(TemplateView):
+    template_name = 'specialist/master_detail.html'
