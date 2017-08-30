@@ -1,4 +1,5 @@
 @import "../../../staticfiles/bower_components/selectize/dist/css/selectize.css"
+@import "../../../staticfiles/bower_components/lightgallery/dist/css/lightgallery.css"
 @import "../../../staticfiles/bower_components/normalize.css/normalize.css"
 @import "_mixins.sass"
 
@@ -6,9 +7,9 @@ $dark-color: #131313
 $main-color: #11EBE6
 $ldark-color: #333333
 
-
 @include font(GothamRegular, GothamProRegular)
 @include font(GothamBold, GothamProBold)
+@include font(lg, lg)
 
 body
 	font-family: "GothamRegular", sans-serif
@@ -83,6 +84,7 @@ header
 	display: flex
 	align-items: center
 	font-size: 14px
+	z-index: 10
 	a
 		text-decoration: none
 		transition: all 0.1s ease-in
@@ -154,7 +156,7 @@ header
 			padding-left: 30px
 			border: 0
 			font-family: "GothamRegular", sans-serif
-			font-size: 18px
+			font-size: 16px
 			outline: 0
 	button
 		width: 90px
@@ -418,6 +420,7 @@ footer
 		border-radius: 4px
 		box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.15)
 		padding: 40px
+		text-align: center
 		p
 			font-size: 16px
 			color: #222222
@@ -426,18 +429,23 @@ footer
 			padding-bottom: 20px
 		form
 			text-align: center
-			button
-				font-size: 14px
-				border: 0
-				border-radius: 6px
-				background-color: #17FFFA
-				display: inline-block
-				width: 50px
-				height: 30px
-				margin: 0 5px
-				color: #fff
-				cursor: pointer
-				outline: 0
+			display: inline-block
+		button
+			font-size: 14px
+			border: 0
+			border-radius: 6px
+			background-color: #17FFFA
+			display: inline-block
+			width: 50px
+			height: 30px
+			margin: 0 5px
+			color: #fff
+			cursor: pointer
+			outline: 0
+		.no
+			background-color: transparent
+			border: 1px solid #dcdcdc
+			color: #dcdcdc
 
 
 
@@ -447,7 +455,7 @@ footer
 // -----------------SPECIALIST-PAGE-----------------
 
 main
-	background-color: #f2f2f2
+	background-color: #F5F5F5
 
 .specialist
 	.grid
@@ -462,81 +470,99 @@ main
 		flex-wrap: wrap
 
 .personal_block
-	width: 32.5%
+	width: 24%
 	height: auto
+	.master
+		width: 100%
+		height: auto
+		padding-bottom: 80px
+		&:hover
+			box-shadow: none
+		.master_desc
+			ul
+				li:first-of-type
+					height: auto
+				li:nth-child(2)
+					width: 140px
+					background: url("../img/p_number_icon.png") left 3px no-repeat
+					margin-bottom: 18px
+				li:last-of-type
+					height: auto
+					background: url("../img/e-mail.png") left 3px no-repeat
+
 	
 
 .shedule_block
-	width: 66.25%
+	width: 74.5%
 	height: auto
 
-h2
-	font-size: 30px
-	color: #3b3b3b
-	font-weight: normal
-	text-align: center
+// h2
+// 	font-size: 30px
+// 	color: #3b3b3b
+// 	font-weight: normal
+// 	text-align: center
 
-.about
-	padding-top: 35px
-	background-color: #fff
-	.p_img
-		width: 210px
-		height: 210px
-		border: 15px solid #f1fafa
-		border-radius: 50%
-		margin: 0 auto 60px auto
-		padding: 5px
-		overflow: hidden
-		img
-			width: 100%
-			height: 100%
-			object-fit: cover
-			object-position: center top	
-	.p_information
-		padding: 0 35px 50px 35px
-		h2
-			padding-bottom: 20px
-		p
-			font-size: 14px
-			color: #c1c1c1
-			text-align: center
-		p:first-of-type
-			padding-bottom: 8px
+// .about
+// 	padding-top: 35px
+// 	background-color: #fff
+// 	.p_img
+// 		width: 210px
+// 		height: 210px
+// 		border: 15px solid #f1fafa
+// 		border-radius: 50%
+// 		margin: 0 auto 60px auto
+// 		padding: 5px
+// 		overflow: hidden
+// 		img
+// 			width: 100%
+// 			height: 100%
+// 			object-fit: cover
+// 			object-position: center top	
+// 	.p_information
+// 		padding: 0 35px 50px 35px
+// 		h2
+// 			padding-bottom: 20px
+// 		p
+// 			font-size: 14px
+// 			color: #c1c1c1
+// 			text-align: center
+// 		p:first-of-type
+// 			padding-bottom: 8px
 
-	.p_contacts
-		padding-bottom: 50px
-		p
-			text-align: center
-			font-size: 14px
-			padding-bottom: 8px
-	button
-		width: 285px
-		height: 60px
-		font-size: 18px
-		border: 0
-		background-color: #c4c4c4
-		color: #fff
-		border-radius: 2px
-		cursor: pointer
-		margin: 0 auto 30px auto
-		display: block
-	.p_rate
-		height: 65px
-		background-color: #f8f8f8
-		display: -webkit-flex
-		display: -moz-flex
-		display: -ms-flex
-		display: -o-flex
-		display: flex
-		justify-content: space-between
-		align-items: center
-		padding: 0 30px 0 50px
-		p
-			font-size: 18px
-			color: #c1c1c1
-			span
-				font-size: 23px
-				color: #78cccd
+// 	.p_contacts
+// 		padding-bottom: 50px
+// 		p
+// 			text-align: center
+// 			font-size: 14px
+// 			padding-bottom: 8px
+// 	button
+// 		width: 285px
+// 		height: 60px
+// 		font-size: 18px
+// 		border: 0
+// 		background-color: #c4c4c4
+// 		color: #fff
+// 		border-radius: 2px
+// 		cursor: pointer
+// 		margin: 0 auto 30px auto
+// 		display: block
+// 	.p_rate
+// 		height: 65px
+// 		background-color: #f8f8f8
+// 		display: -webkit-flex
+// 		display: -moz-flex
+// 		display: -ms-flex
+// 		display: -o-flex
+// 		display: flex
+// 		justify-content: space-between
+// 		align-items: center
+// 		padding: 0 30px 0 50px
+// 		p
+// 			font-size: 18px
+// 			color: #c1c1c1
+// 			span
+// 				font-size: 23px
+// 				color: #78cccd
 
 .shedule
 	width: 100%
@@ -596,25 +622,90 @@ h5
 	color: $dark-color
 
 .p_description
-	padding: 30px 30px 30px 45px
-	h5
-		padding-bottom: 25px
+	padding: 0 30px
+	& > div
+		padding-top: 30px
+		p:last-of-type
+			padding-bottom: 0
+	h4
+		padding-bottom: 30px
 	p
 		font-size: 14px
-		padding-bottom: 20px
-	ul
-		list-style: none
-		font-size: 14px
-		li
-			padding-bottom: 5px
+		color: $ldark-color
+		line-height: 20px
+		padding-bottom: 30px
 
-.iframe
-	width: 100%
-	height: 265px
-	margin-top: 30px
-	iframe
+//-----------------COMPANY-----------------
+
+.company
+	background-color: #F5F5F5
+	.grid
+		display: -webkit-flex
+		display: -moz-flex
+		display: -ms-flex
+		display: -o-flex
+		display: flex
+		justify-content: space-between
+		align-items: flex-start
+		flex-wrap: wrap
+		padding: 40px 0 70px 0
+	.iframe
+		height: 230px
 		width: 100%
-		height: 100%
+		iframe
+			width: 100%
+			height: 100%
+			filter: grayscale(60%)
+	.employees
+		padding-top: 70px
+		& > div
+			display: -webkit-flex
+			display: -moz-flex
+			display: -ms-flex
+			display: -o-flex
+			display: flex
+			justify-content: flex-start
+			align-items: flex-start
+			flex-wrap: wrap
+		& > h4
+			width: 100%
+			padding: 0 0 35px 30px
+		& > a
+			display: block
+			color: #08CECA
+			font-size: 14px
+			text-align: center
+			cursor: pointer
+			margin-top: 50px
+
+.certificates
+	width: 100%
+	height: auto
+	padding-top: 50px
+	#lightgallery
+		display: -webkit-flex
+		display: -moz-flex
+		display: -ms-flex
+		display: -o-flex
+		display: flex
+		justify-content: flex-start
+		align-items: flex-start
+		a
+			width: 185px
+			height: 260px
+			margin: 0 15px 15px 0
+			&:nth-child(6n)
+				margin: 0 0 15px 0
+			img
+				width: 100%
+				height: 100%
+				object-fit: cover
+.lg-backdrop
+  background-color: rgba(0, 0, 0, 0.5)
+		
+
+
+
 
 // -----------------SPECIALIST-AUTHOR-----------------
 
@@ -628,17 +719,24 @@ h5
 		display: flex
 		justify-content: space-between
 
-.wrap
+.master_img
+	position: relative
+	form
+		position: absolute
 	label[for=upload]
-		font-size: 14px
 		display: block
-		color: #78cccd
+		width: 32px
+		height: 32px
+		border-radius: 50%
+		background: #fff url("../img/pencil-edit-button.png") center no-repeat
 		cursor: pointer
-		text-align: center
-		padding-bottom: 35px
+		box-shadow: 0 3px 15px rgba(0, 0, 0, 0.16)
+		position: absolute
+		top: 29px
+		left: 190px
 		input
 			display: none
-	.thumb
+	span
 		width: 210px
 		height: 210px
 		border: 15px solid #f1fafa
@@ -764,78 +862,64 @@ h5
 		@include transition
 
 .edit_block
-	padding-top: 50px
-	form
-		display: -webkit-flex
-		display: -moz-flex
-		display: -ms-flex
-		display: -o-flex
-		display: flex
-		justify-content: flex-end
-		align-items: flex-start
-		font-size: 14px
-		& > div:first-of-type
-			width: 44.0251572327044%
-			margin-right: 30px
-		& > div:last-of-type
-			width: 49.05660377358491%
-		& > div
-			label
-				display: block
-				width: 100%
-				height: auto
-			input
-				width: 100%
-				height: 40px
-				border: 1px solid #dcdcdc
-				border-radius: 3px
-				margin-bottom: 15px
-				padding-left: 25px
-				outline: 0
-				@include transition
-				&:hover,
-				&:focus
-					border-color: #8be0de
-			textarea
-				width: 100%
-				border: 1px solid #dcdcdc
-				border-radius: 3px
-				resize: none
-				outline: 0
-				margin-bottom: 15px
-				padding: 20px 10px 10px 25px
-				@include transition
-				&:hover,
-				&:focus
-					border-color: #8be0de
-			& > p
-				font-size: 18px
-				padding-bottom: 40px
-		.add_block
-			span
-				display: block
-				color: #78cccd
-				cursor: pointer
+	padding-left: 40px
+	.general_information
+		width: 100%
+		& > textarea
+			margin-bottom: 45px
+	
 
 .selectize-dropdown
 	.optgroup-header
 		font-family: "GothamBold", sans-serif
 
+// -----------------EDIT-COMPANY-----------------
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button
-  -webkit-appearance: none
-  -moz-appearance: none
-  margin: 0
+.edit_company
+	.general_information
+		width: 100%
+		padding-left: 40px
+		& > textarea
+			margin-bottom: 40px
+		& > span
+			color: #B6B6B6
+			display: block
+			padding: 20px 0 60px 0
+	.add_block
+		label
+			display: block
+			display: -webkit-flex
+			display: -moz-flex
+			display: -ms-flex
+			display: -o-flex
+			display: flex
+			flex-wrap: wrap
+			align-items: flex-start
+			span
+				width: 20%
+			span:first-of-type
+				width: 100%
+				padding-bottom: 10px
+			span:last-of-type
+				background-color: #dddddd
+				height: 35px
+				display: -webkit-flex
+				display: -moz-flex
+				display: -ms-flex
+				display: -o-flex
+				display: flex
+				justify-content: center
+				align-items: center
+				border-top-left-radius: 3px
+				border-bottom-left-radius: 3px
+			input
+				width: 80%
+				border-top-left-radius: 0
+				border-bottom-left-radius: 0
 
 
-input[type='number']
-  -moz-appearance: textfield
 
-select
-  -webkit-appearance: none
-  -moz-appearance: none
-  appearance: none
+
 
 
 // -----------------EDIT-PROFILE-----------------
@@ -977,8 +1061,8 @@ h4
 			background-color: #F9F9F9
 		label
 			display: block
-				font-size: 12px
-				cursor: pointer
+			font-size: 12px
+			cursor: pointer
 		li
 			position: relative
 		.input
@@ -1100,6 +1184,7 @@ h4
 		align-items: flex-start
 		justify-content: flex-start
 		flex-wrap: wrap
+		padding-top: 40px
 	.filter_form
 		box-shadow: 0 3px 15px rgba(0,0,0,0.16) 
 		label
@@ -1114,8 +1199,6 @@ h4
 	@include transition
 	&:hover
 		box-shadow: 0 3px 15px rgba(0,0,0,0.16)			
-	&:nth-child(3n)
-		margin-right: 0
 	.master_img
 		width: 100%
 		height: 185px
@@ -1214,6 +1297,8 @@ h4
 		&:hover
 			background-color: $main-color
 
+div.master:nth-child(3n)
+	margin-right: 0
 
 .preloader
   margin: 30px auto 0 auto
@@ -1411,13 +1496,15 @@ h4
 		padding-bottom: 40px
 		.selectize-control
 			width: 48%
+			&:first-of-type
+				.selectize-input
+					background: #fff url("../img/polygon.png") 97% 8px no-repeat
 		.selectize-input
 			width: 100%
 			box-shadow: none
 			padding: 7px 24px 7px 20px
 			border: 1px solid #e4e4e4
 			@include transition
-			background: #fff url("../img/polygon.png") 97% 8px no-repeat
 			&:hover,
 			&:focus
 				border-color: $main-color
@@ -1427,9 +1514,9 @@ h4
     	margin: 0
     	border-top: 0;
     	box-shadow: none
-		input
-			width: 48%
-			min-height: 85px
+		// input
+		// 	width: 48%
+		// 	min-height: 85px
 	// p:last-of-type
 	// 	padding-bottom: 40px
 	input,
@@ -1451,7 +1538,72 @@ h4
 		margin-bottom: 15px
 	& > textarea
 		margin-bottom: 160px
+	.company_iframe
+		width: 100%
+		height: 230px
+		iframe
+			width: 100%
+			height: 100%
+
+.become_company
+	.general_information
+		& > textarea
+			margin-bottom: 40px
+		& > span
+			color: #B6B6B6
+			display: block
+			padding: 20px 0 60px 0
+	.add_block
+		label
+			display: block
+			display: -webkit-flex
+			display: -moz-flex
+			display: -ms-flex
+			display: -o-flex
+			display: flex
+			flex-wrap: wrap
+			align-items: flex-start
+			span
+				width: 20%
+			span:first-of-type
+				width: 100%
+				padding-bottom: 10px
+			span:last-of-type
+				background-color: #dddddd
+				height: 35px
+				display: -webkit-flex
+				display: -moz-flex
+				display: -ms-flex
+				display: -o-flex
+				display: flex
+				justify-content: center
+				align-items: center
+				border-top-left-radius: 3px
+				border-bottom-left-radius: 3px
+			input
+				width: 80%
+				border-top-left-radius: 0
+				border-bottom-left-radius: 0
+
+
+
+.hidden
+	visibility: hidden
 
 
 
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
+  -moz-appearance: none
+  margin: 0
+
+
+input[type='number']
+  -moz-appearance: textfield
+
+select
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none

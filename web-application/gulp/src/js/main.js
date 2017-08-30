@@ -1,5 +1,6 @@
 //=../../../staticfiles/bower_components/jquery/dist/jquery.js
 //=../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
+//=../../../staticfiles/bower_components/lightgallery/dist/js/lightgallery-all.js
 
 
 
@@ -164,6 +165,17 @@ $('.image-box').click(function(event) {
   }); 
 });
 
+$('#lightgallery').lightGallery({
+	thumbnail: false,
+	autoplayControls: false,
+	share: false
+}); 
+
+$('#id_tags').selectize({
+	persist: false,
+	createOnBlur: true,
+	create: true
+}); 
 
 
 });
