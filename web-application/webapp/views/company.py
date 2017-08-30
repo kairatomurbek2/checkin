@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
@@ -48,3 +49,14 @@ class CompanyList(ListView):
 
 class CompanyCreateView(TemplateView):
     template_name = 'company/new_company.html'
+
+
+class CompanyDetail(TemplateView):
+    template_name = 'company/company_detail.html'
+
+    model = Company
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyDetail, self).get_context_data(**kwargs)
+        context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
+        return context

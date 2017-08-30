@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
@@ -76,6 +77,9 @@ class Company(models.Model):
         except TypeError:
             return ''
 
+    def get_absolute_url(self):
+        return reverse('company_detail', kwargs={'company_slug': self.slug})
+
     class Meta:
         verbose_name = _('Учреждение')
         verbose_name_plural = _('Учреждения')
@@ -112,6 +116,9 @@ class Specialist(models.Model):
                 [i.get('name', None) for i in self.categories.values('name')])
         except TypeError:
             return ''
+
+    def get_absolute_url(self):
+        return reverse('master_detail', kwargs={'master_slug': self.slug})
 
     class Meta:
         verbose_name = _('Специалист')
