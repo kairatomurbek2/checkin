@@ -3,4 +3,79 @@
 {% block content %}
     <div class="grid">
     </div>
+
+    <main class="become_specilalist become_company">
+	<div class="grid">
+		<form action="#" method="post" class="form_inf">
+			<div class="control-group file-upload" id="file-upload">
+				<div class="image-box text-center">
+					<p>Фото профиля</p>
+					<img src="" alt="">
+				</div>
+				<div class="controls"><input type="file"></div>
+			</div>
+
+			<div class="general_information">
+				<p>Информация об учреждении</p>
+				<div class="first_block">
+					<div class="add_block">
+						<input type="text" placeholder="Название учреждения">
+						<input type="text" placeholder="Рабочий e-mail">
+						<label>
+							<span>Ваш аддрес в checkin</span>
+							<span>chekin/</span>
+							<input type="text" placeholder="atlassian">
+						</label>
+						<div>
+							<!-- <label> -->
+								<input type="tel" placeholder="Телефон">
+							<!-- </label> -->
+						</div>
+						<span>Добавить дополнительный номер телефона +</span>
+					</div>
+
+					<div>
+						<textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
+						<textarea name="" cols="30" rows="10" placeholder="Краткая информация о себе..."></textarea>
+					</div>
+				</div>
+
+				<p>Ваши услуги</p>
+				<div class="second_block">
+					<select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
+							<option value="">Выбрать учреждение</option>
+							<optgroup label="Climbing">
+								<option value="pitons">Pitons</option>
+								<option value="cams">Cams</option>
+								<option value="nuts">Nuts</option>
+								<option value="bolts">Bolts</option>
+								<option value="stoppers">Stoppers</option>
+								<option value="sling">Sling</option>
+							</optgroup>
+							<optgroup label="Skiing">
+								<option value="skis">Skis</option>
+								<option value="skins">Skins</option>
+								<option value="poles">Poles</option>
+							</optgroup>
+						</select>
+
+						<input type="text" id="id_tags">
+				</div>
+
+				<p>Подробная информация</p>
+
+				<textarea name="" cols="30" rows="10" placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+
+				<p>Ваше расположение</p>
+
+				<div class="company_iframe">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6154150.783456076!2d70.24735641073894!3d41.13547693654861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3897381dfce927f3%3A0x281058b74e88c433!2z0JrQuNGA0LPQuNC30LjRjw!5e0!3m2!1sru!2sru!4v1503912235203" frameborder="0" style="border:0" allowfullscreen></iframe>
+				</div>
+				<span>Поставьте метку на карте или позвольте нам отпределить ваше местоположение автоматически</span>
+				<button type="submit" class="button">Сохранить</button>
+
+			</div>
+		</form>
+	</div>
+</main>
 {% endblock %}

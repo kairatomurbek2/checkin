@@ -12,10 +12,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "normalize.css": "*",
-    "jquery": "2.*"
+    "normalize.css": "*"
   },
   "devDependencies": {
-    "selectize": "^0.12.4"
+    "selectize": "^0.12.4",
+    "jquery": "^3.2.1",
+    "lightgallery": "^1.6.0"
   }
 }
