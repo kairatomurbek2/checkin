@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
@@ -43,3 +43,9 @@ class MasterCreateView(TemplateView):
 
 class MasterDetailView(TemplateView):
     template_name = 'specialist/master_detail.html'
+    model = Specialist
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterDetailView, self).get_context_data(**kwargs)
+        context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        return context

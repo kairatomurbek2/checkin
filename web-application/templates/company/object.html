@@ -1,7 +1,7 @@
 {% load staticfiles thumbnail %}
 {% for company in company_list %}
     <div class="master">
-        <a href="#" class="master_img">
+        <a href="{{ company.get_absolute_url }}" class="master_img">
             <span>
                 {% if company.logo %}
                     {% thumbnail company.logo "154x154" as im %}
@@ -26,6 +26,6 @@
                 </li>
             </ul>
         </div>
-        <a href="#">посмотреть</a>
+        <a href="{{ company.get_absolute_url }}">посмотреть</a>
     </div>
 {% endfor %}

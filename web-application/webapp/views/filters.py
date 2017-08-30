@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 import django_filters
 
 from webapp import models
-from webapp.models import Category
+from webapp.models import Category, Specialist
 
 
 def categories(request):
@@ -75,3 +75,4 @@ class SpecialistFilter(django_filters.FilterSet):
         return queryset.filter(
             Q(full_name__icontains=value) | Q(short_info__icontains=value)
         ).distinct()
+
