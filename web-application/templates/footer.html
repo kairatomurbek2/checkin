@@ -9,14 +9,14 @@
 
         <div class="f_block">
             <ul class="f_menu">
-                <li><a href="#">Специалисты</a></li>
-                <li><a href="#">Учреждения</a></li>
+                <li><a href="{% url 'masters' %}">Специалисты</a></li>
+                <li><a href="{% url 'company_list' %}">Учреждения</a></li>
                 <li><a href="#">О нас</a></li>
             </ul>
 
             <ul class="f_menu">
-                <li><a href="#">Стать специалистом</a></li>
-                <li><a href="#">Стать учреждением</a></li>
+                <li><a href="{% url 'new_master' %}">Стать специалистом</a></li>
+                <li><a href="{% url 'new_company' %}">Стать учреждением</a></li>
             </ul>
 
             <div>

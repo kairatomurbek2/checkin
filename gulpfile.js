@@ -21,7 +21,7 @@ var path = {
     },
     src: {
         js: 'web-application/gulp/src/js/*.js',
-        style: 'web-application/gulp/src/style/main.sass'
+        style: 'web-application/gulp/src/style/*.sass'
     },
     watch: {
         js: 'web-application/gulp/src/js/**/*.js',

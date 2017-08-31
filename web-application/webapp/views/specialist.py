@@ -1,10 +1,21 @@
+import datetime
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
-from webapp.models import Specialist
+from main.parameters import Messages
+from webapp import forms
+from webapp.forms import ContactFormSet
+from webapp.models import Specialist, Category, SpecialistContact
 from webapp.views.filters import SpecialistFilter
 
 
@@ -37,8 +48,42 @@ class MastersList(ListView):
         return context
 
 
-class MasterCreateView(TemplateView):
+class MasterCreateView(LoginRequiredMixin, CreateView):
+    success_message = Messages.AddMaster.adding_success
     template_name = 'specialist/new_specialist.html'
+    model = Specialist
+    form_class = forms.MasterCreateForm
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterCreateView, self).get_context_data(**kwargs)
+        context['form'] = self.form_class(initial={'full_name': self.request.user.get_full_name()})
+        if self.request.POST:
+            context['formset'] = ContactFormSet(self.request.POST)
+        else:
+            context['formset'] = ContactFormSet()
+
+        return context
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        return reverse('master_detail', args=(self.object.slug,))
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        specialist = form.save(commit=False)
+        specialist.user = self.request.user
+        specialist.edited_at = datetime.datetime.now()
+        specialist.edited_by = self.request.user
+        specialist.save()
+        if formset.is_valid():
+            formset.instance = specialist
+            formset.save()
+        form.save_m2m()
+        return super(MasterCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        return super(MasterCreateView, self).form_invalid(form)
 
 
 class MasterDetailView(TemplateView):

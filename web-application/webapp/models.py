@@ -8,9 +8,11 @@ from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
+from pytils.translit import slugify
 from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
+from taggit.managers import TaggableManager
 
 from main.choices import STATUS_CHOICES
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
@@ -104,6 +106,7 @@ class Specialist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
     edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
+    tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
     all_objects = models.Manager()
     objects = SpecialistManager()
 
@@ -119,6 +122,12 @@ class Specialist(models.Model):
 
     def get_absolute_url(self):
         return reverse('master_detail', kwargs={'master_slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        super(Specialist, self).save(*args, **kwargs)
+        if self.id and not self.slug:
+            self.slug = slugify(self.full_name)
+            super(Specialist, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('Специалист')

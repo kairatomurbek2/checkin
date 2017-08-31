@@ -123,18 +123,18 @@ $(function() {
 	});
 
 
-	$('#place').selectize({
+	$('#id_categories').selectize({
 		sortField: 'text'
 	});
 
-	$('.add_block > span').click(function (event) {
-		$(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
-		
-		$('.delete').click(function () {
-		$(this).parent('.delete_block').remove();
-	});
-
-	});
+	// $('.add_block > span').click(function (event) {
+	// 	$(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
+	//
+	// 	$('.delete').click(function () {
+	// 	$(this).parent('.delete_block').remove();
+	// });
+    //
+	// });
 
 
 	$('.no').click(function (event) {
@@ -169,13 +169,13 @@ $('#lightgallery').lightGallery({
 	thumbnail: false,
 	autoplayControls: false,
 	share: false
-}); 
+});
 
 $('#id_tags').selectize({
 	persist: false,
 	createOnBlur: true,
 	create: true
-}); 
+});
 
 
 });

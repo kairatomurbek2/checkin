@@ -5,3 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 class Messages:
     class Registration:
         adding_success = _('Регистрация прошла успешно! Теперь же можете авторизоваться')
+
+    class AddMaster:
+        adding_success = _('Регистрация специалиста успешно создана!')

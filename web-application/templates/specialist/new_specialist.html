@@ -1,68 +1,105 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% block head %}
+    <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+{% endblock %}
 {% block content %}
-    <div class="grid">
-    </div>
     <main class="become_specilalist">
-	<div class="grid">
-		<form action="#" method="post" class="form_inf">
-			<div class="control-group file-upload" id="file-upload">
-				<div class="image-box text-center">
-					<p>Фото профиля</p>
-					<img src="" alt="">
-				</div>
-				<div class="controls"><input type="file"></div>
-			</div>
+        <div class="grid">
+            <form action="" method="post" class="form_inf" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p class="text-danger">{{ form.photo.errors }}</p>
+                <div class="control-group file-upload" id="file-upload">
+                    <div class="image-box text-center">
+                        <p>Фото профиля</p>
+                        <img src="" alt="">
+                    </div>
+                    <div class="controls">{{ form.photo }}</div>
+                </div>
+                <div class="general_information">
+                    <p>Персональная информация</p>
+                    <div class="first_block">
+                        <div class="add_block">
+                            <p class="text-danger">{{ form.full_name.errors }}</p>
+                            {{ form.full_name }}
+                            <div class="contact-formset">
+                                {% for form in formset %}
+                                    {{ form.phone }}
+                                {% endfor %}
+                            </div>
+                            {{ formset.management_form }}
+                        </div>
+                        <div>
+                            <p class="text-danger">{{ form.street_address.errors }}</p>
+                            {{ form.street_address }}
+                            <p class="text-danger">{{ form.short_info.errors }}</p>
+                            {{ form.short_info }}
+                        </div>
+                    </div>
+                    <p class="text-danger">{{ form.categories.errors }}</p>
+                    <p>Ваши услуги</p>
+                    <div class="second_block">
+                        <select multiple class="categories-select" id="id_categories" name="categories" required
+                                placeholder="Сфера деятельности">
 
-			<div class="general_information">
-				<p>Персональная информация</p>
-				<div class="first_block">
-					<div class="add_block">
-						<input type="text" placeholder="Имя фамилия">
-						<!-- <input type="text" placeholder="Фамилия"> -->
-						<div>
-							<!-- <label> -->
-								<input type="tel" placeholder="Телефон">
-							<!-- </label> -->
-						</div>
-						<span>Добавить дополнительный номер телефона +</span>
-					</div>
+                        </select>
+                        {{ form.tags }}
+                        <p class="text-danger">{{ form.tags.errors }}</p>
+                    </div>
+                    <p>Подробная информация</p>
+                    <p class="text-danger">{{ form.tags.errors }}</p>
+                    {{ form.info }}
+                    <button type="submit" class="button">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'redactor/redactor.js' %}"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $(document).ready(
+            function () {
+                $('#id_info').redactor({});
+            }
+        );
 
-					<div>
-						<textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
-						<textarea name="" cols="30" rows="10" placeholder="Краткая информация о себе..."></textarea>
-					</div>
-				</div>
+        $('.contact-formset').formset({
+            prefix: 'specialist_contacts',
+            addText: 'Добавить контакт',
+            deleteText: 'Удалить'
+        });
 
-				<p>Ваши услуги</p>
-				<div class="second_block">
-					<select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
-							<option value="">Выбрать учреждение</option>
-							<optgroup label="Climbing">
-								<option value="pitons">Pitons</option>
-								<option value="cams">Cams</option>
-								<option value="nuts">Nuts</option>
-								<option value="bolts">Bolts</option>
-								<option value="stoppers">Stoppers</option>
-								<option value="sling">Sling</option>
-							</optgroup>
-							<optgroup label="Skiing">
-								<option value="skis">Skis</option>
-								<option value="skins">Skins</option>
-								<option value="poles">Poles</option>
-							</optgroup>
-						</select>
-
-						<input type="text">
-				</div>
-
-				<p>Подробная информация</p>
-
-				<textarea name="" cols="30" rows="10" placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
-				<button type="submit" class="button">Сохранить</button>
-
-			</div>
-		</form>
-	</div>
-</main>
+        var categories = [
+            {% for category in all_categories %}
+                {% if category.is_child_node and category.get_children %}
+                    {
+                        "text": "{{ category.name }}",
+                        "children": [
+                            {% for child in category.get_children %}
+                                {
+                                    "id": "{{ child.pk }}",
+                                    "text": "{{ child.name }}",
+                                    "element": HTMLOptionElement
+                                },
+                            {% endfor %}
+                        ],
+                        "element": HTMLOptGroupElement
+                    },
+                {% endif %}
+            {% endfor %}
+        ];
+        (function () {
+            var html = '';
+            for (var i = 0; i < categories.length; i++) {
+                html += "<optgroup label=" + categories[i].text + ">";
+                for (var j = 0; j < categories[i].children.length; j++) {
+                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                }
+                html += "</optgroup>";
+            }
+            $(".categories-select").html(html);
+        })();
+    </script>
 {% endblock %}

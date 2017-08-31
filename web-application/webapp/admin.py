@@ -1,3 +1,4 @@
+from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact
@@ -20,6 +21,9 @@ class CompanyAdminForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = '__all__'
+        widgets = {
+            'tags': autocomplete.TaggitSelect2('autocomplete')
+        }
 
 
 class CompanyContactInline(admin.TabularInline):
@@ -57,6 +61,12 @@ class SpecialistAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'slug']
     readonly_fields = ('created_at', 'edited_at', 'edited_by')
     inlines = [SpecialistContactInline]
+
+    def get_queryset(self, request):
+        return super(SpecialistAdmin, self).get_queryset(request).prefetch_related('tags')
+
+    def tag_list(self, obj):
+        return u", ".join(o.name for o in obj.tags.all())
 
 
 class CertificateAdmin(admin.ModelAdmin):

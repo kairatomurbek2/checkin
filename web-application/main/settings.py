@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -32,6 +31,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sorl.thumbnail',
     'phonenumber_field',
+    'dal',
+    'dal_select2',
+    'taggit',
     'mptt',
     'modeltranslation',
     'multiselectfield',
@@ -157,6 +159,9 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_ADAPTER = 'webapp.adapters.AccountAdapter'
 
 SOCIALACCOUNT_QUERY_EMAIL = True
+
+# Taggit
+TAGGIT_CASE_INSENSITIVE = True
 
 try:
     from settings_local import *
