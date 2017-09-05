@@ -7,6 +7,7 @@ $dark-color: #131313
 $main-color: #11EBE6
 $ldark-color: #333333
 
+
 @include font(GothamRegular, GothamProRegular)
 @include font(GothamBold, GothamProBold)
 @include font(lg, lg)
@@ -29,6 +30,8 @@ ul
 	margin: 0 auto
 
 header
+	box-shadow: 0px 3px 15px rgba(0,0,0,0.07)
+	position: relative
 	.grid
 		position: relative
 		div
@@ -478,6 +481,10 @@ main
 		padding-bottom: 80px
 		&:hover
 			box-shadow: none
+			& > a:last-of-type
+				background-color: #D6D6D6
+		& > a:last-of-type:hover
+			background-color: $main-color
 		.master_desc
 			ul
 				li:first-of-type
@@ -1006,8 +1013,11 @@ h4
 .base-filter
 	box-shadow: 0 3px 15px rgba(0, 0, 0, 0.16)
 	width: 285px
+	height: 475px
 	background-color: #FDFDFD
-	position: fixed
+	// position: fixed
+
+
 
 .live-search
 	display: block
@@ -1155,14 +1165,12 @@ h4
 .masters
 	width: 74.16666666666667%
 	height: auto
-	margin-left: 25.5%
-	& > p
+	.no_result
 		font-size: 18px
 		color: #95989A
 		text-transform: uppercase
-		padding: 70px 0 20px 0
+		padding: 160px 0 200px 0
 		margin-bottom: 40px
-		border-bottom: 1px solid #E4E4E4
 		text-align: center
 	& > a
 		font-size: 14px
@@ -1198,7 +1206,9 @@ h4
 	text-decoration: none
 	@include transition
 	&:hover
-		box-shadow: 0 3px 15px rgba(0,0,0,0.16)			
+		box-shadow: 0 3px 15px rgba(0,0,0,0.16)	
+		& > a:last-of-type
+			background-color: $main-color		
 	.master_img
 		width: 100%
 		height: 185px
@@ -1294,8 +1304,7 @@ h4
 		text-decoration: none
 		@include transition
 		text-transform: uppercase
-		&:hover
-			background-color: $main-color
+		
 
 div.master:nth-child(3n)
 	margin-right: 0

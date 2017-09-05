@@ -1,6 +1,10 @@
 //=../../../staticfiles/bower_components/jquery/dist/jquery.js
 //=../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
 //=../../../staticfiles/bower_components/lightgallery/dist/js/lightgallery-all.js
+//=../libs/jquery.sticky.js
+//=../libs/jquery.maskedinput.js
+
+
 
 
 
@@ -123,18 +127,18 @@ $(function() {
 	});
 
 
-	$('#id_categories').selectize({
+	$('#place').selectize({
 		sortField: 'text'
 	});
 
-	// $('.add_block > span').click(function (event) {
-	// 	$(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
-	//
-	// 	$('.delete').click(function () {
-	// 	$(this).parent('.delete_block').remove();
-	// });
-    //
-	// });
+	$('.add_block > span').click(function (event) {
+		$(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
+		
+		$('.delete').click(function () {
+		$(this).parent('.delete_block').remove();
+	});
+
+	});
 
 
 	$('.no').click(function (event) {
@@ -169,18 +173,21 @@ $('#lightgallery').lightGallery({
 	thumbnail: false,
 	autoplayControls: false,
 	share: false
-});
+}); 
 
 $('#id_tags').selectize({
 	persist: false,
 	createOnBlur: true,
 	create: true
+}); 
+
+$("#sticker").sticky({
+	topSpacing:0,
+	bottomSpacing: '616',
+	getWidthFrom: 'base-filter'
 });
-$('#id_company_tags').selectize({
-	persist: false,
-	createOnBlur: true,
-	create: true
-});
+
+$(".mask").mask("+996(000) 00-00-00");
 
 
 });
