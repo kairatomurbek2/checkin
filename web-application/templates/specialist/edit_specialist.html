@@ -1,4 +1,101 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
+
+    <main class="specialist_author">
+        <form action="#">
+            <div class="grid">
+                <div class="personal_block">
+                    <div class="master">
+                        <a class="master_img">
+					<span>
+						<img id="img" src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
+					</span>
+
+                                <label for="upload">
+                                    <input type='file' id="upload">
+                                </label>
+                        </a>
+
+                        <div class="master_desc">
+                            <h4>Джонни Депп</h4>
+                            <span>Педиатр, детский лор, аллерголог...</span>
+                            <span></span>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus,
+                                pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
+                            <ul>
+                                <li>
+                                    г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37 sdfhj sadfjhasd fdasfkh
+                                </li>
+                                <li>
+                                    +996 705 578 842 +996 705 578 842
+                                </li>
+                                <li>
+                                    aigulbb@info.com
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#" class="hidden">РЕДАКТИРОВАТЬ</a>
+                    </div>
+                </div>
+
+
+                <div class="shedule_block">
+
+                    <div class="edit_block">
+                        <div class="general_information">
+                            <p>Персональная информация</p>
+                            <div class="first_block">
+                                <div class="add_block">
+                                    <input type="text" placeholder="Имя фамилия">
+                                    <!-- <input type="text" placeholder="Фамилия"> -->
+                                    <div>
+                                        <!-- <label> -->
+                                        <input type="tel" placeholder="Телефон" class="mask">
+                                        <!-- </label> -->
+                                    </div>
+                                    <span>Добавить дополнительный номер телефона +</span>
+                                </div>
+
+                                <div>
+                                    <textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
+                                    <textarea name="" cols="30" rows="10"
+                                              placeholder="Краткая информация о себе..."></textarea>
+                                </div>
+                            </div>
+
+                            <p>Ваши услуги</p>
+                            <div class="second_block">
+                                <select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
+                                    <option value="">Выбрать учреждение</option>
+                                    <optgroup label="Climbing">
+                                        <option value="pitons">Pitons</option>
+                                        <option value="cams">Cams</option>
+                                        <option value="nuts">Nuts</option>
+                                        <option value="bolts">Bolts</option>
+                                        <option value="stoppers">Stoppers</option>
+                                        <option value="sling">Sling</option>
+                                    </optgroup>
+                                    <optgroup label="Skiing">
+                                        <option value="skis">Skis</option>
+                                        <option value="skins">Skins</option>
+                                        <option value="poles">Poles</option>
+                                    </optgroup>
+                                </select>
+
+                                <input type="text">
+                            </div>
+
+                            <p>Подробная информация</p>
+
+                            <textarea name="" cols="30" rows="10"
+                                      placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+                            <button type="submit" class="button">Сохранить</button>
+
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </main>
+
 {% endblock %}

@@ -1,5 +1,5 @@
 {% load widget_tweaks staticfiles extra_tags %}
-<div class="base-filter">
+<div class="base-filter" id="sticker">
     <form action="" method="get" name="base_filter" id="base_filter">
         {% for field in filter %}
             {% get_form_field request field as field_template %}
