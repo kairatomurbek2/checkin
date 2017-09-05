@@ -53,7 +53,7 @@
 
                 {% for category in categories %}
                     <li>
-                        <a href="{{ category.slug }}">
+                        <a href="{% url 'company_specialist_list' category.slug %}">
                             {% if category.image %}
                                 {% thumbnail category.image "55x26" as im %}
                                     <span class="img_container"><img src="{{ im.url }}" alt={{ category.name }}></span>

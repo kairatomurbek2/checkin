@@ -70,7 +70,7 @@ class SpecialistAdmin(admin.ModelAdmin):
 
 
 class CertificateAdmin(admin.ModelAdmin):
-    list_display = ['name', 'company']
+    list_display = ['company']
 
 
 admin.site.register(Category, CategoryAdmin)

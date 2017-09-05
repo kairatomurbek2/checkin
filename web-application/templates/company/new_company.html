@@ -1,81 +1,146 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles extra_tags %}
+{% block head %}
+    <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+{% endblock %}
 {% block content %}
-    <div class="grid">
-    </div>
-
     <main class="become_specilalist become_company">
-	<div class="grid">
-		<form action="#" method="post" class="form_inf">
-			<div class="control-group file-upload" id="file-upload">
-				<div class="image-box text-center">
-					<p>Фото профиля</p>
-					<img src="" alt="">
-				</div>
-				<div class="controls"><input type="file"></div>
-			</div>
+        <div class="grid">
+            {% include 'messages.html' %}
+            <form action="" method="post" class="form_inf" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p class="text-danger">{{ form.logo.errors|striptags }}</p>
+                <div class="control-group file-upload" id="file-upload">
+                    <div class="image-box text-center">
+                        <p>Логотип</p>
+                        <img src="" alt="">
+                    </div>
+                    <div class="controls">{{ form.logo }}</div>
+                </div>
 
-			<div class="general_information">
-				<p>Информация об учреждении</p>
-				<div class="first_block">
-					<div class="add_block">
-						<input type="text" placeholder="Название учреждения">
-						<input type="text" placeholder="Рабочий e-mail">
-						<label>
-							<span>Ваш аддрес в checkin</span>
-							<span>chekin/</span>
-							<input type="text" placeholder="atlassian">
-						</label>
-						<div>
-							<!-- <label> -->
-								<input type="tel" placeholder="Телефон">
-							<!-- </label> -->
-						</div>
-						<span>Добавить дополнительный номер телефона +</span>
-					</div>
+                <div class="general_information">
+                    <p>Информация об учреждении</p>
+                    <div class="first_block">
+                        <div class="add_block">
+                            <p class="text-danger">{{ form.name.errors|striptags }}</p>
+                            {{ form.name }}
+                            <p class="text-danger">{{ form.email.errors|striptags }}</p>
+                            {{ form.email }}
+                            <p class="text-danger">{{ form.website.errors|striptags }}</p>
+                            {{ form.website }}
+                            <p class="text-danger">{{ form.slug.errors|striptags }}</p>
+                            <label>
+                                <span>Ваш аддрес в {{ request.META.HTTP_HOST }}/</span>
+                                <span>{{ request.META.HTTP_HOST }}/</span>
+                                {{ form.slug }}
+                            </label>
+                            <div>
+                                <!-- <label> -->
+                                <p class="text-danger">{{ form.phone.errors|striptags }}</p>
+                                {{ form.phone }}
+                                <!-- </label> -->
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-danger">{{ form.street_address.errors|striptags }}</p>
+                            {{ form.street_address }}
+                            <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
+                            {{ form.short_info }}
+                        </div>
+                    </div>
+                    <p>Ваши услуги</p>
+                    <div class="second_block">
+                        <select multiple class="categories-select" id="id_categories" name="categories" required
+                                placeholder="Сфера деятельности">
 
-					<div>
-						<textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
-						<textarea name="" cols="30" rows="10" placeholder="Краткая информация о себе..."></textarea>
-					</div>
-				</div>
+                        </select>
+                        <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
+                        {{ form.company_tags }}
+                    </div>
+                    <p>Юридистические данные</p>
+                    <p class="text-danger">{{ form.legal_data.errors|striptags }}</p>
+                    {{ form.legal_data }}
 
-				<p>Ваши услуги</p>
-				<div class="second_block">
-					<select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
-							<option value="">Выбрать учреждение</option>
-							<optgroup label="Climbing">
-								<option value="pitons">Pitons</option>
-								<option value="cams">Cams</option>
-								<option value="nuts">Nuts</option>
-								<option value="bolts">Bolts</option>
-								<option value="stoppers">Stoppers</option>
-								<option value="sling">Sling</option>
-							</optgroup>
-							<optgroup label="Skiing">
-								<option value="skis">Skis</option>
-								<option value="skins">Skins</option>
-								<option value="poles">Poles</option>
-							</optgroup>
-						</select>
+                    <p>Подробная информация</p>
+                    <p class="text-danger">{{ form.info.errors|striptags }}</p>
+                    {{ form.info }}
+                    <p>Ваше расположение</p>
 
-						<input type="text" id="id_tags">
-				</div>
+                    <div id="mapholder-0" style="height: 250px; margin-bottom: 20px"></div>
+                    <p>
+                        <button type="button" name="get-location-0" class="uk-button uk-button-success"
+                                data-action="get-location">
+                            Get location
+                        </button>
+                        <span id="notification-0" class="uk-text-danger"></span>
+                    </p>
+                    {{ form.latitude }} {{ form.longitude }}
 
-				<p>Подробная информация</p>
+                    <div class="cert-formset">
+                        {% for form in formset %}
+                            {{ form.certificate }}
+                        {% endfor %}
+                    </div>
+                    {{ formset.management_form }}
+                    <button type="submit" class="button">Сохранить</button>
 
-				<textarea name="" cols="30" rows="10" placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    {% load_google_map_js %}
+    <script src="{% static 'redactor/redactor.js' %}"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $(document).ready(
+            function () {
+                $('#id_info').redactor({});
+            }
+        );
+        $(document).ready(function () {
+            GoogleMap.mapHolder = $('#mapholder-0');
+            GoogleMap.latitudeInput = $('input[name="latitude"]');
+            GoogleMap.longitudeInput = $('input[name="longitude"]');
+            GoogleMap.notificationLabel = $('#notification-0');
+            GoogleMap.getLocationButton = $('button[data-action="get-location"]');
+            GoogleMap.initialize(true);
+        });
 
-				<p>Ваше расположение</p>
+        $('.cert-formset').formset({
+            prefix: 'certifications',
+            addText: 'Добавить сертификат',
+            deleteText: 'Удалить'
+        });
 
-				<div class="company_iframe">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6154150.783456076!2d70.24735641073894!3d41.13547693654861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3897381dfce927f3%3A0x281058b74e88c433!2z0JrQuNGA0LPQuNC30LjRjw!5e0!3m2!1sru!2sru!4v1503912235203" frameborder="0" style="border:0" allowfullscreen></iframe>
-				</div>
-				<span>Поставьте метку на карте или позвольте нам отпределить ваше местоположение автоматически</span>
-				<button type="submit" class="button">Сохранить</button>
-
-			</div>
-		</form>
-	</div>
-</main>
+        var categories = [
+            {% for category in categories %}
+                {
+                    "text": "{{ category.name }}",
+                    "children": [
+                        {% for child in category.get_children %}
+                            {
+                                "id": "{{ child.pk }}",
+                                "text": "{{ child.name }}",
+                                "element": HTMLOptionElement
+                            },
+                        {% endfor %}
+                    ],
+                    "element": HTMLOptGroupElement
+                },
+            {% endfor %}
+        ];
+        (function () {
+            var html = '';
+            for (var i = 0; i < categories.length; i++) {
+                html += "<optgroup label=" + categories[i].text + ">";
+                for (var j = 0; j < categories[i].children.length; j++) {
+                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                }
+                html += "</optgroup>";
+            }
+            $(".categories-select").html(html);
+        })();
+    </script>
 {% endblock %}

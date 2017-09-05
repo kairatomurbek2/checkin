@@ -8,7 +8,7 @@
         <div class="grid">
             <form action="" method="post" class="form_inf" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p class="text-danger">{{ form.photo.errors }}</p>
+                <p class="text-danger">{{ form.photo.errors|striptags }}</p>
                 <div class="control-group file-upload" id="file-upload">
                     <div class="image-box text-center">
                         <p>Фото профиля</p>
@@ -20,7 +20,7 @@
                     <p>Персональная информация</p>
                     <div class="first_block">
                         <div class="add_block">
-                            <p class="text-danger">{{ form.full_name.errors }}</p>
+                            <p class="text-danger">{{ form.full_name.errors|striptags }}</p>
                             {{ form.full_name }}
                             <div class="contact-formset">
                                 {% for form in formset %}
@@ -30,13 +30,13 @@
                             {{ formset.management_form }}
                         </div>
                         <div>
-                            <p class="text-danger">{{ form.street_address.errors }}</p>
+                            <p class="text-danger">{{ form.street_address.errors|striptags }}</p>
                             {{ form.street_address }}
-                            <p class="text-danger">{{ form.short_info.errors }}</p>
+                            <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
                             {{ form.short_info }}
                         </div>
                     </div>
-                    <p class="text-danger">{{ form.categories.errors }}</p>
+                    <p class="text-danger">{{ form.categories.errors|striptags }}</p>
                     <p>Ваши услуги</p>
                     <div class="second_block">
                         <select multiple class="categories-select" id="id_categories" name="categories" required
@@ -44,10 +44,10 @@
 
                         </select>
                         {{ form.tags }}
-                        <p class="text-danger">{{ form.tags.errors }}</p>
+                        <p class="text-danger">{{ form.tags.errors|striptags }}</p>
                     </div>
                     <p>Подробная информация</p>
-                    <p class="text-danger">{{ form.tags.errors }}</p>
+                    <p class="text-danger">{{ form.tags.errors|striptags }}</p>
                     {{ form.info }}
                     <button type="submit" class="button">Сохранить</button>
                 </div>

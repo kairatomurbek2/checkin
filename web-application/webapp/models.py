@@ -66,6 +66,9 @@ class Company(models.Model):
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
     edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='MD', verbose_name=_('Статус'))
+    company_tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
+    latitude = models.FloatField(blank=True, null=True, verbose_name=_("Широта"))
+    longitude = models.FloatField(blank=True, null=True, verbose_name=_("Долгота"))
     all_objects = models.Manager()
     objects = CompanyManager()
 

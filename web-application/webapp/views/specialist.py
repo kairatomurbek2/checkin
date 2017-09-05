@@ -50,6 +50,7 @@ class MastersList(ListView):
 
 class MasterCreateView(LoginRequiredMixin, CreateView):
     success_message = Messages.AddMaster.adding_success
+    error_message = Messages.AddMaster.adding_error
     template_name = 'specialist/new_specialist.html'
     model = Specialist
     form_class = forms.MasterCreateForm
@@ -83,6 +84,7 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
         return super(MasterCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
+        messages.error(self.request, self.error_message)
         return super(MasterCreateView, self).form_invalid(form)
 
 
