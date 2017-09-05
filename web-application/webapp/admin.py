@@ -1,3 +1,5 @@
+import datetime
+
 from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
@@ -38,8 +40,8 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug']
     list_filter = ['status']
     list_display = ['name', 'slug', 'phone', 'status', 'email']
-    readonly_fields = ('created_at', 'edited_at', 'edited_by')
-    form = CompanyAdminForm
+    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories')
+    # form = CompanyAdminForm
     inlines = [CompanyContactInline]
 
     def save_model(self, request, obj, form, change):
@@ -59,8 +61,12 @@ class SpecialistAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'slug']
     list_filter = ['company']
     list_display = ['full_name', 'slug']
-    readonly_fields = ('created_at', 'edited_at', 'edited_by')
+    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories')
     inlines = [SpecialistContactInline]
+
+    def save_model(self, request, obj, form, change):
+        obj.edited_by = request.user
+        obj.save()
 
     def get_queryset(self, request):
         return super(SpecialistAdmin, self).get_queryset(request).prefetch_related('tags')
