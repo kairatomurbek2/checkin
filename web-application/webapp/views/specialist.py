@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 
 from main.parameters import Messages
 from webapp import forms
@@ -86,6 +87,15 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         messages.error(self.request, self.error_message)
         return super(MasterCreateView, self).form_invalid(form)
+
+
+class MasterEditView(LoginRequiredMixin, UpdateView):
+    template_name = 'specialist/edit_specialist.html'
+    form_class = forms.MasterCreateForm
+    model = Specialist
+
+    def get_object(self, queryset=None):
+        return Specialist.objects.get(slug=self.kwargs['master_slug'])
 
 
 class MasterDetailView(TemplateView):

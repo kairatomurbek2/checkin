@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from webapp.decorators import user_profile_permission
+from webapp.decorators import user_profile_permission, specialist_owner
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -17,5 +17,7 @@ urlpatterns = [
     url(r'^masters/create/$', specialist_views.MasterCreateView.as_view(), name='new_master'),
     url(r'^companies/create/$', company_views.CompanyCreateView.as_view(), name='new_company'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/$', specialist_views.MasterDetailView.as_view(), name='master_detail'),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/update/$', specialist_owner(specialist_views.MasterEditView.as_view()),
+        name='master_edit'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/$', company_views.CompanyDetail.as_view(), name='company_detail')
 ]

@@ -1,4 +1,8 @@
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.http import HttpResponseForbidden
+
+from webapp.models import Company, Specialist
 
 
 def user_profile_permission(function):
@@ -11,3 +15,17 @@ def user_profile_permission(function):
             return HttpResponseForbidden()
 
     return decorator
+
+
+def specialist_owner(function):
+    def decotator(request, *args, **kwargs):
+        try:
+            specialist = Specialist.objects.get(slug=kwargs['master_slug'])
+            if specialist.user == request.user:
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Specialist.DoesNotExist:
+            raise Http404("Master not found")
+
+    return decotator
