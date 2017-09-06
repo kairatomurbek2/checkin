@@ -11,16 +11,20 @@
                 <div class="master">
                     <a class="master_img">
 						<span>
-							<img src="{{ company.logo.url }}" alt="image">
+                        {% if company.logo %}
+                            {% thumbnail company.logo "154x154" as im %}
+                                <img src="{{ im.url }}" alt="{{ company.name }}">
+                            {% endthumbnail %}
+                        {% else %}
+                            <img src="{% static 'img/no_photo.png' %}" alt="image">
+                        {% endif %}
 						</span>
                     </a>
 
                     <div class="master_desc">
                         <h4>{{ company.name }}</h4>
                         <span>
-                        {% for tag in company.company_tags.all %}
-                            {{ tag.name }},
-                        {% endfor %}
+                            {{ company.get_categories }}
                         </span>
                         <span></span>
                         <p>{{ company.short_info }}</p>
@@ -41,6 +45,7 @@
             </div>
 
             <div class="shedule_block">
+                {% include 'messages.html' %}
                 {% if company.longitude and company.latitude %}
                     <div id="mapholder" style="height: 250px;"></div>
                 {% endif %}
@@ -49,7 +54,12 @@
                         <h4>О Компании</h4>
                         {{ company.info|safe }}
                     </div>
-
+                    {% if company.legal_data %}
+                        <div>
+                            <h4>Юридическая информация</h4>
+                            <p>{{ company.legal_data }}</p>
+                        </div>
+                    {% endif %}
                     <div>
                         <h4>Услуги</h4>
                         {% for tag in company.company_tags.all %}

@@ -1,3 +1,5 @@
+{% load thumbnail staticfiles %}
+
 {% if company.company_specialists.all %}
 
     <div class="employees">
@@ -7,7 +9,13 @@
                 <div class="master">
                     <a href="{{ master.get_absolute_url }}" class="master_img">
                         <span>
-                            <img src="{{ master.photo.url }}" alt="image">
+                            {% if master.photo %}
+                                {% thumbnail master.photo "154x154" as im %}
+                                    <img src="{{ im.url }}" alt="{{ master.full_name }}">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                            {% endif %}
                         </span>
                     </a>
                     <div class="master_desc">
@@ -24,7 +32,9 @@
                                 {{ master.street_address }}
                             </li>
                             <li>
-                                {{ master.specialist_contacts.first.phone }}
+                                {% for number in master.specialist_contacts.all %}
+                                    {{ number.phone }}
+                                {% endfor %}
                             </li>
                         </ul>
                     </div>

@@ -7,6 +7,8 @@
                     {% thumbnail company.logo "154x154" as im %}
                         <img src="{{ im.url }}" alt={{ logo.name }}>
                     {% endthumbnail %}
+                    {% else %}
+                        <img src="{% static 'img/no_photo.png' %}" alt="no image">
                 {% endif %}
             </span>
         </a>
