@@ -12,6 +12,8 @@
                                 {% thumbnail master.photo "154x154" as im %}
                                     <img src="{{ im.url }}" alt={{ master.full_name }}>
                                 {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static 'img/no_photo.png' %}" alt='no image'>
                             {% endif %}
                         </span>
                     </a>
@@ -51,7 +53,10 @@
                             {{ tag.name }},
                         {% endfor %}
                     </div>
+
+
                 </div>
             </div>
+        </div>
     </main>
 {% endblock %}
