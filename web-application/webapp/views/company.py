@@ -102,5 +102,5 @@ class CompanyDetail(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyDetail, self).get_context_data(**kwargs)
-        context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
+        context['company'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
         return context
