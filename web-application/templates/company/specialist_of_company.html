@@ -1,0 +1,47 @@
+{% if company.company_specialists.all %}
+
+    <div class="employees">
+        <h4>Наши специалисты</h4>
+        <div>
+            {% for master in company.company_specialists.all %}
+                <div class="master">
+                    <a href="{{ master.get_absolute_url }}" class="master_img">
+                        <span>
+                            <img src="{{ master.photo.url }}" alt="image">
+                        </span>
+                    </a>
+                    <div class="master_desc">
+                        <h4>{{ master.full_name }}</h4>
+                        <span>
+                            {% for tag in master.tags.all %}
+                                {{ tag.name }},
+                            {% endfor %}
+                        </span>
+                        <span></span>
+                        <p>{{ master.short_info }}</p>
+                        <ul>
+                            <li>
+                                {{ master.street_address }}
+                            </li>
+                            <li>
+                                {{ master.specialist_contacts.first.phone }}
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="{{ master.get_absolute_url }}">ПОСМОТРЕТЬ</a>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        {#                        <div class="preloader" id="loading">#}
+        {#                            <div class="circ1"></div>#}
+        {#                            <div class="circ2"></div>#}
+        {#                            <div class="circ3"></div>#}
+        {#                            <div class="circ4"></div>#}
+        {#                        </div>#}
+
+        {#        <a href="#">БОЛЬШЕ СПЕЦИАЛИСТОВ</a>#}
+
+    </div>
+{% endif %}

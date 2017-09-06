@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% load staticfiles extra_tags thumbnail %}
 
 {% block content %}
 
@@ -41,11 +41,9 @@
             </div>
 
             <div class="shedule_block">
-
-                <div class="iframe">
-                    <iframe src=""></iframe>
-                </div>
-
+                {% if company.longitude and company.latitude %}
+                    <div id="mapholder" style="height: 250px;"></div>
+                {% endif %}
                 <div class="p_description">
                     <div>
                         <h4>О Компании</h4>
@@ -59,65 +57,35 @@
                         {% endfor %}
                     </div>
                 </div>
-
-                <div class="employees">
-                    <h4>Наши специалисты</h4>
-                    <div>
-                        {% for master in company.company_specialists.all %}
-                            <div class="master">
-                                <a href="{{ master.get_absolute_url }}" class="master_img">
-								<span>
-									<img src="{{ master.photo.url }}" alt="image">
-								</span>
-                                </a>
-
-                                <div class="master_desc">
-                                    <h4>{{ master.full_name }}</h4>
-
-                                    <span>
-                                    {% for tag in master.tags.all %}
-                                        {{ tag.name }},
-                                    {% endfor %}
-                                    </span>
-                                    <span></span>
-                                    <p>{{ master.short_info }}</p>
-                                    <ul>
-                                        <li>
-                                            {{ master.street_address }}
-                                        </li>
-                                        <li>
-                                            {{ master.specialist_contacts.first.phone }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <a href="{{ master.get_absolute_url }}">ПОСМОТРЕТЬ</a>
-                            </div>
-                        {% endfor %}
-
-                    </div>
-
-                    <div class="preloader" id="loading">
-                        <div class="circ1"></div>
-                        <div class="circ2"></div>
-                        <div class="circ3"></div>
-                        <div class="circ4"></div>
-                    </div>
-
-                    <a href="#">БОЛЬШЕ СПЕЦИАЛИСТОВ</a>
-
-                </div>
+                {% include 'company/specialist_of_company.html' %}
             </div>
-
-            <div class="certificates">
-                <div id="lightgallery">
-                    {% for cert_object in company.certifications.all %}
-                        <a href="{{ cert_object.certificate.url }}">
-                            <img src="{{ cert_object.certificate.url }}">
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
+            {% include 'company/certificate_of_company.html' %}
         </div>
     </main>
 
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+
+        function initMap() {
+            var tmp_lt = '{{ company.latitude|default_if_none:0 }}';
+            var tmp_ln = '{{ company.longitude|default_if_none:0 }}';
+            var lt = tmp_lt.replace(",", ".");
+            var ln = tmp_ln.replace(",", ".");
+            var uluru = {lat: parseFloat(lt), lng: parseFloat(ln)};
+            var map = new google.maps.Map(document.getElementById('mapholder'), {
+                zoom: 17,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDesqzrUZme031xt28r-4vQTkaBSm96Teo&callback=initMap">
+    </script>
 {% endblock %}
