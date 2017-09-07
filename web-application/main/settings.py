@@ -163,6 +163,14 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 # Taggit
 TAGGIT_CASE_INSENSITIVE = True
 
+# email configuration
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'chekin.kg@gmail.com'
+EMAIL_HOST_PASSWORD = 'chekin123'
+EMAIL_PORT = 587
+
+
 try:
     from settings_local import *
 except ImportError:

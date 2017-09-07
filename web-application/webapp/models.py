@@ -2,8 +2,11 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Sum
+from django.template import Context, Template
+from django.template.loader import render_to_string
 from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -16,6 +19,7 @@ from taggit.managers import TaggableManager
 
 from main.choices import STATUS_CHOICES
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
+from main.settings import BASE_DIR
 
 
 class CategoryManager(models.Manager):
@@ -66,14 +70,67 @@ class Company(models.Model):
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
     edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='MD', verbose_name=_('Статус'))
+    message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
+                                       null=True)
     company_tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
     latitude = models.FloatField(blank=True, null=True, verbose_name=_("Широта"))
     longitude = models.FloatField(blank=True, null=True, verbose_name=_("Долгота"))
     all_objects = models.Manager()
     objects = CompanyManager()
 
+    __original_status = None
+
+    def __init__(self, *args, **kwargs):
+        super(Company, self).__init__(*args, **kwargs)
+        self.__original_status = self.status
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super(Company, self).save(*args, **kwargs)
+
+        def get_html_message(template):
+            return render_to_string("email/%s.html" % template, context)
+
+        if self.status == 'MD' and self.status != self.__original_status:
+            self.__original_status = self.status
+            context = {
+                "name": self.name,
+                "link": settings.DOMAIN_URL + '/admin/webapp/company/' + str(self.id) + '/change/',
+                "created_at": self.created_at,
+                "phone": self.phone,
+                "email": self.email
+            }
+
+            message = get_html_message("success_reg_company")
+            mail = EmailMessage('Зарегистрирована новая компания', message, to=[settings.EMAIL_HOST_USER])
+            mail.content_subtype = 'html'
+            mail.send()
+
+        elif self.status == 'DC' and self.status != self.__original_status:
+            self.__original_status = self.status
+
+            context = {
+                "message": self.message_decline
+            }
+
+            message = get_html_message("decline")
+            mail = EmailMessage('Отказано в регистриции', message, to=[self.email])
+            mail.content_subtype = 'html'
+            mail.send()
+
+        elif self.status == 'AC' and self.status != self.__original_status:
+            self.__original_status = self.status
+
+            context = {
+                "message": "Вы успешно зарегистрированы на нашей платформе"
+            }
+
+            message = get_html_message("success_to_active")
+            mail = EmailMessage('Успешная регистрация компании', message, to=[self.email])
+            mail.content_subtype = 'html'
+            # mail.send()
 
     def get_categories(self):
         try:
