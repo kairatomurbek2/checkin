@@ -1,0 +1,31 @@
+{% extends "account/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+    <div class="container account-page">
+        <h1>{% trans "Sign Up" %}</h1>
+
+        <p>{% blocktrans %} Уже зарегистрированы? <a href="{{ login_url }}">Вход</a>.{% endblocktrans %}</p>
+        {% load socialaccount %}
+        {% providers_media_js %}
+        {#    <ul class="socialaccount_providers">#}
+        {#        <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}"><img src="{% static 'static/img/face.png' %}"></a></li>#}
+        {#    </ul>#}
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+
+            {% csrf_token %}
+            {{ form.username }}
+            {{ form.email }}
+            {{ form.password1|attr:'required' }}
+            {{ form.password2|attr:'required' }}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+        </form>
+    </div>
+{% endblock %}
