@@ -9,6 +9,7 @@ class Messages:
     class AddMaster:
         adding_success = _('Регистрация специалиста успешно создана!')
         adding_error = _('Произошла ошибка!')
+        update_success = _('Ваши данные успешно обновлены!')
 
     class AddCompany:
         adding_success = _('Регистрация компании успешно создана!')

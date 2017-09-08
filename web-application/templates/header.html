@@ -22,7 +22,13 @@
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
                         <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
-                        <li><a href="#">Личный кабинет</a></li>
+                        {% if request.user.user_specialists.exists %}
+                            {% for specialist in request.user.user_specialists.all %}
+                                <li><a href="{% url 'master_edit'  specialist.slug %}">Личный
+                                    кабинет</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
                         <li class="log-out"><a href="#">Выход</a></li>
                     </ul>
                 </li>

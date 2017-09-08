@@ -1,101 +1,161 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles widget_tweaks thumbnail %}
+{% block head %}
+    <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+{% endblock %}
 {% block content %}
-
     <main class="specialist_author">
-        <form action="#">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="grid">
                 <div class="personal_block">
                     <div class="master">
                         <a class="master_img">
 					<span>
-						<img id="img" src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
+                        {% if object.photo %}
+                            {% thumbnail object.photo "154x154" as im %}
+                                <img id="img" src="{{ im.url }}" alt={{ object.full_name }}>
+                            {% endthumbnail %}
+                        {% endif %}
 					</span>
-
-                                <label for="upload">
-                                    <input type='file' id="upload">
-                                </label>
+                            <label for="upload">
+                                <input type='file' id="upload" name="photo">
+                            </label>
                         </a>
 
                         <div class="master_desc">
-                            <h4>Джонни Депп</h4>
-                            <span>Педиатр, детский лор, аллерголог...</span>
+                            <h4>{{ object.full_name }}</h4>
+                            <span>
+                                {{ object.get_categories }}
+                            </span>
                             <span></span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus,
-                                pellentesque quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
+                            <p>{{ object.short_info }}</p>
                             <ul>
                                 <li>
-                                    г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37 sdfhj sadfjhasd fdasfkh
+                                    {{ object.street_address }}
                                 </li>
                                 <li>
-                                    +996 705 578 842 +996 705 578 842
+                                    {% for contact in object.specialist_contacts.all %}
+                                        {{ contact.phone }}
+                                    {% endfor %}
                                 </li>
                                 <li>
-                                    aigulbb@info.com
+                                    {{ object.user.email }}
                                 </li>
                             </ul>
                         </div>
                         <a href="#" class="hidden">РЕДАКТИРОВАТЬ</a>
                     </div>
                 </div>
-
-
                 <div class="shedule_block">
-
+                    {% include 'messages.html' %}
                     <div class="edit_block">
                         <div class="general_information">
                             <p>Персональная информация</p>
                             <div class="first_block">
                                 <div class="add_block">
-                                    <input type="text" placeholder="Имя фамилия">
-                                    <!-- <input type="text" placeholder="Фамилия"> -->
+                                    <p class="text-danger">{{ form.full_name.errors|striptags }}</p>
+                                    {{ form.full_name }}
                                     <div>
-                                        <!-- <label> -->
-                                        <input type="tel" placeholder="Телефон" class="mask">
-                                        <!-- </label> -->
+                                        <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">phone</th>
+                                                <th scope="col">Delete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for form in formset %}
+                                                <tr id="{{ form.prefix }}-row">
+                                                    <td>
+                                                        {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                                        {{ form.phone|add_class:"mask" }}
+                                                    </td>
+                                                    <td style="padding: 5px;">
+                                                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        {{ formset.management_form }}
                                     </div>
-                                    <span>Добавить дополнительный номер телефона +</span>
                                 </div>
-
                                 <div>
-                                    <textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
-                                    <textarea name="" cols="30" rows="10"
-                                              placeholder="Краткая информация о себе..."></textarea>
+                                    <p class="text-danger">{{ form.street_address.errors|striptags }}</p>
+                                    {{ form.street_address }}
+                                    <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
+                                    {{ form.short_info }}
                                 </div>
                             </div>
-
+                            <p class="text-danger">{{ form.categories.errors|striptags }}</p>
                             <p>Ваши услуги</p>
                             <div class="second_block">
-                                <select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
-                                    <option value="">Выбрать учреждение</option>
-                                    <optgroup label="Climbing">
-                                        <option value="pitons">Pitons</option>
-                                        <option value="cams">Cams</option>
-                                        <option value="nuts">Nuts</option>
-                                        <option value="bolts">Bolts</option>
-                                        <option value="stoppers">Stoppers</option>
-                                        <option value="sling">Sling</option>
-                                    </optgroup>
-                                    <optgroup label="Skiing">
-                                        <option value="skis">Skis</option>
-                                        <option value="skins">Skins</option>
-                                        <option value="poles">Poles</option>
-                                    </optgroup>
+                                <select multiple class="categories-select" id="id_categories" name="categories" required
+                                        placeholder="Сфера деятельности">
+                                    <option value="7" selected="selected"></option>
                                 </select>
-
-                                <input type="text">
+                                <p class="text-danger">{{ form.tags.errors|striptags }}</p>
+                                {{ form.tags }}
                             </div>
-
                             <p>Подробная информация</p>
-
-                            <textarea name="" cols="30" rows="10"
-                                      placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+                            {{ form.info }}
+                            <p class="text-danger">{{ form.tags.errors|striptags }}</p>
                             <button type="submit" class="button">Сохранить</button>
-
                         </div>
                     </div>
                 </div>
+            </div>
         </form>
     </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'redactor/redactor.js' %}"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $(document).ready(
+            function () {
+                $('#id_info').redactor({});
+            }
+        );
 
+        $('#id_formset tbody tr').formset({
+            prefix: 'specialist_contacts',
+            addText: 'Добавить контакт',
+            deleteText: 'Удалить'
+        });
+
+        var categories = [
+            {% for category in all_categories %}
+                {% if category.is_child_node and category.get_children %}
+                    {
+                        "text": "{{ category.name }}",
+                        "children": [
+                            {% for child in category.get_children %}
+                                {
+                                    "id": "{{ child.pk }}",
+                                    "text": "{{ child.name }}",
+                                    "element": HTMLOptionElement
+                                },
+                            {% endfor %}
+                        ],
+                        "element": HTMLOptGroupElement
+                    },
+                {% endif %}
+            {% endfor %}
+        ];
+        (function () {
+            var html = '';
+            {% for cat in object.categories.all %}
+                html += "<option value={{ cat.id }} selected='selected'>{{ cat }}</option>";
+            {% endfor %}
+            for (var i = 0; i < categories.length; i++) {
+                html += "<optgroup label=" + categories[i].text + ">";
+                for (var j = 0; j < categories[i].children.length; j++) {
+                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                }
+                html += "</optgroup>";
+            }
+            $(".categories-select").html(html);
+        })();
+    </script>
 {% endblock %}

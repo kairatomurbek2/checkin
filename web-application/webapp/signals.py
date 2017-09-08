@@ -6,7 +6,6 @@ from webapp.models import Company, CompanyContact
 
 @receiver(post_save, sender=Company)
 def create_company_phone(sender, instance, created, **kwargs):
-    print(instance)
     if created:
         CompanyContact.objects.get_or_create(company=instance, phone=instance.phone)
         instance.save()

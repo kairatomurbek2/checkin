@@ -90,12 +90,43 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
 
 
 class MasterEditView(LoginRequiredMixin, UpdateView):
+    success_message = Messages.AddMaster.update_success
+    error_message = Messages.AddMaster.adding_error
     template_name = 'specialist/edit_specialist.html'
     form_class = forms.MasterCreateForm
     model = Specialist
 
+    def get_context_data(self, **kwargs):
+        context = super(MasterEditView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = ContactFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = ContactFormSet(instance=self.object)
+
+        return context
+
     def get_object(self, queryset=None):
         return Specialist.objects.get(slug=self.kwargs['master_slug'])
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        return reverse('master_detail', args=(self.object.slug,))
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        specialist = form.save(commit=False)
+        specialist.edited_at = datetime.datetime.now()
+        specialist.edited_by = self.request.user
+        specialist.save()
+        if formset.is_valid():
+            formset.save()
+        form.save_m2m()
+        return super(MasterEditView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, self.error_message)
+        return super(MasterEditView, self).form_invalid(form)
 
 
 class MasterDetailView(TemplateView):

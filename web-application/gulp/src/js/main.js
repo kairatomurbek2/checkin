@@ -165,11 +165,17 @@ $(function () {
         share: false
     });
 
-    $('#id_tags').selectize({
-        persist: false,
-        createOnBlur: true,
-        create: true
-    });
+$('#id_tags').selectize({
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
+
+$('#id_company_tags').selectize({
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
 
     $("#sticker").sticky({
         topSpacing: 0,

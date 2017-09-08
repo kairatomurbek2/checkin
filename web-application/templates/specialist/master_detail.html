@@ -37,7 +37,13 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="#">ОСТАВИТЬ ОТЗЫВ</a>
+                    {% if request.user != master.user %}
+                        <a href="#">ОСТАВИТЬ ОТЗЫВ</a>
+
+                    {% endif %}
+                    {% if request.user == master.user %}
+                        <a href="{% url 'master_edit'  master.slug %}">Редактировать</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="shedule_block">

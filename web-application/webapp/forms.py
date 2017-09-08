@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+
+from django.forms import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django import forms
@@ -36,7 +38,7 @@ class SpecialistContactForm(forms.ModelForm):
 
     class Meta:
         model = SpecialistContact
-        fields = ['phone']
+        fields = ['phone', ]
 
 
 ContactFormSet = forms.inlineformset_factory(Specialist, SpecialistContact, form=SpecialistContactForm, extra=1,
