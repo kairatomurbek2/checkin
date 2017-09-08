@@ -37,7 +37,7 @@
                             <div>
                                 <!-- <label> -->
                                 <p class="text-danger">{{ form.phone.errors|striptags }}</p>
-                                {{ form.phone }}
+                                {{ form.phone|add_class:"mask" }}
                                 <!-- </label> -->
                             </div>
                         </div>

@@ -183,7 +183,17 @@ $('#id_company_tags').selectize({
         getWidthFrom: 'base-filter'
     });
 
-    $(".mask").mask("+996(000) 00-00-00");
+    function phone_mask(event) {
+        $(".mask").mask("+996(000) 00-00-00");
+    }
+
+    phone_mask();
+
+    $('.become_specilalist .add_block .add-row').click(function (event) {
+        phone_mask();
+    });
+
+
 
     function check_input(event) {
         var add_file = $('.add_file');

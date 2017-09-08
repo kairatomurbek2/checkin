@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles widget_tweaks %}
 {% block head %}
     <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
 {% endblock %}
@@ -24,7 +24,7 @@
                             {{ form.full_name }}
                             <div class="contact-formset">
                                 {% for form in formset %}
-                                    {{ form.phone }}
+                                    {{ form.phone|add_class:"mask" }}
                                 {% endfor %}
                             </div>
                             {{ formset.management_form }}
