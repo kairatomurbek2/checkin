@@ -74,7 +74,6 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
         context = self.get_context_data()
         formset = context['formset']
         specialist = form.save(commit=False)
-        specialist.user = self.request.user
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save()

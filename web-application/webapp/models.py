@@ -1,11 +1,7 @@
 from __future__ import unicode_literals
-
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.db import models
-from django.db.models import Sum
-from django.template import Context, Template
 from django.template.loader import render_to_string
 from django.urls import reverse
 from mptt.fields import TreeForeignKey
@@ -16,10 +12,8 @@ from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-
 from main.choices import STATUS_CHOICES
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
-from main.settings import BASE_DIR
 
 
 class CategoryManager(models.Manager):
@@ -93,22 +87,7 @@ class Company(models.Model):
         def get_html_message(template):
             return render_to_string("email/%s.html" % template, context)
 
-        if self.status == 'MD' and self.status != self.__original_status:
-            self.__original_status = self.status
-            context = {
-                "name": self.name,
-                "link": settings.DOMAIN_URL + '/admin/webapp/company/' + str(self.id) + '/change/',
-                "created_at": self.created_at,
-                "phone": self.phone,
-                "email": self.email
-            }
-
-            message = get_html_message("success_reg_company")
-            mail = EmailMessage('Зарегистрирована новая компания', message, to=[settings.EMAIL_HOST_USER])
-            mail.content_subtype = 'html'
-            mail.send()
-
-        elif self.status == 'DC' and self.status != self.__original_status:
+        if self.status == 'DC' and self.status != self.__original_status:
             self.__original_status = self.status
 
             context = {
@@ -130,7 +109,7 @@ class Company(models.Model):
             message = get_html_message("success_to_active")
             mail = EmailMessage('Успешная регистрация компании', message, to=[self.email])
             mail.content_subtype = 'html'
-            # mail.send()
+            mail.send()
 
     def get_categories(self):
         try:

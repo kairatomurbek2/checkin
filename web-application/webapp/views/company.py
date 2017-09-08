@@ -1,10 +1,13 @@
 import datetime
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import ListView
@@ -88,11 +91,30 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
             formset.instance = company
             formset.save()
         form.save_m2m()
+        self.send_email_notification(company)
         return super(CompanyCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, self.error_message)
         return super(CompanyCreateView, self).form_invalid(form)
+
+    @staticmethod
+    def send_email_notification(company):
+        context = {
+            "name": company.name,
+            "link": settings.DOMAIN_URL + '/admin/webapp/company/' + str(company.id) + '/change/',
+            "created_at": company.created_at,
+            "phone": company.phone,
+            "email": company.email
+        }
+
+        def get_html_message():
+            return render_to_string("email/success_reg_company.html", context)
+
+        message = get_html_message()
+        mail = EmailMessage('Зарегистрирована новая компания', message, to=[settings.EMAIL_HOST_USER])
+        mail.content_subtype = 'html'
+        mail.send()
 
 
 class CompanyDetail(TemplateView):
