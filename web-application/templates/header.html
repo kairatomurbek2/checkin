@@ -24,7 +24,7 @@
                         <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
                         {% if request.user.user_specialists.exists %}
                             {% for specialist in request.user.user_specialists.all %}
-                                <li><a href="{% url 'master_edit'  specialist.slug %}">Личный
+                                <li><a href="{% url 'master_detail'  specialist.slug %}">Личный
                                     кабинет</a>
                                 </li>
                             {% endfor %}
