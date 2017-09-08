@@ -182,6 +182,8 @@
                 $$.parent().append(buttonRow);
                 if (hideAddButton) buttonRow.hide();
                 addButton = buttonRow.find('a');
+
+
             } else {
                 // Otherwise, insert it immediately after the last form:
                 $$.filter(':last').after('<a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a>');
@@ -209,6 +211,8 @@
                 if (options.added) options.added(row);
                 return false;
             });
+
+
         }
 
         return $$;
@@ -228,4 +232,6 @@
         added: null,                     // Function called each time a new form is added
         removed: null                    // Function called each time a form is deleted
     };
+
+
 })(jQuery);

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles extra_tags %}
+{% load staticfiles extra_tags widget_tweaks %}
 {% block head %}
     <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
 {% endblock %}
@@ -67,21 +67,30 @@
                     <p>Ваше расположение</p>
 
                     <div id="mapholder-0" style="height: 250px; margin-bottom: 20px"></div>
-                    <p>
-                        <button type="button" name="get-location-0" class="uk-button uk-button-success"
-                                data-action="get-location">
-                            Get location
-                        </button>
-                        <span id="notification-0" class="uk-text-danger"></span>
-                    </p>
-                    {{ form.latitude }} {{ form.longitude }}
+                    <button type="button" name="get-location-0" class="get_location"
+                            data-action="get-location">
+                        Определить местоположение
+                    </button>
+                    <span id="notification-0" class="uk-text-danger"></span>
+                    {{ form.latitude|add_class:"hidden" }} {{ form.longitude|add_class:"hidden" }}
 
-                    <div class="cert-formset">
-                        {% for form in formset %}
-                            {{ form.certificate }}
-                        {% endfor %}
+
+                <p>Добавление сертификата</p>
+                    <div class="add_certificates">
+
+
+                        <div class="cert-formset">
+                            {% for form in formset %}
+
+                                <label class="filupp">
+                                    {{ form.certificate|add_class:"add_file" }}
+                                    <span class="filupp-file-name js-value">Добавить сертификат</span>
+                                </label>
+
+                            {% endfor %}
+                        </div>
+                        {{ formset.management_form }}
                     </div>
-                    {{ formset.management_form }}
                     <button type="submit" class="button">Сохранить</button>
 
                 </div>
@@ -111,7 +120,7 @@
         $('.cert-formset').formset({
             prefix: 'certifications',
             addText: 'Добавить сертификат',
-            deleteText: 'Удалить'
+            deleteText: ''
         });
 
         var categories = [
@@ -142,5 +151,7 @@
             }
             $(".categories-select").html(html);
         })();
+
+
     </script>
 {% endblock %}
