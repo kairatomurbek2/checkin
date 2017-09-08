@@ -63,6 +63,10 @@ header
 		transition: all 0.1s ease-in
 		&:hover
 			color: $main-color
+		&:active
+			color: $main-color
+	.link_active
+		color: $main-color
 	li
 		&:last-child
 			a
@@ -947,6 +951,13 @@ h4
 		.button
 			line-height: 40px
 			margin-top: 25px
+		a
+			color: $main-color
+			@include transition
+			padding-top: 15px
+			display: inline-block
+			&:hover
+				text-decoration: underline
 	form
 		color: $ldark-color
 		input
@@ -992,6 +1003,7 @@ h4
 			.button
 				margin: 0
 			input
+				margin-top: 5px
 				margin-bottom: 15px
 			input:last-of-type
 				margin-bottom: 70px
@@ -1457,6 +1469,10 @@ div.master:nth-child(3n)
 		font-size: 18px
 		color: ldark-color
 		padding-bottom: 40px
+	.text-danger
+		padding-bottom: 0
+	& > .button
+		margin-top: 130px
 	.first_block
 		display: -webkit-flex
 		display: -moz-flex
@@ -1503,11 +1519,19 @@ div.master:nth-child(3n)
 		justify-content: space-between
 		align-items: flex-start
 		padding-bottom: 40px
+		z-index: 101
+		position: relative
 		.selectize-control
 			width: 48%
 			&:first-of-type
 				.selectize-input
 					background: #fff url("../img/polygon.png") 97% 8px no-repeat
+			&:last-of-type
+				.selectize-input
+					& > div
+						border-radius: 25px
+						padding: 3px 10px
+						margin: 0 5px 3px 0
 		.selectize-input
 			width: 100%
 			box-shadow: none
@@ -1573,7 +1597,7 @@ div.master:nth-child(3n)
 			flex-wrap: wrap
 			align-items: flex-start
 			span
-				width: 20%
+				width: 35%
 			span:first-of-type
 				width: 100%
 				padding-bottom: 10px
@@ -1590,7 +1614,7 @@ div.master:nth-child(3n)
 				border-top-left-radius: 3px
 				border-bottom-left-radius: 3px
 			input
-				width: 80%
+				width: 65%
 				border-top-left-radius: 0
 				border-bottom-left-radius: 0
 
@@ -1598,6 +1622,185 @@ div.master:nth-child(3n)
 
 .hidden
 	visibility: hidden
+
+
+//-----------------ADDITIONS-----------------
+
+.contact-formset
+	position: relative
+	.delete-row
+		position: absolute
+		top: 20%
+		right: -20px
+		width: 14px
+		height: 14px
+		background:  url("../img/x.png") center no-repeat
+.add-row
+	color: $ldark-color
+
+.add_block
+	div.contact-formset:first-of-type
+		.delete-row
+			visibility: hidden
+	.add-row
+		color: $main-color
+		@include transition
+		&:hover
+			text-decoration: underline
+
+
+.become_company
+	.redactor-box
+		margin-bottom: 40px
+	.cert-formset
+		position: relative
+		padding-bottom: 8px
+		.delete-row
+			position: absolute
+			top: 13px
+			left: 225px
+			width: 14px
+			height: 14px
+			background:  url("../img/x.png") center no-repeat
+	.add-row
+		color: $main-color
+		display: inline-block
+		@include transition
+		&:hover
+			text-decoration: underline
+
+#notification-0
+	padding: 0
+
+.get_location
+	background-color: transparent
+	border: 0
+	color: $main-color
+	@include transition
+	cursor: pointer
+	font-family: "GothamRegular", sans-serif
+	margin-bottom: 60px
+	&:hover
+		text-decoration: underline
+
+.filupp
+	position: relative
+	display: flex
+	width: 220px
+	height: 40px
+	border: 1px solid #E4E4E4
+	border-radius: 3px
+	cursor: pointer
+	text-align: center
+	& > input[type="file"]
+		position: absolute
+		width: 1px
+		height: 1px
+		padding: 0
+		margin: -1px
+		overflow: hidden
+		clip: rect(0,0,0,0)
+		border: 0
+
+
+.filupp-file-name
+	display: block
+	width: 90%
+	margin: auto
+	@include text-oferflow
+
+
+.add_certificates
+	div.cert-formset:first-of-type
+		.delete-row
+			visibility: hidden
+
+
+
+
+
+//-----------------ACCOUNT-PAGES-----------------
+
+.account_page
+	background-color: #f5f5f5
+
+.login_page
+	padding: 80px 0
+	h4
+		text-align: center
+		padding-bottom: 20px
+		font-size: 24px
+	p
+		text-align: center
+		padding-bottom: 30px
+		font-size: 14px
+		a
+			color: $main-color
+			@include transition
+			&:hover
+				text-decoration: underline
+	form
+		width: 40%
+		height: auto
+		margin: 0 auto
+		text-align: center
+		input
+			width: 100%
+			height: 35px
+			border: 1px solid #E4E4E4
+			border-radius: 3px
+			outline: 0
+			font-family: "GothamRegular", sans-serif
+			font-size: 12px
+			padding-left: 20px
+			margin-bottom: 15px
+			text-align: left
+			&:hover,
+			&:focus
+				border-color: $main-color
+		.button
+			margin: 25px auto 20px auto
+			width: 50%
+		a
+			color: $main-color
+			display: inline-block
+			@include transition
+			&:hover
+				text-decoration: underline
+
+
+
+.change_password
+	p
+		padding-bottom: 0
+		font-size: 12px
+		text-align: left
+	form
+		label
+			display: block
+			padding-bottom: 5px
+			text-align: left
+
+.password_done
+	padding: 200px 0
+
+
+
+.verify_page
+	padding: 150px 0 200px 0
+	p
+		width: 60%
+		margin: 0 auto
+		line-height: 24px
+
+.verify_email
+	padding: 150px 0 200px 0
+
+
+
+
+
+
 
 
 

@@ -7,38 +7,39 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-    <div class="container account-page">
-        <h1>Вход</h1>
-        {% get_providers as socialaccount_providers %}
-        {% if socialaccount_providers %}
-            <p>Зарегистрироваться через социальные сети.</p>
-            <div class="socialaccount_ballot">
-                <ul class="socialaccount_providers">
-                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-                </ul>
-                <p>{% blocktrans with site.name as site_name %} Для регистрации через почтовый ящик, перейдите по ссылке
-                    <a href="{{ signup_url }}">"Регистрация".</a>{% endblocktrans %}</p>
+    <main class="account_page">
+        <div class="grid login_page">
+            <h4>Вход</h4>
+            {% get_providers as socialaccount_providers %}
+            {% if socialaccount_providers %}
+                <p>Зарегистрироваться через социальные сети.</p>
+                <div class="socialaccount_ballot">
+                    <ul class="socialaccount_providers">
+                        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                    </ul>
+                    <p>{% blocktrans with site.name as site_name %} Для регистрации через почтовый ящик, перейдите по
+                        ссылке
+                        <a href="{{ signup_url }}">"Регистрация".</a>{% endblocktrans %}</p>
 
-                {#                <div class="login-or">{% trans 'or' %}</div>#}
-            </div>
-            {% include "socialaccount/snippets/login_extra.html" %}
-        {% else %}
-            <p>{% blocktrans %}Если вы еще не создали учетную запись, сначала
-                <a href="{{ signup_url }}">зарегистрируйтесь.</a>{% endblocktrans %}</p>
-        {% endif %}
-        <form class="login" method="POST" action="{% url 'account_login' %}">
-            {% csrf_token %}
-            {{ form.login|attr:'required' }}
-            {{ form.password|attr:'required' }}
-            {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {#                <div class="login-or">{% trans 'or' %}</div>#}
+                </div>
+                {% include "socialaccount/snippets/login_extra.html" %}
+            {% else %}
+                <p>{% blocktrans %}Если вы еще не создали учетную запись, сначала
+                    <a href="{{ signup_url }}">зарегистрируйтесь.</a>{% endblocktrans %}</p>
             {% endif %}
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form.login|attr:'required' }}
+                {{ form.password|attr:'required' }}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
 
-            <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-            <br>
-            <a class="button secondaryAction"
-               href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                <button type="submit" class="button">{% trans "Sign In" %}</button>
+                <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
 
-        </form>
-    </div>
+            </form>
+        </div>
+    </main>
 {% endblock %}
