@@ -130,8 +130,10 @@ $(".input i").click(function () {
     if ($(this).siblings('.children').is(":hidden")) {
         $(this).siblings('.children').slideDown("fast");
         $(this).addClass("opened");
+        $(this).siblings('label').children('span.name').css('color', '#333');
     } else {
         $(this).siblings('.children').slideUp("fast");
         $(this).removeClass("opened");
+        $(this).siblings('label').children('span.name').css('color', '#95989A');
     }
 });
