@@ -34,7 +34,7 @@ def specialist_owner(function):
 def company_owner(function):
     def decotator(request, *args, **kwargs):
         try:
-            company = Company.objects.get(slug=kwargs['company_slug'])
+            company = Company.all_objects.get(slug=kwargs['company_slug'])
             if company.user == request.user:
                 return function(request, *args, **kwargs)
             else:

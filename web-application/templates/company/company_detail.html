@@ -33,14 +33,22 @@
                                 {{ company.street_address }}
                             </li>
                             <li>
-                                {{ company.number }}
+                                {% for contact in company.contacts.all %}
+                                    {{ contact.phone }}
+                                {% endfor %}
                             </li>
                             <li>
                                 {{ company.email }}
                             </li>
                         </ul>
                     </div>
-                    <a href="#">ОСТАВИТЬ ОТЗЫВ</a>
+                    {% if request.user != company.user %}
+                        <a href="#">ОСТАВИТЬ ОТЗЫВ</a>
+
+                    {% endif %}
+                    {% if request.user == company.user %}
+                        <a href="{% url 'company_edit'  company.slug %}">Редактировать</a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -63,7 +71,7 @@
                     <div>
                         <h4>Услуги</h4>
                         {% for tag in company.company_tags.all %}
-                            {{ tag.name }},
+                            <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
                 </div>

@@ -1,38 +1,46 @@
 {% extends 'base.html' %}
-{% load staticfiles extra_tags thumbnail %}
+{% load staticfiles extra_tags thumbnail widget_tweaks %}
+{% block head %}
+    <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+{% endblock %}
 {% block content %}
 
     <main class="company edit_company">
-        <form action="#">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="grid">
                 <div class="personal_block">
                     <div class="master">
                         <a class="master_img">
 					<span>
-						<img id="img" src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
+                        {% if object.logo %}
+                            {% thumbnail object.logo "154x154" as im %}
+                                <img id="img" src="{{ im.url }}" alt={{ object.full_name }}>
+                            {% endthumbnail %}
+                        {% endif %}
 					</span>
 
                             <label for="upload">
-                                <input type='file' id="upload">
+                                <input type='file' id="upload" name="logo">
                             </label>
                         </a>
 
                         <div class="master_desc">
-                            <h4>Джонни Депп</h4>
-                            <span>Педиатр, детский лор, аллерголог...</span>
+                            <h4>{{ object.name }}</h4>
+                            <span>{{ object.get_categories }}</span>
                             <span></span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus,
-                                pellentesque
-                                quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
+                            <p>{{ object.short_info }}</p>
                             <ul>
                                 <li>
-                                    г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37 sdfhj sadfjhasd fdasfkh
+                                    {{ object.street_address }}
                                 </li>
                                 <li>
-                                    +996 705 578 842 +996 705 578 842
+                                    {% for contact in object.contacts.all %}
+                                        {{ contact.phone }}
+                                    {% endfor %}
                                 </li>
                                 <li>
-                                    aigulbb@info.com
+                                    {{ object.email }}
                                 </li>
                             </ul>
                         </div>
@@ -42,76 +50,167 @@
 
 
                 <div class="shedule_block">
+                    {% include 'messages.html' %}
                     <div class="general_information">
                         <p>Информация об учреждении</p>
                         <div class="first_block">
                             <div class="add_block">
-                                <input type="text" placeholder="Название учреждения">
-                                <input type="text" placeholder="Рабочий e-mail">
-                                <label>
-                                    <span>Ваш аддрес в checkin</span>
-                                    <span>chekin/</span>
-                                    <input type="text" placeholder="atlassian">
-                                </label>
-                                <div>
-                                    <!-- <label> -->
-                                    <input type="tel" placeholder="Телефон">
-                                    <!-- </label> -->
+                                <p class="text-danger">{{ form.name.errors|striptags }}</p>
+                                {{ form.name }}
+                                <p class="text-danger">{{ form.email.errors|striptags }}</p>
+                                {{ form.email }}
+                                <div class="edit_phone_number">
+                                    <table id="id_phones" border="0" cellpadding="0" cellspacing="25">
+                                        {% for form in phones %}
+                                            <tr id="{{ form.prefix }}-row">
+                                                <td>
+                                                    {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                                    {{ form.phone|add_class:"mask" }}
+                                                </td>
+                                                <td class="del_number">
+                                                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                    {{ phones.management_form }}
                                 </div>
-                                <span>Добавить дополнительный номер телефона +</span>
                             </div>
 
                             <div>
-                                <textarea name="" cols="30" rows="10" placeholder="Адрес..."></textarea>
-                                <textarea name="" cols="30" rows="10"
-                                          placeholder="Краткая информация о себе..."></textarea>
+                                <p class="text-danger">{{ form.street_address.errors|striptags }}</p>
+                                {{ form.street_address }}
+                                <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
+                                {{ form.short_info }}
                             </div>
                         </div>
-
+                        <p class="text-danger">{{ form.categories.errors|striptags }}</p>
                         <p>Ваши услуги</p>
                         <div class="second_block">
-                            <select id="place" multiple placeholder="Сфера деятельности &nbsp&nbsp&nbsp">
-                                <option value="">Выбрать учреждение</option>
-                                <optgroup label="Climbing">
-                                    <option value="pitons">Pitons</option>
-                                    <option value="cams">Cams</option>
-                                    <option value="nuts">Nuts</option>
-                                    <option value="bolts">Bolts</option>
-                                    <option value="stoppers">Stoppers</option>
-                                    <option value="sling">Sling</option>
-                                </optgroup>
-                                <optgroup label="Skiing">
-                                    <option value="skis">Skis</option>
-                                    <option value="skins">Skins</option>
-                                    <option value="poles">Poles</option>
-                                </optgroup>
+                            <select multiple class="categories-select" id="id_categories" name="categories" required
+                                    placeholder="Сфера деятельности">
+
                             </select>
 
-                            <input type="text">
+                            <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
+                            {{ form.company_tags }}
                         </div>
+
+                        <p>Юридистические данные</p>
+                        <p class="text-danger">{{ form.legal_data.errors|striptags }}</p>
+                        {{ form.legal_data }}
 
                         <p>Подробная информация</p>
 
-                        <textarea name="" cols="30" rows="10"
-                                  placeholder="Напишите подробную информацию о своей деятельности...."></textarea>
+                        <p class="text-danger">{{ form.info.errors|striptags }}</p>
+                        {{ form.info }}
 
                         <p>Ваше расположение</p>
 
-                        <div class="company_iframe">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6154150.783456076!2d70.24735641073894!3d41.13547693654861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3897381dfce927f3%3A0x281058b74e88c433!2z0JrQuNGA0LPQuNC30LjRjw!5e0!3m2!1sru!2sru!4v1503912235203"
-                                    frameborder="0" style="border:0" allowfullscreen></iframe>
-                        </div>
-                        <span>Поставьте метку на карте или позвольте нам отпределить ваше местоположение автоматически</span>
+                        <div id="mapholder-0" style="height: 250px; margin-bottom: 20px"></div>
+                        <button type="button" name="get-location-0" class="get_location"
+                                data-action="get-location">
+                            Определить местоположение
+                        </button>
+                        <span id="notification-0" class="uk-text-danger"></span>
+                        {{ form.latitude|add_class:"hidden" }} {{ form.longitude|add_class:"hidden" }}
+
+                        <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
+                            <thead>
+                            <tr>
+                                <th scope="col">certificate</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for form in formset %}
+                                <tr id="{{ form.prefix }}-row">
+                                    <td>
+                                        {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                        {{ form.certificate }}
+                                    </td>
+                                    <td>
+                                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ formset.management_form }}
+
                         <button type="submit" class="button">Сохранить</button>
-
                     </div>
-
-
                 </div>
-
-
+            </div>
             </div>
         </form>
     </main>
 
+{% endblock %}
+{% block js %}
+    {% load_google_map_js %}
+    <script src="{% static 'redactor/redactor.js' %}"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $(document).ready(
+            function () {
+                $('#id_info').redactor({});
+            }
+        );
+
+        $('#id_phones tbody tr').formset({
+            prefix: 'contacts',
+            addText: 'Добавить контакт',
+            deleteText: ''
+        });
+
+        $('#id_formset tbody tr').formset({
+            prefix: 'certifications',
+            addText: 'Добавить сертификат',
+            deleteText: 'Удалить'
+        });
+
+        $(document).ready(function () {
+            GoogleMap.mapHolder = $('#mapholder-0');
+            GoogleMap.latitudeInput = $('input[name="latitude"]');
+            GoogleMap.longitudeInput = $('input[name="longitude"]');
+            GoogleMap.notificationLabel = $('#notification-0');
+            GoogleMap.getLocationButton = $('button[data-action="get-location"]');
+            GoogleMap.initialize(true);
+        });
+
+        var categories = [
+            {% for category in categories %}
+                {
+                    "text": "{{ category.name }}",
+                    "children": [
+                        {% for child in category.get_children %}
+                            {
+                                "id": "{{ child.pk }}",
+                                "text": "{{ child.name }}",
+                                "element": HTMLOptionElement
+                            },
+                        {% endfor %}
+                    ],
+                    "element": HTMLOptGroupElement
+                },
+            {% endfor %}
+        ];
+        (function () {
+            var html = '';
+            {% for cat in object.categories.all %}
+                html += "<option value={{ cat.id }} selected='selected'>{{ cat }}</option>";
+            {% endfor %}
+            for (var i = 0; i < categories.length; i++) {
+                html += "<optgroup label=" + categories[i].text + ">";
+                for (var j = 0; j < categories[i].children.length; j++) {
+                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                }
+                html += "</optgroup>";
+            }
+            $(".categories-select").html(html);
+        })();
+
+
+    </script>
 {% endblock %}

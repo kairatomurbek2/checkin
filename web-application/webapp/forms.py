@@ -8,7 +8,7 @@ from phonenumber_field.formfields import PhoneNumberField
 from redactor.widgets import RedactorEditor
 from taggit.forms import TagWidget
 
-from webapp.models import Specialist, SpecialistContact, Company, Certificate
+from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -66,13 +66,43 @@ class CompanyCreateForm(forms.ModelForm):
                   'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
 
 
-class CertificateForm(forms.ModelForm):
-    certificate = forms.ImageField(widget=forms.FileInput)
+class CompanyUpdateForm(forms.ModelForm):
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Название учреждения')}))
+    email = forms.EmailField(required=True,
+                             widget=forms.EmailInput(attrs={'placeholder': _('Эл. адрес компании')}))
+    website = forms.URLField(required=False, widget=forms.URLInput(attrs={'placeholder': _('Веб-сайт')}))
+    street_address = forms.CharField(required=False,
+                                     widget=forms.Textarea(attrs={'placeholder': _('Адрес'), 'rows': 4}))
+    short_info = forms.CharField(required=False,
+                                 widget=forms.Textarea(attrs={'placeholder': _('Краткая информация')}))
 
     class Meta:
+        model = Company
+        widgets = {
+            'info': RedactorEditor(),
+            'company_tags': TagWidget()
+        }
+        fields = ['logo', 'name', 'street_address', 'short_info', 'legal_data', 'website',
+                  'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
+
+
+class CertificateForm(forms.ModelForm):
+    class Meta:
         model = Certificate
-        fields = ['certificate']
+        fields = ['certificate', ]
 
 
 CertFormSet = forms.inlineformset_factory(Company, Certificate, form=CertificateForm, extra=1,
                                           can_delete=True)
+
+
+class CompanyContactForm(forms.ModelForm):
+    phone = PhoneNumberField(required=False, widget=forms.TextInput(attrs={'placeholder': _('Номер телефона')}))
+
+    class Meta:
+        model = CompanyContact
+        fields = ['phone', ]
+
+
+PhoneFormSet = forms.inlineformset_factory(Company, CompanyContact, form=CompanyContactForm, extra=1,
+                                           can_delete=True)

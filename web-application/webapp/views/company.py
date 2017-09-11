@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.choices import MODERATION
 from main.parameters import Messages
 from webapp import forms
-from webapp.forms import CertFormSet
+from webapp.forms import CertFormSet, PhoneFormSet
 from webapp.models import Company, Category
 from webapp.views.filters import CompanyFilter
 
@@ -130,9 +130,43 @@ class CompanyDetail(TemplateView):
 
 
 class CompanyEditView(LoginRequiredMixin, UpdateView):
+    success_message = Messages.AddCompany.update_success
+    error_message = Messages.AddCompany.adding_error
     template_name = 'company/edit_company.html'
     model = Company
-    form_class = forms.CompanyCreateForm
+    form_class = forms.CompanyUpdateForm
 
     def get_object(self, queryset=None):
-        return Company.objects.get(slug=self.kwargs['company_slug'])
+        return Company.all_objects.get(slug=self.kwargs['company_slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyEditView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = CertFormSet(self.request.POST, self.request.FILES, instance=self.object)
+            context['phones'] = PhoneFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = CertFormSet(instance=self.object)
+            context['phones'] = PhoneFormSet(instance=self.object)
+        return context
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        return reverse('company_detail', args=(self.object.slug,))
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        phones = context['phones']
+        formset = context['formset']
+        company = form.save(commit=False)
+        company.edited_at = datetime.datetime.now()
+        company.edited_by = self.request.user
+        company.save()
+        if phones.is_valid() and formset.is_valid:
+            phones.save()
+            formset.save()
+        form.save_m2m()
+        return super(CompanyEditView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, self.error_message)
+        return super(CompanyEditView, self).form_invalid(form)

@@ -13,4 +13,5 @@ class Messages:
 
     class AddCompany:
         adding_success = _('Регистрация компании успешно создана!')
+        update_success = _('Ваши данные успешно обновлены!')
         adding_error = _('Произошла ошибка!')
