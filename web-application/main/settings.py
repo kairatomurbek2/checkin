@@ -29,12 +29,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'sorl.thumbnail',
     'phonenumber_field',
     'dal',
     'dal_select2',
     'taggit',
     'mptt',
+    'taggit_serializer',
     'modeltranslation',
     'multiselectfield',
     'redactor',
@@ -170,6 +172,13 @@ EMAIL_HOST_USER = 'chekin.kg@gmail.com'
 EMAIL_HOST_PASSWORD = 'chekin123'
 EMAIL_PORT = 587
 
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    )
+}
 
 try:
     from settings_local import *
