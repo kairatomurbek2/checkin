@@ -110,7 +110,7 @@ header
 			position: absolute
 			width: 290px
 			height: auto
-			top: 52px
+			top: 53px
 			right: 0
 			background-color: #fff
 			box-shadow: 0 5px 15px rgba(0,0,0,0.06)
@@ -1560,6 +1560,7 @@ div.master:nth-child(3n)
 		@include transition
 		border: 1px solid #E4E4E4
 		border-radius: 3px
+		box-shadow: none
 		outline: 0	
 		&:hover,
 		&:focus
@@ -1715,6 +1716,25 @@ div.master:nth-child(3n)
 		.delete-row
 			visibility: hidden
 
+.edit_phone_number
+	table
+		width: 100%
+		tr
+			position: relative
+		.del_number
+			position: absolute
+			top: 10px
+			right: -15px
+			width: 14px
+			height: 14px
+			background:  url("../img/x.png") center no-repeat
+			a
+				display: block
+				width: 100%
+				height: 100%
+		tr:first-of-type
+			.del_number
+				display: none
 
 
 
