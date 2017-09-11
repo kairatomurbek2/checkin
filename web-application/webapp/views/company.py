@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 
 from main.choices import MODERATION
 from main.parameters import Messages
@@ -126,3 +127,12 @@ class CompanyDetail(TemplateView):
         context = super(CompanyDetail, self).get_context_data(**kwargs)
         context['company'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
         return context
+
+
+class CompanyEditView(LoginRequiredMixin, UpdateView):
+    template_name = 'company/edit_company.html'
+    model = Company
+    form_class = forms.CompanyCreateForm
+
+    def get_object(self, queryset=None):
+        return Company.objects.get(slug=self.kwargs['company_slug'])

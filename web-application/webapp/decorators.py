@@ -29,3 +29,17 @@ def specialist_owner(function):
             raise Http404("Master not found")
 
     return decotator
+
+
+def company_owner(function):
+    def decotator(request, *args, **kwargs):
+        try:
+            company = Company.objects.get(slug=kwargs['company_slug'])
+            if company.user == request.user:
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Company.DoesNotExist:
+            raise Http404("Company not found")
+
+    return decotator
