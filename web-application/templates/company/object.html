@@ -30,4 +30,6 @@
         </div>
         <a href="{{ company.get_absolute_url }}">посмотреть</a>
     </div>
+    {% empty %}
+     <p class="no_result">По вашему запросу ничего не найдено...</p>
 {% endfor %}

@@ -6,9 +6,10 @@
         <div class="grid">
 
             <div class="search_container">
-                <form action="#" method="post" class="filter_form">
+                <form action="{% url 'search' %}" method="get" class="filter_form">
+                    {% csrf_token %}
                     <label>
-                        <input type="text" placeholder="Найти специалиста, учреждение или услугу...">
+                        <input type="text" placeholder="Найти специалиста, учреждение или услугу..." name="q">
                     </label>
                     <button type="submit"></button>
                 </form>

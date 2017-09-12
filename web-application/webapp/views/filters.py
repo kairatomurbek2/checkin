@@ -42,7 +42,7 @@ class CompanyFilter(django_filters.FilterSet):
 
     def search_company(self, queryset, name, value):
         return queryset.filter(
-            Q(name__icontains=value) | Q(short_info__icontains=value)
+            Q(name__icontains=value) | Q(short_info__icontains=value) | Q(company_tags__name__icontains=value)
         ).distinct()
 
 
@@ -73,6 +73,6 @@ class SpecialistFilter(django_filters.FilterSet):
 
     def search_specialist(self, queryset, name, value):
         return queryset.filter(
-            Q(full_name__icontains=value) | Q(short_info__icontains=value)
+            Q(full_name__icontains=value) | Q(short_info__icontains=value) | Q(tags__name__icontains=value)
         ).distinct()
 
