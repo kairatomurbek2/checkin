@@ -19,7 +19,7 @@
 
             <div class="tabs-stage">
                 {#            Вывод всех специалистов#}
-                <div id="tab-1">
+                <div class="tab-1">
                     {% autopaginate masters 2 %}
                     {% for master in masters %}
                         <div class="master">
@@ -58,7 +58,7 @@
                     {% paginate %}
                 </div>
                 {#            Вывод всех компаний#}
-                <div id="tab-2">
+                <div class="tab-2">
                 {% autopaginate companies 2 %}
                     {% for company in companies %}
                         <div class="master">
