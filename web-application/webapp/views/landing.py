@@ -35,13 +35,13 @@ class SearchView(TemplateView):
     def _get_company(self):
         value = self.request.GET['q']
         qs = Company.objects.all()
-        if self.request.GET['q']:
+        if value:
             qs = qs.filter(Q(name__icontains=value) | Q(company_tags__name__icontains=value)).distinct()
         return qs
 
     def _get_specialist(self):
         value = self.request.GET['q']
         qs = Specialist.objects.all()
-        if self.request.GET['q']:
+        if value:
             qs = qs.filter(Q(full_name__icontains=value) | Q(tags__name__icontains=value)).distinct()
         return qs
