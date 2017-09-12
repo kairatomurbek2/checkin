@@ -161,7 +161,7 @@ class CompanyEditView(LoginRequiredMixin, UpdateView):
         company.edited_at = datetime.datetime.now()
         company.edited_by = self.request.user
         company.save()
-        if phones.is_valid() and formset.is_valid:
+        if phones.is_valid() and formset.is_valid():
             phones.save()
             formset.save()
         form.save_m2m()
