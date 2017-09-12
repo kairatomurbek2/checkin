@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+{% block content %}
+    {% for company in companies %}
+        {{ company.name }}
+    {% endfor %}
+    <br>
+    {% for master in masters %}
+        {{ master.full_name }}
+    {% endfor %}
+{% endblock %}
