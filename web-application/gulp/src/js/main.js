@@ -6,15 +6,33 @@
 
 $(function () {
     $('.tabs-stage > div').hide();
-    $('.tabs-stage > div:nth-child(1)').show();
+
     $('.tabs-nav > li:first-child a').addClass('tab-active');
+    var url = document.location.href;
+    if (url.includes('#')) {
+        var splitted_url = url.split('#');
+        if (splitted_url[1] == 'tab-1') {
+            $('.tabs-nav > li:last-child a').removeClass('tab-active');
+            $('.tabs-nav > li:first-child a').addClass('tab-active');
+            $('.tab-1').show();
+        }
+        else if (splitted_url[1] == 'tab-2') {
+            $('.tab-2').show();
+            $('.tabs-nav > li:last-child a').addClass('tab-active');
+            $('.tabs-nav > li:first-child a').removeClass('tab-active');
+        }
+    }
+    else {
+        $('.tabs-nav > li:first-child a').addClass('tab-active');
+        $('.tab-1').show();
+    }
+
 
     $('.tabs-nav > li > a').on('click', function (event) {
-        event.preventDefault();
         $('.tabs-nav > li a').removeClass('tab-active');
         $(this).addClass('tab-active');
         $('.tabs-stage > div').hide(400);
-        $($(this).attr('href')).show(400);
+        $($(this).attr('href').replace('#', '.')).show(400);
     });
 
     $('.authorised_user > li:last-child').click(function (event) {
@@ -83,7 +101,7 @@ $(function () {
             var reader = new FileReader();
             reader.onload = function (e) {
                 $('#img').attr('src', e.target.result);
-            }
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -165,17 +183,17 @@ $(function () {
         share: false
     });
 
-$('#id_tags').selectize({
-	persist: false,
-	createOnBlur: true,
-	create: true
-});
+    $('#id_tags').selectize({
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
 
-$('#id_company_tags').selectize({
-	persist: false,
-	createOnBlur: true,
-	create: true
-});
+    $('#id_company_tags').selectize({
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
 
     $("#sticker").sticky({
         topSpacing: 0,
@@ -192,7 +210,6 @@ $('#id_company_tags').selectize({
     $('.become_specilalist .add_block .add-row').click(function (event) {
         phone_mask();
     });
-
 
 
     function check_input(event) {

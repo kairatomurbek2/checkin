@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'redactor',
     'widget_tweaks',
     'django_filters',
+    'dj_pagination',
     'webapp'
 ]
 
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dj_pagination.middleware.PaginationMiddleware',
 ]
 
 ROOT_URLCONF = 'main.urls'

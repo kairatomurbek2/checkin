@@ -32,4 +32,6 @@
         </div>
         <a href="{{ specialist.get_absolute_url }}">ПОСМОТРЕТЬ</a>
     </div>
+{% empty %}
+    <p class="no_result">По вашему запросу ничего не найдено...</p>
 {% endfor %}

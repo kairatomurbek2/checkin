@@ -2,11 +2,11 @@
 <section class="search_block">
 
     <div class="grid">
-
         <div class="search_container">
-            <form action="#" method="post" class="filter_form">
+            <form action="{% url 'search' %}" method="get" class="filter_form">
+                {% csrf_token %}
                 <label>
-                        <input type="text" id="search-field" placeholder="Найти специалиста, учреждение или услугу...">
+                        <input id="search-field" type="text" placeholder="Найти специалиста, учреждение или услугу..." name="q">
                     </label>
                 <button type="submit" onclick="return false;"></button>
             </form>
@@ -83,8 +83,10 @@
                         toggleResults(false);
                     }
                     // рендер
-                    (values[0].results.length > 0) ? renderItems('companies', values[0]) : renderItems('companies', values[0], true);
-                    (values[1].results.length > 0) ? renderItems('masters', values[1]) : renderItems('masters', values[1], true);
+                    (values[0].results.length > 0) ? renderItems('companies', values[0]):
+                        renderItems('companies', values[0], true);
+                    (values[1].results.length > 0) ? renderItems('masters', values[1]):
+                        renderItems('masters', values[1], true);
                 })
             } else {
                 // Скрываем поле результатов если их нет

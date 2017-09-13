@@ -21,5 +21,6 @@ urlpatterns = [
         name='master_edit'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/$', company_views.CompanyDetail.as_view(), name='company_detail'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/update/$', company_owner(company_views.CompanyEditView.as_view()),
-        name='company_edit')
+        name='company_edit'),
+    url(r'^search/$', landing_views.SearchView.as_view(), name='search')
 ]

@@ -1,17 +1,106 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
 {% block content %}
-    <div class="grid">
-        {% for object in object_list %}
-            <section>
-                <p>{{ object.name }}</p>
-                <p>{{ object.short_info }}</p>
-                <p>{{ object.street_address }}</p>
-                {% for contact in object.contacts.all %}
-                    {{ contact.phone }}
-                {% endfor %}
-            </section>
-            <br>
-        {% endfor %}
-    </div>
+    <main class="category_page">
+        <div class="grid">
+            {% include 'filters/base.html' %}
+            <div class="category_result">
+                <ul class="tabs-nav">
+                    <li><a href="#tab-1">СПЕЦИАЛИСТЫ</a></li>
+                    <li><a href="#tab-2">УЧРЕЖДЕНИЯ</a></li>
+                </ul>
+
+                <div class="tabs-stage">
+                    {#            Вывод всех специалистов#}
+                    <div class="tab-1">
+                        {% for master in masters.qs %}
+                            <div class="master">
+                                <a href="{{ master.get_absolute_url }}" class="master_img">
+									<span>
+										{% if master.photo %}
+                                            {% thumbnail master.photo "154x154" as im %}
+                                                <img src="{{ im.url }}" alt={{ master.full_name }}>
+                                            {% endthumbnail %}
+                                        {% else %}
+                                            <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                                        {% endif %}
+									</span>
+                                </a>
+                                <div class="master_desc">
+                                    <h4>{{ master.full_name }}</h4>
+                                    <span>{{ master.get_categories }}</span>
+                                    <span></span>
+                                    <p>{{ master.short_info }}</p>
+                                    <ul>
+                                        <li>
+                                            {{ master.street_address }}
+                                        </li>
+                                        <li>
+                                            {% for contact in master.specialist_contacts.all %}
+                                                {{ contact.phone }}
+                                            {% endfor %}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="#">ПОСМОТРЕТЬ</a>
+                            </div>
+                        {% empty %}
+                            <p class="no_result">По вашему запросу спициалситов не найдено...</p>
+                        {% endfor %}
+                    </div>
+                    {#            Вывод всех компаний#}
+                    <div class="tab-2">
+                        {% for company in companies.qs %}
+                            <div class="master">
+                                <a href="{{ company.get_absolute_url }}" class="master_img">
+									<span>
+										{% if company.logo %}
+                                            {% thumbnail company.logo "154x154" as im %}
+                                                <img src="{{ im.url }}" alt={{ logo.name }}>
+                                            {% endthumbnail %}
+                                        {% else %}
+                                            <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                                        {% endif %}
+									</span>
+                                </a>
+
+                                <div class="master_desc">
+                                    <h4>{{ company.name }}</h4>
+                                    <span>{{ company.get_categories }}</span>
+                                    <span></span>
+                                    <p>{{ company.short_info }}</p>
+                                    <ul>
+                                        <li>
+                                            {{ company.street_address }}
+                                        </li>
+                                        <li>
+                                            {% for contact in company.contacts.all %}
+                                                {{ contact.phone }}
+                                            {% endfor %}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ company.get_absolute_url }}">ПОСМОТРЕТЬ</a>
+                            </div>
+                        {% empty %}
+                            <p class="no_result">По вашему запросу учреждения не найдено...</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/ajax-pagination.js' %}"></script>
+    <script src="{% static 'js/get-params.js' %}"></script>
+    <script src="{% static 'js/live-search.js' %}"></script>
+    <script src="{% static 'js/suppliers-categories-filter.js' %}"></script>
+    <script>
+        var page_url = window.location.href;
+        $("#load-id").click(function () {
+            load_page(page_url, "#pagination-id", "#load-id", "#pagediv-id", function (callback) {
+            });
+        });
+    </script>
 {% endblock %}

@@ -15,8 +15,10 @@
 					<span>
                         {% if object.logo %}
                             {% thumbnail object.logo "154x154" as im %}
-                                <img id="img" src="{{ im.url }}" alt={{ object.full_name }}>
+                                <img  src="{{ im.url }}" alt={{ object.full_name }}>
                             {% endthumbnail %}
+                            {% else %}
+                            <img id="img" src="{% static 'img/no_photo.png' %}" alt="image">
                         {% endif %}
 					</span>
 
@@ -148,6 +150,7 @@
 
 {% endblock %}
 {% block js %}
+    <script src="{% static 'js/main.js' %}"></script>
     {% load_google_map_js %}
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
@@ -213,4 +216,5 @@
 
 
     </script>
+
 {% endblock %}
