@@ -18,17 +18,33 @@ from main.choices import MODERATION
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
-from webapp.models import Company, Category
+from webapp.models import Company, Category, Specialist
 from webapp.views.filters import CompanyFilter
 
 
 class CompanySpecialistList(ListView):
     template_name = 'category/company_specialist_list.html'
+    filterset_class = CompanyFilter
     model = Company
 
-    def get_queryset(self):
-        return self.model.objects.filter(categories__in=[i for i in
-                                                         Category.objects.get(slug=self.kwargs['slug']).get_descendants(
+    def get_context_data(self, **kwargs):
+        context = super(CompanySpecialistList, self).get_context_data(**kwargs)
+        company_filter = self.filterset_class(self.request.GET, queryset=self._get_company())
+        master_filter = self.filterset_class(self.request.GET, queryset=self._get_specialist())
+        context['filter'] = company_filter.form
+        context['companies'] = company_filter
+        context['masters'] = master_filter
+        return context
+
+    def _get_company(self):
+        return Company.objects.filter(categories__in=[i for i in
+                                                      Category.objects.get(slug=self.kwargs['slug']).get_descendants(
+                                                          include_self=True)])
+
+    def _get_specialist(self):
+        return Specialist.objects.filter(categories__in=[i for i in
+                                                         Category.objects.get(
+                                                             slug=self.kwargs['slug']).get_descendants(
                                                              include_self=True)])
 
 
