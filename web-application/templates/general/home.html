@@ -8,7 +8,7 @@
                 <label>
                         <input type="text" id="search-field" placeholder="Найти специалиста, учреждение или услугу...">
                     </label>
-                <button type="submit"></button>
+                <button type="submit" onclick="return false;"></button>
             </form>
             <div class="result_block">
                 <div id="masters">
@@ -82,20 +82,9 @@
                         // Скрываем поле результатов если их нет
                         toggleResults(false);
                     }
-                    if (values[0].results.length > 0) {
-                        // рендер
-                        renderItems('companies', values[0])
-                    } else {
-                        // чистим рендер
-                        renderItems('companies', values[0], true)
-                    }
-                    if (values[1].results.length > 0) {
-                        // рендер
-                        renderItems('masters', values[1])
-                    } else {
-                        // чистим рендер
-                        renderItems('masters', values[1], true)
-                    }
+                    // рендер
+                    (values[0].results.length > 0) ? renderItems('companies', values[0]) : renderItems('companies', values[0], true);
+                    (values[1].results.length > 0) ? renderItems('masters', values[1]) : renderItems('masters', values[1], true);
                 })
             } else {
                 // Скрываем поле результатов если их нет
@@ -142,9 +131,9 @@
             })
             elem.querySelector("ul").innerHTML = items;
             if (clear) {
+                // чистим блок если результатов нет
                 elem.querySelector("ul").innerHTML = '';
             }
-
         } else {
             document.querySelector("#" + element).style.display = '';
         }
