@@ -1,59 +1,58 @@
-{% extends 'base.html' %}
-{% load staticfiles thumbnail %}
-{% block content %}
-    <section class="search_block">
+{% extends 'base.html' %} {% load staticfiles thumbnail %} {% block content %}
+<section class="search_block">
 
-        <div class="grid">
+    <div class="grid">
 
-            <div class="search_container">
-                <form action="#" method="post" class="filter_form">
-                    <label>
-                        <input type="text" placeholder="Найти специалиста, учреждение или услугу...">
+        <div class="search_container">
+            <form action="#" method="post" class="filter_form">
+                <label>
+                        <input type="text" id="search-field" placeholder="Найти специалиста, учреждение или услугу...">
                     </label>
-                    <button type="submit"></button>
-                </form>
-
-                <div class="result_block">
-                    <div>
-                        <span>Специалисты</span>
-                        <ul>
-                            <li><a href="#">Психиатр</a></li>
-                            <li><a href="#">Психолог</a></li>
-                            <li><a href="#">Психотерапевт</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <span>Учреждения</span>
-                        <ul>
-                            <li><a href="#">Психотерапевтический центр Радуга</a></li>
-                            <li><a href="#">Центр психологической помощи</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <span>Услуги</span>
-                        <ul>
-                            <li><a href="#">Психотерапия</a></li>
-                            <li><a href="#">Психологическое тестирование</a></li>
-                            <li><a href="#">Психологические приемы </a></li>
-                            <li><a href="#">Психологические приемы </a></li>
-                        </ul>
-                    </div>
+                <button type="submit"></button>
+            </form>
+            <div class="result_block">
+                <div id="masters">
+                    <span>Специалисты</span>
+                    <ul>
+                        {% comment %}
+                        <li><a href="#">Психиатр</a></li>
+                        <li><a href="#">Психолог</a></li>
+                        <li><a href="#">Психотерапевт</a></li> {% endcomment %}
+                    </ul>
                 </div>
 
+                <div id="companies">
+                    <span>Учреждения</span>
+                    <ul>
+                        {% comment %}
+                        <li><a href="#">Психотерапевтический центр Радуга</a></li>
+                        <li><a href="#">Центр психологической помощи</a></li> {% endcomment %}
+                    </ul>
+                </div>
+
+                <div id="services">
+                    <span>Услуги</span>
+                    <ul>
+                        {% comment %}
+                        <li><a href="#">Психотерапия</a></li>
+                        <li><a href="#">Психологическое тестирование</a></li>
+                        <li><a href="#">Психологические приемы </a></li>
+                        <li><a href="#">Психологические приемы </a></li> {% endcomment %}
+                    </ul>
+                </div>
             </div>
         </div>
+    </div>
 
-    </section>
+</section>
 
-    <section class="category_block">
-        <div class="grid">
-            <ul class="category">
+<section class="category_block">
+    <div class="grid">
+        <ul class="category">
 
-                {% for category in categories %}
-                    <li>
-                        <a href="{% url 'company_specialist_list' category.slug %}">
+            {% for category in categories %}
+            <li>
+                <a href="{% url 'company_specialist_list' category.slug %}">
                             {% if category.image %}
                                 {% thumbnail category.image "55x26" as im %}
                                     <span class="img_container"><img src="{{ im.url }}" alt={{ category.name }}></span>
@@ -61,9 +60,103 @@
                             {% endif %}
                             <span>{{ category.name }}</span>
                         </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </section>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+<script>
+    // value из инпута #search-field
+    var requestValue = '';
+    // Привзявка запросов на каждое нажатие на клаву в инпуте
+    document.querySelector("#search-field").addEventListener('keydown', function (e) {
+        setTimeout(function () {
+            requestValue = this.value;
+            if (requestValue !== '') {
+                // Если value не пустое, запускаем цепочку промисов запросов к api
+                Promise.all([getCompanies(requestValue), getMasters(requestValue)]).then(values => {
+                    if (values[0].results.length > 0 || values[1].results.length > 0) {
+                        // показываем окно результатов
+                        toggleResults(true);
+                    } else {
+                        // Скрываем поле результатов если их нет
+                        toggleResults(false);
+                    }
+                    if (values[0].results.length > 0) {
+                        // рендер
+                        renderItems('companies', values[0])
+                    } else {
+                        // чистим рендер
+                        renderItems('companies', values[0], true)
+                    }
+                    if (values[1].results.length > 0) {
+                        // рендер
+                        renderItems('masters', values[1])
+                    } else {
+                        // чистим рендер
+                        renderItems('masters', values[1], true)
+                    }
+                })
+            } else {
+                // Скрываем поле результатов если их нет
+                toggleResults(false);
+            }
+        }.bind(this));
+    })
+    // Функция создания запроса к api
+    function makeRequest(method, url, value) {
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url + value, true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject(new Error(xhr.status, xhr.statusText))
+                    }
+                }
+            }
+            xhr.onerror = function (e) {
+                reject(new Error(xhr.status, xhr.statusText))
+            }
+            xhr.send();
+        })
+    }
+    // Инит запросов к api, используется в Promise.all
+    function getCompanies(value) {
+        return makeRequest('GET', '/api/companies?search=', value);
+    }
+    // Инит запросов к api, используется в Promise.all
+    function getMasters(value) {
+        return makeRequest('GET', '/api/masters?search=', value);
+    }
+    // Функция рендера элементов
+    function renderItems(element, obj, clear) {
+        if (obj.results.length > 0) {
+            var elem = document.querySelector("#" + element);
+            elem.style.display = 'block';
+            var items = '';
+            obj.results.forEach(item => {
+                items += '<li><a>' + (item.name ? item.name : item.full_name) + '</a></li>'
+            })
+            elem.querySelector("ul").innerHTML = items;
+            if (clear) {
+                elem.querySelector("ul").innerHTML = '';
+            }
+
+        } else {
+            document.querySelector("#" + element).style.display = '';
+        }
+    }
+    // Toggle поля результатов
+    function toggleResults(status) {
+        if (status) {
+            document.querySelector(".result_block").style.display = 'block';
+        } else {
+            document.querySelector(".result_block").style.display = '';
+        }
+    }
+</script>
+
 {% endblock %}
