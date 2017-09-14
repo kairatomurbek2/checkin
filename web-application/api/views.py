@@ -14,7 +14,8 @@ class Pagination(LimitOffsetPagination):
 class CompanyListView(generics.ListAPIView):
     serializer_class = CompanyShortSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('name', 'company_tags__name')
+    search_fields = ('name',)
+    filter_fields = ('company_tags__name',)
     ordering_fields = ('created_at',)
     pagination_class = Pagination
 
@@ -25,7 +26,8 @@ class CompanyListView(generics.ListAPIView):
 class SpecialistListView(generics.ListAPIView):
     serializer_class = SpecialistShortSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('full_name', 'tags__name')
+    search_fields = ('full_name',)
+    filter_fields = ('tags__name',)
     ordering_fields = ('created_at',)
     pagination_class = Pagination
 
