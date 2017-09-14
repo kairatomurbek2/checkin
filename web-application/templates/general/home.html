@@ -74,23 +74,28 @@
             requestValue = this.value;
             if (requestValue !== '') {
                 // Если value не пустое, запускаем цепочку промисов запросов к api
-                Promise.all([getCompanies(requestValue), getMasters(requestValue)]).then(values => {
-                    if (values[0].results.length > 0 || values[1].results.length > 0) {
+                Promise.all([getCompanies(requestValue), getMasters(requestValue), getCompaniesTags(requestValue), getMastersTags(requestValue)]).then(values => {
+                    if (values[0].results.length > 0 || values[1].results.length > 0 || values[2].results.length > 0 || values[3].results.length > 0) {
                         // показываем окно результатов
                         toggleResults(true);
                     } else {
                         // Скрываем поле результатов если их нет
-                        toggleResults(false);
+                        return toggleResults(false);
                     }
                     // рендер
                     (values[0].results.length > 0) ? renderItems('companies', values[0]):
                         renderItems('companies', values[0], true);
                     (values[1].results.length > 0) ? renderItems('masters', values[1]):
                         renderItems('masters', values[1], true);
+                    if (values[2].results.length > 0 || values[3].results.length > 0) {
+                        renderServices('services', values[2], values[3]);
+                    } else {
+                        renderServices('services', values[2], values[3], true);
+                    }
                 })
             } else {
                 // Скрываем поле результатов если их нет
-                toggleResults(false);
+                return toggleResults(false);
             }
         }.bind(this));
     })
@@ -122,6 +127,13 @@
     function getMasters(value) {
         return makeRequest('GET', '/api/masters?search=', value);
     }
+    // Инит запросов к api, используется в Promise.all
+    function getCompaniesTags(value) {
+        return makeRequest('GET', '/api/companies?company_tags__name=', value);
+    }
+    function getMastersTags(value) {
+        return makeRequest('GET', '/api/masters?tags__name=', value);
+    }
     // Функция рендера элементов
     function renderItems(element, obj, clear) {
         if (obj.results.length > 0) {
@@ -129,7 +141,37 @@
             elem.style.display = 'block';
             var items = '';
             obj.results.forEach(item => {
-                items += '<li><a>' + (item.name ? item.name : item.full_name) + '</a></li>'
+                items += '<li><a href="/'+element+'/'+item.slug+'">' + (item.name ? item.name : item.full_name) + '</a></li>'
+            })
+            elem.querySelector("ul").innerHTML = items;
+            if (clear) {
+                // чистим блок если результатов нет
+                elem.querySelector("ul").innerHTML = '';
+            }
+        } else {
+            document.querySelector("#" + element).style.display = '';
+        }
+    }
+    // рендер сервисов по тегам
+    function renderServices(element, value1, value2, clear) {
+        if (value1.results.length > 0 || value2.results.length > 0) {
+            console.log(value1, value2);
+            var elem = document.querySelector("#" + element);
+            elem.style.display = 'block';
+            var items = '';
+            value1.results.forEach(item => {
+                var tags = '';
+                item.company_tags.forEach(tag => {
+                    tags += '<i>' + tag + ' </i>'
+                })
+                items += '<li><a href="/companies/'+item.slug+'">' + item.name + ' ( ' + tags + ')</a></li>'
+            })
+            value2.results.forEach(item => {
+                var tags = '';
+                item.tags.forEach(tag => {
+                    tags += '<i>' + tag + ' </i>'
+                })
+                items += '<li><a href="/masters/'+item.slug+'">' + item.full_name + ' ( ' + tags + ')</a></li>'
             })
             elem.querySelector("ul").innerHTML = items;
             if (clear) {
