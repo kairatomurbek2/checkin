@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles thumbnail %}
+{% load staticfiles thumbnail pagination_tags %}
 {% block content %}
     <main class="category_page">
         <div class="grid">
@@ -13,7 +13,8 @@
                 <div class="tabs-stage">
                     {#            Вывод всех специалистов#}
                     <div class="tab-1">
-                        {% for master in masters.qs %}
+                    {% autopaginate masters.qs 2 as masters_list %}
+                        {% for master in masters_list %}
                             <div class="master">
                                 <a href="{{ master.get_absolute_url }}" class="master_img">
 									<span>
@@ -47,10 +48,12 @@
                         {% empty %}
                             <p class="no_result">По вашему запросу спициалситов не найдено...</p>
                         {% endfor %}
+                    {% paginate %}
                     </div>
                     {#            Вывод всех компаний#}
                     <div class="tab-2">
-                        {% for company in companies.qs %}
+                    {% autopaginate companies.qs 2 as companies_list %}
+                        {% for company in companies_list %}
                             <div class="master">
                                 <a href="{{ company.get_absolute_url }}" class="master_img">
 									<span>
@@ -85,6 +88,7 @@
                         {% empty %}
                             <p class="no_result">По вашему запросу учреждения не найдено...</p>
                         {% endfor %}
+                    {% paginate %}
                     </div>
                 </div>
             </div>
