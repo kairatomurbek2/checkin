@@ -117,22 +117,25 @@
                         <span id="notification-0" class="uk-text-danger"></span>
                         {{ form.latitude|add_class:"hidden" }} {{ form.longitude|add_class:"hidden" }}
 
-                        <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
-                            <thead>
-                            <tr>
-                                <th scope="col">certificate</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                            </thead>
+
+                        <p>Добавление сертификата</p>
+                        <table id="id_formset" class="edit_company_certificates" cellspacing="0">
+
                             <tbody>
                             {% for form in formset %}
                                 <tr id="{{ form.prefix }}-row">
-                                    <td>
+                                    <td class="chosen_certificate">
                                         {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
                                         {{ form.certificate }}
+{#                                        <label class="filupp">#}
+{#                                            {{ form.certificate|add_class:"add_file" }}#}
+{#                                            <span class="filupp-file-name js-value">Добавить сертификат</span>#}
+{#                                        </label>#}
+
                                     </td>
-                                    <td>
+                                    <td class="del_certificate">
                                         {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                        <img src="{% static 'img/x.png' %}" alt="">
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -155,9 +158,21 @@
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
+    function check_true_link() {
+    // var certificate = $('.chosen_certificate a');
+    console.log("asdfasd");
+    $('tbody .chosen_certificate').each(function (i, obj) {
+        if ($(obj).children('a').length == true) {
+            $(obj).prepend('<img src="" alt="">');
+            var img_link = $(obj).children('a').attr('href');
+            $(obj).children('img').attr('src', img_link );
+        }
+    })
+}
         $(document).ready(
             function () {
                 $('#id_info').redactor({});
+                check_true_link()
             }
         );
 
@@ -170,7 +185,7 @@
         $('#id_formset tbody tr').formset({
             prefix: 'certifications',
             addText: 'Добавить сертификат',
-            deleteText: 'Удалить'
+            deleteText: ''
         });
 
         $(document).ready(function () {

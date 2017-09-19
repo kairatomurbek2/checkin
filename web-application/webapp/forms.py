@@ -87,6 +87,7 @@ class CompanyUpdateForm(forms.ModelForm):
 
 
 class CertificateForm(forms.ModelForm):
+    # certificate = forms.ImageField(widget=forms.FileInput)
     class Meta:
         model = Certificate
         fields = ['certificate', ]

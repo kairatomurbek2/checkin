@@ -1,14 +1,19 @@
 //=../../../staticfiles/bower_components/jquery/dist/jquery.js
 //=../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
 //=../../../staticfiles/bower_components/lightgallery/dist/js/lightgallery-all.js
+//=../../../staticfiles/bower_components/slick/slick.js
 //=../libs/jquery.sticky.js
 //=../libs/jquery.maskedinput.js
 
 $(function () {
     $('.tabs-stage > div').hide();
 
+
     $('.tabs-nav > li:first-child a').addClass('tab-active');
     var url = document.location.href;
+
+
+
     if (url.includes('#')) {
         var splitted_url = url.split('#');
         if (splitted_url[1] == 'tab-1') {
@@ -34,6 +39,16 @@ $(function () {
         $('.tabs-stage > div').hide(400);
         $($(this).attr('href').replace('#', '.')).show(400);
     });
+
+    var p_link = $('.tab-2 .pagination a');
+
+    p_link.each(function (i, obj) {
+        var h_attr = $(obj).attr('href');
+        $(obj).attr('href', h_attr + '#tab-2');
+    });
+
+
+
 
     $('.authorised_user > li:last-child').click(function (event) {
         event.stopPropagation();
@@ -142,14 +157,14 @@ $(function () {
         sortField: 'text'
     });
 
-    $('.add_block > span').click(function (event) {
-        $(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
-
-        $('.delete').click(function () {
-            $(this).parent('.delete_block').remove();
-        });
-
-    });
+    // $('.add_block > span').click(function (event) {
+    //     $(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
+    //
+    //     $('.delete').click(function () {
+    //         $(this).parent('.delete_block').remove();
+    //     });
+    //
+    // });
 
 
     $('.no').click(function (event) {
@@ -242,5 +257,52 @@ $(function () {
     //     $(this).addClass('link_active');
     // });
 
+    function slick_init(obj) {
+        $(obj).slick({
+            cssEase: 'ease-in',
+            autoplay: true,
+            autoplaySpeed: 3000,
+            variableWidth: true,
+            // infinite: false
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            draggable: false
+        });
+    }
+
+
+    if ($('.certificate_slider a').length > 6) {
+        slick_init('.certificate_slider');
+    }
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
