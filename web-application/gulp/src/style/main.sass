@@ -1,5 +1,7 @@
 @import "../../../staticfiles/bower_components/selectize/dist/css/selectize.css"
 @import "../../../staticfiles/bower_components/lightgallery/dist/css/lightgallery.css"
+@import "../../../staticfiles/bower_components/slick/slick.css"
+@import "../../../staticfiles/bower_components/slick/slick-theme.css"
 @import "../../../staticfiles/bower_components/normalize.css/normalize.css"
 @import "_mixins.sass"
 
@@ -11,6 +13,7 @@ $ldark-color: #333333
 @include font(GothamRegular, GothamProRegular)
 @include font(GothamBold, GothamProBold)
 @include font(lg, lg)
+@include font(slick, slick)
 
 body
 	font-family: "GothamRegular", sans-serif
@@ -24,6 +27,8 @@ body
 	box-sizing: border-box
 ul
 	list-style: none
+a
+	text-decoration: none
 
 .grid
 	max-width: 1200px
@@ -646,6 +651,20 @@ h5
 		color: $ldark-color
 		line-height: 20px
 		padding-bottom: 30px
+	& > div:last-of-type
+		display: flex
+		justify-content: flex-start
+		align-items: flex-start
+		flex-wrap: wrap
+		h4
+			width: 100%
+		span
+			background-color: #fff
+			padding: 10px 20px
+			-webkit-border-radius: 25px
+			-moz-border-radius: 25px
+			border-radius: 25px
+			margin-right: 10px
 
 //-----------------COMPANY-----------------
 
@@ -660,7 +679,7 @@ h5
 		justify-content: space-between
 		align-items: flex-start
 		flex-wrap: wrap
-		padding: 40px 0 70px 0
+		padding: 40px 0 130px 0
 	.iframe
 		height: 230px
 		width: 100%
@@ -700,18 +719,61 @@ h5
 		display: -ms-flex
 		display: -o-flex
 		display: flex
-		justify-content: flex-start
+		justify-content: center
 		align-items: flex-start
+		width: 100%
+		// border: 1px solid #000
 		a
-			width: 185px
+			width: 187px
 			height: 260px
 			margin: 0 15px 15px 0
-			&:nth-child(6n)
-				margin: 0 0 15px 0
+			outline: 0
+			// float: none
+			// &:nth-child(6n)
+			// 	margin: 0 0 15px 0
 			img
 				width: 100%
 				height: 100%
 				object-fit: cover
+  .slick-prev, .slick-next
+    position: absolute
+    top: 50%
+    transform: translateY(-50%)
+    // transform: rotate(90deg)
+    display: block
+    width: 60px
+    height: 60px
+    border-radius: 50%
+    padding: 0
+    color: transparent
+    outline: none
+    background: transparent
+    @include transition
+    z-index: 101
+  .slick-prev
+    background: rgba(0, 0, 0, 0.2) url("../img/arrow-left.png") center no-repeat
+    left: -20px
+    &:before
+      content: ''
+  [dir='rtl'] .slick-prev:before
+    content: ''
+  .slick-next
+    background: rgba(0, 0, 0, 0.2) url("../img/arrow-right.png") center no-repeat
+    right: -20px
+    // transform: rotateX(180deg)
+    &:before
+      content: ''
+  [dir='rtl'] .slick-next:before
+    content: ''
+  .slick-prev
+    &:hover
+      background-image: url("../img/arrow-left-hover.png")
+      background-color: rgba(0,0,0, 0.4)
+  .slick-next
+    &:hover
+      background-image: url("../img/arrow-right-hover.png")
+      background-color: rgba(0,0,0, 0.4)
+
 .lg-backdrop
   background-color: rgba(0, 0, 0, 0.5)
 		
@@ -897,6 +959,8 @@ h5
 			color: #B6B6B6
 			display: block
 			padding: 20px 0 60px 0
+		p:last-of-type
+			padding-bottom: 20px
 	.add_block
 		label
 			display: block
@@ -928,6 +992,8 @@ h5
 				width: 80%
 				border-top-left-radius: 0
 				border-bottom-left-radius: 0
+	.redactor-box
+		margin-bottom: 40px
 
 
 
@@ -1659,10 +1725,6 @@ div.master:nth-child(3n)
 
 
 
-.hidden
-	visibility: hidden
-
-
 //-----------------ADDITIONS-----------------
 
 .contact-formset
@@ -1772,8 +1834,80 @@ div.master:nth-child(3n)
 			.del_number
 				visibility: hidden
 
+.edit_company_certificates
+	border-spacing: 0 15px
+	border-collapse: separate
+	width: 75%
+	tr
+		a
+			display: block
+			text-decoration: none
+			padding-top: 5px
+			color: blue
+	.dynamic-form-add
+		td
+			background-color: transparent
+			a
+				text-decoration: none
+				color: $main-color
+				padding-top: 0
+	td
+		background-color: #fff
+		padding: 10px
+		text-align: center
+		input
+			display: block
+			margin: 5px auto
+	.del_certificate
+		position: relative
+		border-top-right-radius: 3px
+		border-bottom-right-radius: 3px
+		border: 1px solid #e4e4e4
+		width: 33px
+		a
+			position: absolute
+			top: 0
+			left: 0
+			display: block
+			width: 100%
+			height: 100%
+			padding-top: 0
+	.chosen_certificate
+		border-top-left-radius: 3px
+		border-bottom-left-radius: 3px
+		border: 1px solid #e4e4e4
+		border-right: 0
+		position: relative
+		img
+			position: absolute
+			top: 25px
+			left: 50%
+			-webkit-transform: translateX(-50%)
+			-moz-transform: translateX(-50%)
+			-ms-transform: translateX(-50%)
+			-o-transform: translateX(-50%)
+			transform: translateX(-50%)
+			width: 80px
+			height: 120px
+			object-fit: cover
+		a
+			padding-top: 110px
+			visibility: hidden
 
-
+.pagination
+	width: 100%
+	text-align: center
+	margin: 40px 0 0 0
+	font-size: 14px
+	.current
+		color: $main-color
+	a
+		text-decoration: none
+		color: $ldark-color
+		padding: 4px
+		@include transition
+		&:hover
+			color: $main-color
 
 //-----------------ACCOUNT-PAGES-----------------
 
@@ -1858,7 +1992,8 @@ div.master:nth-child(3n)
 
 
 
-
+.hidden
+	visibility: hidden
 
 
 input::-webkit-outer-spin-button,

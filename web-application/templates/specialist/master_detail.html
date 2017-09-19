@@ -56,7 +56,7 @@
                     <div>
                         <h4>Услуги</h4>
                         {% for tag in master.tags.all %}
-                            {{ tag.name }},
+                            <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
 
