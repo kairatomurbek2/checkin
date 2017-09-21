@@ -1,10 +1,16 @@
 {% load staticfiles %}
+{% url 'masters' as master_url %}
+{% url 'company_list' as company_url %}
+
 <header>
     <div class="grid">
         <div>
             <ul class="menu" id="menu">
-                <li><a href="{% url 'masters' %}">Специалисты</a></li>
-                <li><a href="{% url 'company_list' %}">Учреждения</a></li>
+
+                <li><a href="{% url 'masters' %}" {% if request.path == master_url %}class="link_active"{% endif %}>Специалисты</a>
+                </li>
+                <li><a href="{% url 'company_list' %}"
+                       {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a></li>
                 <li><a href="#">О нас</a></li>
             </ul>
             <a href="/"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
@@ -16,15 +22,14 @@
             {% endif %}
             {% if request.user.is_authenticated %}
                 <ul class="authorised_user">
-                <li><a href="{% url 'new_master' %}">Стать специалистом</a></li>
-                <li><a href="{% url 'new_company' %}">Стать учреждением</a></li>
+
                 <li>
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
                         <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
                         {% if request.user.user_specialists.exists %}
                             {% for specialist in request.user.user_specialists.all %}
-                                <li><a href="{% url 'master_detail'  specialist.slug %}">Личный
+                                <li><a href="{% url 'master_detail' specialist.slug %}">Личный
                                     кабинет</a>
                                 </li>
                             {% endfor %}
