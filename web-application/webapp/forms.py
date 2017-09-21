@@ -107,3 +107,29 @@ class CompanyContactForm(forms.ModelForm):
 
 PhoneFormSet = forms.inlineformset_factory(Company, CompanyContact, form=CompanyContactForm, extra=1,
                                            can_delete=True)
+
+
+class SpecialistSearchForm(forms.Form):
+    email = forms.EmailField(required=True)
+    prefix = 'search'
+
+    def is_valid(self):
+        valid = super(SpecialistSearchForm, self).is_valid()
+        if valid:
+            if self.is_empty(self.cleaned_data['email']) and self.is_empty(self.cleaned_data['username']):
+                self.add_error(None, _('Either username or email is required'))
+                return False
+        return valid
+
+    def is_empty(self, value):
+        return value == '' or value is None
+
+
+class UserInviteForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), required=True, empty_label=None)
+    prefix = 'invite'
+
+    def __init__(self, *args, **kwargs):
+        users = kwargs.pop('users', User.objects.none())
+        super(UserInviteForm, self).__init__(*args, **kwargs)
+        self.fields['user'].queryset = users

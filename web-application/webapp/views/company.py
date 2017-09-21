@@ -1,12 +1,15 @@
 import datetime
+from smtplib import SMTPException
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import CreateView
@@ -18,7 +21,8 @@ from main.choices import MODERATION
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
-from webapp.models import Company, Category, Specialist
+from webapp.models import Company, Category, Specialist, Invite
+from webapp.views.base_views import BaseFormView
 from webapp.views.filters import CompanyFilter
 
 
@@ -186,3 +190,75 @@ class CompanyEditView(LoginRequiredMixin, UpdateView):
     def form_invalid(self, form):
         messages.error(self.request, self.error_message)
         return super(CompanyEditView, self).form_invalid(form)
+
+
+class SpecialistSearchView(BaseFormView):
+    template_name = 'company/specialist_search.html'
+    form_class = forms.SpecialistSearchForm
+    users = User.objects.none()
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(**self.get_form_kwargs())
+        if form.is_valid():
+            self.users = self.__get_users(form)
+            if 'invite_user' in request.POST:
+                invite_form = forms.UserInviteForm(users=self.users, **self.get_form_kwargs())
+                if invite_form.is_valid():
+                    return self.invite_form_valid(invite_form)
+                return self.invite_form_invalid(form, invite_form)
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        invite_form = None
+        if self.users:
+            invite_form = forms.UserInviteForm(users=self.users)
+        else:
+            messages.error(self.request, Messages.UserInvite.user_not_found)
+        return self.render_to_response({'form': form, 'users': self.users, 'invite_form': invite_form})
+
+    def __get_users(self, form):
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+        email = form.cleaned_data['email']
+        if Specialist.objects.filter(user__email=email) and not Specialist.objects.filter(company=company):
+            users = User.objects.filter(email=email)
+            if email:
+                users = users.filter(email=email)
+            return users
+
+    def invite_form_valid(self, invite_form):
+        invite = self.__create_invite(invite_form)
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+        self.__send_email_to_user(invite, invite_form.cleaned_data['user'])
+        return HttpResponseRedirect(company.get_absolute_url())
+
+    def __create_invite(self, invite_form):
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+        user = invite_form.cleaned_data['user']
+        invite = Invite.objects.create(invite_from=self.request.user, invite_to=user, invite_company=company)
+        return invite
+
+    def __send_email_to_user(self, invite, user):
+        context = {
+            'invite': invite,
+            'base_url': settings.DOMAIN_URL
+        }
+        html_template = 'email/company_invite_notification.html'
+        plain_template = 'email/company_invite_notification.txt'
+        subject = 'Приглашение от учреждение %s' % Company.objects.get(slug=self.kwargs['company_slug'])
+        html_content = render_to_string(html_template, context)
+        plain_content = render_to_string(plain_template, context)
+        try:
+            user.email_user(
+                subject=subject,
+                message=plain_content,
+                from_email=settings.EMAIL_HOST_USER,
+                html_message=html_content
+            )
+            messages.success(self.request, Messages.UserInvite.user_invite_success)
+        except SMTPException:
+            messages.error(self.request, Messages.UserInvite.user_invite_failed)
+
+    def invite_form_invalid(self, form, invite_form):
+        messages.error(self.request, Messages.UserInvite.user_invite_error)
+        return self.render_to_response({'form': form, 'users': self.users, 'invite_form': invite_form})

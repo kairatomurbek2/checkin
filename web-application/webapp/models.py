@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import uuid
+
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.db import models
@@ -202,3 +205,19 @@ class SpecialistContact(models.Model):
     class Meta:
         verbose_name = _('Контакт специалиста')
         verbose_name_plural = _('Контакты специалистов')
+
+
+class Invite(models.Model):
+    invite_date = models.DateField(auto_now_add=True, verbose_name=_('Даты отправки инвайта'))
+    invite_from = models.ForeignKey(User, verbose_name=_('Приглашение от  отправителя'), related_name='invites_sent')
+    invite_to = models.ForeignKey(User, verbose_name=_('Приглашение в отправителю'), related_name='invites_received')
+    invite_company = models.ForeignKey(Company, verbose_name=_('Приглашение в компанию'))
+    accepted = models.BooleanField(default=False)
+    code = models.CharField(max_length=64, default=uuid.uuid4, editable=False)
+
+    def get_company_list(self):
+        return self.invite_company.all()
+
+    class Meta:
+        verbose_name = _('Приглашение')
+        verbose_name_plural = _('Приглашения')

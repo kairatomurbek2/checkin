@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load i18n widget_tweaks %}
+{% block content %}
+    <main class="become_specilalist become_company">
+        <div class="grid">
+            {% include 'messages.html' %}
+            <form class="form_inf" method="post" name="search_user">
+                {% for error in form.non_field_errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+                {% csrf_token %}
+                <p class="text-danger">{{ form.email.errors|striptags }}</p>
+                {{ form.email }}
+                <button type="submit">Найти</button>
+
+                {% if invite_form %}
+                    {% for error in invite_form.non_field_errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Логин</th>
+                            <th>Фамилия</th>
+                            <th>Имя</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr class="border-bottom">
+                                <td>{{ user.email }}</td>
+                                <td><p class="text-danger">{{ invite_form.user.errors|striptags }}</p>
+                                    {{ invite_form.user }}</td>
+                                <td>{{ user.first_name }}</td>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="button" type="submit" name="invite_user">
+                        Пригласить
+                    </button>
+                    </form>
+                {% endif %}
+        </div>
+    </main>
+{% endblock %}
