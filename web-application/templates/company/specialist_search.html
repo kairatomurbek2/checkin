@@ -1,46 +1,63 @@
 {% extends 'base.html' %}
 {% load i18n widget_tweaks %}
 {% block content %}
-    <main class="become_specilalist become_company">
+    <main class="search_user_page">
         <div class="grid">
             {% include 'messages.html' %}
-            <form class="form_inf" method="post" name="search_user">
+            <form class="search_user" method="post" name="search_user">
                 {% for error in form.non_field_errors %}
                     <p class="text-danger">{{ error }}</p>
                 {% endfor %}
                 {% csrf_token %}
-                <p class="text-danger">{{ form.email.errors|striptags }}</p>
-                {{ form.email }}
-                <button type="submit">Найти</button>
+
+                <div class="search_master">
+                    <p class="text-danger">{{ form.email.errors|striptags }}</p>
+                    {{ form.email }}
+                    <button type="submit"></button>
+                </div>
 
                 {% if invite_form %}
                     {% for error in invite_form.non_field_errors %}
                         <p class="text-danger">{{ error }}</p>
                     {% endfor %}
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Логин</th>
-                            <th>Фамилия</th>
-                            <th>Имя</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for user in users %}
-                            <tr class="border-bottom">
-                                <td>{{ user.email }}</td>
-                                <td><p class="text-danger">{{ invite_form.user.errors|striptags }}</p>
-                                    {{ invite_form.user }}</td>
-                                <td>{{ user.first_name }}</td>
-                                <td>{{ user.last_name }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <button class="button" type="submit" name="invite_user">
+{#                    <table>#}
+{#                        <thead>#}
+{#                        <tr>#}
+{#                            <th>Email</th>#}
+{#                            <th>Логин</th>#}
+{#                            <th>Фамилия</th>#}
+{#                            <th>Имя</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <tbody>#}
+{#                        {% for user in users %}#}
+{#                            <tr class="border-bottom">#}
+{#                                <td>{{ user.email }}</td>#}
+{#                                <td>{{ user.username }}</td>#}
+{#                                <td>{{ user.first_name }}</td>#}
+{#                                <td>{{ user.last_name }}</td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                    </table>#}
+
+                    <ul>
+                        <li class="list_bold">Имя</li>
+                        <li class="list_bold">Фамилия</li>
+
+                        <li class="list_bold">Email</li>
+                        <li class="list_bold">Логин</li>
+                        <li>{{ user.first_name }}</li>
+                        <li>{{ user.last_name }}</li>
+                        <li>{{ user.email }}</li>
+                        <li>{{ user.username }}</li>
+                        <li><button class="button" type="submit" name="invite_user">
                         Пригласить
-                    </button>
+                    </button></li>
+                    </ul>
+                    <p class="text-danger">{{ invite_form.user.errors|striptags }}</p>
+                                    {{ invite_form.user|add_class:"hidden" }}
+
                     </form>
                 {% endif %}
         </div>

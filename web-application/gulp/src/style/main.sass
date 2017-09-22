@@ -35,7 +35,7 @@ a
 	margin: 0 auto
 
 header
-	box-shadow: 0px 3px 15px rgba(0,0,0,0.07)
+	box-shadow: 0 3px 15px rgba(0,0,0,0.07)
 	position: relative
 	.grid
 		position: relative
@@ -792,6 +792,14 @@ h5
 		display: -o-flex
 		display: flex
 		justify-content: space-between
+	.general_information
+		.first_block
+			& > div
+				width: 48%
+			& > .add_block
+				width: 49.7%
+				& > input
+					width: 96.5%
 
 .master_img
 	position: relative
@@ -951,6 +959,14 @@ h5
 
 .edit_company
 	.general_information
+		.first_block
+			& > div
+				width: 48%
+			& > .add_block
+				width: 49.7%
+				& > input
+					width: 96.5%
+	.general_information
 		width: 100%
 		padding-left: 40px
 		& > textarea
@@ -959,8 +975,15 @@ h5
 			color: #B6B6B6
 			display: block
 			padding: 20px 0 60px 0
-		p:last-of-type
+		& > p:last-of-type
 			padding-bottom: 20px
+		.first_block
+			& > div
+				width: 48%
+			& > .add_block
+				width: 49.7%
+				& > input
+					width: 96.5%
 	.add_block
 		label
 			display: block
@@ -1552,10 +1575,10 @@ div.master:nth-child(3n)
 		padding-bottom: 40px
 		& > div
 			width: 48%
-		& > .add_block
-			width: 49.7%
-			& > input
-				width: 96.5%
+		//& > .add_block
+		//	width: 49.7%
+		//	& > input
+		//		width: 96.5%
 		input
 			width: 100%
 			height: 35px
@@ -1724,6 +1747,85 @@ div.master:nth-child(3n)
 				margin-right: 0
 
 
+//-----------------USER-SEARCH-----------------
+
+.search_user_page
+	.grid
+		padding: 80px 0 120px 0
+	.search_master
+		display: flex
+		width: 70%
+		height: 80px
+		padding-top: 20px
+		//border: 1px solid #000
+		margin: auto
+		position: relative
+		//box-shadow: 0 3px 15px rgba(0,0,0,.16)
+		p
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+		input
+			width: 90%
+			height: 100%
+			padding-left: 25px
+			border: 1px solid #fff
+			border-top-left-radius: 3px
+			border-bottom-left-radius: 3px
+			outline: 0
+			box-shadow: 0 3px 15px rgba(0,0,0,.1)
+			font-size: 18px
+			font-family: "GothamRegular", sans-serif
+			color: $ldark-color
+			@include transition
+			&:hover,
+			&:focus
+				border-color: $main-color
+		button
+			width: 90px
+			height: 100%
+			border: 0
+			background: #8be1dc url("../img/search-icon.png") center no-repeat
+			border-top-right-radius: 3px
+			border-bottom-right-radius: 3px
+			outline: 0
+			box-shadow: 0 3px 15px rgba(0,0,0,.1)
+	ul
+		width: 90%
+		height: auto
+		margin: 50px auto 0 auto
+		display: flex
+		flex-wrap: wrap
+		background-color: #fff
+		padding: 60px 0 40px 0
+		//border: 1px solid #e4e4e4
+		-webkit-border-radius: 3px
+		-moz-border-radius: 3px
+		border-radius: 3px
+		box-shadow: 0 3px 15px rgba(0,0,0,.1)
+		li
+			width: 25%
+			//padding: 20px
+			padding-bottom: 20px
+			text-align: center
+			border-right: 1px dotted #e4e4e4
+		li:last-child
+			width: 100%
+			padding-top: 30px
+			padding-bottom: 0
+			border-right: 0
+		li:nth-child(8),
+		li:nth-child(4)
+			border-right: 0
+		.list_bold
+			font-family: "GothamBold", sans-serif
+			font-size: 14px
+			color: #0cb5b1
+			font-weight: normal
+			//text-transform: uppercase
+	.button
+		margin: 0 auto
 
 //-----------------ADDITIONS-----------------
 
@@ -1831,6 +1933,9 @@ div.master:nth-child(3n)
 				width: 100%
 				height: 100%
 		tr:first-of-type
+			.del_number
+				visibility: hidden
+		tr:nth-child(2)
 			.del_number
 				visibility: hidden
 
