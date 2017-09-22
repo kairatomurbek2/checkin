@@ -1,0 +1,3 @@
+Здравствуйте, {{ invite.invite_from.get_full_name }}
+
+Сообщая вам, что специалист {{ invite.invite_to.get_full_name }} принял ваше приглашение к сотрудничеству.

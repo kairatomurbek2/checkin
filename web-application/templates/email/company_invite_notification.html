@@ -9,13 +9,10 @@
 </h3>
 &nbsp;
 <p>Вас пригласили сотрудничать с учреждение {{ invite.invite_company }}</p>
+<p>Для того чтоб принять приглашение войдите на сайт <a
+        href="{{ base_url }}{% url "invite_accept" %}?code={{ invite.code }}">This Link</a> с вашим именем пользователя
+    и паролем, чтобы принять приглашение.</p>
 
-&nbsp;{{ invite.code }}
-
-{#<p>Please, follow <a href="{{ base_url }}{% url "webapp:invite_accept" %}?code={{ invite.code }}">This Link</a> and log in the BSS site with your username and password to accept invitation.</p>#}
-{#<p>If link is not working you may copy following link and paste it directly in your browser address bar:</p>#}
-&nbsp;
-{#<p><u>{{ base_url }}{% url "webapp:invite_accept" %}?code={{ invite.code }}</u></p>#}
 &nbsp;
 <p>Если вы не хотите принимать приглашение или вы уже сотрудничаете с учреждением, то просто игнорируйте это сообщение.
     Приглашение будет активным в течение 10 дней.

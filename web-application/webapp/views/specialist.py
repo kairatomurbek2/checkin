@@ -1,22 +1,22 @@
 import datetime
-
+from smtplib import SMTPException
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
-
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet
-from webapp.models import Specialist, Category, SpecialistContact
+from webapp.models import Specialist, Invite
 from webapp.views.filters import SpecialistFilter
 
 
@@ -137,3 +137,51 @@ class MasterDetailView(TemplateView):
         context = super(MasterDetailView, self).get_context_data(**kwargs)
         context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
         return context
+
+
+class SpecialistInviteAcceptView(LoginRequiredMixin, TemplateView):
+    invite_specialist_have_accepted = Messages.AddMaster.invite_specialist_have_accepted
+    invite_expired = Messages.AddMaster.invite_expired
+    invite_successfully = Messages.AddMaster.invite_successfully
+    template_name = 'specialist/specialist_invite_accept.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            invite = Invite.objects.get(code=request.GET.get('code'))
+        except ObjectDoesNotExist:
+            raise Http404
+        if invite.invite_to != request.user:
+            raise Http404
+        if invite.accepted:
+            invite_message = self.invite_specialist_have_accepted
+        elif (datetime.datetime.now().date() - invite.invite_date).days > 10:
+            invite_message = self.invite_expired
+        else:
+            specialist = Specialist.objects.filter(user=invite.invite_to)
+            specialist.update(company=invite.invite_company)
+            invite.accepted = True
+            invite.save()
+            invite_message = self.invite_successfully
+        self.__send_email_to_admin(invite)
+        context = self.get_context_data(**kwargs)
+        context['invite_accept_text'] = invite_message
+        return self.render_to_response(context)
+
+    def __send_email_to_admin(self, invite):
+        context = {
+            'invite': invite
+        }
+        html_template = 'email/company_invite_accept_notification.html'
+        plain_template = 'email/company_invite_accept_notification.txt'
+        subject = 'Приглашение принято'
+        html_content = render_to_string(html_template, context)
+        plain_content = render_to_string(plain_template, context)
+        try:
+            invite.invite_from.email_user(
+                subject=subject,
+                message=plain_content,
+                from_email=settings.EMAIL_HOST_USER,
+                html_message=html_content
+            )
+        except SMTPException:
+            pass
