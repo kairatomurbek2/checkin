@@ -187,7 +187,7 @@ $(function () {
                 imgg.show();
                 imgg.siblings('p').hide();
 
-            }
+            };
             reader.readAsDataURL(this.files[0]);
         });
     });
@@ -222,9 +222,13 @@ $(function () {
 
     phone_mask();
 
-    $('.become_specilalist .add_block .add-row').click(function (event) {
+    $('.add-row').click(function (event) {
         phone_mask();
     });
+
+    // $('').click(function (event) {
+    //     phone_mask();
+    // });
 
 
     function check_input(event) {
