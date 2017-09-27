@@ -9,11 +9,15 @@
                     <p class="text-danger">{{ error }}</p>
                 {% endfor %}
                 {% csrf_token %}
-
                 <div class="search_master">
+
+                    <h4>Найти специалиста</h4>
                     <p class="text-danger">{{ form.email.errors|striptags }}</p>
-                    {{ form.email }}
-                    <button type="submit"></button>
+                    <div>
+                        {{ form.email }}
+                        <button type="submit"></button>
+                    </div>
+
                 </div>
 
                 {% if invite_form %}
@@ -36,6 +40,7 @@
                             <button class="button" type="submit" name="invite_user">
                                 Пригласить
                             </button>
+                            <a href="#" class="watch_profile" data-toggle="tooltip" data-placement="top" title="Просмотреть профиль" target="_blank"></a>
                         </li>
                     </ul>
                     <p class="text-danger">{{ invite_form.user.errors|striptags }}</p>

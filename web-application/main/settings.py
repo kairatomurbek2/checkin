@@ -181,6 +181,7 @@ REST_FRAMEWORK = {
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     )
 }
+DOMAIN_URL = 'http://127.0.0.1:8000'
 
 try:
     from settings_local import *
