@@ -40,7 +40,13 @@
                             <button class="button" type="submit" name="invite_user">
                                 Пригласить
                             </button>
-                            <a href="#" class="watch_profile" data-toggle="tooltip" data-placement="top" title="Просмотреть профиль" target="_blank"></a>
+                            {% for user in users %}
+                                {% for l in user.user_specialists.all %}
+                                    <a href="{% url 'master_detail' l.slug %}"
+                                       class="watch_profile" data-toggle="tooltip" data-placement="top"
+                                       title="Просмотреть профиль" target="_blank"></a>
+                                {% endfor %}
+                            {% endfor %}
                         </li>
                     </ul>
                     <p class="text-danger">{{ invite_form.user.errors|striptags }}</p>
