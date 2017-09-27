@@ -50,8 +50,9 @@
                         <a href="{% url 'company_edit'  company.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
-
-                <a href="{% url 'user_search' company.slug %}" class="add_specialist">Пригласить специалиста</a>
+                {% if request.user == company.user %}
+                    <a href="{% url 'user_search' company.slug %}" class="add_specialist">Пригласить специалиста</a>
+                {% endif %}
             </div>
 
             <div class="shedule_block">
