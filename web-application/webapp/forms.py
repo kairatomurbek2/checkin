@@ -12,6 +12,9 @@ from webapp.models import Specialist, SpecialistContact, Company, Certificate, C
 
 
 class ProfileEditForm(forms.ModelForm):
+    first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': _('Имя')}))
+    last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': _('Фамилия')}))
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
