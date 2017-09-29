@@ -169,9 +169,8 @@ class Specialist(models.Model):
     def save(self, *args, **kwargs):
         super(Specialist, self).save(*args, **kwargs)
 
-        if self.id and not self.slug:
-            self.slug = slugify(self.full_name)
-            super(Specialist, self).save(*args, **kwargs)
+        if not self.slug:
+            self.slug = slugify(self.full_name + '-' + str(self.id))
 
     class Meta:
         verbose_name = _('Специалист')
