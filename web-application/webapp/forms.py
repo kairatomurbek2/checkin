@@ -7,6 +7,7 @@ from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from redactor.widgets import RedactorEditor
 from taggit.forms import TagWidget
+from main.choices import SEX_CHOICES
 
 from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact
 
@@ -27,13 +28,15 @@ class MasterCreateForm(forms.ModelForm):
     short_info = forms.CharField(required=False,
                                  widget=forms.Textarea(attrs={'placeholder': _('Краткая информация'), 'rows': 4}))
 
+    sex = forms.ChoiceField(required=False, choices=SEX_CHOICES, widget=forms.Select)
+
     class Meta:
         model = Specialist
         widgets = {
             'info': RedactorEditor(),
             'tags': TagWidget()
         }
-        fields = ['photo', 'full_name', 'street_address', 'short_info', 'info', 'tags', 'categories']
+        fields = ['photo', 'full_name', 'street_address', 'short_info', 'info', 'tags', 'categories', 'sex']
 
 
 class SpecialistContactForm(forms.ModelForm):

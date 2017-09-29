@@ -32,6 +32,11 @@
                                 {% endfor %}
 
                             </li>
+                            {% if master.sex %}
+                                <li>
+                                    {{ master.sex }}
+                                </li>
+                            {% endif %}
                             <li>
                                 {{ master.user.email }}
                             </li>
@@ -42,7 +47,7 @@
 
                     {% endif %}
                     {% if request.user == master.user %}
-                        <a href="{% url 'master_edit'  master.slug %}">Редактировать</a>
+                        <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
             </div>

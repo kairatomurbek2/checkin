@@ -11,3 +11,12 @@ STATUS_CHOICES = (
     (DECLINE, _('Отклоненный')),
     (INACTIVE, _('Неактивный'))
 )
+
+MALE = 'MALE'
+FEMALE = 'FEMALE'
+DEFAULT = ''
+SEX_CHOICES = (
+    (DEFAULT, '------'),
+    (_('Мужской'), _('Мужской')),
+    (_('Женский'), _('Женский'))
+)
