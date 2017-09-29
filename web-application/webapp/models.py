@@ -15,7 +15,7 @@ from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-from main.choices import STATUS_CHOICES
+from main.choices import STATUS_CHOICES, SEX_CHOICES
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
 
 
@@ -140,6 +140,7 @@ class Specialist(models.Model):
                                 null=True)
     photo = models.ImageField(verbose_name=_('Фото'), upload_to=specialist_path)
     full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
+    sex = models.CharField(verbose_name=_('Пол'), choices=SEX_CHOICES, max_length=10, blank=True, null=True)
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=250)
     street_address = models.CharField(verbose_name=_('Адрес'), max_length=250, blank=True, null=True)
     short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
@@ -167,6 +168,7 @@ class Specialist(models.Model):
 
     def save(self, *args, **kwargs):
         super(Specialist, self).save(*args, **kwargs)
+
         if self.id and not self.slug:
             self.slug = slugify(self.full_name)
             super(Specialist, self).save(*args, **kwargs)
