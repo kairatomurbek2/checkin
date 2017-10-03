@@ -30,7 +30,6 @@
                                 {% for contact in master.specialist_contacts.all %}
                                     {{ contact.phone }}
                                 {% endfor %}
-
                             </li>
                             {% if master.sex %}
                                 <li>
@@ -44,7 +43,6 @@
                     </div>
                     {% if request.user != master.user %}
                         <a href="#">ОСТАВИТЬ ОТЗЫВ</a>
-
                     {% endif %}
                     {% if request.user == master.user %}
                         <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
@@ -64,8 +62,6 @@
                             <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
-
-
                 </div>
             </div>
         </div>

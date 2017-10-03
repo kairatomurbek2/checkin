@@ -3,6 +3,7 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -82,7 +83,27 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
             formset.instance = specialist
             formset.save()
         form.save_m2m()
+        self.send_email_notification(specialist)
         return super(MasterCreateView, self).form_valid(form)
+
+    @staticmethod
+    def send_email_notification(specialist):
+
+        context = {
+            "name": specialist.full_name,
+            "link": settings.DOMAIN_URL + '/admin/webapp/specialist/' + str(specialist.id) + '/change/',
+            "created_at": specialist.created_at,
+            "phone": specialist.specialist_contacts.first().phone,
+            "email": specialist.user.email
+        }
+
+        def get_html_message():
+            return render_to_string("email/success_specialist.html", context)
+
+        message = get_html_message()
+        mail = EmailMessage('Зарегистрирована новый специалист', message, to=[settings.EMAIL_HOST_USER])
+        mail.content_subtype = 'html'
+        mail.send()
 
     def form_invalid(self, form):
         messages.error(self.request, self.error_message)

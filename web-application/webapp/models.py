@@ -131,7 +131,8 @@ class Company(models.Model):
 
 class SpecialistManager(models.Manager):
     def get_queryset(self):
-        return super(SpecialistManager, self).get_queryset().order_by('-photo', '-short_info', '-created_at')
+        return super(SpecialistManager, self).get_queryset().filter(status='AC').order_by('-photo', '-short_info',
+                                                                                          '-created_at')
 
 
 class Specialist(models.Model):
@@ -146,12 +147,19 @@ class Specialist(models.Model):
     short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
     info = RedactorField(verbose_name=_('Подробная информация'))
     categories = models.ManyToManyField(Category, related_name='specialist_categories', verbose_name=_('Категории'))
+    status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='MD', verbose_name=_('Статус'))
+    message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
+                                       null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
     edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
     tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
     all_objects = models.Manager()
     objects = SpecialistManager()
+
+    def __init__(self, *args, **kwargs):
+        super(Specialist, self).__init__(*args, **kwargs)
+        self.__original_status = self.status
 
     def __str__(self):
         return self.full_name
@@ -171,6 +179,33 @@ class Specialist(models.Model):
 
         if not self.slug:
             self.slug = slugify(self.full_name + '-' + str(self.id))
+
+        def get_html_message(template):
+            return render_to_string("email/%s.html" % template, context)
+
+        if self.status == 'DC' and self.status != self.__original_status:
+            self.__original_status = self.status
+
+            context = {
+                "message": self.message_decline
+            }
+
+            message = get_html_message("decline")
+            mail = EmailMessage('Отказано в регистриции', message, to=[self.user.email])
+            mail.content_subtype = 'html'
+            mail.send()
+
+        elif self.status == 'AC' and self.status != self.__original_status:
+            self.__original_status = self.status
+
+            context = {
+                "message": "Вы успешно зарегистрированы на нашей платформе"
+            }
+
+            message = get_html_message("success_to_active")
+            mail = EmailMessage('Успешная регистрация специалиста', message, to=[self.user.email])
+            mail.content_subtype = 'html'
+            mail.send()
 
     class Meta:
         verbose_name = _('Специалист')
