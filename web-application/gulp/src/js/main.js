@@ -68,6 +68,7 @@ $(function () {
         $('.registered_person').fadeOut(250);
         $('.book').fadeOut(250);
         $('.sub_menu').slideUp(250);
+        $('.review_modal').fadeOut(350);
     });
 
     $('#log-in, .r_user').click(function (event) {
@@ -85,6 +86,13 @@ $(function () {
         $('.blur').css('filter', 'blur(5px)');
     });
 
+    $('#leave_comment').click(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $('.review_modal').fadeIn(350);
+        $('.blur').css('filter', 'blur(5px)');
+    });
+
     $('.log-out').click(function (event) {
         $('.modal').css('display', 'none');
         $('.logout_modal').fadeIn(350);
@@ -92,7 +100,7 @@ $(function () {
         $('.blur').css('filter', 'blur(5px)');
     });
 
-    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div').click(function (event) {
+    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form').click(function (event) {
         event.stopPropagation();
     });
 
@@ -281,6 +289,16 @@ $(function () {
 
 
      $('[data-toggle="tooltip"]').tooltip();
+
+     $('.favourite').click(function (event) {
+        if ($(this).hasClass('fav_active')) {
+            $(this).removeClass('fav_active');
+        } else {
+            $(this).addClass('fav_active');
+        }
+    });
+
+     $('.s_sex > option:first-of-type').html('Выберите пол');
 
 
 });
