@@ -24,6 +24,11 @@
                         <div class="add_block">
                             <p class="text-danger">{{ form.full_name.errors|striptags }}</p>
                             {{ form.full_name }}
+
+                            <p class="text-danger">{{ form.sex.errors|striptags }}</p>
+                            {{ form.sex|add_class:"s_sex" }}
+
+
                             <div class="contact-formset">
                                 {% for form in formset %}
                                     {{ form.phone|add_class:"mask" }}
@@ -36,8 +41,7 @@
                             {{ form.street_address }}
                             <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
                             {{ form.short_info }}
-                            <p class="text-danger">{{ form.sex.errors|striptags }}</p>
-                            {{ form.sex }}
+
                         </div>
                     </div>
                     <p class="text-danger">{{ form.categories.errors|striptags }}</p>
