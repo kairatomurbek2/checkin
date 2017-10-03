@@ -30,7 +30,9 @@
             {% endif %}
             <form class="login" method="POST" action="{% url 'account_login' %}">
                 {% csrf_token %}
+                <p class="text-danger">{{ form.login.errors|striptags }}</p>
                 {{ form.login|attr:'required' }}
+                <p class="text-danger">{{ form.password.errors|striptags }}</p>
                 {{ form.password|attr:'required' }}
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
