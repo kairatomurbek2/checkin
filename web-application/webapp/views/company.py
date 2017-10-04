@@ -217,7 +217,7 @@ class SpecialistSearchView(BaseFormView):
     def __get_users(self, form):
         company = Company.objects.get(slug=self.kwargs['company_slug'])
         email = form.cleaned_data['email']
-        if Specialist.objects.filter(user__email=email) and not Specialist.objects.filter(company=company):
+        if not Specialist.objects.filter(user__email=email, company=company):
             users = User.objects.filter(email=email)
             if email:
                 users = users.filter(email=email)
