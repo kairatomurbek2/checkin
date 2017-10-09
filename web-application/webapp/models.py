@@ -227,19 +227,6 @@ class Certificate(models.Model):
         verbose_name_plural = _('Сертификаты')
 
 
-# class SpecialistCertificate(models.Model):
-#     specialist = models.ForeignKey(Specialist, related_name='specialist_certifications', verbose_name=_('Специалист'))
-#     certificate = ImageField(verbose_name=_('Сертификат'), upload_to=specialist_certificate_path)
-#     name = models.CharField(verbose_name=_('Название'), max_length=80, blank=True)
-#
-#     def __str__(self):
-#         return self.name
-#
-#     class Meta:
-#         verbose_name = _('Сертификат Специалиста')
-#         verbose_name_plural = _('Сертификаты')
-
-
 class CompanyContact(models.Model):
     company = models.ForeignKey(Company, related_name='contacts', verbose_name=_('Учреждение'))
     phone = PhoneNumberField(verbose_name=_('Номер телефона'))
