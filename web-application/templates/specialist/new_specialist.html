@@ -6,6 +6,7 @@
 {% block content %}
     <main class="become_specilalist">
         <div class="grid">
+        {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data">
                 {% csrf_token %}
                 <p class="text-danger">{{ form.photo.errors|striptags }}</p>
@@ -31,6 +32,7 @@
 
                             <div class="contact-formset">
                                 {% for form in formset %}
+                                    <p class="text-danger">{{ form.phone.errors|striptags }}</p>
                                     {{ form.phone|add_class:"mask" }}
                                 {% endfor %}
                             </div>

@@ -89,11 +89,16 @@ class MasterCreateView(LoginRequiredMixin, CreateView):
     @staticmethod
     def send_email_notification(specialist):
 
+        if specialist.specialist_contacts.first():
+            phone = specialist.specialist_contacts.first().phone
+        else:
+            phone = ''
+
         context = {
             "name": specialist.full_name,
             "link": settings.DOMAIN_URL + '/admin/webapp/specialist/' + str(specialist.id) + '/change/',
             "created_at": specialist.created_at,
-            "phone": specialist.specialist_contacts.first().phone,
+            "phone": phone,
             "email": specialist.user.email
         }
 
@@ -118,7 +123,7 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
     model = Specialist
 
     def get_object(self, queryset=None):
-        return Specialist.objects.get(slug=self.kwargs['master_slug'])
+        return Specialist.all_objects.get(slug=self.kwargs['master_slug'])
 
     def get_context_data(self, **kwargs):
         context = super(MasterEditView, self).get_context_data(**kwargs)
