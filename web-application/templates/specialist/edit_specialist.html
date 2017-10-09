@@ -20,7 +20,7 @@
 					</span>
                             <label for="upload">
                                 <input type='file' id="upload" name="photo">
-                            </label>
+                            </label>   
                         </a>
 
                         <div class="master_desc">
@@ -58,13 +58,13 @@
                                     {{ form.full_name }}
                                     <div class="edit_phone_number">
                                         <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
-{#                                            <thead>#}
-{#                                            <tr>#}
-{#                                                <th scope="col">phone</th>#}
-{#                                                <th scope="col">Delete</th>#}
-{#                                            </tr>#}
-{#                                            </thead>#}
-{#                                            <tbody>#}
+                                            {#                                            <thead>#}
+                                            {#                                            <tr>#}
+                                            {#                                                <th scope="col">phone</th>#}
+                                            {#                                                <th scope="col">Delete</th>#}
+                                            {#                                            </tr>#}
+                                            {#                                            </thead>#}
+                                            {#                                            <tbody>#}
                                             {% for form in formset %}
                                                 <tr id="{{ form.prefix }}-row">
                                                     <td>
@@ -76,7 +76,7 @@
                                                     </td>
                                                 </tr>
                                             {% endfor %}
-{#                                            </tbody>#}
+                                            {#                                            </tbody>#}
                                         </table>
                                         {{ formset.management_form }}
                                     </div>
@@ -103,6 +103,27 @@
                             <p>Подробная информация</p>
                             {{ form.info }}
                             <p class="text-danger">{{ form.tags.errors|striptags }}</p>
+
+                            <p>Добавление сертификата</p>
+                        <table id="id_certificates" class="edit_company_certificates" cellspacing="0">
+
+                            <tbody>
+                            {% for form in certificates %}
+                                <tr id="{{ form.prefix }}-row">
+                                    <td class="chosen_certificate">
+                                        {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                        {{ form.certificate }}
+                                    </td>
+                                    <td class="del_certificate">
+                                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                        <img src="{% static 'img/x.png' %}" alt="">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ certificates.management_form }}
+
                             <button type="submit" class="button">Сохранить</button>
                         </div>
                     </div>
@@ -124,6 +145,12 @@
         $('#id_formset tbody tr').formset({
             prefix: 'specialist_contacts',
             addText: 'Добавить контакт',
+            deleteText: ''
+        });
+
+        $('#id_certificates tbody tr').formset({
+            prefix: 'specialist_certifications',
+            addText: 'Добавить сертификат',
             deleteText: ''
         });
 

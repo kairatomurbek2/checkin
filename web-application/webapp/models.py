@@ -213,7 +213,9 @@ class Specialist(models.Model):
 
 
 class Certificate(models.Model):
-    company = models.ForeignKey(Company, related_name='certifications', verbose_name=_('Учреждение'))
+    company = models.ForeignKey(Company, related_name='certifications', verbose_name=_('Учреждение'), blank=True,
+                                null=True)
+    specialist = models.ForeignKey(Specialist, related_name='specialist_certifications', blank=True, null=True)
     certificate = ImageField(verbose_name=_('Сертификат'), upload_to=certificate_path)
     name = models.CharField(verbose_name=_('Название'), max_length=80, blank=True)
 
@@ -223,6 +225,19 @@ class Certificate(models.Model):
     class Meta:
         verbose_name = _('Сертификат')
         verbose_name_plural = _('Сертификаты')
+
+
+# class SpecialistCertificate(models.Model):
+#     specialist = models.ForeignKey(Specialist, related_name='specialist_certifications', verbose_name=_('Специалист'))
+#     certificate = ImageField(verbose_name=_('Сертификат'), upload_to=specialist_certificate_path)
+#     name = models.CharField(verbose_name=_('Название'), max_length=80, blank=True)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         verbose_name = _('Сертификат Специалиста')
+#         verbose_name_plural = _('Сертификаты')
 
 
 class CompanyContact(models.Model):

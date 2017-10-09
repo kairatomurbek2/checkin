@@ -21,7 +21,10 @@ def certificate_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/companies/company_slug/certifications/<filename>
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
-    return "companies/{0}/certifications/{1}".format(instance.company.slug, filename)
+    if instance.company:
+        return "companies/{0}/certifications/{1}".format(instance.company.slug, filename)
+    else:
+        return "specialist/{0}/certifications/{1}".format(instance.specialist.slug, filename)
 
 
 def specialist_path(instance, filename):
