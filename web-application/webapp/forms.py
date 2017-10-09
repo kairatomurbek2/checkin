@@ -102,6 +102,9 @@ class CertificateForm(forms.ModelForm):
 CertFormSet = forms.inlineformset_factory(Company, Certificate, form=CertificateForm, extra=1,
                                           can_delete=True)
 
+CertSpecialistFormSet = forms.inlineformset_factory(Specialist, Certificate, form=CertificateForm, extra=1,
+                                                    can_delete=True)
+
 
 class CompanyContactForm(forms.ModelForm):
     phone = PhoneNumberField(required=False, widget=forms.TextInput(attrs={'placeholder': _('Номер телефона')}))

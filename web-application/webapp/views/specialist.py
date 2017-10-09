@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
-from webapp.forms import ContactFormSet
+from webapp.forms import ContactFormSet, CertSpecialistFormSet
 from webapp.models import Specialist, Invite
 from webapp.views.filters import SpecialistFilter
 
@@ -117,17 +117,20 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
     form_class = forms.MasterCreateForm
     model = Specialist
 
+    def get_object(self, queryset=None):
+        return Specialist.objects.get(slug=self.kwargs['master_slug'])
+
     def get_context_data(self, **kwargs):
         context = super(MasterEditView, self).get_context_data(**kwargs)
         if self.request.POST:
             context['formset'] = ContactFormSet(self.request.POST, instance=self.object)
+            context['certificates'] = CertSpecialistFormSet(self.request.POST, self.request.FILES, instance=self.object)
+
         else:
             context['formset'] = ContactFormSet(instance=self.object)
+            context['certificates'] = CertSpecialistFormSet(instance=self.object)
 
         return context
-
-    def get_object(self, queryset=None):
-        return Specialist.objects.get(slug=self.kwargs['master_slug'])
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, self.success_message)
@@ -136,12 +139,16 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context['formset']
+        certificates = context['certificates']
         specialist = form.save(commit=False)
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save()
-        if formset.is_valid():
+
+        if formset.is_valid() and certificates.is_valid():
             formset.save()
+            certificates.save()
+
         form.save_m2m()
         return super(MasterEditView, self).form_valid(form)
 
