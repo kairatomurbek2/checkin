@@ -20,7 +20,7 @@ def user_profile_permission(function):
 def specialist_owner(function):
     def decotator(request, *args, **kwargs):
         try:
-            specialist = Specialist.objects.get(slug=kwargs['master_slug'])
+            specialist = Specialist.all_objects.get(slug=kwargs['master_slug'])
             if specialist.user == request.user:
                 return function(request, *args, **kwargs)
             else:
