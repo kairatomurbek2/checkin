@@ -56,6 +56,10 @@
                                 <div class="add_block">
                                     <p class="text-danger">{{ form.full_name.errors|striptags }}</p>
                                     {{ form.full_name }}
+
+                                    <p class="text-danger">{{ form.sex.errors|striptags }}</p>
+                                    {{ form.sex|add_class:"s_sex" }}
+
                                     <div class="edit_phone_number">
                                         <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
                                             {#                                            <thead>#}
@@ -65,6 +69,9 @@
                                             {#                                            </tr>#}
                                             {#                                            </thead>#}
                                             {#                                            <tbody>#}
+
+
+
                                             {% for form in formset %}
                                                 <tr id="{{ form.prefix }}-row">
                                                     <td>
@@ -86,8 +93,7 @@
                                     {{ form.street_address }}
                                     <p class="text-danger">{{ form.short_info.errors|striptags }}</p>
                                     {{ form.short_info }}
-                                    <p class="text-danger">{{ form.sex.errors|striptags }}</p>
-                                    {{ form.sex }}
+
                                 </div>
                             </div>
                             <p class="text-danger">{{ form.categories.errors|striptags }}</p>
@@ -136,6 +142,15 @@
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
+
+        $('tbody .chosen_certificate').each(function (i, obj) {
+            if ($(obj).children('a').length == true) {
+                $(obj).prepend('<img src="" alt="">');
+                var img_link = $(obj).children('a').attr('href');
+                $(obj).children('img').attr('src', img_link);
+            }
+        });
+
         $(document).ready(
             function () {
                 $('#id_info').redactor({});

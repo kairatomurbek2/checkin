@@ -887,8 +887,12 @@ h5
 				width: 48%
 			& > .add_block
 				width: 49.7%
-				& > input
+				& > input,
+				& > select
 					width: 96.5%
+		& > p:last-of-type
+			padding-top: 40px
+			padding-bottom: 25px
 
 .master_img
 	position: relative
@@ -1656,7 +1660,7 @@ div.master:nth-child(3n)
 	height: auto
 	& > p
 		font-size: 18px
-		color: ldark-color
+		color: $ldark-color
 		padding-bottom: 40px
 	.text-danger
 		padding-bottom: 0
