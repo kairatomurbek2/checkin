@@ -170,10 +170,14 @@ header
 			width: 100%
 			height: 100%
 			padding-left: 30px
-			border: 0
+			border: 2px solid #fff
 			font-family: "GothamRegular", sans-serif
 			font-size: 16px
 			outline: 0
+			@include transition
+			&:hover,
+			&:focus
+				border: 2px solid $main-color
 	button
 		width: 90px
 		height: 100%
@@ -555,7 +559,6 @@ main
 				li:nth-child(2)
 					width: 140px
 					background: url("../img/p_number_icon.png") left 3px no-repeat
-					margin-bottom: 18px
 				li:last-of-type
 					height: auto
 					background: url("../img/e-mail.png") left 3px no-repeat
@@ -742,6 +745,7 @@ h5
 			-moz-border-radius: 25px
 			border-radius: 25px
 			margin-right: 10px
+			margin-bottom: 10px
 
 //-----------------COMPANY-----------------
 
@@ -1484,16 +1488,17 @@ h4
 			align-items: center
 			li
 				display: inline-block
+				margin-bottom: 12px
 				padding-left: 22px
 				line-height: 17px
 				overflow: hidden
 			li:first-of-type
 				height: 36px
 				background: url("../img/place.png") left 3px no-repeat
-				margin-bottom: 18px
 			li:last-of-type
 				height: 20px
 				background: url("../img/p_number_icon.png") left 3px no-repeat
+				margin-bottom: 0
 	& > a:last-of-type
 		position: absolute
 		left: 0
@@ -1718,9 +1723,13 @@ div.master:nth-child(3n)
 		display: flex
 		justify-content: space-between
 		align-items: flex-start
+		flex-wrap: wrap
 		padding-bottom: 40px
 		z-index: 101
 		position: relative
+		& > p
+			width: 100%
+			text-align: right
 		.selectize-control
 			width: 48%
 			&:first-of-type

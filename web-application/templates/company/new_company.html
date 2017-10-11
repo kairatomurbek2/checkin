@@ -54,8 +54,9 @@
                                 placeholder="Сфера деятельности">
 
                         </select>
-                        <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
+
                         {{ form.company_tags }}
+                        <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
                     </div>
                     <p>Юридистические данные</p>
                     <p class="text-danger">{{ form.legal_data.errors|striptags }}</p>
