@@ -1,0 +1,14 @@
+{% load staticfiles thumbnail %}
+{% if master.specialist_certifications.all %}
+    <div class="certificates">
+        <div id="lightgallery" class="certificate_slider">
+            {% for cert_object in master.specialist_certifications.all %}
+                <a href="{{ cert_object.certificate.url }}">
+                    {% thumbnail cert_object.certificate "185x260" as im %}
+                        <img src="{{ im.url }}" alt="{{ cert_object.name }}">
+                    {% endthumbnail %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
