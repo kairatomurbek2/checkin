@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
-from webapp.models import Company, Specialist
+from webapp.models import Company, Specialist, ScheduleSetting
 
 
 class CompanyShortSerializer(serializers.ModelSerializer, TaggitSerializer):
@@ -18,3 +18,9 @@ class SpecialistShortSerializer(serializers.ModelSerializer, TaggitSerializer):
     class Meta:
         model = Specialist
         fields = ('id', 'full_name', 'slug', 'tags')
+
+
+class ScheduleSettingFullSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleSetting
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch')

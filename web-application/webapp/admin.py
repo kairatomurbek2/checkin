@@ -3,7 +3,7 @@ import datetime
 from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
-from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact
+from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, ScheduleSetting
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 
@@ -83,3 +83,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Certificate, CertificateAdmin)
 admin.site.register(Specialist, SpecialistAdmin)
+admin.site.register(ScheduleSetting)

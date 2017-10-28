@@ -259,3 +259,23 @@ class Invite(models.Model):
     class Meta:
         verbose_name = _('Приглашение')
         verbose_name_plural = _('Приглашения')
+
+
+class ScheduleSetting(models.Model):
+    specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
+                                   null=True)
+    monday = models.CharField(max_length=255, verbose_name=_('Понедельник'), null=True, blank=True)
+    tuesday = models.CharField(max_length=255, verbose_name=_('Вторник'), null=True, blank=True)
+    wednesday = models.CharField(max_length=255, verbose_name=_('Среда'), null=True, blank=True)
+    thursday = models.CharField(max_length=255, verbose_name=_('Четверг'), null=True, blank=True)
+    friday = models.CharField(max_length=255, verbose_name=_('Пятница'), null=True, blank=True)
+    saturday = models.CharField(max_length=255, verbose_name=_('Суббота'), null=True, blank=True)
+    sunday = models.CharField(max_length=255, verbose_name=_('Воскресенье'), null=True, blank=True)
+    lunch = models.CharField(max_length=255, verbose_name=_('Обед'), null=True, blank=True)
+
+    def __str__(self):
+        return self.specialist.full_name
+
+    class Meta:
+        verbose_name = _('Настройка расписание')
+        verbose_name_plural = _('Настройка расписаний')
