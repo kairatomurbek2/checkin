@@ -261,6 +261,17 @@ class Invite(models.Model):
         verbose_name_plural = _('Приглашения')
 
 
+class TimeInterval(models.Model):
+    time_interval = models.CharField(max_length=255, verbose_name=_('Время'))
+
+    def __str__(self):
+        return self.time_interval
+
+    class Meta:
+        verbose_name = _('Промежуток времени')
+        verbose_name_plural = _('Промежутки времени')
+
+
 class ScheduleSetting(models.Model):
     specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
                                    null=True)
@@ -272,6 +283,7 @@ class ScheduleSetting(models.Model):
     saturday = models.CharField(max_length=255, verbose_name=_('Суббота'), null=True, blank=True)
     sunday = models.CharField(max_length=255, verbose_name=_('Воскресенье'), null=True, blank=True)
     lunch = models.CharField(max_length=255, verbose_name=_('Обед'), null=True, blank=True)
+    time_interval = models.ForeignKey(TimeInterval, related_name='time_intervals_schedule')
 
     def __str__(self):
         return self.specialist.full_name
