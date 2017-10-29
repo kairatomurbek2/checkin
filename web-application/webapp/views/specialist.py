@@ -222,11 +222,13 @@ class SpecialistInviteAcceptView(LoginRequiredMixin, TemplateView):
 
 
 class CreateReviewForSpecialistView(LoginRequiredMixin, CreateView):
+    success_message = Messages.AddReview.adding_success
     model = Rating
     form_class = forms.RatingForm
-    template_name = 'specialist/master_detail.html'
+    template_name = 'specialist/specialist_review_form.html'
 
     def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
         return reverse('master_detail', args=(self.kwargs.get('master_slug'),))
 
     def form_valid(self, form):
@@ -234,7 +236,7 @@ class CreateReviewForSpecialistView(LoginRequiredMixin, CreateView):
         rating = form.save(commit=False)
         rating.user = self.request.user
         rating.specialist = specialist
-
+        rating.save()
         return super(CreateReviewForSpecialistView, self).form_valid(form)
 
 
