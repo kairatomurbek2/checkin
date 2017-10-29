@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from webapp.decorators import user_profile_permission, specialist_owner, company_owner
+from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -26,5 +26,13 @@ urlpatterns = [
         company_owner(company_views.SpecialistSearchView.as_view()),
         name='user_search'),
     url(r'^search/$', landing_views.SearchView.as_view(), name='search'),
-    url(r'^invite-accept/$', specialist_views.SpecialistInviteAcceptView.as_view(), name='invite_accept')
+    url(r'^invite-accept/$', specialist_views.SpecialistInviteAcceptView.as_view(), name='invite_accept'),
+    url(r'^create_review/(?P<master_slug>[-_\w]+)/specialist/$',
+        user_review_count_check(specialist_views.CreateReviewForSpecialistView.as_view()),
+        name='create_review_specialist'),
+    url(r'^review/(?P<company_slug>[-_\w]+)/company$',
+        user_review_count_check(company_views.CreateReviewForCompanyView.as_view()),
+        name='create_review_company'),
+    url(r'master/(?P<master_slug>[-_\w]+)/reviews/$', specialist_views.ReviewSpecialistListView.as_view(), name='specialist_reviews'),
+    url(r'company/(?P<company_slug>[-_\w]+)/reviews/$', company_views.ReviewCompanyListView.as_view(), name='company_reviews'),
 ]

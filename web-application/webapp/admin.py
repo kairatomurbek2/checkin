@@ -3,9 +3,7 @@ import datetime
 from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
-from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, \
-    ScheduleSetting, \
-    TimeInterval
+from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, Rating, ScheduleSetting, TimeInterval
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 
@@ -42,7 +40,7 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug']
     list_filter = ['status']
     list_display = ['name', 'slug', 'phone', 'status', 'email']
-    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories')
+    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories', 'rating')
     # form = CompanyAdminForm
     inlines = [CompanyContactInline]
 
@@ -63,7 +61,7 @@ class SpecialistAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'slug']
     list_filter = ['company']
     list_display = ['full_name', 'slug']
-    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories')
+    readonly_fields = ('created_at', 'edited_at', 'edited_by', 'categories', 'rating')
     inlines = [SpecialistContactInline]
 
     def save_model(self, request, obj, form, change):
@@ -81,6 +79,11 @@ class CertificateAdmin(admin.ModelAdmin):
     list_display = ['company']
 
 
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['user']
+
+
+admin.site.register(Rating, RatingAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Certificate, CertificateAdmin)

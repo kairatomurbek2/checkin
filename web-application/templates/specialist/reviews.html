@@ -1,0 +1,9 @@
+{% for review in master.rating_specialist.all|slice:":3" %}
+    <p>Пользователь: {{ review.user }}</p>
+    <p>Оценка: {{ review.count }}</p>
+    <p>Date: {{ review.created_at }}</p>
+{% endfor %}
+
+{% if master.rating_specialist.all %}
+    <a href="{% url 'specialist_reviews' master.slug %}"> All Reviews</a>
+{% endif %}

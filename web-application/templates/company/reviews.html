@@ -1,0 +1,7 @@
+{% for review in company.rating_company.all %}
+    <p>Пользователь: {{ review.user }}</p>
+    <p>Оценка: {{ review.count }}</p>
+    <p>Комментарий: {{ review.comment }}</p>
+{% endfor %}
+
+<a href="{% url 'company_reviews' company.slug %}"> All Reviews</a>

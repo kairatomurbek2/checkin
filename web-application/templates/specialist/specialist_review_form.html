@@ -1,0 +1,30 @@
+<div class="review_modal">
+    <div class="review_form">
+        {% if user.is_authenticated %}
+            {% if master.rating_specialist.all|length >= 1 %}
+                <p>Вы уже добавляли отзыв</p>
+            {% else %}
+                <form action="{% url 'create_review_specialist' master.slug %}" method="post" id="review_form">
+                    {% csrf_token %}
+                    <p>НАПИСАТЬ ОТЗЫВ</p>
+                    <span></span>
+
+                    <div class="evaluation">
+					<span class="star-cb-group">
+                        {{ form.count }}
+    				</span>
+                    </div>
+
+                    {{ form.comment }}
+
+                    <button type="submit" class="button">Оставить отзыв</button>
+                </form>
+            {% endif %}
+
+        {% else %}
+            <p>Авторизуйтесь чтобы оставить отзыв</p>
+        {% endif %}
+
+
+    </div>
+</div>
