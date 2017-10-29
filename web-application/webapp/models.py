@@ -88,8 +88,8 @@ class Company(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-
-        self.rating = round(self.rating, 2)
+        if self.rating:
+            self.rating = round(self.rating, 2)
 
         super(Company, self).save(*args, **kwargs)
 
@@ -183,8 +183,8 @@ class Specialist(models.Model):
         return reverse('master_detail', kwargs={'master_slug': self.slug})
 
     def save(self, *args, **kwargs):
-
-        self.rating = round(self.rating, 2)
+        if self.rating:
+            self.rating = round(self.rating, 2)
         super(Specialist, self).save(*args, **kwargs)
 
         if not self.slug:
