@@ -222,7 +222,7 @@ class SpecialistInviteAcceptView(LoginRequiredMixin, TemplateView):
 
 
 class CreateReviewForSpecialistView(LoginRequiredMixin, CreateView):
-    success_message = Messages.AddReview.adding_success
+    success_message = Messages.AddReview.adding_success_specialist
     model = Rating
     form_class = forms.RatingForm
     template_name = 'specialist/specialist_review_form.html'

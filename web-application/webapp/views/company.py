@@ -263,11 +263,13 @@ class SpecialistSearchView(BaseFormView):
 
 
 class CreateReviewForCompanyView(LoginRequiredMixin, CreateView):
+    success_message = Messages.AddReview.adding_success_company
     model = Rating
     form_class = forms.RatingForm
-    template_name = 'company/company_detail.html'
+    template_name = 'company/rating_company_form.html'
 
     def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
         return reverse('company_detail', args=(self.kwargs.get('company_slug'),))
 
     def form_valid(self, form):
@@ -275,7 +277,7 @@ class CreateReviewForCompanyView(LoginRequiredMixin, CreateView):
         rating = form.save(commit=False)
         rating.user = self.request.user
         rating.company = company
-
+        rating.save()
         return super(CreateReviewForCompanyView, self).form_valid(form)
 
 

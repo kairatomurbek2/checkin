@@ -31,4 +31,5 @@ class Messages:
         user_invite_failed = _('Не удалось отправить приглашение. Пожалуйста, повторите попытку позже.')
 
     class AddReview:
-        adding_success = _('Вы успешно добавили отзыв специалисту!')
+        adding_success_specialist = _('Вы успешно добавили отзыв специалисту!')
+        adding_success_company = _('Вы успешно добавили отзыв компании!')
