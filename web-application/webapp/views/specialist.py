@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
-from webapp.models import Specialist, Invite
+from webapp.models import Specialist, Invite, Rating
 from webapp.views.filters import SpecialistFilter
 
 
@@ -169,6 +169,7 @@ class MasterDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MasterDetailView, self).get_context_data(**kwargs)
         context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        context['form'] = forms.RatingForm
         return context
 
 
@@ -218,3 +219,30 @@ class SpecialistInviteAcceptView(LoginRequiredMixin, TemplateView):
             )
         except SMTPException:
             pass
+
+
+class CreateReviewForSpecialistView(LoginRequiredMixin, CreateView):
+    model = Rating
+    form_class = forms.RatingForm
+    template_name = 'specialist/master_detail.html'
+
+    def get_success_url(self):
+        return reverse('master_detail', args=(self.kwargs.get('master_slug'),))
+
+    def form_valid(self, form):
+        specialist = Specialist.objects.get(slug=self.kwargs.get('master_slug'))
+        rating = form.save(commit=False)
+        rating.user = self.request.user
+        rating.specialist = specialist
+
+        return super(CreateReviewForSpecialistView, self).form_valid(form)
+
+
+class ReviewSpecialistListView(ListView):
+    template_name = 'specialist/all_review.html'
+    model = Rating
+
+    def get_queryset(self):
+        queryset = Rating.objects.filter(specialist__slug=self.kwargs.get('master_slug'))
+
+        return queryset

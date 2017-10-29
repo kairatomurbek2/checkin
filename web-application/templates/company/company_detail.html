@@ -47,7 +47,7 @@
 
                     {% endif %}
                     {% if request.user == company.user %}
-                        <a href="{% url 'company_edit'  company.slug %}">Редактировать</a>
+                        <a href="{% url 'company_edit' company.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
                 {% if request.user == company.user %}
@@ -77,13 +77,19 @@
                             <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
+
                 </div>
+
                 {% include 'company/specialist_of_company.html' %}
             </div>
+
+
             {% include 'company/certificate_of_company.html' %}
         </div>
     </main>
 
+    {% include 'company/rating_company_form.html' %}
+    {% include 'company/reviews.html' %}
 {% endblock %}
 
 {% block js %}

@@ -3,10 +3,7 @@ from __future__ import unicode_literals
 import uuid
 
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
 from django.db import models
-from django.template.loader import render_to_string
-from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
@@ -15,8 +12,12 @@ from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-from main.choices import STATUS_CHOICES, SEX_CHOICES
+from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.urls import reverse
 
 
 class CategoryManager(models.Manager):
@@ -46,7 +47,8 @@ class Category(MPTTModel):
 
 class CompanyManager(models.Manager):
     def get_queryset(self):
-        return super(CompanyManager, self).get_queryset().filter(status='AC').order_by('-logo', '-short_info',
+        return super(CompanyManager, self).get_queryset().filter(status='AC').order_by('-rating', '-logo',
+                                                                                       '-short_info',
                                                                                        '-created_at')
 
 
@@ -70,6 +72,7 @@ class Company(models.Model):
     message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
                                        null=True)
     company_tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
+    rating = models.FloatField(verbose_name=_('Рейтинг'), editable=False, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True, verbose_name=_("Широта"))
     longitude = models.FloatField(blank=True, null=True, verbose_name=_("Долгота"))
     all_objects = models.Manager()
@@ -85,6 +88,9 @@ class Company(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+
+        self.rating = round(self.rating, 2)
+
         super(Company, self).save(*args, **kwargs)
 
         def get_html_message(template):
@@ -131,7 +137,8 @@ class Company(models.Model):
 
 class SpecialistManager(models.Manager):
     def get_queryset(self):
-        return super(SpecialistManager, self).get_queryset().filter(status='AC').order_by('-photo', '-short_info',
+        return super(SpecialistManager, self).get_queryset().filter(status='AC').order_by('-rating', '-photo',
+                                                                                          '-short_info',
                                                                                           '-created_at')
 
 
@@ -151,6 +158,7 @@ class Specialist(models.Model):
     message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
                                        null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
+    rating = models.FloatField(verbose_name=_('Рейтинг'), editable=False, blank=True, null=True)
     edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
     edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
     tags = TaggableManager(verbose_name=_('Услуги'), blank=True)
@@ -175,6 +183,8 @@ class Specialist(models.Model):
         return reverse('master_detail', kwargs={'master_slug': self.slug})
 
     def save(self, *args, **kwargs):
+
+        self.rating = round(self.rating, 2)
         super(Specialist, self).save(*args, **kwargs)
 
         if not self.slug:
@@ -291,3 +301,54 @@ class ScheduleSetting(models.Model):
     class Meta:
         verbose_name = _('Настройка расписание')
         verbose_name_plural = _('Настройка расписаний')
+
+
+class RatingManager(models.Manager):
+    def get_queryset(self):
+        return super(RatingManager, self).get_queryset().order_by('-created_at')
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, verbose_name=_('Пользователь'))
+    specialist = models.ForeignKey(Specialist, related_name='rating_specialist', verbose_name=_('Специалист'),
+                                   blank=True, null=True)
+    company = models.ForeignKey(Company, related_name='rating_company', verbose_name=_('Учреждение'), blank=True,
+                                null=True)
+
+    count = models.PositiveIntegerField(choices=RATING_CHOICES, verbose_name=_('Диапазон'))
+    comment = models.TextField(verbose_name=_('Комментарий'))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    all_objects = models.Manager()
+    objects = RatingManager()
+
+    class Meta:
+        verbose_name = _('Рейтинг')
+        verbose_name_plural = _('Рейтинги (Отзывы)')
+        ordering = ['created_at']
+
+    def __init__(self, *args, **kwargs):
+        super(Rating, self).__init__(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.count)
+
+    def save(self, *args, **kwargs):
+        super(Rating, self).save(*args, **kwargs)
+        if self.specialist:
+            if self.specialist.rating is None:
+                self.specialist.rating = self.count
+            else:
+                current_rating = self.specialist.rating
+                self.specialist.rating = (current_rating + float(self.count)) / 2
+
+            self.specialist.save()
+
+        if self.company:
+            if self.company.rating is None:
+                self.company.rating = self.count
+            else:
+                current_rating = self.company.rating
+                self.company.rating = (current_rating + float(self.count)) / 2
+
+            self.company.save()

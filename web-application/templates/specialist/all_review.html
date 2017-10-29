@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+    {% if rating_list %}
+        {% for rating in rating_list %}
+            <p>Пользователь: {{ rating.user }}</p>
+            <p>Оценка: {{ rating.count }}</p>
+            <p>Date: {{ rating.created_at }}</p>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

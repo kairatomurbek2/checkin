@@ -18,7 +18,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
-from webapp.models import Company, Category, Specialist, Invite
+from webapp.models import Company, Category, Specialist, Invite, Rating
 from webapp.views.base_views import BaseFormView
 from webapp.views.filters import CompanyFilter
 
@@ -143,6 +143,7 @@ class CompanyDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CompanyDetail, self).get_context_data(**kwargs)
         context['company'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
+        context['form'] = forms.RatingForm
         return context
 
 
@@ -259,3 +260,30 @@ class SpecialistSearchView(BaseFormView):
     def invite_form_invalid(self, form, invite_form):
         messages.error(self.request, Messages.UserInvite.user_invite_error)
         return self.render_to_response({'form': form, 'users': self.users, 'invite_form': invite_form})
+
+
+class CreateReviewForCompanyView(LoginRequiredMixin, CreateView):
+    model = Rating
+    form_class = forms.RatingForm
+    template_name = 'company/company_detail.html'
+
+    def get_success_url(self):
+        return reverse('company_detail', args=(self.kwargs.get('company_slug'),))
+
+    def form_valid(self, form):
+        company = Company.objects.get(slug=self.kwargs.get('company_slug'))
+        rating = form.save(commit=False)
+        rating.user = self.request.user
+        rating.company = company
+
+        return super(CreateReviewForCompanyView, self).form_valid(form)
+
+
+class ReviewCompanyListView(ListView):
+    template_name = 'company/all_review.html'
+    model = Rating
+
+    def get_queryset(self):
+        queryset = Rating.objects.filter(company__slug=self.kwargs.get('company_slug'))
+
+        return queryset

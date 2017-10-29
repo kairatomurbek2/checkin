@@ -7,9 +7,9 @@ from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from redactor.widgets import RedactorEditor
 from taggit.forms import TagWidget
-from main.choices import SEX_CHOICES
+from main.choices import SEX_CHOICES, RATING_CHOICES
 
-from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact
+from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact, Rating
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -143,3 +143,12 @@ class UserInviteForm(forms.Form):
         users = kwargs.pop('users', User.objects.none())
         super(UserInviteForm, self).__init__(*args, **kwargs)
         self.fields['user'].queryset = users
+
+
+class RatingForm(forms.ModelForm):
+    count = forms.RadioSelect(choices=RATING_CHOICES)
+    comment = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows': 10, 'cols': 30}))
+
+    class Meta:
+        model = Rating
+        fields = ['count', 'comment']

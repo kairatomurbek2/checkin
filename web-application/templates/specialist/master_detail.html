@@ -41,6 +41,7 @@
                             </li>
                         </ul>
                     </div>
+
                     {% if request.user != master.user %}
                         <a href="#" id="leave_comment">ОСТАВИТЬ ОТЗЫВ</a>
                     {% endif %}
@@ -48,6 +49,7 @@
                         <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
+                {% include 'specialist/reviews.html' %}
             </div>
             <div class="shedule_block">
                 {% include 'messages.html' %}
@@ -67,4 +69,7 @@
             {% include 'specialist/certificate_of_specialist.html' %}
         </div>
     </main>
+
+    {% include 'specialist/specialist_review_form.html' %}
+
 {% endblock %}

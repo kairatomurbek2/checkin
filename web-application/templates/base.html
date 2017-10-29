@@ -38,7 +38,6 @@
             <span class="r_user">Уже есть аккаунт?</span>
 
         </form>
-
     </div>
 </div>
 
@@ -61,15 +60,15 @@
 </div>
 
 <div class="modal logout_modal">
-        <div>
-            <p>Вы уверены что хотите выйти?</p>
-            <form action="{% url 'account_logout' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Да</button>
-            </form>
-            <button class="no">Нет</button>
-        </div>
+    <div>
+        <p>Вы уверены что хотите выйти?</p>
+        <form action="{% url 'account_logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Да</button>
+        </form>
+        <button class="no">Нет</button>
     </div>
+</div>
 
 <div class="blur">
     {% include 'header.html' %}
@@ -77,36 +76,7 @@
     {% include 'footer.html' %}
 </div>
 
-<div class="review_modal">
-		<div class="review_form">
-			<form action="#" method="post">
-				<p>НАПИСАТЬ ОТЗЫВ</p>
-				<span></span>
 
-				<div class="evaluation">
-					<span class="star-cb-group">
-      					<input type="radio" id="rating-5" name="rating" value="5"/>
-						<label for="rating-5">5</label>
-      					<input type="radio" id="rating-4" name="rating" value="4"/>
-						<label for="rating-4">4</label>
-      					<input type="radio" id="rating-3" name="rating" value="3"/>
-						<label for="rating-3">3</label>
-      					<input type="radio" id="rating-2" name="rating" value="2"/>
-						<label for="rating-2">2</label>
-      					<input type="radio" id="rating-1" name="rating" value="1"/>
-						<label for="rating-1">1</label>
-						<!--<input type="radio" id="rating-0" name="rating" value="0" class="star-cb-clear"/>-->
-						<!--<label for="rating-0">0</label>-->
-    				</span>
-				</div>
-
-				<textarea name="review" id="review" cols="30" rows="10"></textarea>
-
-				 <button type="submit" class="button">Оставить отзыв</button>
-			</form>
-
-		</div>
-	</div>
 
 
 <script src="{% static 'js/main.js' %}"></script>

@@ -90,13 +90,14 @@ $(function () {
         event.stopPropagation();
         event.preventDefault();
         $('.review_modal').fadeIn(350);
-        $('.blur').css('filter', 'blur(5px)');
+        // $('.blur').css('filter', 'blur(5px)');
+
     });
 
     $('.log-out').click(function (event) {
         $('.modal').css('display', 'none');
         $('.logout_modal').fadeIn(350);
-        // $('.logout_modal').css('display', 'none');
+        $('.logout_modal').css('display', 'none');
         $('.blur').css('filter', 'blur(5px)');
     });
 
