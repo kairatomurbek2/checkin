@@ -5,6 +5,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
     ReservationFullSerializer
+from datetime import date, timedelta
 
 
 class Pagination(LimitOffsetPagination):
@@ -46,4 +47,7 @@ class ReservationView(generics.ListAPIView):
     pagination_class = Pagination
 
     def get_queryset(self):
-        return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+        today = date.today()
+        month = today + timedelta(days=30)
+        return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'], created_at__gte=today,
+                                          date_time_reservation__lte=month)
