@@ -352,3 +352,20 @@ class Rating(models.Model):
                 self.company.rating = (current_rating + float(self.count)) / 2
 
             self.company.save()
+
+
+class Reservation(models.Model):
+    specialist = models.ForeignKey(Specialist, related_name='specialist_reservations')
+    user = models.ForeignKey(User, related_name='user_reservations', verbose_name=_('Кто бронировал'))
+    full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
+    date_time_reservation = models.DateTimeField(verbose_name=_('Дата и время бронирование'))
+    status = models.BooleanField(default=False, verbose_name=_('Статус'))
+    phone = PhoneNumberField(verbose_name=_('Номер телефона'))
+
+    def __str__(self):
+        return self.full_name
+
+    class Meta:
+        verbose_name = _('Предварительный заказ')
+        verbose_name_plural = _('предварительные заказы')

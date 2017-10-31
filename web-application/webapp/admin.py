@@ -3,7 +3,8 @@ import datetime
 from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
-from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, Rating, ScheduleSetting, TimeInterval
+from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, Rating, \
+    ScheduleSetting, TimeInterval, Reservation
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 
@@ -83,6 +84,12 @@ class RatingAdmin(admin.ModelAdmin):
     list_display = ['user']
 
 
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'specialist']
+    list_filter = ['status', 'date_time_reservation']
+    readonly_fields = ('created_at', )
+
+
 admin.site.register(Rating, RatingAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Company, CompanyAdmin)
@@ -90,3 +97,4 @@ admin.site.register(Certificate, CertificateAdmin)
 admin.site.register(Specialist, SpecialistAdmin)
 admin.site.register(ScheduleSetting)
 admin.site.register(TimeInterval)
+admin.site.register(Reservation, ReservationAdmin)

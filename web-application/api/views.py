@@ -2,8 +2,9 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.pagination import LimitOffsetPagination
 
-from webapp.models import Company, Specialist, ScheduleSetting
-from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer
+from webapp.models import Company, Specialist, ScheduleSetting, Reservation
+from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
+    ReservationFullSerializer
 
 
 class Pagination(LimitOffsetPagination):
@@ -37,3 +38,12 @@ class ScheduleSettingRetrieveView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return ScheduleSetting.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+
+
+class ReservationView(generics.ListAPIView):
+    serializer_class = ReservationFullSerializer
+    lookup_field = 'specialist__slug'
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
