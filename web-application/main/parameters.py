@@ -33,3 +33,6 @@ class Messages:
     class AddReview:
         adding_success_specialist = _('Вы успешно добавили отзыв специалисту!')
         adding_success_company = _('Вы успешно добавили отзыв компании!')
+
+    class AddScheduleSetting:
+        adding_success = _('Настройка расписание успешно созданы!')

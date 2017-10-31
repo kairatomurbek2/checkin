@@ -1,8 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.http import HttpResponseForbidden
+from django.http import HttpResponseRedirect
 
-from webapp.models import Company, Specialist, Rating
+from webapp.models import Company, Specialist, Rating, ScheduleSetting
 
 
 def user_profile_permission(function):
@@ -74,5 +75,48 @@ def user_review_count_check(function):
 
         except Rating.DoesNotExist:
             raise Http404("You are not rated")
+
+    return decorator
+
+
+def schedule_setting_specialist(function):
+    def decotator(request, *args, **kwargs):
+        try:
+            specialist = Specialist.all_objects.get(slug=kwargs['master_slug'])
+            if specialist.user == request.user:
+                schedule_setting = ScheduleSetting.objects.filter(specialist__slug=kwargs.get('master_slug')).count()
+                if schedule_setting >= 1:
+                    raise Http404("Page not found")
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Specialist.DoesNotExist:
+            raise Http404("Master not found")
+
+    return decotator
+
+
+def user_specialist_create_check(function):
+    def decorator(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect('/accounts/login/')
+        specialist = Specialist.objects.filter(user=request.user).count()
+        if specialist >= 1:
+            raise Http404("Page not found")
+        else:
+            return function(request, *args, **kwargs)
+
+    return decorator
+
+
+def user_company_create_check(function):
+    def decorator(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect('/accounts/login/')
+        company = Company.objects.filter(user=request.user).count()
+        if company >= 1:
+            raise Http404("Page not found")
+        else:
+            return function(request, *args, **kwargs)
 
     return decorator

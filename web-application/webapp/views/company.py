@@ -78,7 +78,7 @@ class CompanyList(ListView):
         return context
 
 
-class CompanyCreateView(LoginRequiredMixin, CreateView):
+class CompanyCreateView(CreateView):
     success_message = Messages.AddCompany.adding_success
     error_message = Messages.AddCompany.adding_error
     template_name = 'company/new_company.html'

@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
-from webapp.models import Specialist, Invite, Rating
+from webapp.models import Specialist, Invite, Rating, ScheduleSetting
 from webapp.views.filters import SpecialistFilter
 
 
@@ -50,7 +50,7 @@ class MastersList(ListView):
         return context
 
 
-class MasterCreateView(LoginRequiredMixin, CreateView):
+class MasterCreateView(CreateView):
     success_message = Messages.AddMaster.adding_success
     error_message = Messages.AddMaster.adding_error
     template_name = 'specialist/new_specialist.html'
@@ -248,3 +248,26 @@ class ReviewSpecialistListView(ListView):
         queryset = Rating.objects.filter(specialist__slug=self.kwargs.get('master_slug'))
 
         return queryset
+
+
+class CreateScheduleSettingView(LoginRequiredMixin, CreateView):
+    success_message = Messages.AddScheduleSetting.adding_success
+    model = ScheduleSetting
+    form_class = forms.ScheduleSettingForm
+    template_name = 'specialist/add_schedule_setting.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateScheduleSettingView, self).get_context_data(**kwargs)
+        context['master'] = get_object_or_404(Specialist, slug=self.kwargs.get('master_slug'))
+        return context
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        return reverse('master_detail', args=(self.kwargs.get('master_slug'),))
+
+    def form_valid(self, form):
+        specialist = Specialist.objects.get(slug=self.kwargs.get('master_slug'))
+        schedule_setting = form.save(commit=False)
+        schedule_setting.specialist = specialist
+        schedule_setting.save()
+        return super(CreateScheduleSettingView, self).form_valid(form)

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load staticfiles widget_tweaks thumbnail %}
+
+{% block content %}
+    <main class="specialist_author">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid">
+                <div class="personal_block">
+                    <div class="master">
+                        <a class="master_img">
+					<span>
+                        {% if master.photo %}
+                            {% thumbnail master.photo "154x154" as im %}
+                                <img id="img" src="{{ im.url }}" alt={{ master.full_name }}>
+                            {% endthumbnail %}
+                        {% endif %}
+					</span>
+                        </a>
+
+                        <div class="master_desc">
+                            <h4>{{ master.full_name }}</h4>
+                            <span>
+                                {{ master.get_categories }}
+                            </span>
+                            <span></span>
+                            <p>{{ master.short_info }}</p>
+                            <ul>
+                                <li>
+                                    {{ master.street_address }}
+                                </li>
+                                <li>
+                                    {% for contact in master.specialist_contacts.all %}
+                                        {{ contact.phone }}
+                                    {% endfor %}
+                                </li>
+                                <li>
+                                    {{ master.user.email }}
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#" class="hidden">РЕДАКТИРОВАТЬ</a>
+                    </div>
+                </div>
+                <div class="shedule_block">
+                    {% include 'messages.html' %}
+                    <div class="edit_block">
+                        <div class="general_information">
+                            {{ form.monday }}
+                            {{ form.tuesday }}
+                            {{ form.wednesday }}
+                            {{ form.thursday }}
+                            {{ form.friday }}
+                            {{ form.saturday }}
+                            {{ form.sunday }}
+                            {{ form.lunch }}
+                            {{ form.time_interval }}
+                            <button type="submit" class="button">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+{% endblock %}

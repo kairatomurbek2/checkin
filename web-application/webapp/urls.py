@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check
+from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check, \
+    schedule_setting_specialist, user_specialist_create_check, user_company_create_check
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -14,8 +15,10 @@ urlpatterns = [
         name='company_specialist_list'),
     url(r'^profiles/(?P<slug>[-_\w]+)/$', user_profile_permission(profile_views.ProfileEditView.as_view()),
         name='profile_update'),
-    url(r'^masters/create/$', specialist_views.MasterCreateView.as_view(), name='new_master'),
-    url(r'^companies/create/$', company_views.CompanyCreateView.as_view(), name='new_company'),
+    url(r'^masters/create/$', user_specialist_create_check(specialist_views.MasterCreateView.as_view()),
+        name='new_master'),
+    url(r'^companies/create/$', user_company_create_check(company_views.CompanyCreateView.as_view()),
+        name='new_company'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/$', specialist_views.MasterDetailView.as_view(), name='master_detail'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/update/$', specialist_owner(specialist_views.MasterEditView.as_view()),
         name='master_edit'),
@@ -30,9 +33,13 @@ urlpatterns = [
     url(r'^create_review/(?P<master_slug>[-_\w]+)/specialist/$',
         user_review_count_check(specialist_views.CreateReviewForSpecialistView.as_view()),
         name='create_review_specialist'),
-    url(r'^review/(?P<company_slug>[-_\w]+)/company$',
+    url(r'^review/(?P<company_slug>[-_\w]+)/company/$',
         user_review_count_check(company_views.CreateReviewForCompanyView.as_view()),
         name='create_review_company'),
-    url(r'master/(?P<master_slug>[-_\w]+)/reviews/$', specialist_views.ReviewSpecialistListView.as_view(), name='specialist_reviews'),
-    url(r'company/(?P<company_slug>[-_\w]+)/reviews/$', company_views.ReviewCompanyListView.as_view(), name='company_reviews'),
+    url(r'^master/(?P<master_slug>[-_\w]+)/reviews/$', specialist_views.ReviewSpecialistListView.as_view(),
+        name='specialist_reviews'),
+    url(r'^company/(?P<company_slug>[-_\w]+)/reviews/$', company_views.ReviewCompanyListView.as_view(),
+        name='company_reviews'),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/add-schedule-setting/$',
+        schedule_setting_specialist(specialist_views.CreateScheduleSettingView.as_view()), name='add_schedule_setting')
 ]
