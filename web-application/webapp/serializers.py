@@ -1,4 +1,3 @@
-from django.conf import settings
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
@@ -50,3 +49,9 @@ class ReservationFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ('id', 'full_name', 'date_time_reservation', 'status', 'phone')
+
+
+class ReservationCreteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ('full_name', 'date_time_reservation', 'phone')
