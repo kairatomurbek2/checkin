@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
 from rest_framework import generics
@@ -56,7 +57,7 @@ class ReservationListView(generics.ListAPIView):
                                           date_time_reservation__lte=month)
 
 
-class ReservationCreateView(generics.CreateAPIView):
+class ReservationCreateView(LoginRequiredMixin, generics.CreateAPIView):
     serializer_class = ReservationCreteSerializer
 
     def create(self, request, *args, **kwargs):
