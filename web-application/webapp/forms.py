@@ -162,3 +162,12 @@ class ScheduleSettingForm(forms.ModelForm):
         model = ScheduleSetting
         fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',
                   'time_interval']
+
+
+class ScheduleSettingUpdateForm(forms.ModelForm):
+    time_interval = forms.ModelChoiceField(TimeInterval.objects.all(), empty_label=None)
+
+    class Meta:
+        model = ScheduleSetting
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',
+                  'time_interval']

@@ -35,4 +35,5 @@ class Messages:
         adding_success_company = _('Вы успешно добавили отзыв компании!')
 
     class AddScheduleSetting:
-        adding_success = _('Настройка расписание успешно созданы!')
+        adding_success = _('Настройка расписание успешно созданы !')
+        update_success = _('Настройка расписание успешно обновлены !')
