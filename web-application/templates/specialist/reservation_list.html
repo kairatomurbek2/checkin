@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+    {% if object_list %}
+        {% for obj in object_list %}
+            <p>Дата и время записи: {{ obj.created_at }}</p>
+            <p>Дата и время бронирование: {{ obj.date_time_reservation }}</p>
+            <p>Номер телефона: {{ obj.phone }}</p>
+            <p>Кто бронировал: {{ obj.full_name }}</p>
+            <p>Статус: {{ obj.status }}</p>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
-from webapp.models import Specialist, Invite, Rating, ScheduleSetting
+from webapp.models import Specialist, Invite, Rating, ScheduleSetting, Reservation
 from webapp.views.filters import SpecialistFilter
 
 
@@ -290,3 +290,11 @@ class UpdateScheduleSettingView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, self.success_message)
         return reverse('master_detail', args=(self.kwargs.get('master_slug'),))
+
+
+class ReservationListView(LoginRequiredMixin, ListView):
+    model = Reservation
+    template_name = 'specialist/reservation_list.html'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(specialist__slug=self.kwargs['master_slug']).order_by('-created_at')

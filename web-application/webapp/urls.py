@@ -43,5 +43,7 @@ urlpatterns = [
     url(r'^masters/(?P<master_slug>[-_\w]+)/add-schedule-setting/$',
         schedule_setting_specialist(specialist_views.CreateScheduleSettingView.as_view()), name='add_schedule_setting'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/update-schedule-setting/$',
-        specialist_owner(specialist_views.UpdateScheduleSettingView.as_view()), name='update_schedule_setting')
+        specialist_owner(specialist_views.UpdateScheduleSettingView.as_view()), name='update_schedule_setting'),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/reservations/$',
+        specialist_owner(specialist_views.ReservationListView.as_view()), name='master_reservation')
 ]
