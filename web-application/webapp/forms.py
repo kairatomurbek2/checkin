@@ -156,7 +156,7 @@ class RatingForm(forms.ModelForm):
 
 
 class ScheduleSettingForm(forms.ModelForm):
-    time_interval = forms.ModelChoiceField(TimeInterval.objects.all(), empty_label=None)
+    time_interval = forms.ModelChoiceField(TimeInterval.objects.all(), empty_label=None, initial=5)
 
     class Meta:
         model = ScheduleSetting
