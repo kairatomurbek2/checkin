@@ -2,7 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
-
+from django.http import JsonResponse
+from django.utils.translation import ugettext_lazy as _
 from webapp.models import Company, Specialist, Rating, ScheduleSetting
 
 
@@ -116,6 +117,19 @@ def user_company_create_check(function):
         company = Company.objects.filter(user=request.user).count()
         if company >= 1:
             raise Http404("Page not found")
+        else:
+            return function(request, *args, **kwargs)
+
+    return decorator
+
+
+def login_check(function):
+    def decorator(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                "status": "error",
+                "message": _("In order to book you need to be authorized!")
+            })
         else:
             return function(request, *args, **kwargs)
 

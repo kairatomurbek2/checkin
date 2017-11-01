@@ -58,7 +58,7 @@ class ReservationListView(generics.ListAPIView):
                                           date_time_reservation__lte=month)
 
 
-class ReservationCreateView(LoginRequiredMixin, generics.CreateAPIView):
+class ReservationCreateView(generics.CreateAPIView):
     serializer_class = ReservationCreteSerializer
 
     def create(self, request, *args, **kwargs):
