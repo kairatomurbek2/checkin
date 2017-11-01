@@ -44,11 +44,11 @@
             <div class="shedule_block">
                 {% include 'messages.html' %}
                 <div class="table_form">
-                    <h4>Записаться к специалисту</h4>
+                    <h4>Указать время работы</h4>
                     <form action="#" method="post">
                         {% csrf_token %}
                         <div id="true-inputs">
-                            {% render_field form.monday class='true_input' id="id_monday" %}
+                            {% render_field form.monday|attr:"hidden" class='true_input' id="id_monday" %}
                             {% render_field form.tuesday|attr:"hidden" class='true_input' id="id_tuesday" %}
                             {% render_field form.wednesday|attr:"hidden" class='true_input' id="id_wednesday" %}
                             {% render_field form.thursday|attr:"hidden" class='true_input' id="id_thursday" %}
@@ -217,7 +217,7 @@
                                 {{ form.time_interval }}
                             </div>
 
-                            <button type="submit" class="button">Отправить</button>
+                            <button type="submit" class="button">Сохранить</button>
                         </div>
                     </form>
 
