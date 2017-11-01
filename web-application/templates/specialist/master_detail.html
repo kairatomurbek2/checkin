@@ -63,6 +63,16 @@
                         {% for tag in master.tags.all %}
                             <span>{{ tag.name }}</span>
                         {% endfor %}
+
+                        <div class="main-wrap">
+                            <div class="main">
+                                <div class='loader'>
+                                    <img src="{% static 'img/loader.gif' %}" alt="">
+                                </div>
+                            </div>
+                            <a href="#" onclick="prevWeek()" id="prev-week">Prev week</a>
+                            <a href="#" onclick="nextWeek()" id="next-week">Next week</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,4 +82,498 @@
 
     {% include 'specialist/specialist_review_form.html' %}
 
+    <style>
+        .main-wrap {
+            width: 100%;
+        }
+        .main {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .weekday {
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .weekday > span {
+            display: block;
+            padding-bottom: 10px;
+        }
+
+        .time {
+            background: rgb(109, 109, 255);
+            padding: 3px;
+            margin-bottom: 5px;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .time .phone {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            font-size: 14px;
+            color: #000;
+            padding: 5px 10px;
+            background: #fff;
+            z-index: 3;
+            box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.1);
+        }
+
+        .taken {
+            background: #cccccc;
+        }
+
+        .order-modal-wrap {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .order-modal {
+            display: block;
+            width: 390px;
+            height: 390px;
+            background: #fff;
+            padding: 30px;
+            position: fixed;
+            top: 50%;
+            margin-top: -195px;
+            left: 50%;
+            margin-left: -195px;
+            z-index: 2;
+        }
+        .inputs {
+            padding-top: 40px;
+            text-align: center
+        }
+        .inputs input {
+            display: block;
+            padding: 5px;
+            width: 100%;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            outline: none;
+            text-align: left
+        }
+        .inputs input.error {
+            border-color: red;
+        }
+        .inputs button {
+            display: inline-block;
+            padding: 10px 30px;
+            font-size:  14px;
+            color: #fff;
+            background: #21FFD2;
+            border:  0;
+        }
+        .order-modal .title {
+            width: 100%;
+            font-size: 14px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .order-modal .title-time {
+            text-align: center;
+            padding: 5px 0;
+            font-size:  12px;
+        }
+
+        .error, .success {
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            line-height: 18px;
+            padding: 30px 0;
+        }
+        .success {
+            display: none;
+            color: rgb(94, 196, 94);
+        }
+        .error {
+            display: none;
+            color: rgb(254, 62, 62);
+        }
+
+        .loader {
+            padding: 70px 0;
+            width: 100px;
+        }
+        .loader img {
+            width: 100px;
+            height: 100px;
+        }
+
+    </style>
+
+{% endblock %}
+{% block js %}
+    <script>
+
+        // GLOBAL VARIABLES
+        let toOrder = {
+            day: '',
+            time: ''
+        };
+        let work = {
+            workingDays: [],
+            lunch: '',
+            timeInterval: ''
+        };
+        let weekStep = 6;
+        let limitDate = new Date();
+        limitDate.setDate(limitDate.getDate() + 30);
+        let weekDay = {
+            start: new Date().setHours(0,0,0,0),
+            end: '',
+            limit: limitDate
+        };
+        let takenArr = [];
+        let weekDays = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        var mainArray = [];
+
+        // LISTENERS
+        document.querySelector(".order-modal-wrap").addEventListener('click', function(event){
+            if (event.target.classList.contains('order-modal-wrap')) {
+                toggleModal(false);
+            }
+        });
+        function addListenerToTime(){
+            document.querySelector('body').addEventListener('click', function(event) {
+                {% if request.user != master.user %}
+                if (event.target.classList.contains("time") && !event.target.classList.contains("taken")) {
+                    toOrder.time = event.target.innerHTML;
+                    toOrder.day = event.target.parentElement.dataset.date;
+                    toggleModal(true);
+                }
+                {% endif %}
+                {% if request.user == master.user %}
+                if (event.target.parentElement.classList.contains("time") && event.target.parentElement.classList.contains("taken") && !event.target.parentElement.classList.contains("lunch")) {
+                    if (event.target.parentElement.querySelector(".phone").style.display == "block") {
+                        event.target.parentElement.querySelector(".phone").style.display = "none";
+                    } else {
+                        event.target.parentElement.querySelector(".phone").style.display = "block";
+                    }
+                }
+                {% endif %}
+            });
+        }
+
+        // UI
+        function toggleModal(state) {
+            if (state == true) {
+                document.querySelector(".order-modal-wrap").style.display = 'block';
+                document.querySelector(".blur").style.filter = "blur(20px)";
+                document.querySelector(".title-time").innerHTML = "Запись на " + new Date(toOrder.day).getFullYear() + '-' + (new Date(toOrder.day).getMonth()+1) + '-' + new Date(toOrder.day).getDate() + ' ' + toOrder.time;
+            } else if (state == false) {
+                document.querySelector(".order-modal-wrap").style.display = 'none';
+                document.querySelector(".blur").style.filter = "blur(0px)";
+                document.querySelector(".title-time").innerHTML = "";
+            }
+        }
+        function betweenDate(startDt, endDt) {
+            mainArray = [];
+            var currentDate = new Date(startDt),
+                end = new Date(endDt);
+            console.log(work.lunch);
+            let lunchTime = {
+                start: {
+                    hours: parseInt(work.lunch.split('-')[0].substr(0, 2)),
+                    minutes: parseInt(work.lunch.split('-')[0].substr(2, 2))
+                },
+                end: {
+                    hours: parseInt(work.lunch.split('-')[1].substr(0, 2)),
+                    minutes: parseInt(work.lunch.split('-')[1].substr(2, 2) - 1)
+                }
+            };
+            while (currentDate <= end) {
+                let workingDay = work.workingDays.filter(x => {
+                    return x.day === currentDate.getDay()
+                })[0];
+                if (workingDay.time) {
+                    let workTime = {
+                        startTime: {
+                            hours: parseInt(workingDay.time.split('-')[0].substr(0, 2)),
+                            minutes: parseInt(workingDay.time.split('-')[0].substr(2, 2))
+                        },
+                        endTime: {
+                            hours: parseInt(workingDay.time.split('-')[1].substr(0, 2)),
+                            minutes: parseInt(workingDay.time.split('-')[1].substr(2, 2))
+                        }
+                    };
+                    let startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.startTime.hours, workTime.startTime.minutes, 0);
+                    let endTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.endTime.hours, workTime.endTime.minutes, 0);
+                    let timeInterval = {
+                        minutes: parseInt(work.timeInterval.split(':')[1]),
+                        hours: parseInt(work.timeInterval.split(':')[0])
+                    };
+                    let time = [];
+                    while (new Date(startTime).getTime() < new Date(endTime).getTime()) {
+                        let lunch = {
+                            start: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.start.hours, lunchTime.start.minutes, 0),
+                            end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.end.hours, lunchTime.end.minutes, 0)
+                        };
+                        let myTime = getTime(startTime);
+                        if (new Date(startTime) >= lunch.start && new Date(startTime) <= lunch.end) {
+                            myTime.taken = true;
+                            myTime.time = 'Обед';
+                            myTime.lunch = true;
+                        }
+                        takenArr.forEach(taken => {
+                            if (currentDate.getDate() === new Date(taken.date).getDate()) {
+                                taken.time.forEach(takenTime => {
+                                    if (myTime.time === takenTime) {
+                                        myTime.taken = true;
+                                        {% if request.user == master.user %}
+                                        myTime.name = taken.name || '';
+                                        myTime.phone = taken.phone || '';
+                                        myTime.status = taken.status;
+                                        {% endif %}
+                                    }
+                                })
+                            }
+                        });
+                        time.push(myTime);
+                        startTime.setHours(startTime.getHours() + timeInterval.hours);
+                        startTime.setMinutes(startTime.getMinutes() + timeInterval.minutes);
+                    }
+                    let dateObj = {
+                        date: new Date(currentDate),
+                        time: time
+                    };
+                    mainArray.push(dateObj);
+                } else {
+                    mainArray.push({
+                        date: new Date(currentDate),
+                        time: []
+                    })
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            console.log(mainArray);
+            renderDate();
+        }
+        function getTime(date) {
+            date = new Date(date);
+            return {
+                time: '' + (date.getHours() < 10 ? '0' : '') + date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(),
+                taken: false
+            }
+        }
+        function renderDate() {
+            let template = '';
+            let dates = '';
+            mainArray.forEach(dateObj => {
+                let timeTemplate = '';
+                dateObj.time.forEach(time => {
+                    {% if request.user == master.user %}
+                    timeTemplate += `
+                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">
+                                <div>${time.lunch ? 'Обед' : time.time}</div>
+                                <div>${time.name ? '(' + time.name + ')' : '' }</div>
+                                <div class="phone" style="display: none;">${time.phone ? time.phone : '' }</div>
+                            </div>
+                        `;
+                    {% endif %}
+                    {% if request.user != master.user %}
+                    timeTemplate += `
+                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">${time.lunch ? 'Обед' : time.taken ? '---' : time.time}</div>
+                        `;
+
+                    {% endif %}
+                });
+
+                let beautyDate = '' + new Date(dateObj.date).getDate() + '/' + (new Date(dateObj.date).getMonth()+1) + '/' + new Date(dateObj.date).getFullYear();
+                template += `
+                <div class="weekday">
+                    <span>${weekDays[new Date(dateObj.date).getDay()]}</span>
+                    <span>${beautyDate}</span>
+                    <div class="time-block" data-date="${dateObj.date}">
+                       ${timeTemplate}
+                    </div>
+                </div>
+            `;
+            });
+            document.querySelector(".main").innerHTML = template;
+        }
+        function nextWeek() {
+            let nextStart = new Date(weekDay.start);
+            nextStart.setDate(nextStart.getDate() + weekStep);
+            let nextEnd = new Date(weekDay.end);
+            nextEnd.setDate(nextEnd.getDate() + weekStep);
+
+            if (nextEnd >= weekDay.limit) {
+                nextEnd = new Date(weekDay.limit);
+                nextStart = new Date(weekDay.limit);
+                nextStart.setDate(nextStart.getDate() - weekStep);
+            }
+            weekDay.start = nextStart;
+            weekDay.end = nextEnd;
+            betweenDate(nextStart, nextEnd);
+        }
+        function prevWeek() {
+            let prevStart = new Date(weekDay.start);
+            prevStart.setDate(prevStart.getDate() - weekStep);
+            let prevEnd = new Date(weekDay.end);
+            prevEnd.setDate(prevEnd.getDate() - weekStep);
+
+            if (prevStart <= new Date().setHours(0,0,0,0)) {
+                prevStart = new Date();
+                prevStart.setHours(0,0,0,0);
+                prevEnd = new Date();
+                prevEnd.setHours(0,0,0,0);
+                prevEnd.setDate(prevEnd.getDate() + weekStep);
+            }
+            weekDay.start = prevStart;
+            weekDay.end = prevEnd;
+            betweenDate(prevStart, prevEnd);
+        }
+
+        // REQUESTS
+        function makeRequest(method, url, slug) {
+            return new Promise((resolve, reject) => {
+                if (method === 'GET') {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open(method, url + slug, true);
+                    xhr.onload = function (e) {
+                        if (xhr.readyState === 4 && (xhr.status === 200)) {
+                            resolve(JSON.parse(xhr.responseText))
+                        } else {
+                            reject(new Error(xhr.status, ' ', xhr.statusText))
+                        }
+                    };
+                    xhr.onerror = function (e) {
+                        reject(new Error(xhr.status, ' ', xhr.statusText))
+                    };
+                    xhr.send();
+                }
+                if (method === 'POST') {
+                    var data = JSON.stringify({
+                        "full_name": document.querySelector("#full_name").value,
+                        "date_time_reservation": "" + new Date(toOrder.day).getFullYear() + '-' + (new Date(toOrder.day).getMonth()+1) + '-' + new Date(toOrder.day).getDate() + ' ' + toOrder.time,
+                        "phone": document.querySelector("#phone").value
+                    });
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.addEventListener("readystatechange", function () {
+                        console.log(this);
+                        if (this.readyState === 4) {
+                            let response = JSON.parse(this.responseText);
+                            if ((this.status === 200 || this.status === 201) && !response.message) {
+                                resolve(response)
+                            } else {
+                                reject(response)
+                            }
+                        }
+                    });
+                    xhr.open("POST", url + slug + '/');
+                    xhr.setRequestHeader("content-type", "application/json");
+                    xhr.setRequestHeader("X-CSRFToken", "{{csrf_token}}");
+                    xhr.send(data);
+                }
+            });
+        }
+        // request for getting work data
+        makeRequest('GET', '/api/schedule-setting/', '{{master.slug}}').then(response => {
+            Object.keys(response).forEach(key => {
+                switch (key) {
+                    case 'monday':
+                        work.workingDays.push({day: 1, time: response[key]});
+                        break;
+                    case 'tuesday':
+                        work.workingDays.push({day: 2, time: response[key]});
+                        break;
+                    case 'wednesday':
+                        work.workingDays.push({day: 3, time: response[key]});
+                        break;
+                    case 'thursday':
+                        work.workingDays.push({day: 4, time: response[key]});
+                        break;
+                    case 'friday':
+                        work.workingDays.push({day: 5, time: response[key]});
+                        break;
+                    case 'saturday':
+                        work.workingDays.push({day: 6, time: response[key]});
+                        break;
+                    case 'sunday':
+                        work.workingDays.push({day: 0, time: response[key]});
+                        break;
+                    default:
+                        break;
+                }
+            });
+            work.lunch = response.lunch;
+            work.timeInterval = response.time_interval.time_interval;
+
+            makeRequest('GET', '/api/reservation/', '{{master.slug}}').then(response => {
+                if (response && response.results) {
+                    if (response.results.length > 0) {
+                        response.results.forEach(item => {
+                            let date = item.date_time_reservation.split(" ")[0];
+                            date = date.split('.');
+                            date = new Date('' + date[2] + '/' + (parseInt(date[1])+1) + '/' + date[0]);
+                            let time = item.date_time_reservation.split(" ")[1];
+                            {% if request.user == master.user %}
+                            takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status});
+                            {% endif %}
+                            {% if request.user != master.user %}
+                            if (item.status === true) {
+                                takenArr.push({date: date, time: [time]});
+                            }
+                            {% endif %}
+                        });
+                    }
+                }
+                let nextDate = new Date();
+                nextDate.setHours(0, 0, 0, 0);
+                nextDate.setDate(nextDate.getDate() + weekStep);
+                weekDay.end = nextDate;
+                betweenDate(new Date().setHours(0, 0, 0, 0), nextDate);
+                addListenerToTime();
+            });
+        });
+        // POST Request to make order
+        document.querySelector("#make-order").addEventListener('click', function(){
+            makeRequest('POST', '/api/reservation/add/', '{{master.slug}}').then(response => {
+                console.log('--------response from order---------');
+                console.log(response);
+                document.querySelector(".success").style.display = "block";
+                document.querySelector(".success").innerHTML = "Заявка успешно оформлена, ожидайте подтверждение специалиста";
+                setTimeout(function(){
+                    document.querySelector(".success").innerHTML = "";
+                    document.querySelector(".success").style.display = "";
+                    document.querySelector(".error").innerHTML = "";
+                    toggleModal(false);
+                }, 3000);
+            }).catch(response => {
+                var input = '';
+                console.log(response);
+                document.querySelector(".error").style.display = "block";
+                if (Object.keys(response).indexOf('message') === -1) {
+                    Object.keys(response).forEach(key => {
+                        document.querySelector(".error").innerHTML += '<div>' + response[key] + '</div>';
+                        input = document.querySelector("#"+key);
+                        input.classList.add('error');
+                    });
+                    setTimeout(function(){
+                        input.classList.remove('error');
+                        document.querySelector(".error").innerHTML = "";
+                        document.querySelector(".error").style.display = "";
+                    }, 3000);
+                } else {
+                    document.querySelector(".error").innerHTML += '<div>' + response.message + '</div>';
+                    setTimeout(function(){
+                        document.querySelector(".error").innerHTML = "";
+                        document.querySelector(".error").style.display = "";
+                    }, 3000);
+                }
+            })
+        });
+
+    </script>
 {% endblock %}
