@@ -4,6 +4,10 @@
 //=../libs/slick/slick.js
 //=../libs/jquery.sticky.js
 //=../libs/jquery.maskedinput.js
+//=../libs/picker.js
+//=../libs/picker.date.js
+//=../libs/picker.time.js
+//=../libs/ru_RU.js
 
 $(function () {
     $('.tabs-stage > div').hide();
@@ -11,7 +15,6 @@ $(function () {
 
     $('.tabs-nav > li:first-child a').addClass('tab-active');
     var url = document.location.href;
-
 
 
     if (url.includes('#')) {
@@ -46,8 +49,6 @@ $(function () {
         var h_attr = $(obj).attr('href');
         $(obj).attr('href', h_attr + '#tab-2');
     });
-
-
 
 
     $('.authorised_user > li:last-child').click(function (event) {
@@ -289,9 +290,9 @@ $(function () {
     }
 
 
-     $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
-     $('.favourite').click(function (event) {
+    $('.favourite').click(function (event) {
         if ($(this).hasClass('fav_active')) {
             $(this).removeClass('fav_active');
         } else {
@@ -299,7 +300,112 @@ $(function () {
         }
     });
 
-     $('.s_sex > option:first-of-type').html('Выберите пол');
+    $('.s_sex > option:first-of-type').html('Выберите пол');
+
+    $('.timepicker').pickatime({
+        format: 'HH:i',
+        min: [6, 0],
+        max: [21, 0],
+        interval: 60,
+        clear: ''
+    });
+
+    // $.fn.hasAttr = function(name) {
+    //     return this.attr(name) !== undefined;
+    // };
+
+    $.fn.hasAttr = function (name) {
+        return this.attr(name) !== undefined;
+    };
+
+    function changeValue(key, data, flag) {
+        // console.log(data);
+        // console.log(key);
+        var true_input = $('#true-inputs').find('input#id_' + key);
+        var true_value = true_input.val().replace(/[^\d.]/g, '');
+
+        if (flag === "from") {
+            if ((true_input.val() !== "") && (true_value.length <= 4)) {
+                true_input.val(data + true_input.val());
+            }
+            else {
+                true_input.val("");
+                true_input.val(data + " - ");
+            }
+
+            // console.log($('input#id_' + key).val());
+        } else {
+            if ((true_input.val() !== "") && (true_value.length <= 4)) {
+                true_input.val(true_input.val() + data);
+            } else {
+                true_input.val("");
+                true_input.val(" - " + data);
+            }
+
+            console.log($('input#id_' + key).val());
+        }
+    }
+
+    var day_key;
+
+    $('.from-time').on('change', function () {
+        day_key = $(this).parent('.fieldset__wrapper').parent('.time_limit').parent('.get_time').attr('data-key');
+        var that = $(this);
+        changeValue(day_key, that.val(), "from");
+
+        if (that.closest('.get_time').hasAttr('data-first')) {
+            $(".from-time").not(that).each(function (i, item) {
+                if (($(item).closest('.get_time').attr('data-key') !== 'sunday') &&
+                    ($(item).closest('.get_time').find('input.day').hasAttr('checked'))) {
+                    $(item).val(that.val());
+                    var item_key = $(item).closest('.get_time').attr('data-key');
+                    changeValue(item_key, that.val(), "from")
+                }
+            });
+        }
+
+    });
+
+    $('.to-time').on('change', function () {
+        day_key = $(this).parent('.fieldset__wrapper').parent('.time_limit').parent('.get_time').attr('data-key');
+        var that = $(this);
+        changeValue(day_key, that.val(), "to");
+
+        if (that.closest('.get_time').hasAttr('data-first')) {
+            $(".to-time").not(that).each(function (i, item) {
+                if (($(item).closest('.get_time').attr('data-key') !== 'sunday') &&
+                    ($(item).closest('.get_time').find('input.day').hasAttr('checked'))) {
+                    $(item).val(that.val());
+                    var item_key = $(item).closest('.get_time').attr('data-key');
+                    changeValue(item_key, that.val(), "to");
+                }
+            });
+        }
+
+    });
+
+
+    $('.day').on('click', function () {
+        var parent = $(this).siblings('.time_limit');
+        var parent_key = $(this).parent('.get_time').attr('data-key');
+        if ($(this).attr('checked')) {
+            $(this).attr('checked', false);
+            parent.find('input.from-time').attr("disabled", true)
+                .val("");
+            parent.find('input.to-time').attr("disabled", true)
+                .val("");
+            $('#true-inputs').find('input#id_' + parent_key).val("");
+
+        } else {
+            $(this).attr('checked', true);
+            parent.find('input.from-time').attr("disabled", false)
+                .val("");
+            parent.find('input.to-time').attr("disabled", false)
+                .val("");
+        }
+
+        console.log($('input#id_' + parent_key).val());
+    });
 
 
 });
