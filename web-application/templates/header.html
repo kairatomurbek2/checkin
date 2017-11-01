@@ -29,6 +29,15 @@
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
                         <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
+                        {% if request.user.companies.exists %}
+                            {% for company in request.user.companies.all %}
+                                <li>
+                                    <a href="{% url 'company_detail' company.slug %}">
+                                        {{ company }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
                         {% if request.user.user_specialists.exists %}
                             {% for specialist in request.user.user_specialists.all %}
                                 <li><a href="{% url 'master_detail' specialist.slug %}">Личный
