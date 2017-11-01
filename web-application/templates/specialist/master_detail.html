@@ -216,25 +216,25 @@
     <script>
 
         // GLOBAL VARIABLES
-        let toOrder = {
+        var toOrder = {
             day: '',
             time: ''
         };
-        let work = {
+        var work = {
             workingDays: [],
             lunch: '',
             timeInterval: ''
         };
-        let weekStep = 6;
-        let limitDate = new Date();
+        var weekStep = 6;
+        var limitDate = new Date();
         limitDate.setDate(limitDate.getDate() + 30);
-        let weekDay = {
+        var weekDay = {
             start: new Date().setHours(0,0,0,0),
             end: '',
             limit: limitDate
         };
-        let takenArr = [];
-        let weekDays = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        var takenArr = [];
+        var weekDays = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
         var mainArray = [];
 
         // LISTENERS
@@ -253,7 +253,11 @@
                 }
                 {% endif %}
                 {% if request.user == master.user %}
-                if (event.target.parentElement.classList.contains("time") && event.target.parentElement.classList.contains("taken") && !event.target.parentElement.classList.contains("lunch")) {
+                if (event.target.parentElement.classList.contains("time") &&
+                    event.target.parentElement.classList.contains("taken") &&
+                    !event.target.parentElement.classList.contains("lunch") &&
+                    !event.target.parentElement.classList.contains("rest")
+                ) {
                     if (event.target.parentElement.querySelector(".phone").style.display == "block") {
                         event.target.parentElement.querySelector(".phone").style.display = "none";
                     } else {
@@ -280,7 +284,7 @@
             mainArray = [];
             var currentDate = new Date(startDt),
                 end = new Date(endDt);
-            let lunchTime = {
+            var lunchTime = {
                 start: {
                     hours: parseInt(work.lunch.split('-')[0].split(":")[0]),
                     minutes: parseInt(work.lunch.split('-')[0].split(":")[1])
@@ -291,11 +295,11 @@
                 }
             };
             while (currentDate <= end) {
-                let workingDay = work.workingDays.filter(x => {
+                var workingDay = work.workingDays.filter(x => {
                     return x.day === currentDate.getDay()
                 })[0];
                 if (workingDay.time) {
-                    let workTime = {
+                    var workTime = {
                         startTime: {
                             hours: parseInt(workingDay.time.split('-')[0].split(":")[0]),
                             minutes: parseInt(workingDay.time.split('-')[0].split(":")[1])
@@ -305,29 +309,52 @@
                             minutes: parseInt(workingDay.time.split('-')[1].split(":")[1])
                         }
                     };
-                    let startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.startTime.hours, workTime.startTime.minutes, 0);
-                    let endTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.endTime.hours, workTime.endTime.minutes, 0);
-                    let timeInterval = {
-                        minutes: parseInt(work.timeInterval.split(':')[1]),
-                        hours: parseInt(work.timeInterval.split(':')[0])
-                    };
-                    let time = [];
+                    var startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.startTime.hours, workTime.startTime.minutes, 0);
+                    var endTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), workTime.endTime.hours, workTime.endTime.minutes, 0);
+
+                    var timeInterval = {};
+                    if (work.timeInterval.indexOf(":") === -1) {
+                        timeInterval = {
+                            minutes: parseInt(work.timeInterval),
+                            hours: 0
+                        };
+                    } else {
+                        timeInterval = {
+                            minutes: parseInt(work.timeInterval.split(':')[1]),
+                            hours: parseInt(work.timeInterval.split(':')[0])
+                        };
+                    }
+                    var time = [];
                     while (new Date(startTime).getTime() < new Date(endTime).getTime()) {
-                        let lunch = {
+                        var lunch = {
                             start: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.start.hours, lunchTime.start.minutes, 0),
                             end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.end.hours, lunchTime.end.minutes, 0)
                         };
-                        let myTime = getTime(startTime);
+                        var myTime = getTime(startTime);
                         if (new Date(startTime) >= lunch.start && new Date(startTime) <= lunch.end) {
                             myTime.taken = true;
                             myTime.time = 'Обед';
                             myTime.lunch = true;
+                        }
+
+                        if (new Date().getDate() === new Date(startTime).getDate()) {
+                            var nowHours = parseInt(new Date().getHours());
+                            var nowMinutes = parseInt(new Date().getMinutes());
+                            var compareHours = parseInt(new Date(startTime).getHours());
+                            var compareMinutes = parseInt(new Date(startTime).getMinutes());
+                            console.log(nowHours, nowMinutes, compareHours, compareMinutes);
+                            if (nowHours > compareHours) {
+                                myTime.taken = true;
+                            } else if (nowHours === compareHours && nowMinutes > compareMinutes) {
+                                myTime.taken = true;
+                            }
                         }
                         takenArr.forEach(taken => {
                             if (currentDate.getDate() === new Date(taken.date).getDate()) {
                                 taken.time.forEach(takenTime => {
                                     if (myTime.time === takenTime) {
                                         myTime.taken = true;
+
                                         {% if request.user == master.user %}
                                         myTime.name = taken.name || '';
                                         myTime.phone = taken.phone || '';
@@ -341,7 +368,7 @@
                         startTime.setHours(startTime.getHours() + timeInterval.hours);
                         startTime.setMinutes(startTime.getMinutes() + timeInterval.minutes);
                     }
-                    let dateObj = {
+                    var dateObj = {
                         date: new Date(currentDate),
                         time: time
                     };
@@ -349,7 +376,11 @@
                 } else {
                     mainArray.push({
                         date: new Date(currentDate),
-                        time: []
+                        time: [{
+                            time: 'Выходной',
+                            taken: true,
+                            rest: true
+                        }]
                     })
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
@@ -364,10 +395,10 @@
             }
         }
         function renderDate() {
-            let template = '';
-            let dates = '';
+            var template = '';
+            var dates = '';
             mainArray.forEach(dateObj => {
-                let timeTemplate = '';
+                var timeTemplate = '';
                 dateObj.time.forEach(time => {
                     {% if request.user == master.user %}
                     timeTemplate += `
@@ -380,13 +411,13 @@
                     {% endif %}
                     {% if request.user != master.user %}
                     timeTemplate += `
-                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">${time.lunch ? 'Обед' : time.taken ? '---' : time.time}</div>
+                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">${time.rest ? 'Выходной' : time.lunch ? 'Обед' : time.taken ? '---' : time.time}</div>
                         `;
 
                     {% endif %}
                 });
 
-                let beautyDate = '' + new Date(dateObj.date).getDate() + '/' + (new Date(dateObj.date).getMonth()+1) + '/' + new Date(dateObj.date).getFullYear();
+                var beautyDate = '' + new Date(dateObj.date).getDate() + '/' + (new Date(dateObj.date).getMonth()+1) + '/' + new Date(dateObj.date).getFullYear();
                 template += `
                 <div class="weekday">
                     <span>${weekDays[new Date(dateObj.date).getDay()]}</span>
@@ -400,9 +431,9 @@
             document.querySelector(".main").innerHTML = template;
         }
         function nextWeek() {
-            let nextStart = new Date(weekDay.start);
+            var nextStart = new Date(weekDay.start);
             nextStart.setDate(nextStart.getDate() + weekStep);
-            let nextEnd = new Date(weekDay.end);
+            var nextEnd = new Date(weekDay.end);
             nextEnd.setDate(nextEnd.getDate() + weekStep);
 
             if (nextEnd >= weekDay.limit) {
@@ -415,9 +446,9 @@
             betweenDate(nextStart, nextEnd);
         }
         function prevWeek() {
-            let prevStart = new Date(weekDay.start);
+            var prevStart = new Date(weekDay.start);
             prevStart.setDate(prevStart.getDate() - weekStep);
-            let prevEnd = new Date(weekDay.end);
+            var prevEnd = new Date(weekDay.end);
             prevEnd.setDate(prevEnd.getDate() - weekStep);
 
             if (prevStart <= new Date().setHours(0,0,0,0)) {
@@ -460,7 +491,7 @@
 
                     xhr.addEventListener("readystatechange", function () {
                         if (this.readyState === 4) {
-                            let response = JSON.parse(this.responseText);
+                            var response = JSON.parse(this.responseText);
                             if ((this.status === 200 || this.status === 201) && !response.message) {
                                 resolve(response)
                             } else {
@@ -511,10 +542,10 @@
                 if (response && response.results) {
                     if (response.results.length > 0) {
                         response.results.forEach(item => {
-                            let date = item.date_time_reservation.split(" ")[0];
+                            var date = item.date_time_reservation.split(" ")[0];
                             date = date.split('.');
                             date = new Date('' + date[2] + '/' + (parseInt(date[1])+1) + '/' + date[0]);
-                            let time = item.date_time_reservation.split(" ")[1];
+                            var time = item.date_time_reservation.split(" ")[1];
                             {% if request.user == master.user %}
                             takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status});
                             {% endif %}
@@ -526,7 +557,7 @@
                         });
                     }
                 }
-                let nextDate = new Date();
+                var nextDate = new Date();
                 nextDate.setHours(0, 0, 0, 0);
                 nextDate.setDate(nextDate.getDate() + weekStep);
                 weekDay.end = nextDate;
