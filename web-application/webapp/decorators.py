@@ -128,7 +128,7 @@ def login_check(function):
         if not request.user.is_authenticated:
             return JsonResponse({
                 "status": "error",
-                "message": _("In order to book you need to be authorized!")
+                "message": _("Чтобы забронировать, вам необходимо авторизоваться!")
             })
         else:
             return function(request, *args, **kwargs)
