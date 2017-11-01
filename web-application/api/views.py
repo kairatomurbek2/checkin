@@ -53,7 +53,8 @@ class ReservationListView(generics.ListAPIView):
     def get_queryset(self):
         today = date.today()
         month = today + timedelta(days=30)
-        return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'], created_at__gte=today,
+        return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'],
+                                          date_time_reservation__gte=today,
                                           date_time_reservation__lte=month)
 
 
