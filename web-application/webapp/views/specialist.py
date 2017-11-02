@@ -45,6 +45,8 @@ class MastersList(ListView):
             specialist_list = pagination.page(1)
         except EmptyPage:
             raise Http404("That page contains no results")
+        context['fav_spec'] = [fav.specialist for spec in self.object_list
+                               for fav in spec.specialist_favorites.filter(user=self.request.user)]
         context['specialist_list'] = specialist_list.object_list
         context['is_paginated'] = specialist_list.has_next()
         return context
