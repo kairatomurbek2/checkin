@@ -13,9 +13,12 @@
             <p>{% blocktrans %} Уже зарегистрированы? <a href="{{ login_url }}">Вход</a>{% endblocktrans %}</p>
             {% load socialaccount %}
             {% providers_media_js %}
-            {#    <ul class="socialaccount_providers">#}
-            {#        <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}"><img src="{% static 'static/img/face.png' %}"></a></li>#}
-            {#    </ul>#}
+            <ul class="socialaccount_providers">
+                <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}"><img
+                        src="{% static 'img/face.png' %}"></a></li>
+                <li style="list-style: none;"><a href="{% provider_login_url "google" method="js_sdk" %}"><img
+                        src="{% static 'img/google.png' %}"></a></li>
+            </ul>
             <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 
                 {% csrf_token %}

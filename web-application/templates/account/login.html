@@ -12,7 +12,7 @@
             <h4>Вход</h4>
             {% get_providers as socialaccount_providers %}
             {% if socialaccount_providers %}
-                <p>Зарегистрироваться через социальные сети.</p>
+                <p>Войти через социальные сети.</p>
                 <div class="socialaccount_ballot">
                     <ul class="socialaccount_providers">
                         {% include "socialaccount/snippets/provider_list.html" with process="login" %}
@@ -21,7 +21,6 @@
                         ссылке
                         <a href="{{ signup_url }}">"Регистрация".</a>{% endblocktrans %}</p>
 
-                    {#                <div class="login-or">{% trans 'or' %}</div>#}
                 </div>
                 {% include "socialaccount/snippets/login_extra.html" %}
             {% else %}

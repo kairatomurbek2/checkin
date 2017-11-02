@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -162,7 +164,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_ADAPTER = 'webapp.adapters.AccountAdapter'
 
+LOGIN_REDIRECT_URL = '/'
+
 SOCIALACCOUNT_QUERY_EMAIL = True
+
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = None
 
 # Taggit
 TAGGIT_CASE_INSENSITIVE = True
@@ -182,6 +190,34 @@ REST_FRAMEWORK = {
     )
 }
 DOMAIN_URL = 'http://127.0.0.1:8000'
+
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+         {'METHOD': 'oauth2',
+          'SCOPE': ['email', 'public_profile', 'user_friends'],
+          'AUTH_PARAMS': {'auth_type': 'rerequest'},
+          'FIELDS': [
+              'id',
+              'email',
+              'name',
+              'first_name',
+              'last_name',
+              'verified',
+              'locale',
+              'timezone',
+              'link',
+              'gender',
+              'updated_time'],
+          'EXCHANGE_TOKEN': True,
+          'LOCALE_FUNC': lambda request: 'ru_RU',
+          'VERIFIED_EMAIL': False,
+          'VERSION': 'v2.4'},
+     'google':
+         {'SCOPE': ['email'],
+          'AUTH_PARAMS': {'access_type': 'online'}
+          }
+
+     }
 
 try:
     from settings_local import *
