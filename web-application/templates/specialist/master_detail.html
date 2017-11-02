@@ -325,6 +325,7 @@
                         };
                     }
                     var time = [];
+                    var lunchState = false;
                     while (new Date(startTime).getTime() <= new Date(endTime).getTime()) {
                         var lunch = {
                             start: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.start.hours, lunchTime.start.minutes, 0),
@@ -332,9 +333,15 @@
                         };
                         var myTime = getTime(startTime);
                         if (new Date(startTime) >= lunch.start && new Date(startTime) <= lunch.end) {
-                            myTime.taken = true;
-                            myTime.time = 'Обед';
-                            myTime.lunch = true;
+                            if (!lunchState) {
+                                myTime.taken = true;
+                                myTime.time = 'Обед';
+                                myTime.lunch = true;
+                                lunchState = true;
+                            } else {
+                                myTime.taken = true;
+                                myTime.time = null;
+                            }
                         }
 
                         if (new Date().getDate() === new Date(startTime).getDate()) {
@@ -366,7 +373,7 @@
                         if (new Date(startTime).getTime() === new Date(endTime).getTime()) {
                             myTime.taken = true;
                         }
-                        time.push(myTime);
+                        if (myTime.time) time.push(myTime);
                         startTime.setHours(startTime.getHours() + timeInterval.hours);
                         startTime.setMinutes(startTime.getMinutes() + timeInterval.minutes);
                     }
