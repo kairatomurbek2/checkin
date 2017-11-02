@@ -1,8 +1,11 @@
 from dal import autocomplete
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import JsonResponse
+from django.views import View
 from django.views.generic import TemplateView
 from taggit.models import Tag
-from webapp.models import Company, Specialist
+from webapp.models import Company, Specialist, FavoriteSpecialist
 
 
 class HomeView(TemplateView):
@@ -45,3 +48,28 @@ class SearchView(TemplateView):
         if value:
             qs = qs.filter(Q(full_name__icontains=value) | Q(tags__name__icontains=value)).distinct()
         return qs
+
+
+class FavoriteCreateView(LoginRequiredMixin, View):
+    def get(self, request):
+        specialist_slug = request.GET.get("specialist")
+        if specialist_slug:
+            favorite, created = FavoriteSpecialist.objects.get_or_create(specialist_id=specialist_slug,
+                                                                         user=request.user)
+        else:
+            return JsonResponse({
+                "status": "error",
+                "message": "specialist query param is required"
+            })
+        if not created:
+            favorite.delete()
+            flash_message = "Специалист успешно удален из избранных"
+        else:
+            flash_message = "Специалист успешно добавлен в избранное"
+        favorites_count = request.user.favoritespecialist_set.count()
+        data = {
+            "created": created,
+            "flash_message": flash_message,
+            "favorites_count": favorites_count
+        }
+        return JsonResponse(data)

@@ -369,3 +369,12 @@ class Reservation(models.Model):
     class Meta:
         verbose_name = _('Предварительный заказ')
         verbose_name_plural = _('предварительные заказы')
+
+
+class FavoriteSpecialist(models.Model):
+    specialist = models.ForeignKey(Specialist, related_name='specialist_favorites')
+    user = models.ForeignKey(User)
+
+    class Meta:
+        verbose_name = _("Избранный специалист")
+        verbose_name_plural = _("Избранные специалисты")
