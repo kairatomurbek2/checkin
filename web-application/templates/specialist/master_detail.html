@@ -325,7 +325,7 @@
                         };
                     }
                     var time = [];
-                    while (new Date(startTime).getTime() < new Date(endTime).getTime()) {
+                    while (new Date(startTime).getTime() <= new Date(endTime).getTime()) {
                         var lunch = {
                             start: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.start.hours, lunchTime.start.minutes, 0),
                             end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.end.hours, lunchTime.end.minutes, 0)
@@ -342,7 +342,6 @@
                             var nowMinutes = parseInt(new Date().getMinutes());
                             var compareHours = parseInt(new Date(startTime).getHours());
                             var compareMinutes = parseInt(new Date(startTime).getMinutes());
-                            console.log(nowHours, nowMinutes, compareHours, compareMinutes);
                             if (nowHours > compareHours) {
                                 myTime.taken = true;
                             } else if (nowHours === compareHours && nowMinutes > compareMinutes) {
@@ -364,6 +363,9 @@
                                 })
                             }
                         });
+                        if (new Date(startTime).getTime() === new Date(endTime).getTime()) {
+                            myTime.taken = true;
+                        }
                         time.push(myTime);
                         startTime.setHours(startTime.getHours() + timeInterval.hours);
                         startTime.setMinutes(startTime.getMinutes() + timeInterval.minutes);
@@ -592,10 +594,7 @@
                     }, 3000);
                 } else {
                     document.querySelector(".error").innerHTML += '<div>' + response.message + '</div>';
-                    setTimeout(function(){
-                        document.querySelector(".error").innerHTML = "";
-                        document.querySelector(".error").style.display = "";
-                    }, 3000);
+                    document.querySelector(".error").insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
                 }
             })
         });
