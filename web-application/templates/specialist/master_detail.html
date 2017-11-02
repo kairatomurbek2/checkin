@@ -64,15 +64,21 @@
                             <span>{{ tag.name }}</span>
                         {% endfor %}
 
-                        <div class="main-wrap">
-                            <div class="main">
-                                <div class='loader'>
-                                    <img src="{% static 'img/loader.gif' %}" alt="">
+                        {% if master.schedule_setting_specialist.all %}
+                            <div class="main-wrap">
+                                <div class="main">
+                                    <div class='loader'>
+                                        <img src="{% static 'img/loader.gif' %}" alt="">
+                                    </div>
                                 </div>
+                                <a href="#" onclick="prevWeek()" id="prev-week">Prev week</a>
+                                <a href="#" onclick="nextWeek()" id="next-week">Next week</a>
                             </div>
-                            <a href="#" onclick="prevWeek()" id="prev-week">Prev week</a>
-                            <a href="#" onclick="nextWeek()" id="next-week">Next week</a>
-                        </div>
+                        {% else %}
+                            {% if request.user == master.user %}
+                                <a href="{% url "add_schedule_setting" master.slug %}">Указать время работы</a>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
