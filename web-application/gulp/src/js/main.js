@@ -411,7 +411,12 @@ $(function () {
         console.log($('input#id_' + parent_key).val());
     });
 
-
+    $('.datepicker').pickadate({
+        monthsFull: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+        selectMonths: true,
+        format: 'dd.mm.yy',
+        formatSubmit: 'dd.mm.yy'
+    });
 
 
 });

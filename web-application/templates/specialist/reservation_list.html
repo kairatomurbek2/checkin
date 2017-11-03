@@ -13,4 +13,101 @@
         {% endfor %}
     {% endif %}
 
+    <main class="order_page">
+	<div class="grid">
+		<form action="#" method="post" class="sort">
+			<div class="sort_forms">
+
+				<span>Диапазон дат</span>
+				<div class="date_limit">
+					c
+					<div class="fieldset__wrapper">
+						<input type="text" name="date_input" class="datepicker" placeholder="Выберите дату">
+					</div>
+				</div>
+
+				<div class="date_limit">
+					до
+					<div class="fieldset__wrapper">
+						<input type="text" class="datepicker" placeholder="Выберите дату">
+					</div>
+				</div>
+
+				<label>Статус
+					<select name="status">
+						<option>Подвержденные</option>
+						<option>Не подвержденные</option>
+					</select>
+				</label>
+
+				<button type="submit" class="button">Применить фильтр</button>
+			</div>
+
+			<div class="sort_search">
+				<input type="search" placeholder="Найти...">
+			</div>
+		</form>
+
+		<div class="list_application">
+			<table style="width:100%">
+				<tr>
+					<th>Время заявки</th>
+					<th class="center">Имя</th>
+					<th class="center">Время запиcи</th>
+					<th class="center">Контакты</th>
+					<th class="center">Статус</th>
+				</tr>
+				<tr>
+					<td>
+						<span>25.10.2017 </span>
+						<span>16:00</span>
+					</td>
+					<td>Расул Красавчик Верстальщикович</td>
+					<td class="center">
+						<span>25.10.2017 </span>
+						<span>16:00</span>
+					</td>
+					<td class="center">12 234 234 23</td>
+					<td class="center">
+						<div class="form_td">
+							<form action="#">
+							<button type="submit" class="button agree">Подтвердить</button>
+							<button type="submit" class="button disagree">Отказать</button>
+						</form>
+						</div>
+
+						<div class="confirmed">Подтвержден</div>
+						<div class="non_confirmed">Отказано</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span>25.10.2017 </span>
+						<span>16:00</span>
+					</td>
+					<td>Расул Красавчик Верстальщикович sadfasf asf</td>
+					<td class="center">
+						<span>25.10.2017 </span>
+						<span>16:00</span>
+					</td>
+					<td class="center">94 23 2131 234</td>
+					<td class="center">
+						<div class="form_td">
+							<form action="#">
+							<button type="submit" class="button agree">Подтвердить</button>
+							<button type="submit" class="button disagree">Отказать</button>
+						</form>
+						</div>
+
+						<div class="confirmed">Подтвержден</div>
+						<div class="non_confirmed">Отказано</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+	</div>
+</main>
+
 {% endblock %}
