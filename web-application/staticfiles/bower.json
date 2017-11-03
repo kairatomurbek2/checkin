@@ -17,6 +17,8 @@
   "devDependencies": {
     "selectize": "^0.12.4",
     "jquery": "^3.2.1",
-    "lightgallery": "^1.6.0"
+    "lightgallery": "^1.6.0",
+    "perfect-scrollbar": "^0.8.1",
+    "jquery-bar-rating": "^1.2.2"
   }
 }

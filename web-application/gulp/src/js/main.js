@@ -65,11 +65,14 @@ $(function () {
     $(document).click(function () {
         // $('.filters').slideUp();
         $('.modal').fadeOut(350);
-        $('.blur').css('filter', 'none');
         $('.registered_person').fadeOut(250);
         $('.book').fadeOut(250);
         $('.sub_menu').slideUp(250);
         $('.review_modal').fadeOut(350);
+    });
+
+    $('.modal, .order-modal-wrap').click(function () {
+        $('.blur').css('filter', 'none');
     });
 
     $('#log-in, .r_user').click(function (event) {
@@ -98,11 +101,10 @@ $(function () {
     $('.log-out').click(function (event) {
         $('.modal').css('display', 'none');
         $('.logout_modal').fadeIn(350);
-        $('.logout_modal').css('display', 'none');
         $('.blur').css('filter', 'blur(5px)');
     });
 
-    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form').click(function (event) {
+    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form, .order-modal').click(function (event) {
         event.stopPropagation();
     });
 
@@ -302,6 +304,8 @@ $(function () {
 
     $('.s_sex > option:first-of-type').html('Выберите пол');
 
+    // $('.main').perfectScrollbar();
+
     $('.timepicker').pickatime({
         format: 'HH:i',
         min: [6, 0],
@@ -406,6 +410,8 @@ $(function () {
 
         console.log($('input#id_' + parent_key).val());
     });
+
+
 
 
 });
