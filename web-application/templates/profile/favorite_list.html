@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+{% block content %}
+    <main class="favourites">
+        <div class="grid">
+
+            <h4>Избранные Специалисты</h4>
+            <div>
+                {% for favorite in object_list %}
+                    <div class="master">
+                        <a href="{{ favorite.specialist.get_absolute_url }}" class="master_img">
+            <span>
+                {% if favorite.specialist.photo %}
+                    {% thumbnail favorite.specialist.photo "154x154" as im %}
+                        <img src="{{ im.url }}" alt={{ favorite.specialist.full_name }}>
+                    {% endthumbnail %}
+                {% else %}
+                    <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                {% endif %}
+			</span>
+                        </a>
+                        {% if request.user.is_authenticated %}
+                            <div class="favourite {% if favorite.specialist.id in fav_spec %}fav_active{% endif %}"
+                                 data-specialist-id="{{ favorite.specialist.id }}"></div>
+                        {% else %}
+                            <div class="favourite"
+                                 data-specialist-id="{{ favorite.specialist.id }}"></div>
+                        {% endif %}
+
+                        <div class="master_desc">
+                            <h4>{{ favorite.specialist.full_name }}</h4>
+                            <span>
+                {{ favorite.specialist.get_categories }}
+            </span>
+                            <span></span>
+                            <p>{{ favorite.specialist.short_info }}</p>
+                            <ul>
+                                <li>
+                                    {{ favorite.specialist.street_address }}
+                                </li>
+                                <li>
+                                    {% for contact in favorite.specialist.specialist_contacts.all %}
+                                        {{ contact.phone }}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="{{ favorite.specialist.get_absolute_url }}">ПОСМОТРЕТЬ</a>
+                    </div>
+                {% empty %}
+                    <p class="no_result">Вы еще не добавили специалистов в избранное!</p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </main>
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal" style="z-index: 1050">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(".favourite").click(function () {
+            var id = $(this).attr('data-specialist-id');
+            if (typeof parseInt(id) === 'number') {
+                $.get({
+                    url: '/favorite/add/?specialist=' + id,
+                    success: function (response) {
+                        if (!response.status) {
+                            $("#myModal .modal-body").html('<p style="text-align: center;">' + response.flash_message + '</p>');
+                            updateFavourite(response.favorites_count);
+                            $('#myModal').modal();
+                        } else {
+                            $("#myModal .modal-body").html('<p>' + response.message + '</p><a style="display: inline-block; margin-top: 10px;" href="/accounts/login">Авторизация</a>');
+                            $('#myModal').modal();
+                        }
+                    }
+                });
+            }
+        });
+        function updateFavourite(value) {
+            $(".authorised_user li:first-child span").html(value);
+        }
+    </script>
+{% endblock %}
