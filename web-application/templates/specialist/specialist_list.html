@@ -47,9 +47,7 @@
                 $.get({
                     url: '/favorite/add/?specialist=' + id,
                     success: function(response) {
-                        if (response.created) {
-                            alert(response.flash_message);
-                        }
+                        alert(response.flash_message);
                     }
                 });
             }
