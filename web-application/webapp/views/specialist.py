@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
-from webapp.models import Specialist, Invite, Rating, ScheduleSetting, Reservation
+from webapp.models import Specialist, Invite, Rating, ScheduleSetting, Reservation, FavoriteSpecialist
 from webapp.views.filters import SpecialistFilter
 
 
@@ -45,8 +45,9 @@ class MastersList(ListView):
             specialist_list = pagination.page(1)
         except EmptyPage:
             raise Http404("That page contains no results")
-        context['fav_spec'] = [fav.specialist for spec in self.object_list
-                               for fav in spec.specialist_favorites.filter(user=self.request.user)]
+        if self.request.user.is_authenticated:
+            context['fav_spec'] = FavoriteSpecialist.objects.filter(user=self.request.user).values_list('specialist',
+                                                                                                        flat=True)
         context['specialist_list'] = specialist_list.object_list
         context['is_paginated'] = specialist_list.has_next()
         return context

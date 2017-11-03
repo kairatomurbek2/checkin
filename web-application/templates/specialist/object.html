@@ -12,8 +12,13 @@
                 {% endif %}
 			</span>
         </a>
-        <div class="favourite {% if specialist in fav_spec %}fav_active{% endif %}"
+     {% if request.user.is_authenticated %}
+        <div class="favourite {% if specialist.id in fav_spec %}fav_active{% endif %}"
              data-specialist-id="{{ specialist.id }}"></div>
+         {% else %}
+         <div class="favourite"
+             data-specialist-id="{{ specialist.id }}"></div>
+    {% endif %}
 
         <div class="master_desc">
             <h4>{{ specialist.full_name }}</h4>
