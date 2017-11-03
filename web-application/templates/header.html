@@ -16,15 +16,14 @@
             <a href="/"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
             {% if not request.user.is_authenticated %}
                 <ul class="menu">
+                <li><a href="#">Избранные(<span>0</span>)</a></li>
                     <li id="log-in"><a href="#">Вход</a></li>
                     <li id="sign-up"><a href="#">Регистрация</a></li>
                 </ul>
             {% endif %}
             {% if request.user.is_authenticated %}
                 <ul class="authorised_user">
-
-                <li><a href="#">Избранные (<span>3</span>)</a></li>
-
+                <li><a href="#">Избранные (<span>{{ request.user.favoritespecialist_set.count }}</span>)</a></li>
                 <li>
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
