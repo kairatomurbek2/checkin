@@ -50,7 +50,7 @@ class SearchView(TemplateView):
         return qs
 
 
-class FavoriteCreateView(LoginRequiredMixin, View):
+class FavoriteCreateView(View):
     def get(self, request):
         specialist_slug = request.GET.get("specialist")
         if specialist_slug:

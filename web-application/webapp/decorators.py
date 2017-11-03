@@ -134,3 +134,16 @@ def login_check(function):
             return function(request, *args, **kwargs)
 
     return decorator
+
+
+def login_check_favorite(function):
+    def decorator(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                "status": "error",
+                "message": _("Для того чтоб добавить в избраное, Вам необходимо авторизоваться!")
+            })
+        else:
+            return function(request, *args, **kwargs)
+
+    return decorator
