@@ -23,13 +23,7 @@
             {% endif %}
             {% if request.user.is_authenticated %}
                 <ul class="authorised_user">
-                <li><a href="#">Избранные (<span>
-                    {% if request.user.favoritespecialist_set.count > 0 %}
-                        {{ request.user.favoritespecialist_set.count }}
-                        {% else %}
-                        0
-                        {% endif %}
-                        </span>)</a></li>
+                <li><a href="#">Избранные (<span>{% if request.user.favoritespecialist_set.count > 0 %}{{ request.user.favoritespecialist_set.count }}{% else %}0{% endif %}</span>)</a></li>
                 <li>
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
