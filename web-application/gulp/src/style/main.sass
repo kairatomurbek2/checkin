@@ -1,5 +1,6 @@
 @import "../../../staticfiles/bower_components/selectize/dist/css/selectize.css"
 @import "../../../staticfiles/bower_components/lightgallery/dist/css/lightgallery.css"
+@import "../../../staticfiles/bower_components/jquery-bar-rating/dist/themes/fontawesome-stars.css"
 @import "../libs/slick/slick.css"
 @import "../libs/slick/slick-theme.css"
 @import "../libs/classic.css"
@@ -12,7 +13,6 @@
 $dark-color: #131313
 $main-color: #11EBE6
 $ldark-color: #333333
-
 
 
 @include font(GothamRegular, GothamProRegular)
@@ -475,6 +475,7 @@ footer
 
 .review_modal
 	display: none
+	background-color: rgba(255, 255, 255, 0.9)
 	position: fixed
 	left: 0
 	top: 0
@@ -522,6 +523,15 @@ footer
 	.button
 		margin: 0 auto
 
+
+.br-theme-fontawesome-stars
+	.br-widget
+		a.br-active:after
+  			color: $main-color
+.br-theme-fontawesome-stars
+	.br-widget
+		a.br-selected:after
+  			color: $main-color
 
 .evaluation
 	padding: 20px 113px 0 113px

@@ -1,14 +1,61 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
 
 {% block content %}
-    {% if rating_list %}
-        {% for rating in rating_list %}
-            <p>Пользователь: {{ rating.user }}</p>
-            <p>Оценка: {{ rating.count }}</p>
-            <p>Date: {{ rating.created_at }}</p>
-        {% endfor %}
-    {% endif %}
+    <main class="specialist list_review">
+        <div class="grid">
+            <div class="personal_block">
+                <div class="master">
+                    <a class="master_img">
+					<span>
+                        {% if master.photo %}
+                            {% thumbnail master.photo "154x154" as im %}
+                                <img id="img" src="{{ im.url }}" alt={{ master.full_name }}>
+                            {% endthumbnail %}
+                        {% endif %}
+					</span>
+                    </a>
 
+                    <div class="master_desc">
+                        <h4>{{ master.full_name }}</h4>
+                        <span>
+                                {{ master.get_categories }}
+                            </span>
+                        <span></span>
+                        <p>{{ master.short_info }}</p>
+                        <ul>
+                            <li>
+                                {{ master.street_address }}
+                            </li>
+                            <li>
+                                {% for contact in master.specialist_contacts.all %}
+                                    {{ contact.phone }}
+                                {% endfor %}
+                            </li>
+                            <li>
+                                {{ master.user.email }}
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="hidden">РЕДАКТИРОВАТЬ</a>
+                </div>
+            </div>
+
+            <div class="shedule_block">
+                <h4>Отзывы</h4>
+                <div class="all_reviews">
+                    {% if rating_list %}
+                        {% for rating in rating_list %}
+                            <div class="single_review">
+                                <p>{{ rating.user }}, <span>{{ rating.created_at }}</span></p>
+
+                                <p>{{ rating.comment }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

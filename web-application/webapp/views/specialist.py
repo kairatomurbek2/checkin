@@ -247,9 +247,13 @@ class ReviewSpecialistListView(ListView):
     template_name = 'specialist/all_review.html'
     model = Rating
 
+    def get_context_data(self, **kwargs):
+        context = super(ReviewSpecialistListView, self).get_context_data(**kwargs)
+        context['master'] = get_object_or_404(Specialist, slug=self.kwargs.get('master_slug'))
+        return context
+
     def get_queryset(self):
         queryset = Rating.objects.filter(specialist__slug=self.kwargs.get('master_slug'))
-
         return queryset
 
 

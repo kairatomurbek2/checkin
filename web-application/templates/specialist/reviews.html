@@ -1,9 +1,13 @@
-{% for review in master.rating_specialist.all|slice:":3" %}
-    <p>Пользователь: {{ review.user }}</p>
-    <p>Оценка: {{ review.count }}</p>
-    <p>Date: {{ review.created_at }}</p>
-{% endfor %}
+<div class="reviews">
+    {% for review in master.rating_specialist.all|slice:":3" %}
+        <div class="review">
+            <p>{{ review.user }}, <span>{{ review.created_at }}</span></p>
+            <p>{{ review.comment }}</p>
+        </div>
+    {% endfor %}
+    {% if master.rating_specialist.all %}
+        <a href="{% url 'specialist_reviews' master.slug %}" class="total_review">Все отзывы
+            (<span>{{ master.rating_specialist.count }}</span>)</a>
+    {% endif %}
+</div>
 
-{% if master.rating_specialist.all %}
-    <a href="{% url 'specialist_reviews' master.slug %}"> All Reviews</a>
-{% endif %}

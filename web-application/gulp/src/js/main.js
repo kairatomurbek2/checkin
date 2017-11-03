@@ -1,6 +1,7 @@
 //=../../../staticfiles/bower_components/jquery/dist/jquery.js
 //=../../../staticfiles/bower_components/selectize/dist/js/standalone/selectize.js
 //=../../../staticfiles/bower_components/lightgallery/dist/js/lightgallery-all.js
+//=../../../staticfiles/bower_components/jquery-bar-rating/jquery.barrating.js
 //=../libs/slick/slick.js
 //=../libs/jquery.sticky.js
 //=../libs/jquery.maskedinput.js
@@ -417,6 +418,12 @@ $(function () {
         format: 'dd.mm.yy',
         formatSubmit: 'dd.mm.yy'
     });
+
+    $('.star_rating').barrating({
+        theme: 'fontawesome-stars',
+        showSelectedRating: false
+    });
+
 
 
 });
