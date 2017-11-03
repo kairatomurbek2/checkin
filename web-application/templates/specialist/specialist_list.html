@@ -3,7 +3,7 @@
 {% block content %}
     <main class="all_specialists">
         <div class="grid">
-           {% include 'filters/base.html' %}
+            {% include 'filters/base.html' %}
             <div class="masters">
                 <form class="filter_form">
                     <label>
@@ -30,7 +30,14 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal" style="z-index: 1050">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
                 <div class="modal-body" style="text-align: center;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
@@ -49,25 +56,25 @@
         });
     </script>
     <script>
-        $(".favourite").click(function(){
+        $(".favourite").click(function () {
             var id = $(this).attr('data-specialist-id');
-            if (typeof parseInt(id) === 'number' ) {
+            if (typeof parseInt(id) === 'number') {
                 $.get({
                     url: '/favorite/add/?specialist=' + id,
-                    success: function(response) {
+                    success: function (response) {
                         if (!response.status) {
-                            $("#myModal .modal-body").html('<p style="text-align: center;">' + response.flash_message +'</p>');
+                            $("#myModal .modal-body").html('<p style="text-align: center;">' + response.flash_message + '</p>');
                             updateFavourite(response.favorites_count);
                             $('#myModal').modal();
                         } else {
-                            $("#myModal .modal-body").html('<p>'+response.message+'</p><a style="display: inline-block; margin-top: 10px;" href="/accounts/login">Авторизация</a>');
+                            $("#myModal .modal-body").html('<p>' + response.message + '</p><a style="display: inline-block; margin-top: 10px;" href="/accounts/login">Авторизация</a>');
                             $('#myModal').modal();
                         }
                     }
                 });
             }
         });
-        function updateFavourite(value){
+        function updateFavourite(value) {
             $(".authorised_user li:first-child span").html(value);
         }
     </script>
