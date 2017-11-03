@@ -27,6 +27,14 @@
             </div>
         </div>
     </main>
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal" style="z-index: 1050">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="text-align: center;">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block js %}
     <script src="{% static 'js/ajax-pagination.js' %}"></script>
@@ -47,10 +55,20 @@
                 $.get({
                     url: '/favorite/add/?specialist=' + id,
                     success: function(response) {
-                        alert(response.flash_message);
+                        if (!response.status) {
+                            $("#myModal .modal-body").html('<p style="text-align: center;">' + response.flash_message +'</p>');
+                            updateFavourite(response.favorites_count);
+                            $('#myModal').modal();
+                        } else {
+                            $("#myModal .modal-body").html('<p>'+response.message+'</p><a style="display: inline-block; margin-top: 10px;" href="/accounts/login">Авторизация</a>');
+                            $('#myModal').modal();
+                        }
                     }
                 });
             }
         });
+        function updateFavourite(value){
+            $(".authorised_user li:first-child span").html(value);
+        }
     </script>
 {% endblock %}
