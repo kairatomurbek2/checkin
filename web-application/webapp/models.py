@@ -12,7 +12,7 @@ from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES
+from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
@@ -360,8 +360,11 @@ class Reservation(models.Model):
     full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
     date_time_reservation = models.DateTimeField(verbose_name=_('Дата и время бронирование'))
-    status = models.BooleanField(default=False, verbose_name=_('Статус'))
+    status = models.CharField(choices=STATUS_CHOICES_RESERVATION, max_length=10, default='armored',
+                              verbose_name=_('Статус'))
     phone = PhoneNumberField(verbose_name=_('Номер телефона'))
+    edited_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_('Когда редактирован'))
+    edited_by = models.ForeignKey(User, blank=True, null=True, verbose_name=_('Кем редактирован'))
 
     def __str__(self):
         return self.full_name

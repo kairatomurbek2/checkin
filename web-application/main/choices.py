@@ -27,3 +27,12 @@ RATING_CHOICES = (
     (4, '4'),
     (5, '5'),
 )
+
+CONFIRMED = 'confirmed'
+REFUSED = 'refused'
+ARMORED = 'armored'
+STATUS_CHOICES_RESERVATION = (
+    (CONFIRMED, _('Подтвержден')),
+    (REFUSED, _('Отказано')),
+    (ARMORED, _('Бронирован')),
+)
