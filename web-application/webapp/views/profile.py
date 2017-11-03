@@ -25,8 +25,7 @@ class ProfileFavoriteListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(ProfileFavoriteListView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            context['fav_spec'] = self.model.objects.filter(user=self.request.user).values_list('specialist',
-                                                                                                        flat=True)
+            context['fav_spec'] = self.model.objects.filter(user=self.request.user).values_list('specialist', flat=True)
         return context
 
     def get_queryset(self):
