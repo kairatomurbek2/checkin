@@ -53,6 +53,36 @@
             </div>
             <div class="shedule_block">
                 {% include 'messages.html' %}
+
+                {% if master.schedule_setting_specialist.all %}
+                    <div class="main-wrap">
+                        <h4>Записаться к специалисту</h4>
+                        {% if request.user == master.user %}
+                            <div class="edit_time">
+                                <a href="{% url 'update_schedule_setting' master.slug %}"><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
+                            </div>
+                        {% endif %}
+                        <a href="#" onclick="prevWeek()" id="prev-week"><i class="fa fa-angle-left fa-3x"
+                                                                           aria-hidden="true"></i></a>
+                        <a href="#" onclick="nextWeek()" id="next-week"><i class="fa fa-angle-right fa-3x"
+                                                                           aria-hidden="true"></i></a>
+
+
+                        <div class="main">
+                            <div class='loader'>
+                                <img src="{% static 'img/loader.gif' %}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if request.user == master.user %}
+                        <div class="set_time">
+                             <a href="{% url "add_schedule_setting" master.slug %}"> <i class="fa fa-clock-o fa-2x" aria-hidden="true"></i> Указать время работы</a>
+                        </div>
+
+                    {% endif %}
+                {% endif %}
+
                 <div class="p_description">
                     <div>
                         <h4>О специалисте</h4>
@@ -63,22 +93,6 @@
                         {% for tag in master.tags.all %}
                             <span>{{ tag.name }}</span>
                         {% endfor %}
-
-                        {% if master.schedule_setting_specialist.all %}
-                            <div class="main-wrap">
-                                <div class="main">
-                                    <div class='loader'>
-                                        <img src="{% static 'img/loader.gif' %}" alt="">
-                                    </div>
-                                </div>
-                                <a href="#" onclick="prevWeek()" id="prev-week">Prev week</a>
-                                <a href="#" onclick="nextWeek()" id="next-week">Next week</a>
-                            </div>
-                        {% else %}
-                            {% if request.user == master.user %}
-                                <a href="{% url "add_schedule_setting" master.slug %}">Указать время работы</a>
-                            {% endif %}
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -91,29 +105,77 @@
     <style>
         .main-wrap {
             width: 100%;
+            background-color: #fff;
+            padding: 35px 15px 40px 40px;
+            position: relative;
         }
-        .main {
-            width: 100%;
+
+        .main-wrap > a {
+            color: #11EBE6;
+            position: absolute;
+            top: 78px;
+            width: 30px;
+            height: 36px;
             display: flex;
-            justify-content: center;
+            z-index: 10;
+        }
+
+        .main-wrap > a i {
+            margin: auto;
+        }
+
+        #prev-week {
+            left: 20px;
+        }
+
+        #next-week {
+            right: 34px;
+        }
+
+        .main {
+            position: relative;
+            width: 100%;
+            height: 406px;
+            padding-right: 25px;
+            overflow-y: scroll;
+            display: flex;
+            justify-content: space-between;
         }
 
         .weekday {
-            padding: 0 10px;
+{#            padding: 0 10px;#}
             text-align: center;
+            width: 98px;
         }
 
         .weekday > span {
             display: block;
             padding-bottom: 10px;
+            color: #95989A;
+            font-size: 14px;
+        }
+
+        .weekday > span:last-of-type {
+            display: block;
+            padding-bottom: 15px;
         }
 
         .time {
-            background: rgb(109, 109, 255);
-            padding: 3px;
-            margin-bottom: 5px;
+            background-color: #11EBE6;
+            padding: 8px 0;
+            margin-bottom: 10px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 5px;
+            font-size: 14px;
             color: #ffffff;
             position: relative;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        
+        .time:hover:not(.taken) {
+            background-color: #04c1bd;
         }
 
         .time .phone {
@@ -127,6 +189,8 @@
             z-index: 3;
             box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.1);
         }
+        
+        
 
         .taken {
             background: #cccccc;
@@ -148,10 +212,10 @@
             padding: 30px;
             position: fixed;
             top: 50%;
-            margin-top: -195px;
             left: 50%;
-            margin-left: -195px;
+            transform: translate(-50%, -50%);
             z-index: 2;
+            box-shadow: 0 0 20px 3px rgba(0,0,0,0.15);
         }
         .inputs {
             padding-top: 40px;
@@ -159,12 +223,18 @@
         }
         .inputs input {
             display: block;
-            padding: 5px;
             width: 100%;
             padding: 10px 20px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             outline: none;
-            text-align: left
+            text-align: left;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #222222;
+{#					&:hover,#}
+{#					&:focus#}
+{#						border-color: #8be0de#}
         }
         .inputs input.error {
             border-color: red;
@@ -172,16 +242,24 @@
         .inputs button {
             display: inline-block;
             padding: 10px 30px;
-            font-size:  14px;
             color: #fff;
-            background: #21FFD2;
             border:  0;
+
+            font-size: 12px;
+            border-radius: 6px;
+            background-color: #17FFFA;
+            width: 190px;
+            height: 40px;
+            margin-top: 20px;
+            cursor: pointer;
+            outline: 0;
         }
         .order-modal .title {
-            width: 100%;
-            font-size: 14px;
-            text-transform: uppercase;
-            text-align: center;
+            font-size: 16px;
+			color: #222222;
+			text-align: center;
+			text-transform: uppercase;
+			padding-bottom: 20px;
         }
 
         .order-modal .title-time {
@@ -193,9 +271,8 @@
         .error, .success {
             width: 100%;
             text-align: center;
-            font-size: 14px;
             line-height: 18px;
-            padding: 30px 0;
+            padding: 10px 0;
         }
         .success {
             display: none;
@@ -204,6 +281,10 @@
         .error {
             display: none;
             color: rgb(254, 62, 62);
+        }
+
+        .authorization-text a {
+            color: #17FFFA;
         }
 
         .loader {
@@ -277,8 +358,8 @@
         // UI
         function toggleModal(state) {
             if (state == true) {
+                document.querySelector(".blur").style.filter = "blur(5px)";
                 document.querySelector(".order-modal-wrap").style.display = 'block';
-                document.querySelector(".blur").style.filter = "blur(20px)";
                 document.querySelector(".title-time").innerHTML = "Запись на " + new Date(toOrder.day).getFullYear() + '-' + (new Date(toOrder.day).getMonth()+1) + '-' + new Date(toOrder.day).getDate() + ' ' + toOrder.time;
             } else if (state == false) {
                 document.querySelector(".order-modal-wrap").style.display = 'none';
