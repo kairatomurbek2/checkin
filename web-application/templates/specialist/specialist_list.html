@@ -40,4 +40,19 @@
             });
         });
     </script>
+    <script>
+        $(".favourite").click(function(){
+            var id = $(this).attr('data-specialist-id');
+            if (typeof parseInt(id) === 'number' ) {
+                $.get({
+                    url: '/favorite/add/?specialist=' + id,
+                    success: function(response) {
+                        if (response.created) {
+                            alert(response.flash_message);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
