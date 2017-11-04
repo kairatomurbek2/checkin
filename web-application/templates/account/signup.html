@@ -14,35 +14,35 @@
                 <span></span>
 
                 {% load socialaccount %}
-            {% providers_media_js %}
-            <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-                {% csrf_token %}
-                <p class="text-danger">{{ form.username.errors|striptags }}</p>
-                {{ form.username }}
-                <p class="text-danger">{{ form.email|striptags }}</p>
-                {{ form.email }}
-                <p class="text-danger">{{ form.password1|striptags }}</p>
-                {{ form.password1|attr:'required' }}
-                <p class="text-danger">{{ form.password2|striptags }}</p>
-                {{ form.password2|attr:'required' }}
-                {% if redirect_field_value %}
-                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                {% endif %}
+                {% providers_media_js %}
+                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    <p class="text-danger">{{ form.username.errors|striptags }}</p>
+                    <input type="text" placeholder="ФИО" name="username" required="">
+                    <p class="text-danger">{{ form.email|striptags }}</p>
+                    {{ form.email }}
+                    <p class="text-danger">{{ form.password1|striptags }}</p>
+                    {{ form.password1|attr:'required' }}
+                    <p class="text-danger">{{ form.password2|striptags }}</p>
+                    {{ form.password2|attr:'required' }}
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
 
-                <ul class="socialaccount_providers">
-                    <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}">
-                        Войти через <i class="fa fa-google-plus" aria-hidden="true"></i>
-                    </a>
-                    </li>
-                    <li style="list-style: none;"><a href="{% provider_login_url "google" method="js_sdk" %}">
-                        Войти через <i class="fa fa-facebook" aria-hidden="true"></i>
-                    </a></li>
-                </ul>
+                    <ul class="socialaccount_providers">
+                        <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}">
+                            Войти через <i class="fa fa-google-plus" aria-hidden="true"></i>
+                        </a>
+                        </li>
+                        <li style="list-style: none;"><a href="{% provider_login_url "google" method="js_sdk" %}">
+                            Войти через <i class="fa fa-facebook" aria-hidden="true"></i>
+                        </a></li>
+                    </ul>
 
-                <button type="submit" class="button">{% trans "Sign Up" %}</button>
-            </form>
+                    <button type="submit" class="button">{% trans "Sign Up" %}</button>
+                </form>
 
-            <a href="{{ login_url }}">Уже зарегистрированы?</a>
+                <a href="{{ login_url }}">Уже зарегистрированы?</a>
             </div>
         </div>
     </main>
