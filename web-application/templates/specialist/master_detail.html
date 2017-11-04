@@ -102,6 +102,25 @@
 
     {% include 'specialist/specialist_review_form.html' %}
 
+    <!-- popup for armored request -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="armored-modal" style="z-index: 1050">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                    Запись на это время уже была оформлена до Вас, но еще не подтверждена специалистом, Вы можете подождать пока данное время освободится, либо выбрать другое.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- popup for armored request -->
+
     <style>
         .main-wrap {
             width: 100%;
@@ -333,23 +352,32 @@
         function addListenerToTime(){
             document.querySelector('body').addEventListener('click', function(event) {
                 {% if request.user != master.user %}
-                if (event.target.classList.contains("time") && !event.target.classList.contains("taken")) {
+                if (event.target.classList.contains("time") && !event.target.classList.contains("taken") && !event.target.classList.contains("armored")) {
                     toOrder.time = event.target.innerHTML;
                     toOrder.day = event.target.parentElement.dataset.date;
                     toggleModal(true);
+                }
+                if (event.target.classList.contains("armored")) {
+                    $("#armored-modal").modal();
                 }
                 {% endif %}
                 {% if request.user == master.user %}
                 if (event.target.parentElement.classList.contains("time") &&
                     event.target.parentElement.classList.contains("taken") &&
-                    !event.target.parentElement.classList.contains("lunch") &&
-                    !event.target.parentElement.classList.contains("rest")
+                    !event.target.parentElement.classList.contains("no-phone")
                 ) {
                     if (event.target.parentElement.querySelector(".phone").style.display == "block") {
                         event.target.parentElement.querySelector(".phone").style.display = "none";
                     } else {
                         event.target.parentElement.querySelector(".phone").style.display = "block";
                     }
+                }
+                if (event.target.classList.contains("time") && !event.target.classList.contains("taken") && !event.target.classList.contains("armored") || 
+                    event.target.parentElement.classList.contains("time") && !event.target.parentElement.classList.contains("taken") && !event.target.parentElement.classList.contains("armored")) {
+                    toOrder.time = event.target.innerHTML;
+                    toOrder.day = event.target.parentElement.dataset.date || event.target.parentElement.parentElement.dataset.date;
+                    toOrder.status = 'confirmed';
+                    toggleModal(true);
                 }
                 {% endif %}
             });
@@ -411,6 +439,7 @@
                             hours: parseInt(work.timeInterval.split(':')[0])
                         };
                     }
+
                     var time = [];
                     var lunchState = false;
                     while (new Date(startTime).getTime() <= new Date(endTime).getTime()) {
@@ -419,18 +448,20 @@
                             end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), lunchTime.end.hours, lunchTime.end.minutes, 0)
                         };
                         var myTime = getTime(startTime);
+                        // check time on lunch
                         if (new Date(startTime) >= lunch.start && new Date(startTime) <= lunch.end) {
                             if (!lunchState) {
                                 myTime.taken = true;
                                 myTime.time = 'Обед';
                                 myTime.lunch = true;
                                 lunchState = true;
+                                myTime.noPhone = true;
                             } else {
                                 myTime.taken = true;
                                 myTime.time = null;
                             }
                         }
-
+                        // check if now time is bigger than in block
                         if (new Date().getDate() === new Date(startTime).getDate()) {
                             var nowHours = parseInt(new Date().getHours());
                             var nowMinutes = parseInt(new Date().getMinutes());
@@ -438,20 +469,25 @@
                             var compareMinutes = parseInt(new Date(startTime).getMinutes());
                             if (nowHours > compareHours) {
                                 myTime.taken = true;
+                                myTime.noPhone = true;
                             } else if (nowHours === compareHours && nowMinutes > compareMinutes) {
                                 myTime.taken = true;
+                                myTime.noPhone = true;
                             }
                         }
                         takenArr.forEach(taken => {
                             if (currentDate.getDate() === new Date(taken.date).getDate()) {
                                 taken.time.forEach(takenTime => {
                                     if (myTime.time === takenTime) {
-                                        myTime.taken = true;
-
-                                        {% if request.user == master.user %}
-                                        myTime.name = taken.name || '';
-                                        myTime.phone = taken.phone || '';
                                         myTime.status = taken.status;
+                                        if (taken.status == 'confirmed') {
+                                            myTime.taken = true;
+                                        } else {
+                                            myTime.taken = false;
+                                        }
+                                        {% if request.user == master.user %}
+                                            myTime.name = taken.name || '';
+                                            myTime.phone = taken.phone || '';
                                         {% endif %}
                                     }
                                 })
@@ -459,6 +495,7 @@
                         });
                         if (new Date(startTime).getTime() === new Date(endTime).getTime()) {
                             myTime.taken = true;
+                            myTime.noPhone = true;
                         }
                         if (myTime.time) time.push(myTime);
                         startTime.setHours(startTime.getHours() + timeInterval.hours);
@@ -475,12 +512,14 @@
                         time: [{
                             time: 'Выходной',
                             taken: true,
-                            rest: true
+                            rest: true,
+                            noPhone: true
                         }]
                     })
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
             }
+            console.log(mainArray);
             renderDate();
         }
         function getTime(date) {
@@ -498,16 +537,28 @@
                 dateObj.time.forEach(time => {
                     {% if request.user == master.user %}
                     timeTemplate += `
-                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">
+                            <div class="time 
+                                    ${time.taken ? 'taken' : ''} 
+                                    ${time.lunch ? 'lunch' : ''}
+                                    ${time.status == 'armored' ? 'armored' : '' }
+                                    ${time.noPhone ? 'no-phone' : ''}"
+                                    ${((time.status == 'armored' || time.status == 'confirmed') && !time.noPhone) ? 'data-toggle="tooltip" data-placement="top" title="'+ time.phone +'"' : ''}>
+
                                 <div>${time.lunch ? 'Обед' : time.time}</div>
                                 <div>${time.name ? '(' + time.name + ')' : '' }</div>
                                 <div class="phone" style="display: none;">${time.phone ? time.phone : '' }</div>
+
                             </div>
                         `;
                     {% endif %}
                     {% if request.user != master.user %}
                     timeTemplate += `
-                            <div class="time ${time.taken ? 'taken' : ''} ${time.lunch ? 'lunch' : ''}">${time.rest ? 'Выходной' : time.lunch ? 'Обед' : time.taken ? '---' : time.time}</div>
+                            <div class="time 
+                            ${time.status == 'armored' ? 'armored' : ''} 
+                            ${(time.status == 'confirmed' || time.taken) ? 'taken' : ''}
+                            ${time.lunch ? 'lunch' : ''}">
+                                ${time.rest ? 'Выходной' : time.lunch ? 'Обед' : time.taken ? '---' : time.time}
+                            </div>
                         `;
 
                     {% endif %}
@@ -578,11 +629,24 @@
                     xhr.send();
                 }
                 if (method === 'POST') {
+                    var time = "" + new Date(toOrder.day).getFullYear() + 
+                        '-' + (new Date(toOrder.day).getMonth()+1 > 9 ? new Date(toOrder.day).getMonth()+1 : '0' + (new Date(toOrder.day).getMonth()+1)) + 
+                        '-' + (new Date(toOrder.day).getDate() > 9 ? new Date(toOrder.day).getDate() : ('0'+ new Date(toOrder.day).getDate())) + 
+                        ' ' + toOrder.time.trim();
+
                     var data = JSON.stringify({
                         "full_name": document.querySelector("#full_name").value,
-                        "date_time_reservation": "" + new Date(toOrder.day).getFullYear() + '-' + (new Date(toOrder.day).getMonth()+1) + '-' + new Date(toOrder.day).getDate() + ' ' + toOrder.time,
+                        "date_time_reservation": time,
                         "phone": document.querySelector("#phone").value
                     });
+                    {% if request.user == master.user %}
+                    data = JSON.stringify({
+                        "full_name": document.querySelector("#full_name").value,
+                        "date_time_reservation": time,
+                        "phone": document.querySelector("#phone").value,
+                        "status": toOrder.status,
+                    });
+                    {% endif %}
                     var xhr = new XMLHttpRequest();
 
                     xhr.addEventListener("readystatechange", function () {
@@ -636,6 +700,7 @@
 
             makeRequest('GET', '/api/reservation/', '{{master.slug}}').then(response => {
                 if (response && response.results) {
+                    console.log(response.results);
                     if (response.results.length > 0) {
                         response.results.forEach(item => {
                             var date = item.date_time_reservation.split(" ")[0];
@@ -643,11 +708,13 @@
                             date = new Date('' + date[2] + '/' + (parseInt(date[1])+1) + '/' + date[0]);
                             var time = item.date_time_reservation.split(" ")[1];
                             {% if request.user == master.user %}
-                            takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status});
+                            if (item.status !== 'refused') {
+                                takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status});
+                            }
                             {% endif %}
                             {% if request.user != master.user %}
-                            if (item.status === true) {
-                                takenArr.push({date: date, time: [time]});
+                            if (item.status !== 'refused') {
+                                takenArr.push({date: date, time: [time], status: item.status});
                             }
                             {% endif %}
                         });
