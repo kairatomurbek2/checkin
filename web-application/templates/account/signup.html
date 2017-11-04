@@ -7,20 +7,15 @@
 
 {% block content %}
     <main class="account_page">
-        <div class="grid login_page">
-            <h4>{% trans "Sign Up" %}</h4>
+        <div class="grid">
 
-            <p>{% blocktrans %} Уже зарегистрированы? <a href="{{ login_url }}">Вход</a>{% endblocktrans %}</p>
-            {% load socialaccount %}
+            <div class="s_register c_register">
+                <p>Регистрация</p>
+                <span></span>
+
+                {% load socialaccount %}
             {% providers_media_js %}
-            <ul class="socialaccount_providers">
-                <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}"><img
-                        src="{% static 'img/face.png' %}"></a></li>
-                <li style="list-style: none;"><a href="{% provider_login_url "google" method="js_sdk" %}"><img
-                        src="{% static 'img/google.png' %}"></a></li>
-            </ul>
             <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-
                 {% csrf_token %}
                 <p class="text-danger">{{ form.username.errors|striptags }}</p>
                 {{ form.username }}
@@ -33,8 +28,22 @@
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                 {% endif %}
+
+                <ul class="socialaccount_providers">
+                    <li style="list-style: none;"><a href="{% provider_login_url "facebook" method="js_sdk" %}">
+                        Войти через <i class="fa fa-google-plus" aria-hidden="true"></i>
+                    </a>
+                    </li>
+                    <li style="list-style: none;"><a href="{% provider_login_url "google" method="js_sdk" %}">
+                        Войти через <i class="fa fa-facebook" aria-hidden="true"></i>
+                    </a></li>
+                </ul>
+
                 <button type="submit" class="button">{% trans "Sign Up" %}</button>
             </form>
+
+            <a href="{{ login_url }}">Уже зарегистрированы?</a>
+            </div>
         </div>
     </main>
 {% endblock %}

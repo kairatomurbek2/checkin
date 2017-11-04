@@ -76,20 +76,20 @@ $(function () {
         $('.blur').css('filter', 'none');
     });
 
-    $('#log-in, .r_user').click(function (event) {
-        event.stopPropagation();
-        $('.modal').css('display', 'none');
-        $('.c_modal').fadeIn(350);
-        $('.blur').css('filter', 'blur(5px)');
-    });
-
-    $('#sign-up, .n_user').click(function (event) {
-        event.stopPropagation();
-        $('.modal').fadeIn(350);
-        $('.c_modal').css('display', 'none');
-        $('.logout_modal').css('display', 'none');
-        $('.blur').css('filter', 'blur(5px)');
-    });
+    // $('#log-in, .r_user').click(function (event) {
+    //     event.stopPropagation();
+    //     $('.modal').css('display', 'none');
+    //     $('.c_modal').fadeIn(350);
+    //     $('.blur').css('filter', 'blur(5px)');
+    // });
+    //
+    // $('#sign-up, .n_user').click(function (event) {
+    //     event.stopPropagation();
+    //     $('.modal').fadeIn(350);
+    //     $('.c_modal').css('display', 'none');
+    //     $('.logout_modal').css('display', 'none');
+    //     $('.blur').css('filter', 'blur(5px)');
+    // });
 
     $('#leave_comment').click(function (event) {
         event.stopPropagation();

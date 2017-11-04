@@ -14,51 +14,51 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-<div class="modal">
-    <div class="s_register">
-        <p>РЕГИСТРАЦИЯ</p>
-        <span></span>
-        <form action="{% url 'account_signup' %}" method="post">
-            {% csrf_token %}
-            <label>
-                <input type="text" placeholder="Имя пользователя" name="username" required>
-            </label>
-            <label>
-                <input type="email" placeholder="e-mail" name="email" required>
-            </label>
-
-            <label>
-                <input type="password" placeholder="Пароль" id="password" required name="password1">
-            </label>
-
-            <label>
-                <input type="password" placeholder="Повторите пароль" id="confirm_password" required name="password2">
-            </label>
-
-            <button type="submit">Зарегистрироваться</button>
-            <span class="r_user">Уже есть аккаунт?</span>
-
-        </form>
-    </div>
-</div>
-
-<div class="modal c_modal">
-    <div class="s_register c_register">
-        <p>ВХОД</p>
-        <span></span>
-        <form action="{% url 'account_login' %}" method="POST">
-            {% csrf_token %}
-            <label>
-                <input type="email" placeholder="e-mail" name="login" required>
-            </label>
-            <label>
-                <input type="password" placeholder="Пароль" name="password" required>
-            </label>
-            <button type="submit">Войти</button>
-            <span class="n_user">Нет аккаунта?</span>
-        </form>
-    </div>
-</div>
+{#<div class="modal">#}
+{#    <div class="s_register">#}
+{#        <p>РЕГИСТРАЦИЯ</p>#}
+{#        <span></span>#}
+{#        <form action="{% url 'account_signup' %}" method="post">#}
+{#            {% csrf_token %}#}
+{#            <label>#}
+{#                <input type="text" placeholder="Имя пользователя" name="username" required>#}
+{#            </label>#}
+{#            <label>#}
+{#                <input type="email" placeholder="e-mail" name="email" required>#}
+{#            </label>#}
+{##}
+{#            <label>#}
+{#                <input type="password" placeholder="Пароль" id="password" required name="password1">#}
+{#            </label>#}
+{##}
+{#            <label>#}
+{#                <input type="password" placeholder="Повторите пароль" id="confirm_password" required name="password2">#}
+{#            </label>#}
+{##}
+{#            <button type="submit">Зарегистрироваться</button>#}
+{#            <span class="r_user">Уже есть аккаунт?</span>#}
+{##}
+{#        </form>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div class="modal c_modal">#}
+{#    <div class="s_register c_register">#}
+{#        <p>ВХОД</p>#}
+{#        <span></span>#}
+{#        <form action="{% url 'account_login' %}" method="POST">#}
+{#            {% csrf_token %}#}
+{#            <label>#}
+{#                <input type="email" placeholder="e-mail" name="login" required>#}
+{#            </label>#}
+{#            <label>#}
+{#                <input type="password" placeholder="Пароль" name="password" required>#}
+{#            </label>#}
+{#            <button type="submit">Войти</button>#}
+{#            <span class="n_user">Нет аккаунта?</span>#}
+{#        </form>#}
+{#    </div>#}
+{#</div>#}
 
 <div class="modal logout_modal">
     <div>
