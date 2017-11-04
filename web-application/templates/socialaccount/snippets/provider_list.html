@@ -4,23 +4,23 @@
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
-{% if provider.id == "openid" %}
-{% for brand in provider.get_brands %}
-<li>
-  <a title="{{brand.name}}"
-     class="socialaccount_provider {{provider.id}} {{brand.id}}"
-     href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-     >{{ brand.name }} </a>
-</li>
+    {% if provider.id == "openid" %}
+        {% for brand in provider.get_brands %}
+            <li>
+                <a title="{{ brand.name }}"
+                   class="socialaccount_provider {{ provider.id }} {{ brand.id }}"
+                   href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                >{{ brand.name }} </a>
+            </li>
 
-{% endfor %}
-{% endif %}
-<li style="list-style: none">
-  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><img src="
-{% if provider.name == "Google" %}{% static 'img/google.png' %}
-{% elif provider.name == 'Facebook' %}{% static 'img/face.png' %}
+        {% endfor %}
+    {% endif %}
+    <li style="list-style: none">
+        <a title="{{ provider.name }}" class="socialaccount_provider {{ provider.id }}"
+           href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+{% if provider.name == "Google" %}Войти через <i class="fa fa-google-plus" aria-hidden="true"></i>
+{% elif provider.name == 'Facebook' %}Войти через <i class="fa fa-facebook" aria-hidden="true"></i>
 {% else %}{% static 'static/img/icons/3.png' %}
-{% endif %}" alt=""></a>
-</li>
+{% endif %}</a>
+    </li>
 {% endfor %}
