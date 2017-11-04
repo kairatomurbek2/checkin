@@ -6,12 +6,21 @@ from django.utils.translation import ugettext_lazy as _
 
 import django_filters
 
+from main.choices import STATUS_CHOICES_RESERVATION
 from webapp import models
-from webapp.models import Category, Specialist
+from webapp.models import Category, Specialist, Reservation
+from datetime import datetime
 
 
 def categories(request):
     return models.Category.objects.all()
+
+
+def assembly_status():
+    choices = []
+    for assembly_status in STATUS_CHOICES_RESERVATION:
+        choices.append(assembly_status)
+    return choices
 
 
 class CompanyFilter(django_filters.FilterSet):
@@ -76,3 +85,15 @@ class SpecialistFilter(django_filters.FilterSet):
             Q(full_name__icontains=value) | Q(short_info__icontains=value) | Q(tags__name__icontains=value)
         ).distinct()
 
+
+def search(queryset, name, value):
+    return queryset.filter(Q(full_name__icontains=value) | Q(phone__icontains=value)).distinct()
+
+
+class ReservationFilter(django_filters.FilterSet):
+    created_at_from = django_filters.DateFilter(label=_('C'), name='created_at', lookup_expr='gte')
+    created_at_to = django_filters.DateFilter(label=_('До'), name='created_at', lookup_expr='lte')
+    status = django_filters.ChoiceFilter(label=_('Статус'), choices=assembly_status)
+    search = django_filters.CharFilter(label=_('Поиск'),
+                                       widget=forms.TextInput(attrs={'placeholder': _('Найти')}),
+                                       method=search)

@@ -18,7 +18,7 @@ from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
 from webapp.models import Specialist, Invite, Rating, ScheduleSetting, Reservation, FavoriteSpecialist
-from webapp.views.filters import SpecialistFilter
+from webapp.views.filters import SpecialistFilter, ReservationFilter
 
 
 class MastersList(ListView):
@@ -302,6 +302,13 @@ class UpdateScheduleSettingView(LoginRequiredMixin, UpdateView):
 class ReservationListView(LoginRequiredMixin, ListView):
     model = Reservation
     template_name = 'specialist/reservation_list.html'
+    filterset_class = ReservationFilter
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super(ReservationListView, self).get_context_data(**kwargs)
+        reservation_filter = self.filterset_class(self.request.GET, queryset=self._get_reservation_list())
+        context['reservation_filter'] = reservation_filter
+        return context
+
+    def _get_reservation_list(self):
         return Reservation.objects.filter(specialist__slug=self.kwargs['master_slug']).order_by('-created_at')
