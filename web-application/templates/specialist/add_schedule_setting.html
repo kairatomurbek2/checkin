@@ -26,15 +26,15 @@
                         <p>{{ master.short_info }}</p>
                         <ul>
                             <li>
-                                {{ master.street_address }}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
                             </li>
                             <li>
                                 {% for contact in master.specialist_contacts.all %}
-                                    {{ contact.phone }}
+                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                 {% endfor %}
                             </li>
                             <li>
-                                {{ master.user.email }}
+                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
                             </li>
                         </ul>
                     </div>

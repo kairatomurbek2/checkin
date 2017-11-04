@@ -608,11 +608,11 @@ main
         li:first-of-type
           height: auto
         li:nth-child(2)
-          width: 140px
-          background: url("../img/p_number_icon.png") left 3px no-repeat
+          //width: 140px
+          //background: url("../img/p_number_icon.png") left 3px no-repeat
         li:last-of-type
           height: auto
-          background: url("../img/e-mail.png") left 3px no-repeat
+          //background: url("../img/e-mail.png") left 3px no-repeat
       .total_review
         color: $main-color
         text-align: center
@@ -1335,10 +1335,6 @@ h4
         color: #95989A
     input
       display: none
-      // &:indeterminate + label
-      //   span.box
-      //     background: url("../img/logo/indeterminate.jpg") 4px 4px no-repeat
-      //     outline: 1px solid #b8b8b8
       &:checked + label
         span.box
           background: #fff url("../img/f_checked.png") center no-repeat
@@ -1501,15 +1497,14 @@ h4
       li
         display: inline-block
         margin-bottom: 12px
-        padding-left: 22px
+        //padding-left: 22px
         line-height: 17px
         overflow: hidden
-      li:first-of-type
-        height: 36px
-        background: url("../img/place.png") left 3px no-repeat
+        i
+          color: #D6D6D6
+          font-size: 16px
+          margin-right: 10px
       li:last-of-type
-        height: 20px
-        background: url("../img/p_number_icon.png") left 3px no-repeat
         margin-bottom: 0
   & > a:last-of-type
     position: absolute

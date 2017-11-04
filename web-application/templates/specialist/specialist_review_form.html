@@ -1,6 +1,7 @@
 {% load staticfiles widget_tweaks thumbnail %}
 <div class="review_modal">
     <div class="review_form">
+        <span class="close_modal"><i class="fa fa-times" aria-hidden="true"></i></span>
         {% if user.is_authenticated %}
             {% if master.rating_specialist.all|length >= 1 %}
                 <p>Вы уже добавляли отзыв</p>
@@ -25,7 +26,6 @@
         {% else %}
             <p>Авторизуйтесь чтобы оставить отзыв</p>
         {% endif %}
-
 
     </div>
 </div>
