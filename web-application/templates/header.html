@@ -17,8 +17,8 @@
             {% if not request.user.is_authenticated %}
                 <ul class="menu">
                 <li><a href="{% url 'account_login' %}">Избранные(<span>0</span>)</a></li>
-                    <li id="log-in"><a href="#">Вход</a></li>
-                    <li id="sign-up"><a href="#">Регистрация</a></li>
+                    <li id="log-in"><a href="{% url 'account_login' %}">Вход</a></li>
+                    <li id="sign-up"><a href="{% url 'account_signup' %}">Регистрация</a></li>
                 </ul>
             {% endif %}
             {% if request.user.is_authenticated %}
