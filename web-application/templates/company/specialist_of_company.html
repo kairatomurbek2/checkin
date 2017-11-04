@@ -29,11 +29,11 @@
                         <p>{{ master.short_info }}</p>
                         <ul>
                             <li>
-                                {{ master.street_address }}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
                             </li>
                             <li>
                                 {% for number in master.specialist_contacts.all %}
-                                    {{ number.phone }}
+                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ number.phone }}
                                 {% endfor %}
                             </li>
                         </ul>

@@ -76,20 +76,20 @@ $(function () {
         $('.blur').css('filter', 'none');
     });
 
-    $('#log-in, .r_user').click(function (event) {
-        event.stopPropagation();
-        $('.modal').css('display', 'none');
-        $('.c_modal').fadeIn(350);
-        $('.blur').css('filter', 'blur(5px)');
-    });
-
-    $('#sign-up, .n_user').click(function (event) {
-        event.stopPropagation();
-        $('.modal').fadeIn(350);
-        $('.c_modal').css('display', 'none');
-        $('.logout_modal').css('display', 'none');
-        $('.blur').css('filter', 'blur(5px)');
-    });
+    // $('#log-in, .r_user').click(function (event) {
+    //     event.stopPropagation();
+    //     $('.modal').css('display', 'none');
+    //     $('.c_modal').fadeIn(350);
+    //     $('.blur').css('filter', 'blur(5px)');
+    // });
+    //
+    // $('#sign-up, .n_user').click(function (event) {
+    //     event.stopPropagation();
+    //     $('.modal').fadeIn(350);
+    //     $('.c_modal').css('display', 'none');
+    //     $('.logout_modal').css('display', 'none');
+    //     $('.blur').css('filter', 'blur(5px)');
+    // });
 
     $('#leave_comment').click(function (event) {
         event.stopPropagation();
@@ -105,23 +105,14 @@ $(function () {
         $('.blur').css('filter', 'blur(5px)');
     });
 
+    $('.close_modal').click(function (event) {
+        $('.review_modal, .order-modal-wrap').css('display', 'none');
+        $('.blur').css('filter', 'none');
+    });
+
     $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form, .order-modal').click(function (event) {
         event.stopPropagation();
     });
-
-    var password = document.getElementById("password")
-        , confirm_password = document.getElementById("confirm_password");
-
-    function validatePassword() {
-        if (password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Пароли не совпадают");
-        } else {
-            confirm_password.setCustomValidity('');
-        }
-    }
-
-    password.onchange = validatePassword;
-    confirm_password.onkeyup = validatePassword;
 
 
     function preview(input) {
@@ -138,46 +129,11 @@ $(function () {
         preview(this);
     });
 
-    var r_person = $('.registered_person');
-    $('.dt li.registered').append(r_person);
-
-
-    var r_cell = $('.dt li.registered');
-
-    r_cell.each(function (i, obj) {
-        $(obj).on('click', function (event) {
-            event.stopPropagation();
-            $('.book').fadeOut(250);
-            $('.registered_person').fadeOut(250);
-            $(this).children('.registered_person').fadeIn(250);
-        });
-    });
-
-    var booking = $('.book');
-    $('.dt li.free').append(booking);
-    var f_cell = $('.dt li.free');
-    f_cell.each(function (i, obj) {
-        $(obj).on('click', function (event) {
-            event.stopPropagation();
-            $('.registered_person').fadeOut(250);
-            $('.book').fadeOut(250);
-            $(this).children('.book').fadeIn(250);
-        });
-    });
 
 
     $('#id_categories').selectize({
         sortField: 'text'
     });
-
-    // $('.add_block > span').click(function (event) {
-    //     $(this).siblings('div').append('<div class="delete_block"><input type="tel" placeholder="Телефон"><span class="delete"></span></div>');
-    //
-    //     $('.delete').click(function () {
-    //         $(this).parent('.delete_block').remove();
-    //     });
-    //
-    // });
 
 
     $('.no').click(function (event) {

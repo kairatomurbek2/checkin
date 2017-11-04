@@ -30,15 +30,15 @@
                         <p>{{ company.short_info }}</p>
                         <ul>
                             <li>
-                                {{ company.street_address }}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ company.street_address }}
                             </li>
                             <li>
                                 {% for contact in company.contacts.all %}
-                                    {{ contact.phone }}
+                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                 {% endfor %}
                             </li>
                             <li>
-                                {{ company.email }}
+                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ company.email }}
                             </li>
                         </ul>
                     </div>

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles thumbnail  %}
+{% load staticfiles thumbnail %}
 {% block content %}
     <main class="specialist">
         <div class="grid">
@@ -24,20 +24,20 @@
                         <p>{{ master.short_info }}</p>
                         <ul>
                             <li>
-                                {{ master.street_address }}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
                             </li>
                             <li>
                                 {% for contact in master.specialist_contacts.all %}
-                                    {{ contact.phone }}
+                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                 {% endfor %}
                             </li>
                             {% if master.sex %}
                                 <li>
-                                    {{ master.sex }}
+                                    <i class="fa fa-venus-mars" aria-hidden="true"></i> {{ master.sex }}
                                 </li>
                             {% endif %}
                             <li>
-                                {{ master.user.email }}
+                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
                             </li>
                         </ul>
                     </div>
@@ -229,13 +229,23 @@
             height: 390px;
             background: #fff;
             padding: 30px;
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
             box-shadow: 0 0 20px 3px rgba(0,0,0,0.15);
         }
+
+        .close_modal {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: #04c1bd;
+            font-size: 16px;
+        }
+
         .inputs {
             padding-top: 40px;
             text-align: center
