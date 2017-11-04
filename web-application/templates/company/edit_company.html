@@ -34,15 +34,15 @@
                             <p>{{ object.short_info }}</p>
                             <ul>
                                 <li>
-                                    {{ object.street_address }}
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{ object.street_address }}
                                 </li>
                                 <li>
                                     {% for contact in object.contacts.all %}
-                                        {{ contact.phone }}
+                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                     {% endfor %}
                                 </li>
                                 <li>
-                                    {{ object.email }}
+                                    <i class="fa fa-envelope" aria-hidden="true"></i> {{ object.email }}
                                 </li>
                             </ul>
                         </div>
@@ -94,8 +94,9 @@
 
                             </select>
 
-                            <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
+
                             {{ form.company_tags }}
+                            <p class="text-danger">{{ form.company_tags.errors|striptags }}</p>
                         </div>
 
                         <p>Юридистические данные</p>

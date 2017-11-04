@@ -32,15 +32,15 @@
                             <p>{{ object.short_info }}</p>
                             <ul>
                                 <li>
-                                    {{ object.street_address }}
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{ object.street_address }}
                                 </li>
                                 <li>
                                     {% for contact in object.specialist_contacts.all %}
-                                        {{ contact.phone }}
+                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                     {% endfor %}
                                 </li>
                                 <li>
-                                    {{ object.user.email }}
+                                    <i class="fa fa-envelope" aria-hidden="true"></i> {{ object.user.email }}
                                 </li>
                             </ul>
                         </div>
@@ -62,13 +62,6 @@
 
                                     <div class="edit_phone_number">
                                         <table id="id_formset" border="0" cellpadding="0" cellspacing="25">
-                                            {#                                            <thead>#}
-                                            {#                                            <tr>#}
-                                            {#                                                <th scope="col">phone</th>#}
-                                            {#                                                <th scope="col">Delete</th>#}
-                                            {#                                            </tr>#}
-                                            {#                                            </thead>#}
-                                            {#                                            <tbody>#}
 
 
 
@@ -103,8 +96,9 @@
                                         placeholder="Сфера деятельности">
                                     <option value="7" selected="selected"></option>
                                 </select>
-                                <p class="text-danger">{{ form.tags.errors|striptags }}</p>
+
                                 {{ form.tags }}
+                                <p class="text-danger">{{ form.tags.errors|striptags }}</p>
                             </div>
                             <p>Подробная информация</p>
                             {{ form.info }}
