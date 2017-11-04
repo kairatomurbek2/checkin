@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
-    ReservationFullSerializer, ReservationCreteSerializer
+    ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer
 from datetime import date, timedelta
 
 
@@ -68,3 +68,11 @@ class ReservationCreateView(generics.CreateAPIView):
         serializer.save(specialist=specialist, user=self.request.user)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ReservationStatusView(generics.UpdateAPIView):
+    serializer_class = ReservationSerializer
+
+    def get_queryset(self):
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        return Reservation.objects.filter(specialist=specialist, pk=self.kwargs['pk'])

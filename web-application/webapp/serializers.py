@@ -55,3 +55,9 @@ class ReservationCreteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ('full_name', 'date_time_reservation', 'phone')
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ('status',)

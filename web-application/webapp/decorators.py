@@ -147,3 +147,17 @@ def login_check_favorite(function):
             return function(request, *args, **kwargs)
 
     return decorator
+
+
+def specialist_status_reservation(function):
+    def decotator(request, *args, **kwargs):
+        try:
+            specialist = Specialist.all_objects.get(slug=kwargs['specialist__slug'])
+            if specialist.user == request.user:
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Specialist.DoesNotExist:
+            raise Http404("Master not found")
+
+    return decotator
