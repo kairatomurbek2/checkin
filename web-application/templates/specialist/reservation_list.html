@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles widget_tweaks %}
+{% load staticfiles widget_tweaks pagination_tags %}
 
 {% block content %}
     <main class="order_page">
@@ -43,37 +43,40 @@
                         <th class="center">Контакты</th>
                         <th class="center">Статус</th>
                     </tr>
-                    {% if object_list %}
-                        {% for obj in reservation_filter.qs %}
-                            <tr>
-                                <td>
-                                    <span>{{ obj.created_at }}</span>
-                                </td>
-                                <td>{{ obj.full_name }}</td>
-                                <td class="center">
-                                    <span>{{ obj.date_time_reservation }}</span>
-                                </td>
-                                <td class="center">{{ obj.phone }}</td>
-                                <td class="center">
-                                    {% if obj.status == 'armored' %}
-                                        <div class="form_td">
-                                            <form action="#" method="post" id="{{ obj.id }}">
-                                                <button type="submit" class="button agree">Подтвердить</button>
-                                                <button type="submit" class="button disagree">Отказать</button>
-                                            </form>
-                                        </div>
-                                    {% endif %}
-                                    {% if obj.status == 'confirmed' %}
-                                        <div class="confirmed">Подтвержден</div>
-                                    {% endif %}
-                                    {% if obj.status == 'refused' %}
-                                        <div class="non_confirmed">Отказано</div>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                    {% autopaginate reservation_filter.qs 50 as reservations %}
+                    {% for obj in reservations %}
+                        <tr>
+                            <td>
+                                <span>{{ obj.created_at }}</span>
+                            </td>
+                            <td>{{ obj.full_name }}</td>
+                            <td class="center">
+                                <span>{{ obj.date_time_reservation }}</span>
+                            </td>
+                            <td class="center">{{ obj.phone }}</td>
+                            <td class="center">
+                                {% if obj.status == 'armored' %}
+                                    <div class="form_td">
+                                        <form action="" method="post" id="{{ obj.id }}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="button agree">Подтвердить</button>
+                                            <button type="submit" class="button disagree">Отказать</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                {% if obj.status == 'confirmed' %}
+                                    <div class="confirmed">Подтвержден</div>
+                                {% endif %}
+                                {% if obj.status == 'refused' %}
+                                    <div class="non_confirmed">Отказано</div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <p class="no_result">Нет записей</p>
+                    {% endfor %}
                 </table>
+                {% paginate %}
             </div>
         </div>
     </main>
