@@ -1,7 +1,12 @@
-{% for review in company.rating_company.all %}
-    <p>Пользователь: {{ review.user }}</p>
-    <p>Оценка: {{ review.count }}</p>
-    <p>Комментарий: {{ review.comment }}</p>
-{% endfor %}
-
-<a href="{% url 'company_reviews' company.slug %}"> All Reviews</a>
+<div class="reviews">
+    {% for review in company.rating_company.all|slice:":3" %}
+        <div class="review">
+            <p>{{ review.user }}, <span>{{ review.created_at }}</span></p>
+            <p>{{ review.comment }}</p>
+        </div>
+    {% endfor %}
+    {% if company.rating_company.all %}
+        <a href="{% url 'company_reviews' company.slug %}" class="total_review">Все отзывы
+            (<span>{{ company.rating_company.count }}</span>)</a>
+    {% endif %}
+</div>

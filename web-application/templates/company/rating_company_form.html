@@ -1,3 +1,4 @@
+{% load staticfiles widget_tweaks thumbnail %}
 <div class="review_modal">
     <div class="review_form">
         {% if user.is_authenticated %}
@@ -11,7 +12,7 @@
 
                     <div class="evaluation">
 					<span class="star-cb-group">
-                        {{ form.count }}
+                        {{ form.count|add_class:"star_rating" }}
     				</span>
                     </div>
 

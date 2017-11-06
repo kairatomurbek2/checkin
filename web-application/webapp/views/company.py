@@ -285,7 +285,11 @@ class ReviewCompanyListView(ListView):
     template_name = 'company/all_review.html'
     model = Rating
 
+    def get_context_data(self, **kwargs):
+        context = super(ReviewCompanyListView, self).get_context_data(**kwargs)
+        context['company'] = get_object_or_404(Company, slug=self.kwargs.get('company_slug'))
+        return context
+
     def get_queryset(self):
         queryset = Rating.objects.filter(company__slug=self.kwargs.get('company_slug'))
-
         return queryset

@@ -53,6 +53,7 @@
                 {% if request.user == company.user %}
                     <a href="{% url 'user_search' company.slug %}" class="add_specialist">Пригласить специалиста</a>
                 {% endif %}
+             {% include 'company/reviews.html' %}
             </div>
 
             <div class="shedule_block">
@@ -89,7 +90,7 @@
     </main>
 
     {% include 'company/rating_company_form.html' %}
-    {% include 'company/reviews.html' %}
+
 {% endblock %}
 
 {% block js %}
