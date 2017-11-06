@@ -273,7 +273,7 @@ class CreateScheduleSettingView(LoginRequiredMixin, CreateView):
         return reverse('master_detail', args=(self.kwargs.get('master_slug'),))
 
     def form_valid(self, form):
-        specialist = Specialist.objects.get(slug=self.kwargs.get('master_slug'))
+        specialist = Specialist.all_objects.get(slug=self.kwargs.get('master_slug'))
         schedule_setting = form.save(commit=False)
         schedule_setting.specialist = specialist
         schedule_setting.save()
