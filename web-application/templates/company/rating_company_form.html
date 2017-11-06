@@ -2,7 +2,7 @@
 <div class="review_modal">
     <div class="review_form">
         {% if user.is_authenticated %}
-            {% if company.rating_company.all|length >= 1 %}
+            {% if company.rating_company.all|length >= 1 and user.rating_set.all|length %}
                 <p>Вы уже добавляли отзыв</p>
             {% else %}
                 <form action="{% url 'create_review_company' company.slug %}" method="post" id="review_form">

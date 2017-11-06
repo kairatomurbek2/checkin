@@ -3,7 +3,7 @@
     <div class="review_form">
         <span class="close_modal"><i class="fa fa-times" aria-hidden="true"></i></span>
         {% if user.is_authenticated %}
-            {% if user.rating_set.all|length >= 1 %}
+            {% if master.rating_specialist.all|length >= 1 and user.rating_set.all|length >= 1 %}
                 <p>Вы уже добавляли отзыв</p>
             {% else %}
                 <form action="{% url 'create_review_specialist' master.slug %}" method="post" id="review_form">
