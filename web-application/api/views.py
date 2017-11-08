@@ -76,3 +76,9 @@ class ReservationStatusView(generics.UpdateAPIView):
     def get_queryset(self):
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
         return Reservation.objects.filter(specialist=specialist, pk=self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        r = Reservation.objects.filter(specialist=specialist, pk=self.kwargs['pk'])
+        r.update(edited_by=self.request.user)
+        return super(ReservationStatusView, self).update(request, *args, **kwargs)
