@@ -57,10 +57,10 @@
                             <td class="center">
                                 {% if obj.status == 'armored' %}
                                     <div class="form_td">
-                                        <div>
+                                        <form>
                                             <button type="submit" class="button agree" onclick="setStatus({{obj.id}}, 'confirmed', '{{obj.specialist.slug}}')">Подтвердить</button>
                                             <button type="submit" class="button disagree" onclick="setStatus({{obj.id}}, 'refused', '{{obj.specialist.slug}}')">Отказать</button>
-                                        </div>
+                                        </form>
                                     </div>
                                 {% endif %}
                                 {% if obj.status == 'confirmed' %}
@@ -79,24 +79,6 @@
             </div>
         </div>
     </main>
-    <!-- confirm request -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal" style="z-index: 1050">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- confirm request end -->
 {% endblock %}
 
 {% block js %}
@@ -113,11 +95,7 @@
             },
             success: function (response) {
                 if (response.status === 'refused') {
-                    $("#confirm-modal .modal-body").html("Завяка успешно отклонена");
-                    $("#confirm-modal").modal();
-                } else {
-                    $("#confirm-modal .modal-body").html("Завяка успешно одобрена");
-                    $("#confirm-modal").modal();
+                    window.location.reload();
                 }
             }
         });
