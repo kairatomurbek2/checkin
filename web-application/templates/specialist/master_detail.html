@@ -120,6 +120,26 @@
         </div>
     </div>
     <!-- popup for armored request -->
+    {% if request.user == master.user %}
+        <!-- confirm request -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal" style="z-index: 1050">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" style="text-align: center;">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- confirm request end -->
+    {% endif %}
 
     <style>
         .main-wrap {
@@ -392,7 +412,6 @@
                 {% endif %}
             });
         }
-
         // UI
         function toggleModal(state) {
             if (state == true) {
@@ -498,6 +517,7 @@
                                         {% if request.user == master.user %}
                                             myTime.name = taken.name || '';
                                             myTime.phone = taken.phone || '';
+                                            myTime.id = taken.id || '';
                                         {% endif %}
                                     }
                                 })
@@ -529,7 +549,6 @@
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
             }
-            console.log(mainArray);
             renderDate();
         }
         function getTime(date) {
@@ -556,7 +575,10 @@
 
                                 <div>${time.lunch ? 'Обед' : time.time}</div>
                                 <div>${time.name ? '(' + time.name + ')' : '' }</div>
-                                <div class="phone" style="display: none;">${time.phone ? time.phone : '' }</div>
+                                <div class="phone" style="display: none;">
+                                    <a href="#" class="agree" onclick="setStatus(${time.id}, 'confirmed')">Одобрить</a>
+                                    <a href="#" class="disagree" onclick="setStatus(${time.id}, 'refused')">Отклонить</a>
+                                </div>
 
                             </div>
                         `;
@@ -710,7 +732,6 @@
 
             makeRequest('GET', '/api/reservation/', '{{master.slug}}').then(response => {
                 if (response && response.results) {
-                    console.log(response.results);
                     if (response.results.length > 0) {
                         response.results.forEach(item => {
                             var date = item.date_time_reservation.split(" ")[0];
@@ -719,7 +740,7 @@
                             var time = item.date_time_reservation.split(" ")[1];
                             {% if request.user == master.user %}
                             if (item.status !== 'refused') {
-                                takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status});
+                                takenArr.push({date: date, time: [time], name: item.full_name, phone: item.phone, status: item.status, id: item.id});
                             }
                             {% endif %}
                             {% if request.user != master.user %}
@@ -781,6 +802,30 @@
                 }
             })
         });
+        {% if request.user == master.user %}
+        // set status of order
+        function setStatus(id, status){
+            $.ajax({
+                url: '/api/reservation/status/{{master.slug}}/' + id + '/',
+                method: 'put',
+                headers: {
+                    'X-CSRFToken': '{{csrf_token}}'
+                },
+                data: {
+                    status: status
+                },
+                success: function (response) {
+                    if (response.status === 'refused') {
+                        $("#confirm-modal .modal-body").html("Завяка успешно отклонена");
+                        $("#confirm-modal").modal();
+                    } else {
+                        $("#confirm-modal .modal-body").html("Завяка успешно одобрена");
+                        $("#confirm-modal").modal();
+                    }
+                }
+            });
+        }
+        {% endif %}
 
     </script>
 {% endblock %}
