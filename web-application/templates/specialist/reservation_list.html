@@ -57,7 +57,7 @@
                             <td class="center">
                                 {% if obj.status == 'armored' %}
                                     <div class="form_td">
-                                        <form action="" method="post" id="{{ obj.id }}">
+                                        <form action="" method="post" id="{{ obj.id }}" data-slug="{{ obj.specialist.slug }}">
                                             {% csrf_token %}
                                             <button type="submit" class="button agree">Подтвердить</button>
                                             <button type="submit" class="button disagree">Отказать</button>
