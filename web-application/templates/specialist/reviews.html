@@ -1,7 +1,17 @@
+{% load extra_tags %}
+
 <div class="reviews">
     {% for review in master.rating_specialist.all|slice:":3" %}
         <div class="review">
             <p>{{ review.user }}, <span>{{ review.created_at }}</span></p>
+            <div class="rating">
+                <div>
+                    <span class="star-off">
+
+                        <span class="star-on" style="width: {% multiply review.count %}%"></span>
+                    </span>
+                </div>
+            </div>
             <p>{{ review.comment }}</p>
         </div>
     {% endfor %}
