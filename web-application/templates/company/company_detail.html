@@ -42,13 +42,15 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="rating">
-                        <div>
+                    {% if company.rating %}
+                        <div class="rating">
+                            <div>
                             <span class="star-off">
                                 <span class="star-on" style="width: {% percent_converter company.rating %}%"></span>
                             </span>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                     {% if request.user != company.user %}
                         <a href="#" id="leave_comment">ОСТАВИТЬ ОТЗЫВ</a>
 
