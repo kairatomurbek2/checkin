@@ -23,3 +23,13 @@ def bootstrap_alert_class(tags):
 @register.inclusion_tag('partial/google_map.html')
 def load_google_map_js():
     return {}
+
+
+@register.simple_tag()
+def multiply(count):
+    return count * 20
+
+
+@register.simple_tag()
+def percent_converter(rating):
+    return rating * 20

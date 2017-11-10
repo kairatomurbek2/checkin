@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles thumbnail %}
+{% load staticfiles thumbnail extra_tags %}
 
 {% block content %}
     <main class="specialist list_review">
@@ -49,7 +49,13 @@
                         {% for rating in rating_list %}
                             <div class="single_review">
                                 <p>{{ rating.user }}, <span>{{ rating.created_at }}</span></p>
-
+                                <div class="rating">
+                                    <div>
+                                        <span class="star-off">
+                                            <span class="star-on" style="width: {% multiply rating.count %}%"></span>
+                                        </span>
+                                    </div>
+                                </div>
                                 <p>{{ rating.comment }}</p>
                             </div>
                         {% endfor %}

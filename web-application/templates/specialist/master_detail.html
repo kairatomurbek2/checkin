@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles thumbnail %}
+{% load staticfiles thumbnail extra_tags %}
 {% block content %}
     <main class="specialist">
         <div class="grid">
@@ -40,6 +40,14 @@
                                 <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
                             </li>
                         </ul>
+                    </div>
+
+                    <div class="rating">
+                        <div>
+                            <span class="star-off">
+                                <span class="star-on" style="width: {% percent_converter master.rating %}%"></span>
+                            </span>
+                        </div>
                     </div>
 
                     {% if request.user != master.user %}
@@ -212,7 +220,7 @@
             box-sizing: border-box;
             cursor: pointer;
         }
-        
+
         .time:hover:not(.taken) {
             background-color: #04c1bd;
         }
@@ -228,8 +236,8 @@
             z-index: 3;
             box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.1);
         }
-        
-        
+
+
 
         .taken {
             background: #cccccc;
@@ -402,7 +410,7 @@
                         event.target.parentElement.querySelector(".phone").style.display = "block";
                     }
                 }
-                if (event.target.classList.contains("time") && !event.target.classList.contains("taken") && !event.target.classList.contains("armored") || 
+                if (event.target.classList.contains("time") && !event.target.classList.contains("taken") && !event.target.classList.contains("armored") ||
                     event.target.parentElement.classList.contains("time") && !event.target.parentElement.classList.contains("taken") && !event.target.parentElement.classList.contains("armored")) {
                     toOrder.time = event.target.innerHTML;
                     toOrder.day = event.target.parentElement.dataset.date || event.target.parentElement.parentElement.dataset.date;
@@ -661,11 +669,11 @@
                     xhr.send();
                 }
                 if (method === 'POST') {
-                    var time = "" + new Date(toOrder.day).getFullYear() + 
-                        '-' + (new Date(toOrder.day).getMonth()+1 > 9 ? new Date(toOrder.day).getMonth()+1 : '0' + (new Date(toOrder.day).getMonth()+1)) + 
-                        '-' + (new Date(toOrder.day).getDate() > 9 ? new Date(toOrder.day).getDate() : ('0'+ new Date(toOrder.day).getDate())) + 
+                    var time = "" + new Date(toOrder.day).getFullYear() +
+                        '-' + (new Date(toOrder.day).getMonth()+1 > 9 ? new Date(toOrder.day).getMonth()+1 : '0' + (new Date(toOrder.day).getMonth()+1)) +
+                        '-' + (new Date(toOrder.day).getDate() > 9 ? new Date(toOrder.day).getDate() : ('0'+ new Date(toOrder.day).getDate())) +
                         ' ' + toOrder.time.trim();
-                    
+
                     var data = JSON.stringify({
                         "full_name": document.querySelector("#full_name").value,
                         "date_time_reservation": time,
