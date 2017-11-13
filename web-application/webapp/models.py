@@ -271,29 +271,31 @@ class Invite(models.Model):
         verbose_name_plural = _('Приглашения')
 
 
-class TimeInterval(models.Model):
-    time_interval = models.CharField(max_length=255, verbose_name=_('Время'))
+class WorkDay(models.Model):
+    time = models.CharField(max_length=255, verbose_name=_('Время'), null=True, blank=True)
+    interval = models.CharField(max_length=255, verbose_name=_('Интервал'), null=True, blank=True)
+    live_recording = models.CharField(max_length=255, verbose_name=_('Живая запись'), null=True, blank=True)
+    lunch_settings = models.CharField(max_length=255, verbose_name=_('Обед'), null=True, blank=True)
 
     def __str__(self):
-        return self.time_interval
+        return self.time
 
     class Meta:
-        verbose_name = _('Промежуток времени')
-        verbose_name_plural = _('Промежутки времени')
+        verbose_name = _('Рабочий день')
+        verbose_name_plural = _('Рабочие дни')
 
 
 class ScheduleSetting(models.Model):
     specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
                                    null=True)
-    monday = models.CharField(max_length=255, verbose_name=_('Понедельник'), null=True, blank=True)
-    tuesday = models.CharField(max_length=255, verbose_name=_('Вторник'), null=True, blank=True)
-    wednesday = models.CharField(max_length=255, verbose_name=_('Среда'), null=True, blank=True)
-    thursday = models.CharField(max_length=255, verbose_name=_('Четверг'), null=True, blank=True)
-    friday = models.CharField(max_length=255, verbose_name=_('Пятница'), null=True, blank=True)
-    saturday = models.CharField(max_length=255, verbose_name=_('Суббота'), null=True, blank=True)
-    sunday = models.CharField(max_length=255, verbose_name=_('Воскресенье'), null=True, blank=True)
-    lunch = models.CharField(max_length=255, verbose_name=_('Обед'), null=True, blank=True)
-    time_interval = models.ForeignKey(TimeInterval, related_name='time_intervals_schedule')
+    monday = models.ForeignKey(WorkDay, verbose_name=_('Понедельник'), related_name='mondays', null=True, blank=True)
+    tuesday = models.ForeignKey(WorkDay, verbose_name=_('Вторник'), related_name='tuesdays', null=True, blank=True)
+    wednesday = models.ForeignKey(WorkDay, verbose_name=_('Среда'), related_name='wednesdays', null=True, blank=True)
+    thursday = models.ForeignKey(WorkDay, verbose_name=_('Четверг'), related_name='thursday', null=True, blank=True)
+    friday = models.ForeignKey(WorkDay, verbose_name=_('Пятница'), related_name='fridays', null=True, blank=True)
+    saturday = models.ForeignKey(WorkDay, verbose_name=_('Суббота'), related_name='saturdays', null=True, blank=True)
+    sunday = models.ForeignKey(WorkDay, verbose_name=_('Воскресенье'), related_name='sundays', null=True, blank=True)
+    lunch = models.ForeignKey(WorkDay, verbose_name=_('Обед'), related_name='lunch', null=True, blank=True)
 
     def __str__(self):
         return self.specialist.full_name

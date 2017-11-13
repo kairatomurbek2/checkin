@@ -9,8 +9,7 @@ from redactor.widgets import RedactorEditor
 from taggit.forms import TagWidget
 from main.choices import SEX_CHOICES, RATING_CHOICES
 
-from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact, Rating, ScheduleSetting, \
-    TimeInterval
+from webapp.models import Specialist, SpecialistContact, Company, Certificate, CompanyContact, Rating, ScheduleSetting
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -156,18 +155,14 @@ class RatingForm(forms.ModelForm):
 
 
 class ScheduleSettingForm(forms.ModelForm):
-    time_interval = forms.ModelChoiceField(TimeInterval.objects.all(), empty_label=None, initial=5)
 
     class Meta:
         model = ScheduleSetting
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',
-                  'time_interval']
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch']
 
 
 class ScheduleSettingUpdateForm(forms.ModelForm):
-    time_interval = forms.ModelChoiceField(TimeInterval.objects.all(), empty_label=None)
 
     class Meta:
         model = ScheduleSetting
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',
-                  'time_interval']
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',]

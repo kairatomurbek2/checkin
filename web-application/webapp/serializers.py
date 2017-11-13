@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
-from webapp.models import Company, Specialist, ScheduleSetting, TimeInterval, Reservation
+from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from django.utils import timezone
 
 
@@ -21,20 +21,12 @@ class SpecialistShortSerializer(serializers.ModelSerializer, TaggitSerializer):
         fields = ('id', 'full_name', 'slug', 'tags')
 
 
-class TimeIntervalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeInterval
-        fields = ('time_interval',)
-
-
 class ScheduleSettingFullSerializer(serializers.ModelSerializer):
-    time_interval = TimeIntervalSerializer(many=False)
 
     class Meta:
         model = ScheduleSetting
         fields = (
-            'id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',
-            'time_interval')
+            'id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch')
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
