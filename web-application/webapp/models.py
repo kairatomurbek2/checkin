@@ -295,7 +295,6 @@ class ScheduleSetting(models.Model):
     friday = models.ForeignKey(WorkDay, verbose_name=_('Пятница'), related_name='fridays', null=True, blank=True)
     saturday = models.ForeignKey(WorkDay, verbose_name=_('Суббота'), related_name='saturdays', null=True, blank=True)
     sunday = models.ForeignKey(WorkDay, verbose_name=_('Воскресенье'), related_name='sundays', null=True, blank=True)
-    lunch = models.ForeignKey(WorkDay, verbose_name=_('Обед'), related_name='lunch', null=True, blank=True)
 
     def __str__(self):
         return self.specialist.full_name

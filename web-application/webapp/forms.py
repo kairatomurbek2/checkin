@@ -158,11 +158,11 @@ class ScheduleSettingForm(forms.ModelForm):
 
     class Meta:
         model = ScheduleSetting
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch']
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 
 class ScheduleSettingUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ScheduleSetting
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch',]
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',]

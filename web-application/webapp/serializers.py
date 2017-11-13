@@ -26,7 +26,7 @@ class ScheduleSettingFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleSetting
         fields = (
-            'id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'lunch')
+            'id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
