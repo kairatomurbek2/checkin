@@ -288,6 +288,7 @@ class WorkDay(models.Model):
 class ScheduleSetting(models.Model):
     specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
                                    null=True)
+    company = models.ForeignKey(Company, related_name='schedule_setting_company', null=True, blank=True)
     monday = models.ForeignKey(WorkDay, verbose_name=_('Понедельник'), related_name='mondays', null=True, blank=True)
     tuesday = models.ForeignKey(WorkDay, verbose_name=_('Вторник'), related_name='tuesdays', null=True, blank=True)
     wednesday = models.ForeignKey(WorkDay, verbose_name=_('Среда'), related_name='wednesdays', null=True, blank=True)

@@ -38,8 +38,7 @@ class ScheduleSettingFullSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleSetting
-        fields = (
-            'id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company')
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
