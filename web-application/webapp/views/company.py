@@ -18,7 +18,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
-from webapp.models import Company, Category, Specialist, Invite, Rating
+from webapp.models import Company, Category, Specialist, Invite, Rating, Employees
 from webapp.views.base_views import BaseFormView
 from webapp.views.filters import CompanyFilter
 
@@ -101,9 +101,12 @@ class CompanyCreateView(CreateView):
         context = self.get_context_data()
         formset = context['formset']
         company = form.save(commit=False)
-        company.user = self.request.user
+        employee = Employees(user=self.request.user, owner=True)
+        employee.save()
         company.edited_at = datetime.datetime.now()
         company.edited_by = self.request.user
+        company.save()
+        company.user.add(employee)
         company.save()
         if formset.is_valid():
             formset.instance = company
@@ -142,8 +145,11 @@ class CompanyDetail(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyDetail, self).get_context_data(**kwargs)
-        context['company'] = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
+        company = get_object_or_404(self.model, slug=self.kwargs.get('company_slug'))
+        context['company'] = company
         context['form'] = forms.RatingForm
+        context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
+        print(context['owners'])
         return context
 
 

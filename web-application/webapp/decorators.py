@@ -34,17 +34,18 @@ def specialist_owner(function):
 
 
 def company_owner(function):
-    def decotator(request, *args, **kwargs):
+    def decorator(request, *args, **kwargs):
         try:
             company = Company.all_objects.get(slug=kwargs['company_slug'])
-            if company.user == request.user:
+            owner = company.user.filter(owner=True).last().user
+            if owner == request.user:
                 return function(request, *args, **kwargs)
             else:
                 raise PermissionDenied('Permission denied')
         except Company.DoesNotExist:
             raise Http404("Company not found")
 
-    return decotator
+    return decorator
 
 
 def user_review_count_check(function):
@@ -114,7 +115,7 @@ def user_company_create_check(function):
     def decorator(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return HttpResponseRedirect('/accounts/login/')
-        company = Company.objects.filter(user=request.user).count()
+        company = Company.objects.filter(user__user=request.user, user__owner=True).count()
         if company >= 1:
             raise Http404("Page not found")
         else:

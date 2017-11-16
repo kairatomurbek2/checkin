@@ -4,7 +4,7 @@ from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, Rating, \
-    ScheduleSetting, Reservation, WorkDay
+    ScheduleSetting, Reservation, WorkDay, Employees
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 
@@ -98,3 +98,4 @@ admin.site.register(Specialist, SpecialistAdmin)
 admin.site.register(ScheduleSetting)
 admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(WorkDay)
+admin.site.register(Employees)

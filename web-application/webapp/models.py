@@ -45,6 +45,19 @@ class Category(MPTTModel):
         verbose_name_plural = _('Категории')
 
 
+class Employees(models.Model):
+    user = models.OneToOneField(User, related_name='employee')
+    owner = models.BooleanField(default=False, verbose_name=_('Владелец компании'))
+    administrator = models.BooleanField(default=False, verbose_name=_('Администратор компании'))
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = _('Сотрудник')
+        verbose_name_plural = _('Сотрудники')
+
+
 class CompanyManager(models.Manager):
     def get_queryset(self):
         return super(CompanyManager, self).get_queryset().filter(status='AC').order_by('-rating', '-logo',
@@ -53,7 +66,7 @@ class CompanyManager(models.Manager):
 
 
 class Company(models.Model):
-    user = models.ForeignKey(User, related_name='companies', verbose_name=_('Пользователь'))
+    user = models.ManyToManyField(Employees, related_name='companies', verbose_name=_('Пользователь'))
     logo = models.ImageField(verbose_name=_('Логотип'), upload_to=company_path, blank=True, null=True)
     name = models.CharField(verbose_name=_('Название'), max_length=200)
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=150)

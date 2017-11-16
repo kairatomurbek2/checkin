@@ -51,15 +51,15 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if request.user != company.user %}
+                    {% if user.id not in owners %}
                         <a href="#" id="leave_comment">ОСТАВИТЬ ОТЗЫВ</a>
 
                     {% endif %}
-                    {% if request.user == company.user %}
+                    {% if user.id in owners %}
                         <a href="{% url 'company_edit' company.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
-                {% if request.user == company.user %}
+                {% if request.user.id in owners %}
                     <a href="{% url 'user_search' company.slug %}" class="add_specialist">Пригласить специалиста</a>
                 {% endif %}
              {% include 'company/reviews.html' %}
