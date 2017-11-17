@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -168,6 +169,17 @@ class ScheduleSettingUpdateForm(forms.ModelForm):
 
 
 class AddAdministratorForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if User.objects.filter(email=data).exists():
+            raise ValidationError(_('Пользователь с таким email уже существует'), code='email_used')
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super(AddAdministratorForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
