@@ -58,7 +58,7 @@ class ReservationFullSerializer(serializers.ModelSerializer):
 class ReservationCreteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ('full_name', 'date_time_reservation', 'phone', 'status')
+        fields = ('id', 'full_name', 'date_time_reservation', 'phone', 'status')
 
 
 class ReservationSerializer(serializers.ModelSerializer):
