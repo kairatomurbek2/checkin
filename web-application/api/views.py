@@ -37,7 +37,7 @@ class SpecialistListView(generics.ListAPIView):
     pagination_class = Pagination
 
 
-class ScheduleSettingRetrieveView(generics.RetrieveAPIView):
+class ScheduleSettingListAPIViewView(generics.ListAPIView):
     serializer_class = ScheduleSettingFullSerializer
     lookup_field = 'specialist__slug'
 
