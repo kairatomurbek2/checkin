@@ -28,6 +28,8 @@ urlpatterns = [
     url(r'^companies/(?P<company_slug>[-_\w]+)/$', company_views.CompanyDetail.as_view(), name='company_detail'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/update/$', company_owner(company_views.CompanyEditView.as_view()),
         name='company_edit'),
+    url(r'^companies/(?P<company_slug>[-_\w]+)/add-administrator/$',
+        company_owner(company_views.AddAdministratorView.as_view()), name='add_administrator'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/user-search/$',
         company_owner(company_views.SpecialistSearchView.as_view()),
         name='user_search'),

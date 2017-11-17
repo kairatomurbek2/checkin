@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -155,14 +156,18 @@ class RatingForm(forms.ModelForm):
 
 
 class ScheduleSettingForm(forms.ModelForm):
-
     class Meta:
         model = ScheduleSetting
         fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 
 class ScheduleSettingUpdateForm(forms.ModelForm):
-
     class Meta:
         model = ScheduleSetting
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',]
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', ]
+
+
+class AddAdministratorForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']

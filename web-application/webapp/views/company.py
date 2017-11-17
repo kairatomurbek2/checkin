@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import CreateView
@@ -299,3 +299,25 @@ class ReviewCompanyListView(ListView):
     def get_queryset(self):
         queryset = Rating.objects.filter(company__slug=self.kwargs.get('company_slug'))
         return queryset
+
+
+class AddAdministratorView(CreateView):
+    success_message = Messages.AddCompany.add_administrator_success
+    model = User
+    form_class = forms.AddAdministratorForm
+    template_name = "company/add_administrator.html"
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        com = Company.objects.get(slug=self.kwargs.get('company_slug'))
+        return reverse('company_detail', kwargs={'company_slug': com.slug})
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.save()
+        employee = Employees(user=user, administrator=True)
+        employee.save()
+        company = Company.objects.get(slug=self.kwargs.get('company_slug'))
+        company.user.add(employee)
+        company.save()
+        return super(AddAdministratorView, self).form_valid(form)
