@@ -3,12 +3,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
+from rest_framework.status import HTTP_202_ACCEPTED
 
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
-    ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer
+    ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer
 from datetime import date, timedelta
 
 
@@ -82,3 +84,20 @@ class ReservationStatusView(generics.UpdateAPIView):
         r = Reservation.objects.filter(specialist=specialist, pk=self.kwargs['pk'])
         r.update(edited_by=self.request.user)
         return super(ReservationStatusView, self).update(request, *args, **kwargs)
+
+
+class ScheduleSettingAddView(generics.CreateAPIView):
+    serializer_class = ScheduleSettingSerializer
+
+    def get_serializer_context(self):
+        context = super(ScheduleSettingAddView, self).get_serializer_context()
+        context['specialist__slug'] = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        return context
+
+    def create(self, request, *args, **kwargs):
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(specialist=specialist)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
