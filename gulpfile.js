@@ -21,7 +21,11 @@ var path = {
     },
     src: {
         js: 'web-application/gulp/src/js/*.js',
-        style: 'web-application/gulp/src/style/*.sass'
+        style: 'web-application/gulp/src/style/*.sass',
+    },
+    calendar: {
+        libs: 'web-application/gulp/src/libs/vue/*.js',
+        scripts: 'web-application/gulp/src/js/calendar/*.js'
     },
     watch: {
         js: 'web-application/gulp/src/js/**/*.js',
@@ -72,10 +76,16 @@ gulp.task('style:build', function () {
         .pipe(reload({stream: true}));
 });
 
-
+gulp.task('calendar:build', function(){
+    gulp.src(path.calendar.libs)
+        .pipe(gulp.dest(path.build.js));
+    gulp.src(path.calendar.scripts)
+        .pipe(gulp.dest(path.build.js));
+});
 
 gulp.task('build', [
     'js:build',
+    'calendar:build',
     'style:build'
 ]);
 
@@ -86,6 +96,7 @@ gulp.task('watch', function(){
     });
     watch([path.watch.js], function(event, cb) {
         gulp.start('js:build');
+        gulp.start('calendar:build');
     });
 });
 
