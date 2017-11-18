@@ -228,9 +228,9 @@ let app = new Vue({
                         }
                     })
                 }
-            })
+            });
             this.reservations.forEach(reservation => {
-                if (reservation.date_time_reservation.getTime() ==== time.time.getTime()) {
+                if (reservation.date_time_reservation.getTime() === time.time.getTime()) {
                     time.date_time_reservation = time.time;
                     this.reservations.splice(this.reservations.indexOf(reservation), 1, time);
                 }
