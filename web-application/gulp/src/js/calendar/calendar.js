@@ -20,10 +20,6 @@ let app = new Vue({
         }
     },
 
-    // beforeMount: function () {
-    //     this.getDataFromDjango();
-    // },
-
     methods: {
         getDataFromDjango(val, slug, csrfToken){
             this._masterSlug = slug;
@@ -225,23 +221,23 @@ let app = new Vue({
         },
         setOrderStatusInArray(time){
             this.mainArray.forEach(day => {
-                if (day.date.getDate() == time.time.getDate()) {
+                if (day.date.getDate() === time.time.getDate()) {
                     day.times.forEach(timeEl => {
-                        if (timeEl.time instanceof Date && timeEl.time.getTime() == time.time.getTime()) {
+                        if (timeEl.time instanceof Date && timeEl.time.getTime() === time.time.getTime()) {
                             timeEl = time;
                         }
                     })
                 }
             })
             this.reservations.forEach(reservation => {
-                if (reservation.date_time_reservation.getTime() === time.time.getTime()) {
+                if (reservation.date_time_reservation.getTime() ==== time.time.getTime()) {
                     time.date_time_reservation = time.time;
                     this.reservations.splice(this.reservations.indexOf(reservation), 1, time);
                 }
             })
         },
         toggleOrderPopup(time) {
-            if (time.status == 'free' || time.status == 'refused') {
+            if (time.status === 'free' || time.status === 'refused') {
                 console.log(document.querySelector(".order-modal-wrap"));
                 this.record = time;
                 document.querySelector(".blur").style.filter = "blur(5px)";
@@ -249,8 +245,8 @@ let app = new Vue({
                 document.querySelector(".title-time").innerHTML = "Запись на " + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
                 
             }
-            if (this._masterUser) {
-                if (time.status == 'armored') {
+            if (!this._masterUser) {
+                if (time.status === 'armored') {
                     $("#armored-modal").modal();
                 }
             } 
