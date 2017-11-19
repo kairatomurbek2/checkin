@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles thumbnail extra_tags %}
 {% block content %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+{% endblock %}
 <main class="specialist" xmlns:v-bind="http://www.w3.org/1999/xhtml">
         <div class="grid">
             <div class="personal_block">
@@ -101,13 +104,12 @@
                         {% endfor %}
                     </div>
                 </div>
-                <!-- VUE APP -->
                 {% verbatim %}
                 <div class="main-wrap">
-                    <a id="prev-week" onclick="app.moveToPreviousWeek()">
+                    <a class="main-wrap-arrows" id="prev-week" onclick="app.moveToPreviousWeek()">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                     </a>
-                    <a id="next-week" onclick="app.moveToNextWeek();">
+                    <a class="main-wrap-arrows" id="next-week" onclick="app.moveToNextWeek();">
                         <i class="fa fa-arrow-right" aria-hidden="true"></i>
                     </a>
                     <div id="app" class="main">
@@ -120,7 +122,8 @@
                             </div>
                             <div class="weekdays weekdays-scroll">
                                 <div v-for="weekDay of mainArray" class="weekday" v-bind:class="{holiday: (weekDay.times.length < 3)}" style="width: 100%; text-align: center;">
-                                    <div v-for="(time, index) of weekDay.times" class="time" :class="time.status" v-on:click="toggleOrderPopup(time)">
+                                    <div v-for="(time, index) of weekDay.times" class="time" :class="[time.status, makeClassFromCompany(time)]"
+                                         v-on:click="toggleOrderPopup(time)">
                                         <div v-if="time.status !== 'lunch' && time.status !== 'live' 
                                             && time.status !== 'holiday' && time.status !== 'left'" 
                                             {% endverbatim %}
@@ -169,7 +172,6 @@
                     </div>
                 </div>
                 {% endverbatim %}
-                <!-- VUE APP END -->
             </div>
             {% include 'specialist/certificate_of_specialist.html' %}
         </div>
@@ -215,253 +217,6 @@
         </div>
         <!-- confirm request end -->
     {% endif %}
-
-    <style>
-        .main-wrap {
-            width: 100%;
-            background-color: #fff;
-            padding: 35px 15px 40px 40px;
-            position: relative;
-        }
-
-        .main-wrap > a {
-            color: #11EBE6;
-            position: absolute;
-            top: 78px;
-            width: 30px;
-            height: 36px;
-            display: flex;
-            z-index: 10;
-            font-size: 24px;
-        }
-
-        .main-wrap > a:hover {
-            cursor: pointer;
-        }
-
-        .main-wrap > a i {
-            margin: auto;
-        }
-
-        #prev-week {
-            left: 20px;
-            top: 40px;
-        }
-
-        #next-week {
-            right: 20px;
-            top: 40px;
-        }
-
-        .main {
-            position: relative;
-            width: 100%;
-            height: 406px;
-            padding-right: 25px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .weekdays-wrap {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .weekdays {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 5px;
-        }
-
-        .weekdays-scroll {
-            overflow-y: scroll;
-            height: 350px;
-        }
-
-        .weekday {
-            padding: 0 10px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .weekday.holiday {
-            background: rgb(236, 236, 236);
-        }
-
-        .weekday > span {
-            display: block;
-            padding-bottom: 10px;
-            color: #95989A;
-            font-size: 14px;
-        }
-
-        .weekday > span:last-of-type {
-            display: block;
-            padding-bottom: 15px;
-        }
-
-        .time {
-            background-color: #11EBE6;
-            padding: 8px 0;
-            margin-bottom: 10px;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 5px;
-            font-size: 14px;
-            color: #ffffff;
-            position: relative;
-            box-sizing: border-box;
-            cursor: pointer;
-        }
-
-        .time:hover:not(.taken) {
-            background-color: #04c1bd;
-        }
-
-        .time.armored {
-            background: #49c7ff;
-        }
-
-        .time.confirmed {
-            background: #cccccc;
-        }
-
-        .time.live {
-            background: #ff6d72;
-        }
-
-        .time.lunch {
-            background: #998f0f;
-        }
-
-        .time.holiday {
-            background: #ff76f8;
-        }
-
-        .time.left {
-            background: rgb(139, 139, 139);
-        }
-
-        .order-modal-wrap {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-        .order-modal {
-            display: block;
-            width: 390px;
-            height: 390px;
-            background: #fff;
-            padding: 30px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            box-shadow: 0 0 20px 3px rgba(0,0,0,0.15);
-        }
-
-        .close_modal {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
-            color: #04c1bd;
-            font-size: 16px;
-        }
-
-        .inputs {
-            padding-top: 40px;
-            text-align: center
-        }
-        .inputs input {
-            display: block;
-            width: 100%;
-            padding: 10px 20px;
-            margin-bottom: 20px;
-            outline: none;
-            text-align: left;
-            border: 1px solid #dcdcdc;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #222222;
-        }
-        .inputs input.error {
-            border-color: red;
-        }
-        .inputs button {
-            display: inline-block;
-            padding: 10px 30px;
-            color: #fff;
-            border:  0;
-            font-size: 12px;
-            border-radius: 6px;
-            background-color: #17FFFA;
-            width: 190px;
-            height: 40px;
-            margin-top: 20px;
-            cursor: pointer;
-            outline: 0;
-        }
-        .order-modal .title {
-            font-size: 16px;
-			color: #222222;
-			text-align: center;
-			text-transform: uppercase;
-			padding-bottom: 20px;
-        }
-
-        .order-modal .title-time {
-            text-align: center;
-            padding: 5px 0;
-            font-size:  12px;
-        }
-
-        .error, .success {
-            width: 100%;
-            text-align: center;
-            line-height: 18px;
-            padding: 10px 0;
-        }
-        .success {
-            display: none;
-            color: rgb(94, 196, 94);
-        }
-        .error {
-            display: none;
-            color: rgb(254, 62, 62);
-        }
-
-        .authorization-text a {
-            color: #17FFFA;
-        }
-
-        .loader {
-            padding: 70px 0;
-            width: 100px;
-        }
-        .loader img {
-            width: 100px;
-            height: 100px;
-        }
-
-        .order-action {
-            font-size: 21px;
-            display: inline-block;
-            vertical-align: top;
-            background: transparent;
-            border: 0;
-            padding: 0 5px;
-        }
-        .order-action:hover {
-            cursor: pointer;
-        }
-
-    </style>
 
 {% endblock %}
 {% block js %}
