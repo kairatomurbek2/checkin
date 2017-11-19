@@ -5,12 +5,14 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.status import HTTP_202_ACCEPTED
 
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
-    ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer
+    ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer, \
+    ScheduleSettingUpdateSerializer
 from datetime import date, timedelta
 
 
@@ -101,3 +103,12 @@ class ScheduleSettingAddView(generics.CreateAPIView):
         serializer.save(specialist=specialist)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ScheduleSettingUpdateView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'specialist__slug'
+    serializer_class = ScheduleSettingUpdateSerializer
+
+    def get_queryset(self):
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        return ScheduleSetting.objects.filter(specialist=specialist, pk=self.kwargs['pk'])
