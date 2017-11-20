@@ -56,7 +56,8 @@ let app = new Vue({
             let now = new Date(start);
             while (now <= end) {
                 this.schedule.forEach(schedule => {
-                    if (schedule[this.days[now.getDay()]] && schedule[this.days[now.getDay()]].time.length > 3) {
+                    if (schedule[this.days[now.getDay()]] && (typeof schedule[this.days[now.getDay()]].time === 'object'
+                            || schedule[this.days[now.getDay()]].time.length > 3)) {
                         let daySchedule = schedule[this.days[now.getDay()]];
                         if (typeof daySchedule.interval !== 'object') {
                             this.getWorkInterval(daySchedule, 'interval');
