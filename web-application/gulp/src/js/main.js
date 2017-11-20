@@ -99,6 +99,9 @@ $(function () {
         event.stopPropagation();
     });
 
+    $(".order-modal-wrap").click(function () {
+        $(".order-modal-wrap").css("display", "none");
+    });
 
     function preview(input) {
         if (input.files && input.files[0]) {
