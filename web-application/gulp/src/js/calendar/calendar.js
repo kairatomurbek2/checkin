@@ -56,7 +56,7 @@ let app = new Vue({
             let now = new Date(start);
             while (now <= end) {
                 this.schedule.forEach(schedule => {
-                    if (schedule[this.days[now.getDay()]]) {
+                    if (schedule[this.days[now.getDay()]] && schedule[this.days[now.getDay()]].time.length > 3) {
                         let daySchedule = schedule[this.days[now.getDay()]];
                         if (typeof daySchedule.interval !== 'object') {
                             this.getWorkInterval(daySchedule, 'interval');
@@ -127,15 +127,15 @@ let app = new Vue({
                     }
                 }
                 // check if record is out of real time
-                // if (oneDay.date.getTime() <= new Date().getTime()) {
-                //     times.push({
-                //         time: new Date(oneDay.date),
-                //         status: 'left'
-                //     });
-                //     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
-                //     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
-                //     continue;
-                // }
+                if (oneDay.date.getTime() <= new Date().getTime()) {
+                    times.push({
+                        time: new Date(oneDay.date),
+                        status: 'left'
+                    });
+                    oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                    oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                    continue;
+                }
                 let record = this.orderFreeRecords(oneDay.date);
                 if (record) {
                     record.company = companyId;
@@ -455,13 +455,32 @@ let app = new Vue({
                 interval: 10,
                 clear: ''
             });
+            $('.initial-picker').change(function () {
+                let val = $(this).val();
+                val = {
+                    hours: parseInt(val.split(":")[0]),
+                    minutes: parseInt(val.split(":")[1]),
+                };
+                console.log(val);
+                $(this).parent().siblings(".input").find(".next-picker").pickatime({
+                    format: 'HH:i',
+                    min: [val.hours, val.minutes],
+                    max: [23, 59],
+                    interval: 10,
+                    clear: ''
+                });
+            });
+            $('.next-picker').change(function (e) {
+                this.showAdditionalInputs(e.target.parentElement.parentElement);
+            }.bind(this))
         },
-        activateSiblingInput() {
-            console.log('hello');
-        }
+        showAdditionalInputs(elem){
+            $(elem).find(".additional-inputs").css("display", "block");
+
+        },
     }
 });
 
 // $(".initial-picker").change(function () {
-//    console.log("Changed");
+//     console.log($(this).val());
 // });

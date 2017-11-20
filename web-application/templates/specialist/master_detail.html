@@ -173,10 +173,23 @@
                                 <div class="weekday-input" v-for="(day, index) of localeDays">
                                     <h3>{{day}}</h3>
                                     <div class="input">
-                                        <input type="text" :change="activateSiblingInput()" class="picker initial-picker" placeholder="Начало дня">
+                                        <input type="text" class="picker initial-picker" placeholder="Начало дня">
                                     </div>
                                     <div class="input">
-                                        <input type="text" class="picker" placeholder="Конец дня">
+                                        <input type="text" class="picker next-picker" placeholder="Конец дня">
+                                    </div>
+                                    <div class="additional-inputs" style="display: none;">
+                                        <div class="input">
+                                            <input type="text" required placeholder="Введите интервал приема">
+                                        </div>
+                                        <div class="input">
+                                            <input type="text" placeholder="Жив.очередь (начало)">
+                                            <input type="text" placeholder="Жив.очередь (конец)">
+                                        </div>
+                                        <div class="input">
+                                            <input type="text" placeholder="Обед(начало)">
+                                            <input type="text" placeholder="Обед(конец)">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
