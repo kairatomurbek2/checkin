@@ -173,7 +173,7 @@
                                 <div class="weekday-input" v-for="(day, index) of localeDays">
                                     <h3>{{day}}</h3>
                                     <div class="input">
-                                        <input type="text" @change="activateSiblingInput(event)" class="picker initial-picker" placeholder="Начало дня">
+                                        <input type="text" :change="activateSiblingInput()" class="picker initial-picker" placeholder="Начало дня">
                                     </div>
                                     <div class="input">
                                         <input type="text" class="picker" placeholder="Конец дня">

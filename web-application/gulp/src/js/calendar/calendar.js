@@ -6,7 +6,7 @@ let app = new Vue({
         dayTime: {},
         schedule: {},
         scheduleState: false,
-        editorState: true,
+        editorState: false,
         period: 6,
         record: {},
         reservations: null,
@@ -32,7 +32,7 @@ let app = new Vue({
             this._masterSlug = slug;
             this._masterUser = val;
             this._csrfToken = csrfToken;
-            // this.getMasterSchedule();
+            this.getMasterSchedule();
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
@@ -456,8 +456,12 @@ let app = new Vue({
                 clear: ''
             });
         },
-        activateSiblingInput(event) {
-            console.log(event);
+        activateSiblingInput() {
+            console.log('hello');
         }
     }
 });
+
+// $(".initial-picker").change(function () {
+//    console.log("Changed");
+// });
