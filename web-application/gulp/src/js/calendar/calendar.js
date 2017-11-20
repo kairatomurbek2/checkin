@@ -103,7 +103,7 @@ let app = new Vue({
             let times = [];
             daySchedule = this.getWorkInterval(daySchedule, 'time');
             oneDay.date.setHours(daySchedule.time.start.hours, daySchedule.time.start.minutes, 0, 0);
-            while (oneDay.date < oneDay.initialDate.setHours(daySchedule.time.end.hours, daySchedule.time.end.minutes, 0, 0)) {
+            while (oneDay.date <= oneDay.initialDate.setHours(daySchedule.time.end.hours, daySchedule.time.end.minutes, 0, 0)) {
                 if (daySchedule.lunch_settings) {
                     daySchedule = this.getWorkInterval(daySchedule, 'lunch_settings');
                     let time = this.doSetIntervalLimit(daySchedule, oneDay, 'lunch_settings');
@@ -140,6 +140,16 @@ let app = new Vue({
                 if (record) {
                     record.company = companyId;
                     times.push(record);
+                    oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                    oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                    continue;
+                }
+                if (oneDay.date.getTime() === oneDay.initialDate.setHours(daySchedule.time.end.hours, daySchedule.time.end.minutes, 0, 0)) {
+                    times.push({
+                        company: companyId,
+                        time: new Date(oneDay.date),
+                        status: 'disabled'
+                    });
                     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
                     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
                     continue;

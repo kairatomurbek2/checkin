@@ -135,7 +135,7 @@
                                                  {%verbatim%}>
                                                 {{prettyDate(time.time, 'time')}}
                                             </div>
-                                            <div v-if="time.status == 'lunch' || time.status == 'live'">
+                                            <div v-if="time.status == 'live'">
                                                 {{prettyDateRange(time.time, 'time')}}
                                             </div>
                                             <div v-if="time.status == 'holiday'">
