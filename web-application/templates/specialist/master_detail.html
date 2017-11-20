@@ -97,58 +97,58 @@
                         <h4>О специалисте</h4>
                         {{ master.info|safe }}
                     </div>
-                    <div>
-                        <h4>Услуги</h4>
-                        {% for tag in master.tags.all %}
-                            <span>{{ tag.name }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% verbatim %}
-                <div class="main-wrap">
-                    <a class="main-wrap-arrows" id="prev-week" onclick="app.moveToPreviousWeek()">
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                    </a>
-                    <a class="main-wrap-arrows" id="next-week" onclick="app.moveToNextWeek();">
-                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                    <div id="app" class="main">
-                        <div class="weekdays-wrap">
-                            <div class="weekdays weekdays-title">
-                                <div v-for="weekDay of mainArray" class="weekday">
-                                    <span>{{localeDays[weekDay.date.getDay()]}}</span>
-                                    <span>{{prettyDate(weekDay.date, 'date')}}</span>
-                                </div>
+
+                    <!--VUE App-->
+                    {% verbatim %}
+                    <div class="main-wrap">
+                        <a class="main-wrap-arrows" id="prev-week" style="display: none;" onclick="app.moveToPreviousWeek()">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </a>
+                        <a class="main-wrap-arrows" id="next-week" style="display: none;" onclick="app.moveToNextWeek();">
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                        <div id="app" class="main">
+                            <div class="loader" v-if="!scheduleState && !editorState">
+                                {% endverbatim %}
+                                <img src="{% static 'img/loader.gif' %}" alt="loader">
+                                {% verbatim %}
                             </div>
-                            <div class="weekdays weekdays-scroll">
-                                <div v-for="weekDay of mainArray" class="weekday" v-bind:class="{holiday: (weekDay.times.length < 3)}" style="width: 100%; text-align: center;">
-                                    <div v-for="(time, index) of weekDay.times" class="time" :class="[time.status, makeClassFromCompany(time)]"
-                                         v-on:click="toggleOrderPopup(time)">
-                                        <div v-if="time.status !== 'lunch' && time.status !== 'live' 
-                                            && time.status !== 'holiday' && time.status !== 'left'" 
+                            <div v-if="scheduleState" class="weekdays-wrap">
+                                <div class="weekdays weekdays-title">
+                                    <div v-for="weekDay of mainArray" class="weekday">
+                                        <span>{{localeDays[weekDay.date.getDay()]}}</span>
+                                        <span>{{prettyDate(weekDay.date, 'date')}}</span>
+                                    </div>
+                                </div>
+                                <div class="weekdays weekdays-scroll">
+                                    <div v-for="weekDay of mainArray" class="weekday" v-bind:class="{holiday: (weekDay.times.length < 3)}" style="width: 100%; text-align: center;">
+                                        <div v-for="(time, index) of weekDay.times" class="time" :class="[time.status, makeClassFromCompany(time)]"
+                                             v-on:click="toggleOrderPopup(time)">
+                                            <div v-if="time.status !== 'lunch' && time.status !== 'live'
+                                            && time.status !== 'holiday' && time.status !== 'left'"
+                                                 {% endverbatim %}
+                                                 {% if request.user == master.user %}
+                                                 {% verbatim %}
+                                                 :title="time.name? time.name + ' : ' + time.phone : ''"
+                                                 {% endverbatim %}
+                                                 {% endif %}
+                                                 {%verbatim%}>
+                                                {{prettyDate(time.time, 'time')}}
+                                            </div>
+                                            <div v-if="time.status == 'lunch' || time.status == 'live'">
+                                                {{prettyDateRange(time.time, 'time')}}
+                                            </div>
+                                            <div v-if="time.status == 'holiday'">
+                                                Выходной
+                                            </div>
+                                            <div v-if="time.status == 'left'">
+                                                ---
+                                            </div>
+                                            <div v-if="time.status == 'lunch'">Обед</div>
+                                            <div v-if="time.status == 'live'">Очередь</div>
                                             {% endverbatim %}
                                             {% if request.user == master.user %}
                                             {% verbatim %}
-                                                :title="time.name? time.name + ' : ' + time.phone : ''"
-                                            {% endverbatim %}
-                                            {% endif %}
-                                            {%verbatim%}>
-                                            {{prettyDate(time.time, 'time')}}
-                                        </div>
-                                        <div v-if="time.status == 'lunch' || time.status == 'live'">
-                                            {{prettyDateRange(time.time, 'time')}}
-                                        </div>
-                                        <div v-if="time.status == 'holiday'">
-                                            Выходной
-                                        </div>
-                                        <div v-if="time.status == 'left'">
-                                            ---
-                                        </div>
-                                        <div v-if="time.status == 'lunch'">Обед</div>
-                                        <div v-if="time.status == 'live'">Очередь</div>
-                                        {% endverbatim %}
-                                        {% if request.user == master.user %}
-                                        {% verbatim %}
                                             <div v-if="time.status == 'armored'">
                                                 <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
                                                     <i class="fa fa-check" aria-hidden="true"></i>
@@ -162,16 +162,35 @@
                                                     <i class="fa fa-times" aria-hidden="true"></i>
                                                 </button>
                                             </div>
-                                        {% endverbatim %}
-                                        {% endif %}
-                                        {% verbatim %}
+                                            {% endverbatim %}
+                                            {% endif %}
+                                            {% verbatim %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="time-editor" v-if="editorState">
+                                <div class="weekday-input" v-for="(day, index) of localeDays">
+                                    <h3>{{day}}</h3>
+                                    <div class="input">
+                                        <input type="text" @change="activateSiblingInput(event)" class="picker initial-picker" placeholder="Начало дня">
+                                    </div>
+                                    <div class="input">
+                                        <input type="text" class="picker" placeholder="Конец дня">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endverbatim %}
+
+                    <div>
+                        <h4>Услуги</h4>
+                        {% for tag in master.tags.all %}
+                            <span>{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endverbatim %}
             </div>
             {% include 'specialist/certificate_of_specialist.html' %}
         </div>
@@ -220,7 +239,7 @@
 
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/vue.js' %}"></script>
+    <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/vue-resource.min.js' %}"></script>
     <script src="{% static 'js/calendar.js' %}"></script>
     <script>
@@ -228,7 +247,6 @@
         {% if request.user == master.user %}
             masterUser = true;
         {% endif %}
-        console.log(app);
         app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}');
     </script>
 {% endblock %}

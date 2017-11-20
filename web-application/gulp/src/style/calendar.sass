@@ -4,6 +4,12 @@
   padding: 35px 15px 40px 40px
   position: relative
 
+  .loader
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+
   a.main-wrap-arrows
     color: #11EBE6
     position: absolute
@@ -77,6 +83,12 @@
     position: relative
     box-sizing: border-box
     cursor: pointer
+
+    &.free.company-0
+      background: #08e8eb
+
+    &.free.company-1
+      background: #0aebc6
 
   .time:hover:not(.taken)
     background-color: #04c1bd
@@ -208,3 +220,28 @@
 
 .order-action:hover
   cursor: pointer
+
+
+.time-editor
+  width: 100%
+  .weekday-input
+    padding-bottom: 40px
+    h3
+      padding-bottom: 5px
+    .input
+      width: 128px
+      height: 26px
+      float: left
+      margin-right: 10px
+      input
+        display: inline-block
+        padding: 5px
+        font-size: 12px
+        width: auto
+        z-index: 1 !important
+
+  .picker
+    outline: none
+  .picker__holder
+    outline: none
+    z-index: 10001

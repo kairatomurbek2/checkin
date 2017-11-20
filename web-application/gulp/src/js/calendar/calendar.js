@@ -1,4 +1,3 @@
-// check if request.user == master.user
 let app = new Vue({
     el: '#app',
     data: {
@@ -6,6 +5,8 @@ let app = new Vue({
         localeDays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
         dayTime: {},
         schedule: {},
+        scheduleState: false,
+        editorState: true,
         period: 6,
         record: {},
         reservations: null,
@@ -21,12 +22,17 @@ let app = new Vue({
         }
     },
 
+    mounted() {
+        this.initEditor();
+    },
+
     methods: {
+        // calendar methods
         getDataFromDjango(val, slug, csrfToken) {
             this._masterSlug = slug;
             this._masterUser = val;
             this._csrfToken = csrfToken;
-            this.getMasterSchedule();
+            // this.getMasterSchedule();
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
@@ -87,7 +93,7 @@ let app = new Vue({
             }
             // when dates were added from different schedules, it's needed to sort it all
             this.sortTimesInMainArray();
-            console.log(this.mainArray);
+            this.toggleContent(true, false);
         },
         addDatesToArray(now, daySchedule, companyId) {
             let oneDay = {
@@ -427,6 +433,31 @@ let app = new Vue({
                 this.companies.push(time.company);
                 return 'company-' + (this.companies.length - 1);
             }
+        },
+        toggleContent(scheduleState, editorState) {
+            this.scheduleState = scheduleState;
+            this.editorState = editorState;
+            if (this.scheduleState) {
+                document.querySelector('#prev-week').style.display = 'block';
+                document.querySelector('#next-week').style.display = 'block';
+            } else {
+                document.querySelector('#prev-week').style.display = 'none';
+                document.querySelector('#next-week').style.display = 'none';
+            }
+        },
+
+        // editor methods
+        initEditor() {
+            $('.initial-picker').pickatime({
+                format: 'HH:i',
+                min: [0, 0],
+                max: [23, 59],
+                interval: 10,
+                clear: ''
+            });
+        },
+        activateSiblingInput(event) {
+            console.log(event);
         }
     }
 });
