@@ -52,7 +52,6 @@ class ScheduleSettingListAPIViewView(generics.ListAPIView):
 class ReservationListView(generics.ListAPIView):
     serializer_class = ReservationFullSerializer
     lookup_field = 'specialist__slug'
-    pagination_class = Pagination
 
     def get_queryset(self):
         today = date.today()
