@@ -45,6 +45,7 @@ let app = new Vue({
         getMasterOrders() {
             this.$http.get('/api/reservation/' + this._masterSlug).then(response => {
                 this.reservations = response.body.results;
+                console.log(response.body);
                 this.doCorrectDateInOrders();
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
             }, error => {
@@ -172,7 +173,7 @@ let app = new Vue({
                     time: order.date_time_reservation.split(' ')[1].split(':'),
                     jsDate: ''
                 };
-                date.jsDate = new Date('' + date.date[1] + '-' + date.date[0] + '-' + date.date[2]).setHours(parseInt(date.time[0]), parseInt(date.time[1]), 0, 0);
+                date.jsDate = new Date('' + date.date[1] + '/' + date.date[0] + '/' + date.date[2]).setHours(parseInt(date.time[0]), parseInt(date.time[1]), 0, 0);
                 order.date_time_reservation = new Date(date.jsDate);
             })
         },
