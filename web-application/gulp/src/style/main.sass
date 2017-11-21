@@ -939,7 +939,7 @@ h5
 
 .table_form
   background-color: #FFF
-  padding: 30px 40px 20px 40px
+  padding: 30px 40px 50px 40px
   form
     display: -webkit-flex
     display: -moz-flex
@@ -947,13 +947,22 @@ h5
     display: -o-flex
     display: flex
     align-items: flex-start
+    flex-wrap: wrap
     padding-top: 20px
     font-size: 14px
     color: #95989A
-  .table_time
-    width: 58%
+  .shedule_container
+    width: 42%
     height: auto
-    padding-right: 35px
+    & > span
+      color: $main-color
+      display: block
+      width: 100%
+      padding-bottom: 30px
+  .table_time
+    width: 100%
+    height: auto
+    padding-right: 25px
     border-right: 1px dotted $main-color
     & > li
       display: -webkit-flex
@@ -966,8 +975,9 @@ h5
       margin-bottom: 15px
       & > label
         width: 125px
+        color: $ldark-color
       .time_limit
-        width: 125px
+        width: 75px
         display: -webkit-flex
         display: -moz-flex
         display: -ms-flex
@@ -976,7 +986,7 @@ h5
         justify-content: space-between
         align-items: center
         input.timepicker
-          width: 100px
+          width: 100%
           height: 34px
           // border: 1px solid #E4E4E4
           border-radius: 3px
@@ -984,16 +994,79 @@ h5
           color: $ldark-color
           &:hover
             border-color: #0089ec
+  .interval_block
+    width: 58%
+    height: auto
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+    flex-wrap: wrap
+    padding-left: 25px
+    & > span
+      width: 100%
+      color: $ldark-color
+      padding-bottom: 30px
+    .interval
+      width: 75px
+      height: auto
+      label
+        display: block
+        width: 100%
+        height: 34px
+        margin-bottom: 14px
+        select
+          background: url('../img/break-polygon.png') 92% center no-repeat
+          width: 100%
+          height: 100%
+          border: 1px solid #e4e4e4
+          border-radius: 3px
+          padding-left: 10px
+          outline: 0
+          &:hover,
+          &:focus
+            border-color: #0089ec
+    .live_turn
+      width: 340px
+      & > ul
+        width: 100%
+        height: auto
+        & > li
+          display: flex
+          justify-content: space-between
+          align-items: center
+          margin-bottom: 15px
+          .turn_interval
+            width: 165px
+            height: 34px
+            display: flex
+            justify-content: space-between
+            align-items: flex-start
+            visibility: hidden
+          & > input.day:checked ~ .turn_interval
+            visibility: visible
+        .fieldset__wrapper
+          width: 75px
+          height: 100%
+          input.timepicker
+            width: 100%
+            height: 100%
+            // border: 1px solid #E4E4E4
+            border-radius: 3px
+            padding-left: 10px
+            color: $ldark-color
+            &:hover
+              border-color: #0089ec
+
 
   .break
-    width: 42%
+    width: 100%
     height: auto
-    padding-left: 40px
+    display: flex
+    justify-content: flex-start
+    align-items: flex-end
+    padding-top: 45px
     & > div
-      & > span
-        color: $ldark-color
-        padding-bottom: 15px
-    & > div:first-child
+      width: 270px
       display: -webkit-flex
       display: -moz-flex
       display: -ms-flex
@@ -1002,8 +1075,11 @@ h5
       justify-content: space-between
       align-items: flex-start
       flex-wrap: wrap
+      margin-right: 100px
       span
         width: 100%
+        color: $ldark-color
+        padding-bottom: 15px
       .time_limit
         width: 125px
         height: auto
@@ -1017,30 +1093,11 @@ h5
         input.timepicker
           width: 100px
           height: 34px
-          // border: 1px solid #E4E4E4
           border-radius: 3px
           padding-left: 10px
           color: $ldark-color
           &:hover
             border-color: #0089ec
-    & > div:last-of-type
-      padding-top: 20px
-      span
-        display: block
-      select
-        margin-left: 25px
-        background: url("../img/break-polygon.png") 90% center no-repeat
-        width: 100px
-        height: 35px
-        border: 1px solid #E4E4E4
-        border-radius: 3px
-        padding-left: 15px
-        outline: 0
-        &:hover,
-        &:focus
-          border-color: #0089ec
-    button
-      margin-top: 130px
 
 .picker
   font-size: 14px
