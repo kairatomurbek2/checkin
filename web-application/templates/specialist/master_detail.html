@@ -191,6 +191,381 @@
                 </div>
                 {% endverbatim %}
                 <!--VUE App End-->
+
+                <div class="table_form">
+				<h4>Настройка времени</h4>
+				<form action="#" method="post">
+					<div id="true-inputs">
+						<input type="hidden" class="true_input" id="id_monday">
+						<input type="hidden" class="true_input" id="id_tuesday">
+						<input type="hidden" class="true_input" id="id_wednesday">
+						<input type="hidden" class="true_input" id="id_thursday">
+						<input type="hidden" class="true_input" id="id_friday">
+						<input type="hidden" class="true_input" id="id_saturday">
+						<input type="hidden" class="true_input" id="id_sunday">
+						<input type="hidden" class="true_input" id="id_break">
+					</div>
+
+					<div class="shedule_container">
+						<span>Sunrise Studio</span>
+						<ul class="table_time">
+							<li class="get_time" data-key="monday" data-first>
+								<input type="checkbox" class="day" id="day1" checked="checked">
+								<label class="control control--checkbox" for="day1">Понедельник
+									<div class="control__indicator"></div>
+								</label>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li>
+							<li class="get_time" data-key="tuesday">
+								<input type="checkbox" class="day" id="day2" checked="checked">
+								<label class="control control--checkbox" for="day2">Вторник
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li>
+							<li class="get_time" data-key="wednesday">
+								<input type="checkbox" class="day" id="day3" checked="checked">
+								<label class="control control--checkbox" for="day3">Среда
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li>
+							<li class="get_time" data-key="thursday">
+								<input type="checkbox" class="day" id="day4" checked="checked">
+								<label class="control control--checkbox" for="day4">Четверг
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li>
+							<li class="get_time" data-key="friday">
+								<input type="checkbox" class="day" id="day5" checked="checked">
+								<label class="control control--checkbox" for="day5">Пятница
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li >
+							<li class="get_time" data-key="saturday">
+								<input type="checkbox" class="day" id="day6" checked="checked">
+								<label class="control control--checkbox" for="day6">Суббота
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00">
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00">
+									</div>
+								</div>
+							</li>
+							<li class="get_time" data-key="sunday">
+								<input type="checkbox" class="day" id="day7">
+								<label class="control control--checkbox" for="day7">Воскресенье
+									<div class="control__indicator"></div>
+								</label>
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker from-time" placeholder="00:00" disabled>
+									</div>
+								</div>
+
+
+								<div class="time_limit">
+									<div class="fieldset__wrapper">
+										<input type="number" class="timepicker to-time" placeholder="00:00" disabled>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="interval_block">
+						<span>Интервал приема:</span>
+						<div class="interval">
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+
+							<label>
+								<select name="interval">
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+									<option>30 min</option>
+								</select>
+							</label>
+						</div>
+
+						<div class="live_turn">
+							<ul>
+								<li>
+									<input type="checkbox" class="day" id="interval1">
+									<label class="control control--checkbox" for="interval1">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval2">
+									<label class="control control--checkbox" for="interval2">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval3">
+									<label class="control control--checkbox" for="interval3">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval4">
+									<label class="control control--checkbox" for="interval4">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval5">
+									<label class="control control--checkbox" for="interval5">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval6">
+									<label class="control control--checkbox" for="interval6">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="с">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+
+								<li>
+									<input type="checkbox" class="day" id="interval7">
+									<label class="control control--checkbox" for="interval7">Живая очередь
+										<div class="control__indicator"></div>
+									</label>
+
+									<div class="turn_interval">
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="c">
+										</div>
+
+										<div class="fieldset__wrapper">
+											<input type="number" class="timepicker" placeholder="до">
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+
+					<div class="break">
+						<div class="get_time" data-key="break">
+							<span>Перерыв на обед:</span>
+							<div class="time_limit">с
+								<div class="fieldset__wrapper">
+									<input type="number" class="timepicker from-time" placeholder="00:00">
+								</div>
+							</div>
+
+							<div class="time_limit">до
+								<div class="fieldset__wrapper">
+									<input type="number" class="timepicker to-time" placeholder="00:00">
+								</div>
+							</div>
+						</div>
+
+						<button type="submit" class="button">Отправить</button>
+					</div>
+				</form>
+
+			</div>
                 <div class="p_description">
                     <div>
                         <h4>О специалисте</h4>
