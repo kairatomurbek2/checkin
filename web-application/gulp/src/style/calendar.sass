@@ -24,12 +24,26 @@
 
 
   #prev-week
-    left: 10px
-    top: 40px
+    left: 20px
+    top: 80px
 
   #next-week
     right: 10px
-    top: 40px
+    top: 80px
+
+  .edit-schedule-wrap 
+    display: block
+    width: 100%
+    padding-bottom: 20px
+  .edit-schedule
+    float: right
+    color: #6ED3CF
+    font-size: 14px
+    &:hover
+      cursor: pointer
+    i 
+      margin-left: 10px
+      font-size: 18px
 
   .main
     position: relative
@@ -72,7 +86,7 @@
     padding-bottom: 15px
 
   .time
-    background-color: #11EBE6
+    background: #11EBE6
     padding: 8px 0
     margin-bottom: 10px
     -webkit-border-radius: 4px
@@ -84,26 +98,30 @@
     box-sizing: border-box
     cursor: pointer
 
-    &.free.company-0
+    &.company-0
       background: #6ED3CF
 
-    &.free.company-1
+    &.company-1
+      background: #6ED3CF
+
+    &.company-2
       background: #5BACCA
 
   .time:hover:not(.taken)
     background-color: #04c1bd
 
   .time.armored
-    background: #49c7ff
+    opacity: 0.7
 
   .time.disabled
     background: #8B8B8B
 
   .time.confirmed
     background: #cccccc
+    opacity: 0.3
 
   .time.live
-    background: #ff6d72
+    background: #FF8B8B
 
   .time.lunch
     background: #998f0f
@@ -227,6 +245,11 @@
 
 .time-editor
   width: 100%
+  overflow-y: scroll
+
+  form
+    margin-bottom: 100px
+
   .weekday-input
     padding-bottom: 40px
     h3
@@ -259,3 +282,13 @@
       input
         outline: none
         width: auto
+
+input.timepicker, input.initial-timepicker, input.next-timepicker, input.picker__input
+  width: 100%
+  height: 34px
+  border: 1px solid #E4E4E4
+  border-radius: 3px
+  padding-left: 10px
+  color: #333333
+  &:hover
+    border-color: #0089ec

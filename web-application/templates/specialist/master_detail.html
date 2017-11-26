@@ -2,14 +2,16 @@
 {% load staticfiles thumbnail extra_tags %}
 {% block content %}
 {% block head %}
-    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+<link rel="stylesheet" href="{% static 'css/calendar.css' %}" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 {% endblock %}
 <main class="specialist" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-        <div class="grid">
-            <div class="personal_block">
+    <div class="grid">
+        <div class="personal_block">
 
-                <div class="master">
-                    <a class="master_img">
+            <div class="master">
+                <a class="master_img">
                         <span>
                             {% if master.photo %}
                                 {% thumbnail master.photo "154x154" as im %}
@@ -19,621 +21,330 @@
                                 <img src="{% static 'img/no_photo.png' %}" alt='no image'>
                             {% endif %}
                         </span>
-                    </a>
-                    <div class="master_desc">
-                        <h4>{{ master.full_name }}</h4>
-                        <span>{{ master.get_categories }}</span>
-                        <span></span>
-                        <p>{{ master.short_info }}</p>
-                        <ul>
-                            <li>
-                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
-                            </li>
-                            <li>
-                                {% for contact in master.specialist_contacts.all %}
-                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
-                                {% endfor %}
-                            </li>
-                            {% if master.sex %}
-                                <li>
-                                    <i class="fa fa-venus-mars" aria-hidden="true"></i> {{ master.sex }}
-                                </li>
-                            {% endif %}
-                            <li>
-                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
-                            </li>
-                        </ul>
-                    </div>
-                    {% if master.rating %}
-                        <div class="rating">
-                            <div>
+                </a>
+                <div class="master_desc">
+                    <h4>{{ master.full_name }}</h4>
+                    <span>{{ master.get_categories }}</span>
+                    <span></span>
+                    <p>{{ master.short_info }}</p>
+                    <ul>
+                        <li>
+                            <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
+                        </li>
+                        <li>
+                            {% for contact in master.specialist_contacts.all %}
+                            <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                            {% endfor %}
+                        </li>
+                        {% if master.sex %}
+                        <li>
+                            <i class="fa fa-venus-mars" aria-hidden="true"></i> {{ master.sex }}
+                        </li>
+                        {% endif %}
+                        <li>
+                            <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
+                        </li>
+                    </ul>
+                </div>
+                {% if master.rating %}
+                <div class="rating">
+                    <div>
                             <span class="star-off">
                                 <span class="star-on" style="width: {% percent_converter master.rating %}%"></span>
                             </span>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if request.user != master.user %}
-                        <a href="#" id="leave_comment">ОСТАВИТЬ ОТЗЫВ</a>
-                    {% endif %}
-                    {% if request.user == master.user %}
-                        <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
-                    {% endif %}
+                    </div>
                 </div>
-                {% include 'specialist/reviews.html' %}
-            </div>
-            <div class="shedule_block">
-                {% include 'messages.html' %}
-
-                {% if master.schedule_setting_specialist.all %}
-                    <!-- <div class="main-wrap">
-                        <h4>Записаться к специалисту</h4>
-                        {% if request.user == master.user %}
-                            <div class="edit_time">
-                                <a href="{% url 'update_schedule_setting' master.slug %}"><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
-                            </div>
-                        {% endif %}
-                        <a href="#" onclick="prevWeek()" id="prev-week"><i class="fa fa-angle-left fa-3x"
-                                                                           aria-hidden="true"></i></a>
-                        <a href="#" onclick="nextWeek()" id="next-week"><i class="fa fa-angle-right fa-3x"
-                                                                           aria-hidden="true"></i></a>
-
-
-                        <div class="main">
-                            <div class='loader'>
-                                <img src="{% static 'img/loader.gif' %}" alt="">
-                            </div>
-                        </div>
-                    </div> -->
-                {% else %}
-                    {% if request.user == master.user %}
-                        <div class="set_time">
-                             <a href="{% url "add_schedule_setting" master.slug %}"> <i class="fa fa-clock-o fa-2x" aria-hidden="true"></i> Указать время работы</a>
-                        </div>
-                    {% endif %}
                 {% endif %}
-                <!--VUE App-->
-                {% verbatim %}
-                <div class="main-wrap">
-                    <a class="main-wrap-arrows" id="prev-week" style="display: none;" onclick="app.moveToPreviousWeek()">
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                    </a>
-                    <a class="main-wrap-arrows" id="next-week" style="display: none;" onclick="app.moveToNextWeek();">
-                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                    <div id="app" class="main">
-                        <div class="loader" v-if="!scheduleState && !editorState">
-                            {% endverbatim %}
-                            <img src="{% static 'img/loader.gif' %}" alt="loader">
-                            {% verbatim %}
-                        </div>
-                        <div v-if="scheduleState" class="weekdays-wrap">
-                            <div class="weekdays weekdays-title">
-                                <div v-for="weekDay of mainArray" class="weekday">
-                                    <span>{{localeDays[weekDay.date.getDay()]}}</span>
-                                    <span>{{prettyDate(weekDay.date, 'date')}}</span>
-                                </div>
-                            </div>
-                            <div class="weekdays weekdays-scroll">
-                                <div v-for="weekDay of mainArray" class="weekday" v-bind:class="{holiday: (weekDay.times.length < 3)}" style="width: 100%; text-align: center;">
-                                    <div v-for="(time, index) of weekDay.times" class="time" :class="[time.status, makeClassFromCompany(time)]"
-                                         v-on:click="toggleOrderPopup(time)">
-                                        <div v-if="time.status !== 'lunch' && time.status !== 'live'
-                                            && time.status !== 'holiday' && time.status !== 'left'"
-                                             {% endverbatim %}
-                                             {% if request.user == master.user %}
-                                             {% verbatim %}
-                                             :title="time.name? time.name + ' : ' + time.phone : ''"
-                                             {% endverbatim %}
-                                             {% endif %}
-                                             {%verbatim%}>
-                                            {{prettyDate(time.time, 'time')}}
-                                        </div>
-                                        <div v-if="time.status == 'live'">
-                                            {{prettyDateRange(time.time, 'time')}}
-                                        </div>
-                                        <div v-if="time.status == 'holiday'">
-                                            Выходной
-                                        </div>
-                                        <div v-if="time.status == 'left'">
-                                            ---
-                                        </div>
-                                        <div v-if="time.status == 'lunch'">Обед</div>
-                                        <div v-if="time.status == 'live'">Очередь</div>
-                                        {% endverbatim %}
-                                        {% if request.user == master.user %}
-                                        {% verbatim %}
-                                        <div v-if="time.status == 'armored'">
-                                            <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
-                                                <i class="fa fa-check" aria-hidden="true"></i>
-                                            </button>
-                                            <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                        <div v-if="time.status == 'confirmed'">
-                                            <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                        {% endverbatim %}
-                                        {% endif %}
-                                        {% verbatim %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="time-editor" v-if="editorState">
-                            <div class="weekday-input" v-for="(day, index) of localeDays">
-                                <h3>{{day}}</h3>
-                                <div class="input">
-                                    <input type="text" class="picker initial-picker" placeholder="Начало дня">
-                                </div>
-                                <div class="input">
-                                    <input type="text" class="picker next-picker" placeholder="Конец дня">
-                                </div>
-                                <div class="additional-inputs" style="display: none;">
-                                    <div class="input">
-                                        <input type="text" required placeholder="Введите интервал приема">
-                                    </div>
-                                    <div class="input">
-                                        <input type="text" placeholder="Жив.очередь (начало)">
-                                        <input type="text" placeholder="Жив.очередь (конец)">
-                                    </div>
-                                    <div class="input">
-                                        <input type="text" placeholder="Обед(начало)">
-                                        <input type="text" placeholder="Обед(конец)">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                {% if request.user != master.user %}
+                <a href="#" id="leave_comment">ОСТАВИТЬ ОТЗЫВ</a>
+                {% endif %}
+                {% if request.user == master.user %}
+                <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
+                {% endif %}
+            </div>
+            {% include 'specialist/reviews.html' %}
+        </div>
+        <div class="shedule_block">
+            {% include 'messages.html' %}
+
+            {% if master.schedule_setting_specialist.all %}
+            <!-- <div class="main-wrap">
+                <h4>Записаться к специалисту</h4>
+                {% if request.user == master.user %}
+                    <div class="edit_time">
+                        <a href="{% url 'update_schedule_setting' master.slug %}"><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
+                    </div>
+                {% endif %}
+                <a href="#" onclick="prevWeek()" id="prev-week"><i class="fa fa-angle-left fa-3x"
+                                                                   aria-hidden="true"></i></a>
+                <a href="#" onclick="nextWeek()" id="next-week"><i class="fa fa-angle-right fa-3x"
+                                                                   aria-hidden="true"></i></a>
+
+
+                <div class="main">
+                    <div class='loader'>
+                        <img src="{% static 'img/loader.gif' %}" alt="">
                     </div>
                 </div>
-                {% endverbatim %}
-                <!--VUE App End-->
-
-                <div class="table_form">
-				<h4>Настройка времени</h4>
-				<form action="#" method="post">
-					<div id="true-inputs">
-						<input type="hidden" class="true_input" id="id_monday">
-						<input type="hidden" class="true_input" id="id_tuesday">
-						<input type="hidden" class="true_input" id="id_wednesday">
-						<input type="hidden" class="true_input" id="id_thursday">
-						<input type="hidden" class="true_input" id="id_friday">
-						<input type="hidden" class="true_input" id="id_saturday">
-						<input type="hidden" class="true_input" id="id_sunday">
-						<input type="hidden" class="true_input" id="id_break">
-					</div>
-
-					<div class="shedule_container">
-						<span>Sunrise Studio</span>
-						<ul class="table_time">
-							<li class="get_time" data-key="monday" data-first>
-								<input type="checkbox" class="day" id="day1" checked="checked">
-								<label class="control control--checkbox" for="day1">Понедельник
-									<div class="control__indicator"></div>
-								</label>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li>
-							<li class="get_time" data-key="tuesday">
-								<input type="checkbox" class="day" id="day2" checked="checked">
-								<label class="control control--checkbox" for="day2">Вторник
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li>
-							<li class="get_time" data-key="wednesday">
-								<input type="checkbox" class="day" id="day3" checked="checked">
-								<label class="control control--checkbox" for="day3">Среда
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li>
-							<li class="get_time" data-key="thursday">
-								<input type="checkbox" class="day" id="day4" checked="checked">
-								<label class="control control--checkbox" for="day4">Четверг
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li>
-							<li class="get_time" data-key="friday">
-								<input type="checkbox" class="day" id="day5" checked="checked">
-								<label class="control control--checkbox" for="day5">Пятница
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li >
-							<li class="get_time" data-key="saturday">
-								<input type="checkbox" class="day" id="day6" checked="checked">
-								<label class="control control--checkbox" for="day6">Суббота
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00">
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00">
-									</div>
-								</div>
-							</li>
-							<li class="get_time" data-key="sunday">
-								<input type="checkbox" class="day" id="day7">
-								<label class="control control--checkbox" for="day7">Воскресенье
-									<div class="control__indicator"></div>
-								</label>
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker from-time" placeholder="00:00" disabled>
-									</div>
-								</div>
-
-
-								<div class="time_limit">
-									<div class="fieldset__wrapper">
-										<input type="number" class="timepicker to-time" placeholder="00:00" disabled>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-
-					<div class="interval_block">
-						<span>Интервал приема:</span>
-						<div class="interval">
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-
-							<label>
-								<select name="interval">
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-									<option>30 min</option>
-								</select>
-							</label>
-						</div>
-
-						<div class="live_turn">
-							<ul>
-								<li>
-									<input type="checkbox" class="day" id="interval1">
-									<label class="control control--checkbox" for="interval1">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval2">
-									<label class="control control--checkbox" for="interval2">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval3">
-									<label class="control control--checkbox" for="interval3">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval4">
-									<label class="control control--checkbox" for="interval4">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval5">
-									<label class="control control--checkbox" for="interval5">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval6">
-									<label class="control control--checkbox" for="interval6">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="с">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<input type="checkbox" class="day" id="interval7">
-									<label class="control control--checkbox" for="interval7">Живая очередь
-										<div class="control__indicator"></div>
-									</label>
-
-									<div class="turn_interval">
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="c">
-										</div>
-
-										<div class="fieldset__wrapper">
-											<input type="number" class="timepicker" placeholder="до">
-										</div>
-									</div>
-								</li>
-							</ul>
-						</div>
-
-					</div>
-
-					<div class="break">
-						<div class="get_time" data-key="break">
-							<span>Перерыв на обед:</span>
-							<div class="time_limit">с
-								<div class="fieldset__wrapper">
-									<input type="number" class="timepicker from-time" placeholder="00:00">
-								</div>
-							</div>
-
-							<div class="time_limit">до
-								<div class="fieldset__wrapper">
-									<input type="number" class="timepicker to-time" placeholder="00:00">
-								</div>
-							</div>
-						</div>
-
-						<button type="submit" class="button">Отправить</button>
-					</div>
-				</form>
-
-			</div>
-                <div class="p_description">
-                    <div>
-                        <h4>О специалисте</h4>
-                        {{ master.info|safe }}
+            </div> -->
+            {% else %}
+            {% if request.user == master.user %}
+            <div class="set_time">
+                <a href="{% url " add_schedule_setting" master.slug %}">
+                    <i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>
+            </div>
+            {% endif %}
+            {% endif %}
+            <!--VUE App-->
+            {% verbatim %}
+            <div class="main-wrap">
+                <a class="main-wrap-arrows" id="prev-week" style="display: none;" onclick="app.moveToPreviousWeek()">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+                <a class="main-wrap-arrows" id="next-week" style="display: none;" onclick="app.moveToNextWeek();">
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
+                <div id="app" class="main">
+                    <div class="loader" v-if="!scheduleState && !editorState">
+                        {% endverbatim %}
+                        <img src="{% static 'img/loader.gif' %}" alt="loader">
+                        {% verbatim %}
                     </div>
-                    <div>
-                        <h4>Услуги</h4>
-                        {% for tag in master.tags.all %}
-                            <span>{{ tag.name }}</span>
-                        {% endfor %}
+                    <div class="weekdays-wrap" v-if="scheduleState">
+                        <div class="edit-schedule-wrap">
+                            <a v-on:click="toggleContent(false, true)" class="edit-schedule">
+                                Редактировать график
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="weekdays weekdays-title">
+                            <div v-for="weekDay of mainArray" class="weekday">
+                                <span>{{localeDays[weekDay.date.getDay()]}}</span>
+                                <span>{{prettyDate(weekDay.date, 'date')}}</span>
+                            </div>
+                        </div>
+                        <div class="weekdays weekdays-scroll">
+                            <div v-for="weekDay of mainArray" class="weekday"
+                                 v-bind:class="{holiday: (weekDay.times.length < 3)}"
+                                 style="width: 100%; text-align: center;">
+                                <div v-for="(time, index) of weekDay.times" class="time"
+                                     :class="[time.status, makeClassFromCompany(time)]"
+                                     v-on:click="toggleOrderPopup(time)">
+                                    <div v-if="time.status !== 'lunch' && time.status !== 'live'
+                                            && time.status !== 'holiday' && time.status !== 'left'"
+                                         {% endverbatim %}
+                                         {% if request.user == master.user %}
+                                         {% verbatim %}
+                                         :title="time.name? time.name + ' : ' + time.phone : ''"
+                                         {% endverbatim %}
+                                         {% endif %}
+                                         {%verbatim%}>
+                                        {{prettyDate(time.time, 'time')}}
+                                    </div>
+                                    <div v-if="time.status == 'live'">
+                                        {{prettyDateRange(time.time, 'time')}}
+                                    </div>
+                                    <div v-if="time.status == 'holiday'">
+                                        Выходной
+                                    </div>
+                                    <div v-if="time.status == 'left'">
+                                        ---
+                                    </div>
+                                    <div v-if="time.status == 'lunch'">Обед</div>
+                                    <div v-if="time.status == 'live'">Очередь</div>
+                                    {% endverbatim %}
+                                    {% if request.user == master.user %}
+                                    {% verbatim %}
+                                    <div v-if="time.status == 'armored'">
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div v-if="time.status == 'confirmed'">
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    {% endverbatim %}
+                                    {% endif %}
+                                    {% verbatim %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="time-editor" v-if="editorState">
+                        <a v-on:click="toggleContent(true, false)" class="edit-schedule">
+                            Вернуться к расписанию
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                        <div class="table_form">
+                            <h4>Настройка времени</h4>
+                            <form v-for="(schedule, index) of scheduleSettings">
+                                <div id="true-inputs">
+                                    <input type="hidden" class="true_input" id="id_day">
+                                </div>
+                                <div class="shedule_container">
+                                    <span>Sunrise Studio</span>
+                                    <ul class="table_time">
+                                        <li class="get_time" data-key="day" data-first v-for="day of days">
+                                            <input type="checkbox" class="day" :id="'day_'+day" :checked="schedule[day]">
+                                            <label class="control control--checkbox" :for="'day_'+day">{{day}}
+                                                <div class="control__indicator"></div>
+                                            </label>
+                                            <div class="time_limit">
+                                                <div class="fieldset__wrapper">
+                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
+                                                           type="text"
+                                                           class="initial-timepicker timepicker timepicker from-time"
+                                                           :value="schedule[day] ? schedule[day].time.start : ''">
+                                                </div>
+                                            </div>
+                                            <div class="time_limit">
+                                                <div class="fieldset__wrapper">
+                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day].time, day, $event, index, false)"
+                                                           type="text"
+                                                           class="next-timepicker timepicker to-time"
+                                                           :value="schedule[day] ? schedule[day].time.end : ''">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="interval_block">
+                                    <span>Интервал приема:</span>
+                                    <div class="interval">
+                                        <label v-for="day of days">
+                                            <select name="interval">
+                                                <option
+                                                    v-for="interval of intervals"
+                                                    v-on:change="schedule[day].interval = $event.target.value"
+                                                >{{interval}}</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="live_turn">
+                                        <ul>
+                                            <li v-for="day of days">
+                                                <input type="checkbox" class="day" :id="'live_'+day"
+                                                       :checked="schedule[day] && schedule[day].live_recording.start">
+                                                <label class="control control--checkbox" :for="'live_'+day">Живая очередь
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                                <div class="turn_interval">
+                                                    <div class="fieldset__wrapper">
+                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
+                                                               type="text"
+                                                               class="timepicker live-timepicker-start"
+                                                               :value="schedule[day]? schedule[day].live_recording.start: 'c'">
+                                                    </div>
+
+                                                    <div class="fieldset__wrapper">
+                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
+                                                               type="text"
+                                                               class="timepicker live-timepicker-end"
+                                                               :value="schedule[day]? schedule[day].live_recording.end: 'до'">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="break">
+                                    <div class="get_time" data-key="break">
+                                        <span>Перерыв на обед:</span>
+                                        <div class="time_limit">с
+                                            <div class="fieldset__wrapper">
+                                                <input type="text" class="timepicker from-time" placeholder="00:00" value="12:00" v-on:change="lunchTime[index] = $event.target.value">
+                                            </div>
+                                        </div>
+
+                                        <div class="time_limit">до
+                                            <div class="fieldset__wrapper">
+                                                <input type="text" class="timepicker to-time" placeholder="00:00" value="13:00" v-on:change="lunchTime[index] = $event.target.value">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button v-on:click="submitSchedule($event)" class="button">Отправить</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            {% include 'specialist/certificate_of_specialist.html' %}
+            {% endverbatim %}
+            <!--VUE App End-->
+            <div class="p_description">
+                <div>
+                    <h4>О специалисте</h4>
+                    {{ master.info|safe }}
+                </div>
+                <div>
+                    <h4>Услуги</h4>
+                    {% for tag in master.tags.all %}
+                    <span>{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-    </main>
+        {% include 'specialist/certificate_of_specialist.html' %}
+    </div>
+</main>
 
-    {% include 'specialist/specialist_review_form.html' %}
+{% include 'specialist/specialist_review_form.html' %}
 
-    <!-- popup for armored request -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="armored-modal" style="z-index: 1050">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-                    Запись на это время уже была оформлена до Вас, но еще не подтверждена специалистом, Вы можете подождать пока данное время освободится, либо выбрать другое.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
+<!-- popup for armored request -->
+<div class="modal fade" tabindex="-1" role="dialog" id="armored-modal" style="z-index: 1050">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                Запись на это время уже была оформлена до Вас, но еще не подтверждена специалистом, Вы можете подождать
+                пока данное время освободится, либо выбрать другое.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
-    <!-- popup for armored request -->
-    {% if request.user == master.user %}
-        <!-- confirm request -->
-        <div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal" style="z-index: 1050">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="modal-body" style="text-align: center;">
-                    
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
+</div>
+<!-- popup for armored request -->
+{% if request.user == master.user %}
+<!-- confirm request -->
+<div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal" style="z-index: 1050">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
-        <!-- confirm request end -->
-    {% endif %}
+    </div>
+</div>
+<!-- confirm request end -->
+{% endif %}
 
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/vue.min.js' %}"></script>
-    <script src="{% static 'js/vue-resource.min.js' %}"></script>
-    <script src="{% static 'js/calendar.js' %}"></script>
-    <script>
-        let masterUser = false;
-        {% if request.user == master.user %}
-            masterUser = true;
-        {% endif %}
-        app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}');
-    </script>
+<script src="{% static 'js/vue.min.js' %}"></script>
+<script src="{% static 'js/vue-resource.min.js' %}"></script>
+<script src="{% static 'js/calendar.js' %}"></script>
+<script>
+    let masterUser = false;
+    {% if request.user == master.user %}
+        masterUser = true;
+    {% endif %}
+    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}');
+</script>
 {% endblock %}
