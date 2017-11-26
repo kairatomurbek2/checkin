@@ -1,8 +1,5 @@
-Vue.use(window.VueTimepicker);
-
 let app = new Vue({
     el: '#app',
-    components: { VueTimepicker },
     data: {
         days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
         localeDays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
