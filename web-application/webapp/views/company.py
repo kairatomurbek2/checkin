@@ -149,7 +149,6 @@ class CompanyDetail(TemplateView):
         context['company'] = company
         context['form'] = forms.RatingForm
         context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
-        print(context['owners'])
         return context
 
 
