@@ -45,7 +45,9 @@
                             <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
                         </li>
                         <li>
-                            <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.company }}
+                            {% for company in master.company.all %}
+                            <i aria-hidden="true"></i> {{ company.name }}
+                            {% endfor %}
                         </li>
                     </ul>
                 </div>

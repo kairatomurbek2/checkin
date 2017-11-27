@@ -17,7 +17,7 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
-from webapp.models import Specialist, Invite, Rating, Reservation, FavoriteSpecialist
+from webapp.models import Specialist, Invite, Rating, Reservation, FavoriteSpecialist, Company
 from webapp.views.filters import SpecialistFilter, ReservationFilter
 
 
@@ -194,8 +194,9 @@ class SpecialistInviteAcceptView(LoginRequiredMixin, TemplateView):
         elif (datetime.datetime.now().date() - invite.invite_date).days > 10:
             invite_message = self.invite_expired
         else:
-            specialist = Specialist.objects.filter(user=invite.invite_to)
-            specialist.update(company=invite.invite_company)
+            specialist = Specialist.objects.filter(user=invite.invite_to).first()
+            company = Company.objects.get(name=invite.invite_company)
+            specialist.company.add(company)
             invite.accepted = True
             invite.save()
             invite_message = self.invite_successfully
