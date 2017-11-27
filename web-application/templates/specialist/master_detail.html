@@ -190,7 +190,7 @@
                                     <span>Sunrise Studio</span>
                                     <ul class="table_time">
                                         <li class="get_time" data-key="day" data-first v-for="day of days">
-                                            <input type="checkbox" class="day" :id="'day_'+day" :checked="schedule[day]">
+                                            <input type="checkbox" class="day" :id="'day_'+day" :checked="schedule[day].time">
                                             <label class="control control--checkbox" :for="'day_'+day">{{day}}
                                                 <div class="control__indicator"></div>
                                             </label>
@@ -229,7 +229,7 @@
                                         <ul>
                                             <li v-for="day of days">
                                                 <input type="checkbox" class="day" :id="'live_'+day"
-                                                       :checked="schedule[day] && schedule[day].live_recording.start">
+                                                       :checked="schedule[day] && schedule[day].live_recording">
                                                 <label class="control control--checkbox" :for="'live_'+day">Живая очередь
                                                     <div class="control__indicator"></div>
                                                 </label>
@@ -238,14 +238,14 @@
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
                                                                type="text"
                                                                class="timepicker live-timepicker-start"
-                                                               :value="schedule[day]? schedule[day].live_recording.start: 'c'">
+                                                               :value="schedule[day].live_recording ? schedule[day].live_recording.start: 'c'">
                                                     </div>
 
                                                     <div class="fieldset__wrapper">
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
                                                                type="text"
                                                                class="timepicker live-timepicker-end"
-                                                               :value="schedule[day]? schedule[day].live_recording.end: 'до'">
+                                                               :value="schedule[day].live_recording ? schedule[day].live_recording.end: 'до'">
                                                     </div>
                                                 </div>
                                             </li>
