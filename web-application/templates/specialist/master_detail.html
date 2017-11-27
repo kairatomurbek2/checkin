@@ -72,7 +72,7 @@
                 <h4>Записаться к специалисту</h4>
                 {% if request.user == master.user %}
                     <div class="edit_time">
-                        <a href="{% url 'update_schedule_setting' master.slug %}"><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
+                        <a href=""><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
                     </div>
                 {% endif %}
                 <a href="#" onclick="prevWeek()" id="prev-week"><i class="fa fa-angle-left fa-3x"

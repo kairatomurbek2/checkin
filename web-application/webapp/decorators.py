@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy as _
-from webapp.models import Company, Specialist, Rating, ScheduleSetting
+from webapp.models import Company, Specialist, Rating
 
 
 def user_profile_permission(function):
@@ -79,23 +79,6 @@ def user_review_count_check(function):
             raise Http404("You are not rated")
 
     return decorator
-
-
-def schedule_setting_specialist(function):
-    def decotator(request, *args, **kwargs):
-        try:
-            specialist = Specialist.all_objects.get(slug=kwargs['master_slug'])
-            if specialist.user == request.user:
-                schedule_setting = ScheduleSetting.objects.filter(specialist__slug=kwargs.get('master_slug')).count()
-                if schedule_setting >= 1:
-                    raise Http404("Page not found")
-                return function(request, *args, **kwargs)
-            else:
-                raise PermissionDenied('Permission denied')
-        except Specialist.DoesNotExist:
-            raise Http404("Master not found")
-
-    return decotator
 
 
 def user_specialist_create_check(function):
