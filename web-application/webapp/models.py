@@ -289,9 +289,6 @@ class WorkDay(models.Model):
     live_recording = models.CharField(max_length=255, verbose_name=_('Живая запись'), null=True, blank=True)
     lunch_settings = models.CharField(max_length=255, verbose_name=_('Обед'), null=True, blank=True)
 
-    def __str__(self):
-        return self.time
-
     class Meta:
         verbose_name = _('Рабочий день')
         verbose_name_plural = _('Рабочие дни')
