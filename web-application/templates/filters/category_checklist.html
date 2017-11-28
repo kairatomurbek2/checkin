@@ -1,4 +1,5 @@
 {% load i18n staticfiles %}
+{% load cache %}
 {% load mptt_tags %}
 {% load extra_tags %}
 
@@ -7,35 +8,37 @@
         <div class="live-search">
             <input type="text" id="live-search-input" placeholder="{% trans 'Найти категорию' %}">
         </div>
-        <ul class="categories">
-            {% for category in categories %}
-                <li class="main-category input root">
-                {% if category.get_children %}<i class="qv qv-down3 qv-gray"></i>{% endif %}
-                <input type="checkbox" name="categories" id="category-{{ category.pk }}"
-                       value="{{ category.slug }}">
-                <label for="category-{{ category.pk }}">
-                    <span class="box"></span>
-                    <span class="name">{{ category.name }}</span>
-                </label>
-                <ul class="children">
-                    {% recursetree category.get_descendants %}
-                        <li class="input {% if node.level < 2 %}child {% else %} leaf{% endif %}">
-                            {% if node.children.count > 0 %}<i class="qv qv-down3 qv-gray"></i>{% endif %}
-                            <input type="checkbox" name="categories" id="category-{{ node.pk }}"
-                                   value="{{ node.slug }}">
-                            <label for="category-{{ node.pk }}">
-                                <span class="box"></span>
-                                <span class="name">{{ node.name }}</span>
-                            </label>
-                            <ul class="children children-children">
-                                {% if not node.is_leaf_node %}
-                                    {{ children }}
-                                {% endif %}
-                            </ul>
-                        </li>
-                    {% endrecursetree %}
-                </ul>
-            {% endfor %}
-        </ul>
+        {% cache 600 categories_checklist %}
+            <ul class="categories">
+                {% for category in categories %}
+                    <li class="main-category input root">
+                    {% if category.get_children %}<i class="qv qv-down3 qv-gray"></i>{% endif %}
+                    <input type="checkbox" name="categories" id="category-{{ category.pk }}"
+                           value="{{ category.slug }}">
+                    <label for="category-{{ category.pk }}">
+                        <span class="box"></span>
+                        <span class="name">{{ category.name }}</span>
+                    </label>
+                    <ul class="children">
+                        {% recursetree category.get_descendants %}
+                            <li class="input {% if node.level < 2 %}child {% else %} leaf{% endif %}">
+                                {% if node.children.count > 0 %}<i class="qv qv-down3 qv-gray"></i>{% endif %}
+                                <input type="checkbox" name="categories" id="category-{{ node.pk }}"
+                                       value="{{ node.slug }}">
+                                <label for="category-{{ node.pk }}">
+                                    <span class="box"></span>
+                                    <span class="name">{{ node.name }}</span>
+                                </label>
+                                <ul class="children children-children">
+                                    {% if not node.is_leaf_node %}
+                                        {{ children }}
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endrecursetree %}
+                    </ul>
+                {% endfor %}
+            </ul>
+        {% endcache %}
     </div>
 </div>
