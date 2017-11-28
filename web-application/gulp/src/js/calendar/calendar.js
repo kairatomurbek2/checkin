@@ -7,7 +7,7 @@ let app = new Vue({
         dayTime: {},
         schedule: {},
         scheduleSettings: [],
-        scheduleState: false,
+        scheduleState: true,
         editorState: false,
         period: 6,
         record: {},
@@ -25,7 +25,8 @@ let app = new Vue({
         lunchTime: []
     },
 
-    mounted() {},
+    mounted() {
+    },
 
     methods: {
         // calendar methods
@@ -38,7 +39,6 @@ let app = new Vue({
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
                 this.schedule = response.body;
-                this.getScheduleSettings();
                 this.getMasterOrders();
             }, error => {
                 console.error(error);
@@ -54,6 +54,7 @@ let app = new Vue({
             })
         },
         fillRange(start, end) {
+            this.mainArray = [];
             this.range.current = end;
             let now = new Date(start);
             while (now <= end) {
@@ -96,7 +97,6 @@ let app = new Vue({
             }
             // when dates were added from different schedules, it's needed to sort it all
             this.sortTimesInMainArray();
-            this.toggleContent(true, false);
         },
         addDatesToArray(now, daySchedule, companyId) {
             let oneDay = {
@@ -398,7 +398,7 @@ let app = new Vue({
                 dateObject = dateObject.date;
             }
             let result = this.mainArray.findIndex(x => {
-                return new Date(x.date.setHours(0,0,0,0)).getTime() === new Date(dateObject).getTime()
+                return new Date(x.date.setHours(0, 0, 0, 0)).getTime() === new Date(dateObject).getTime()
             });
             if (result !== -1) {
                 return {status: true, index: result}
@@ -428,7 +428,7 @@ let app = new Vue({
                 });
             })
         },
-        makeClassFromCompany(time){
+        makeClassFromCompany(time) {
             let index = this.companies.indexOf(time.company);
             if (index !== -1) {
                 return 'company-' + index
@@ -443,13 +443,16 @@ let app = new Vue({
             if (this.scheduleState) {
                 document.querySelector('#prev-week').style.display = 'block';
                 document.querySelector('#next-week').style.display = 'block';
+                this.getMasterSchedule();
             } else {
                 document.querySelector('#prev-week').style.display = 'none';
                 document.querySelector('#next-week').style.display = 'none';
+                this.getScheduleSettings();
             }
         },
         // editor methods
-        getScheduleSettings(){
+        getScheduleSettings() {
+            this.scheduleSettings = [];
             this.schedule.forEach((schedule, index) => {
                 let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
                 let options = {
@@ -461,38 +464,52 @@ let app = new Vue({
                     response => {
                         let schedule = response.body;
                         this.days.forEach(day => {
-                            if (schedule[day]) {
+                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                schedule[day].active = true;
+                            } else {
+                                schedule[day].active = false;
                                 schedule[day].time = {
-                                    start: schedule[day].time.split("-")[0],
-                                    end: schedule[day].time.split("-")[1],
+                                    start: '',
+                                    end: ''
+                                };
+                                schedule[day].live_recording = {
+                                    start: '',
+                                    end: ''
+                                };
+                                schedule[day].lunch_settings = {
+                                    start: '',
+                                    end: ''
+                                };
+                                schedule[day].interval = '';
+                            }
+                            if (schedule[day].active) {
+                                schedule[day].time = {
+                                    start: schedule[day].time.split('-')[0],
+                                    end: schedule[day].time.split('-')[1],
                                     init: schedule[day].time,
                                 };
 
-                                if (schedule[day].live_recording) {
+                                if (schedule[day].live_recording && schedule[day].live_recording.indexOf("-") !== -1) {
+                                    schedule[day].liveState = true;
                                     schedule[day].live_recording = {
                                         init: schedule[day].live_recording,
-                                        start: schedule[day].live_recording.split("-")[0],
-                                        end: schedule[day].live_recording.split("-")[1],
+                                        start: schedule[day].live_recording.split('-')[0],
+                                        end: schedule[day].live_recording.split('-')[1],
                                     }
+                                } else {
+                                    schedule[day].liveState = false;
                                 }
-                                console.log(schedule[day].lunch_settings);
-                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf("-") !== -1) {
+                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
                                     if (!this.lunchTime[index]) {
-                                        this.lunchTime[index] = {
+                                        this.lunchTime.push({
                                             init: schedule[day].lunch_settings,
-                                            start: schedule[day].lunch_settings.split("-")[0],
-                                            end: schedule[day].lunch_settings.split("-")[1]
-                                        }
+                                            start: schedule[day].lunch_settings.split('-')[0],
+                                            end: schedule[day].lunch_settings.split('-')[1]
+                                        });
                                     }
-                                }
-                            } else {
-                                schedule[day] = {
-                                    time: '',
-                                    interval: '',
-                                    live_recording: '',
-                                    lunch_settings: ''
                                 }
                             }
+
                         });
                         this.scheduleSettings.push(response.body);
                     },
@@ -503,11 +520,11 @@ let app = new Vue({
             });
             console.log('Schedule settings', this.scheduleSettings);
         },
-        parseTime(val){
+        parseTime(val) {
             if (val && val.indexOf(':') !== -1) {
                 return {
-                    hours: parseInt(val.split(":")[0]),
-                    minutes: parseInt(val.split(":")[1])
+                    hours: parseInt(val.split(':')[0]),
+                    minutes: parseInt(val.split(':')[1])
                 }
             }
         },
@@ -531,10 +548,12 @@ let app = new Vue({
             let gotTime = {};
             let relative = {};
             if (index === 0) {
-                if (this.scheduleSettings[1][day]) {
-                    sibling.init = this.scheduleSettings[1][day].time;
-                    sibling.start = this.parseTime(this.scheduleSettings[1][day].time.start);
-                    sibling.end = this.parseTime(this.scheduleSettings[1][day].time.end);
+                if (this.scheduleSettings.length > 1) {
+                    if (this.scheduleSettings[1][day]) {
+                        sibling.init = this.scheduleSettings[1][day].time;
+                        sibling.start = this.parseTime(this.scheduleSettings[1][day].time.start);
+                        sibling.end = this.parseTime(this.scheduleSettings[1][day].time.end);
+                    }
                 }
             }
 
@@ -549,35 +568,45 @@ let app = new Vue({
             if (startState) {
                 gotTime = this.parseTime(value);
                 relative = this.parseTime(scheduleDay.time.end);
-                if (this.compareScheduleTimes(relative, gotTime)) {
-                    if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
-                        scheduleDay.time.start = value;
+                if (relative) {
+                    if (this.compareScheduleTimes(relative, gotTime)) {
+                        if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
+                            scheduleDay.time.start = value;
+                        } else {
+                            scheduleDay.time.start = '00:00';
+                            event.target.value = '00:00';
+                        }
                     } else {
                         scheduleDay.time.start = '00:00';
                         event.target.value = '00:00';
                     }
                 } else {
-                    scheduleDay.time.start = '00:00';
-                    event.target.value = '00:00';
+                    scheduleDay.time.start = value;
                 }
             } else {
                 gotTime = this.parseTime(value);
                 relative = this.parseTime(scheduleDay.time.start);
 
-                if (this.compareScheduleTimes(gotTime, relative)) {
-                    if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
-                        scheduleDay.time.end = value;
+                if (relative) {
+                    if (this.compareScheduleTimes(gotTime, relative)) {
+                        if (this.scheduleSettings.length > 1) {
+                            if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
+                                scheduleDay.time.end = value;
+                            } else {
+                                scheduleDay.time.end = '00:00';
+                                event.target.value = '00:00';
+                            }
+                        } else {
+                            scheduleDay.time.end = value;
+                        }
                     } else {
                         scheduleDay.time.end = '00:00';
                         event.target.value = '00:00';
                     }
                 } else {
-                    scheduleDay.time.end = '00:00';
-                    event.target.value = '00:00';
+                    scheduleDay.time.end = value;
                 }
-
             }
-            console.log(app.scheduleSettings);
         },
         updateLiveQueue(scheduleDay, event, startState) {
             let value = this.parseTime(event.target.value);
@@ -586,57 +615,55 @@ let app = new Vue({
 
             if (this.compareScheduleTimes(start, value) || this.compareScheduleTimes(value, end)) {
                 if (startState) {
-                    scheduleDay.start = scheduleDay.time.start;
+                    scheduleDay.live_recording.start = scheduleDay.time.start;
                     event.target.value = scheduleDay.time.start;
                 } else {
-                    scheduleDay.end = scheduleDay.time.start;
+                    scheduleDay.live_recording.end = scheduleDay.time.start;
                     event.target.value = scheduleDay.time.start;
                 }
             } else {
                 if (startState) {
-                    scheduleDay.start = event.target.value;
+                    scheduleDay.live_recording.start = event.target.value;
                 } else {
-                    scheduleDay.end = event.target.value;
+                    scheduleDay.live_recording.end = event.target.value;
                 }
             }
 
         },
-        submitSchedule(event) {
+        submitSchedule(event, index) {
             event.preventDefault();
-            let scheduleSettingsToSend = JSON.parse(JSON.stringify(this.scheduleSettings));
-            scheduleSettingsToSend.forEach((schedule, index) => {
-                this.days.forEach(day => {
-                    if (schedule[day] && schedule[day].time) {
-                        schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
-                        if (schedule[day].live_recording) {
-                            schedule[day].live_recording = schedule[day].live_recording.start + '-' + schedule[day].live_recording.end;
-                        }
-                        schedule[day].lunch_settings = this.lunchTime[index].start + '-' + this.lunchTime[index].end;
+            let schedule = JSON.parse(JSON.stringify(this.scheduleSettings[index]));
+            this.days.forEach(day => {
+                if (schedule[day] && schedule[day].active) {
+                    schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
+                    if (schedule[day].liveState) {
+                        schedule[day].live_recording = schedule[day].live_recording.start + '-' + schedule[day].live_recording.end;
                     } else {
-                        schedule[day] = {
-                            time: '',
-                            lunch_settings: '',
-                            interval: '',
-                            live_recording: ''
-                        }
+                        schedule[day].live_recording = '';
                     }
-                });
-
-                let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
-                let body = schedule;
-                let options = {
-                    headers : {
-                        'X-CSRFToken': this._csrfToken
-                    }
-                };
-                this.$http.put(url, body, options).then(response => {
-                    console.log(response);
-                    alert("Вы Успешно обновили расписание");
-                }, error => {
-                    console.error(error);
-                })
-
+                    schedule[day].lunch_settings = this.lunchTime[index].start + '-' + this.lunchTime[index].end;
+                } else {
+                    schedule[day].time = '';
+                    schedule[day].lunch_settings = '';
+                    schedule[day].interval = '';
+                    schedule[day].live_recording = '';
+                    schedule[day].active = false;
+                }
             });
+
+            let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
+            let body = schedule;
+            let options = {
+                headers: {
+                    'X-CSRFToken': this._csrfToken
+                }
+            };
+            this.$http.put(url, body, options).then(response => {
+                console.log(response);
+                alert('Вы Успешно обновили расписание');
+            }, error => {
+                console.error(error);
+            })
         }
     }
 });
