@@ -230,7 +230,6 @@
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
-                                                           :readonly="!schedule[day].active"
                                                            :value="schedule[day].active ? schedule[day].time.start : ''">
                                                 </div>
                                             </div>
@@ -238,7 +237,6 @@
                                                 <div class="fieldset__wrapper">
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"
                                                            type="text"
-                                                           :readonly="!schedule[day].active"
                                                            class="next-timepicker timepicker to-time"
                                                            :value="schedule[day].active ? schedule[day].time.end : ''">
                                                 </div>
@@ -270,7 +268,6 @@
                                                     <div class="fieldset__wrapper">
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
                                                                type="text"
-                                                               :readonly="!schedule[day].active"
                                                                class="timepicker live-timepicker-start"
                                                                :value="(schedule[day].live_recording) ?
                                                                schedule[day].live_recording.start: 'c'">
@@ -279,7 +276,6 @@
                                                     <div class="fieldset__wrapper">
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
                                                                type="text"
-                                                               :readonly="!schedule[day].active"
                                                                class="timepicker live-timepicker-end"
                                                                :value="(schedule[day] && schedule[day].live_recording) ?
                                                                schedule[day].live_recording.end: 'до'">
