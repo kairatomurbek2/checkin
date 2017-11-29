@@ -170,7 +170,7 @@
                                     <div v-if="time.status == 'lunch'">Обед</div>
                                     <div v-if="time.status == 'live'">Очередь</div>
                                     {% endverbatim %}
-                                    {% if request.user == master.user %}
+                                    {% if request.user == master.user or user.id in owners or user.id in administrator %}
                                     {% verbatim %}
                                     <div v-if="time.status == 'armored'">
                                         <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
@@ -348,7 +348,7 @@
     </div>
 </div>
 <!-- popup for armored request -->
-{% if request.user == master.user %}
+{% if request.user == master.user or user.id in owners or user.id in administrator %}
 <!-- confirm request -->
 <div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal" style="z-index: 1050">
     <div class="modal-dialog" role="document">
@@ -377,7 +377,7 @@
 <script>
     let masterUser = false;
     let companies = [];
-    {% if request.user == master.user %}
+    {% if request.user == master.user or user.id in owners or user.id in administrator %}
         masterUser = true;
     {% endif %}
     {% for company in master.company.all %}

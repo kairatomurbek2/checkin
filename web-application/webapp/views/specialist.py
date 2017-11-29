@@ -171,8 +171,12 @@ class MasterDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MasterDetailView, self).get_context_data(**kwargs)
-        context['master'] = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        master = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        company = Company.objects.filter(company_specialists=master).last()
+        context['master'] = master
         context['form'] = forms.RatingForm
+        context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
+        context['administrator'] = company.user.filter(administrator=True).values_list('user', flat=True)
         return context
 
 
