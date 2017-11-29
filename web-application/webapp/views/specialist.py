@@ -175,10 +175,14 @@ class MasterDetailView(TemplateView):
         company = Company.objects.filter(company_specialists=master).last()
         context['master'] = master
         context['form'] = forms.RatingForm
-        if company.user.filter(owner=True).values_list('user', flat=True):
+        try:
             context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
-        if company.user.filter(administrator=True).values_list('user', flat=True):
+        except:
+            pass
+        try:
             context['administrator'] = company.user.filter(administrator=True).values_list('user', flat=True)
+        except:
+            pass
         return context
 
 
