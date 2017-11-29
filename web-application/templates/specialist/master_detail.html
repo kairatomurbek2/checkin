@@ -63,21 +63,15 @@
                 {% endif %}
             </div>
             <div class="work_place">
-                <div class="place">
-                    <a href="#">
-                        <span>Place 1</span>
-                    </a>
+                {% for company in master.company.all %}
+                    <div class="place">
+                        <a href="{{ company.get_absolute_url }}">
+                            <span>{{ company }}</span>
+                        </a>
 
-                    <span><i class="fa fa-map-marker" aria-hidden="true"></i>  jasdhfaasd fsdafhasdfas 1234</span>
-                </div>
-
-                <div class="place">
-                    <a href="#">
-                        <span>Place 2</span>
-                    </a>
-
-                    <span><i class="fa fa-map-marker" aria-hidden="true"></i>  jasdhfaasd fsdafhasdfas 1234</span>
-                </div>
+                        <span><i class="fa fa-map-marker" aria-hidden="true"></i>{{ company.street_address }}</span>
+                    </div>
+                {% endfor %}
             </div>
             {% include 'specialist/reviews.html' %}
         </div>
