@@ -443,7 +443,7 @@ let app = new Vue({
               }
             })
             if (index.length > 0) {
-                return 'company-' + index[0].id
+                return 'company-' + this.companies.indexOf(index[0]);
             };
         },
         toggleContent(scheduleState, editorState) {
