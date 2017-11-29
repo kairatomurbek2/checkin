@@ -175,8 +175,10 @@ class MasterDetailView(TemplateView):
         company = Company.objects.filter(company_specialists=master).last()
         context['master'] = master
         context['form'] = forms.RatingForm
-        context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
-        context['administrator'] = company.user.filter(administrator=True).values_list('user', flat=True)
+        if company.user.filter(owner=True).values_list('user', flat=True):
+            context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
+        if company.user.filter(administrator=True).values_list('user', flat=True):
+            context['administrator'] = company.user.filter(administrator=True).values_list('user', flat=True)
         return context
 
 
