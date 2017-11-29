@@ -13,7 +13,6 @@ let app = new Vue({
         record: {},
         reservations: null,
         mainArray: [],
-        companies: [],
         _masterSlug: '',
         _masterUser: '',
         _csrfToken: '',
@@ -22,18 +21,28 @@ let app = new Vue({
             end: new Date(new Date().setDate(new Date().getDate() + 30)).setHours(0, 0, 0, 0),
             current: ''
         },
-        lunchTime: []
+        lunchTime: [],
+        companies: []
     },
 
     mounted() {
+        if (this.companies.length > 0) {
+            $(".main-wrap-arrows").css("display", "block");
+        } else {
+            $(".main-wrap-arrows").css("display", "none");
+        }
     },
 
     methods: {
         // calendar methods
-        getDataFromDjango(val, slug, csrfToken) {
+        getDataFromDjango(val, slug, csrfToken, companies) {
             this._masterSlug = slug;
             this._masterUser = val;
             this._csrfToken = csrfToken;
+            companies = companies.filter(company => {
+                return typeof company === 'object';
+            });
+            this.companies = companies;
             this.getMasterSchedule();
         },
         getMasterSchedule() {
@@ -453,76 +462,262 @@ let app = new Vue({
         // editor methods
         getScheduleSettings() {
             this.scheduleSettings = [];
-            this.schedule.forEach((schedule, index) => {
-                let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
-                let options = {
-                    headers: {
-                        'X-CSRFToken': this._csrfToken
-                    }
-                };
-                this.$http.get(url, options).then(
-                    response => {
-                        let schedule = response.body;
-                        this.days.forEach(day => {
-                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
-                                schedule[day].active = true;
-                            } else {
-                                schedule[day].active = false;
-                                schedule[day].time = {
-                                    start: '',
-                                    end: ''
-                                };
-                                schedule[day].live_recording = {
-                                    start: '',
-                                    end: ''
-                                };
-                                schedule[day].lunch_settings = {
-                                    start: '',
-                                    end: ''
-                                };
-                                schedule[day].interval = '';
+            if (this.schedule.length > 0) {
+                if (this.schedule.length === this.companies.length) {
+                    this.schedule.forEach((schedule, index) => {
+                        let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                        let options = {
+                            headers: {
+                                'X-CSRFToken': this._csrfToken
                             }
-                            if (schedule[day].active) {
-                                schedule[day].time = {
-                                    start: schedule[day].time.split('-')[0],
-                                    end: schedule[day].time.split('-')[1],
-                                    init: schedule[day].time,
-                                };
-
-                                if (schedule[day].live_recording && schedule[day].live_recording.indexOf("-") !== -1) {
-                                    schedule[day].liveState = true;
-                                    schedule[day].live_recording = {
-                                        init: schedule[day].live_recording,
-                                        start: schedule[day].live_recording.split('-')[0],
-                                        end: schedule[day].live_recording.split('-')[1],
+                        };
+                        this.$http.get(url, options).then(
+                            response => {
+                                let schedule = response.body;
+                                this.companies.forEach(company => {
+                                    if (typeof company === 'object' && company.id === schedule.company) {
+                                        schedule.companyName = company.name;
                                     }
-                                } else {
-                                    schedule[day].liveState = false;
+                                });
+                                schedule.lunch_settings = {
+                                    init: '',
+                                    start: '',
+                                    end: ''
+                                };
+                                this.days.forEach(day => {
+                                    if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                        schedule[day].active = true;
+                                    } else {
+                                        schedule[day].active = false;
+                                        schedule[day].time = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].live_recording = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].lunch_settings = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].interval = '';
+                                    }
+                                    if (schedule[day].active) {
+                                        schedule[day].time = {
+                                            start: schedule[day].time.split('-')[0],
+                                            end: schedule[day].time.split('-')[1],
+                                            init: schedule[day].time,
+                                        };
+                                        if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
+                                            schedule[day].liveState = true;
+                                            schedule[day].live_recording = {
+                                                init: schedule[day].live_recording,
+                                                start: schedule[day].live_recording.split('-')[0],
+                                                end: schedule[day].live_recording.split('-')[1],
+                                            }
+                                        } else {
+                                            schedule[day].liveState = false;
+                                            schedule[day].live_recording = {
+                                                start: '',
+                                                end: ''
+                                            }
+                                        }
+                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                            schedule.lunch_settings.init = schedule[day].lunch_settings;
+                                            schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
+                                            schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                        }
+                                    }
+                                });
+                                schedule.active = true;
+                                this.scheduleSettings.push(schedule);
+                            },
+                            error => {
+                                console.log(error);
+                            }
+                        )
+                    });
+                } else {
+                    this.companies.forEach(company => {
+                        if (typeof company === 'object') {
+                            let lunchIndex = 0;
+                            let schedule = this.schedule.filter((x, index) => {
+                                if (x.company === company.id) {
+                                    lunchIndex = index;
+                                    return true;
                                 }
-                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
-                                    if (!this.lunchTime[index]) {
-                                        this.lunchTime.push({
-                                            init: schedule[day].lunch_settings,
-                                            start: schedule[day].lunch_settings.split('-')[0],
-                                            end: schedule[day].lunch_settings.split('-')[1]
+                            });
+                            schedule.lunch_settings = {
+                                start: '',
+                                end: ''
+                            };
+                            if (schedule.length > 0) {
+                                schedule = schedule[0];
+                                let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                                let options = {
+                                    headers: {
+                                        'X-CSRFToken': this._csrfToken
+                                    }
+                                };
+                                this.$http.get(url, options).then(
+                                    response => {
+                                        let schedule = response.body;
+                                        this.companies.forEach(company => {
+                                            if (typeof company === 'object' && company.id === schedule.company) {
+                                                schedule.companyName = company.name;
+                                            }
                                         });
+                                        schedule.lunch_settings = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        this.days.forEach(day => {
+                                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                                schedule[day].active = true;
+                                            } else {
+                                                schedule[day].active = false;
+                                                schedule[day].time = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].live_recording = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].lunch_settings = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].interval = '';
+                                            }
+                                            if (schedule[day].active) {
+                                                schedule[day].time = {
+                                                    start: schedule[day].time.split('-')[0],
+                                                    end: schedule[day].time.split('-')[1],
+                                                    init: schedule[day].time,
+                                                };
+                                                if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
+                                                    schedule[day].liveState = true;
+                                                    schedule[day].live_recording = {
+                                                        init: schedule[day].live_recording,
+                                                        start: schedule[day].live_recording.split('-')[0],
+                                                        end: schedule[day].live_recording.split('-')[1],
+                                                    }
+                                                } else {
+                                                    schedule[day].liveState = false;
+                                                    schedule[day].live_recording = {
+                                                        start: '',
+                                                        end: ''
+                                                    }
+                                                }
+                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                                    schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
+                                                    schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                                }
+                                            }
+                                        });
+                                        schedule.active = true;
+                                        this.scheduleSettings.push(schedule);
+                                    },
+                                    error => {
+                                        console.log(error);
                                     }
-                                }
+                                )
                             }
-
+                            else {
+                                let dayObj = {};
+                                this.days.forEach(day => {
+                                    dayObj[day] = {
+                                        time: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        live_recording: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        lunch_settings: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        interval: ''
+                                    }
+                                });
+                                dayObj.active = false;
+                                dayObj.company = company.id;
+                                dayObj.companyName = company.name;
+                                dayObj.lunch_settings = {
+                                    start: '',
+                                    end: ''
+                                };
+                                this.scheduleSettings.push(dayObj);
+                            }
+                        }
+                    })
+                }
+            } else {
+                if (this.companies.length > 0 && this.companies.some(comp => typeof comp === 'object')) {
+                    this.companies.forEach(company => {
+                        let dayObj = {};
+                        this.days.forEach(day => {
+                            dayObj[day] = {
+                                time: {
+                                    start: '',
+                                    end: ''
+                                },
+                                live_recording: {
+                                    start: '',
+                                    end: ''
+                                },
+                                lunch_settings: {
+                                    start: '',
+                                    end: ''
+                                },
+                                interval: ''
+                            }
                         });
-                        this.scheduleSettings.push(response.body);
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                )
-            });
-            console.log('Schedule settings', this.scheduleSettings);
+                        dayObj.active = false;
+                        dayObj.company = company.id;
+                        dayObj.companyName = company.name;
+                        dayObj.lunch_settings = {
+                            start: '',
+                            end: ''
+                        };
+                        this.scheduleSettings.push(dayObj);
+                    })
+                } else {
+                    let dayObj = {};
+                    this.days.forEach(day => {
+                        dayObj[day] = {
+                            time: {
+                                start: '',
+                                end: ''
+                            },
+                            live_recording: {
+                                start: '',
+                                end: ''
+                            },
+                            lunch_settings: {
+                                start: '',
+                                end: ''
+                            },
+                            interval: ''
+                        }
+                    });
+                    dayObj.active = false;
+                    dayObj.lunch_settings = {
+                        start: '',
+                        end: ''
+                    };
+                    this.scheduleSettings.push(dayObj);
+                }
+            }
         },
         parseTime(val) {
             if (val && val.indexOf(':') !== -1) {
                 return {
+                    init: val,
                     hours: parseInt(val.split(':')[0]),
                     minutes: parseInt(val.split(':')[1])
                 }
@@ -534,9 +729,9 @@ let app = new Vue({
             } else if (time1.hours < time2.hours) {
                 return false;
             } else if (time1.hours === time2.hours) {
-                if (time1.minutes > time2.minutes) {
+                if (time1.minutes >= time2.minutes) {
                     return true;
-                } else return time1.minutes >= time2.minutes;
+                } else return time1.minutes > time2.minutes;
             }
 
         },
@@ -547,9 +742,10 @@ let app = new Vue({
             let sibling = {};
             let gotTime = {};
             let relative = {};
+            debugger;
             if (index === 0) {
                 if (this.scheduleSettings.length > 1) {
-                    if (this.scheduleSettings[1][day]) {
+                    if (this.scheduleSettings[1][day] && this.scheduleSettings[1][day].time.start.indexOf(":") !== -1) {
                         sibling.init = this.scheduleSettings[1][day].time;
                         sibling.start = this.parseTime(this.scheduleSettings[1][day].time.start);
                         sibling.end = this.parseTime(this.scheduleSettings[1][day].time.end);
@@ -558,7 +754,7 @@ let app = new Vue({
             }
 
             if (index === 1) {
-                if (this.scheduleSettings[0][day]) {
+                if (this.scheduleSettings[0][day] && this.scheduleSettings[0][day].time.end.indexOf(":") !== -1) {
                     sibling.init = this.scheduleSettings[0][day].time;
                     sibling.start = this.parseTime(this.scheduleSettings[0][day].time.start);
                     sibling.end = this.parseTime(this.scheduleSettings[0][day].time.end);
@@ -570,15 +766,18 @@ let app = new Vue({
                 relative = this.parseTime(scheduleDay.time.end);
                 if (relative) {
                     if (this.compareScheduleTimes(relative, gotTime)) {
-                        if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
-                            scheduleDay.time.start = value;
-                        } else {
-                            scheduleDay.time.start = '00:00';
-                            event.target.value = '00:00';
-                        }
+                        scheduleDay.time.start = value;
                     } else {
-                        scheduleDay.time.start = '00:00';
-                        event.target.value = '00:00';
+                        scheduleDay.time.start = scheduleDay.time.end;
+                        event.target.value = scheduleDay.time.end;
+                    }
+                }
+                if (sibling.start) {
+                    if (this.compareScheduleTimes(sibling.start, gotTime) && this.compareScheduleTimes(sibling.end, gotTime)) {
+                        scheduleDay.time.start = value;
+                    } else {
+                        scheduleDay.time.start = sibling.end.init;
+                        event.target.value = sibling.end.init;
                     }
                 } else {
                     scheduleDay.time.start = value;
@@ -586,22 +785,20 @@ let app = new Vue({
             } else {
                 gotTime = this.parseTime(value);
                 relative = this.parseTime(scheduleDay.time.start);
-
                 if (relative) {
-                    if (this.compareScheduleTimes(gotTime, relative)) {
-                        if (this.scheduleSettings.length > 1) {
-                            if (this.compareScheduleTimes(sibling.start, gotTime) || this.compareScheduleTimes(gotTime, sibling.end)) {
-                                scheduleDay.time.end = value;
-                            } else {
-                                scheduleDay.time.end = '00:00';
-                                event.target.value = '00:00';
-                            }
-                        } else {
-                            scheduleDay.time.end = value;
-                        }
+                    if (this.compareScheduleTimes(relative, gotTime)) {
+                        scheduleDay.time.end = scheduleDay.time.start;
+                        event.target.end = scheduleDay.time.start;
                     } else {
-                        scheduleDay.time.end = '00:00';
-                        event.target.value = '00:00';
+                        scheduleDay.time.end = value;
+                    }
+                }
+                if (sibling.end) {
+                    if (this.compareScheduleTimes(sibling.start, gotTime) && this.compareScheduleTimes(sibling.end, gotTime)) {
+                        scheduleDay.time.end = value;
+                    } else {
+                        scheduleDay.time.end = sibling.end.init;
+                        event.target.value = sibling.end.init;
                     }
                 } else {
                     scheduleDay.time.end = value;
@@ -618,8 +815,8 @@ let app = new Vue({
                     scheduleDay.live_recording.start = scheduleDay.time.start;
                     event.target.value = scheduleDay.time.start;
                 } else {
-                    scheduleDay.live_recording.end = scheduleDay.time.start;
-                    event.target.value = scheduleDay.time.start;
+                    scheduleDay.live_recording.end = scheduleDay.time.end;
+                    event.target.value = scheduleDay.time.end;
                 }
             } else {
                 if (startState) {
@@ -628,11 +825,14 @@ let app = new Vue({
                     scheduleDay.live_recording.end = event.target.value;
                 }
             }
-
         },
-        submitSchedule(event, index) {
+        submitSchedule(event, index, active) {
             event.preventDefault();
             let schedule = JSON.parse(JSON.stringify(this.scheduleSettings[index]));
+            if (!schedule.lunch_settings.start || !schedule.lunch_settings.end) {
+                alert("Вы не ввели время обеда");
+                return;
+            }
             this.days.forEach(day => {
                 if (schedule[day] && schedule[day].active) {
                     schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
@@ -641,7 +841,7 @@ let app = new Vue({
                     } else {
                         schedule[day].live_recording = '';
                     }
-                    schedule[day].lunch_settings = this.lunchTime[index].start + '-' + this.lunchTime[index].end;
+                    schedule[day].lunch_settings = schedule.lunch_settings.start + '-' + schedule.lunch_settings.end;
                 } else {
                     schedule[day].time = '';
                     schedule[day].lunch_settings = '';
@@ -651,16 +851,52 @@ let app = new Vue({
                 }
             });
 
-            let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
-            let body = schedule;
-            let options = {
-                headers: {
-                    'X-CSRFToken': this._csrfToken
+            if (active) {
+                let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
+                let body = schedule;
+                let options = {
+                    headers: {
+                        'X-CSRFToken': this._csrfToken
+                    }
+                };
+                this.$http.put(url, body, options).then(response => {
+                    alert('Вы успешно обновили расписание');
+                }, error => {
+                    console.error(error);
+                })
+            } else {
+                let url = `/api/work_day/${this._masterSlug}/add/`;
+                let body = schedule;
+                let options = {
+                    headers: {
+                        'X-CSRFToken': this._csrfToken
+                    }
+                };
+                this.$http.post(url, body, options).then(response => {
+                    alert('Вы успешно создали расписание');
+                    this.updateSchduleAfterEditing();
+                }, error => {
+                    console.error(error);
+                })
+            }
+        },
+        updateLunchTime(index, val, state) {
+            if (!this.scheduleSettings[index].lunch_settings.start) {
+                this.scheduleSettings[index].lunch_settings = {
+                    start: '',
+                    end: ''
                 }
-            };
-            this.$http.put(url, body, options).then(response => {
-                console.log(response);
-                alert('Вы Успешно обновили расписание');
+            }
+            if (state) {
+                this.scheduleSettings[index].lunch_settings.start = val;
+            } else {
+                this.scheduleSettings[index].lunch_settings.end = val;
+            }
+        },
+        updateSchduleAfterEditing() {
+            this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
+                this.schedule = response.body;
+                this.getScheduleSettings();
             }, error => {
                 console.error(error);
             })

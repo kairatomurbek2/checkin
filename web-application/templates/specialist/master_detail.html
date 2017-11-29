@@ -12,15 +12,15 @@
 
             <div class="master">
                 <a class="master_img">
-                        <span>
-                            {% if master.photo %}
-                                {% thumbnail master.photo "154x154" as im %}
-                                    <img src="{{ im.url }}" alt={{ master.full_name }}>
-                                {% endthumbnail %}
-                            {% else %}
-                                <img src="{% static 'img/no_photo.png' %}" alt='no image'>
-                            {% endif %}
-                        </span>
+                  <span>
+                      {% if master.photo %}
+                          {% thumbnail master.photo "154x154" as im %}
+                              <img src="{{ im.url }}" alt={{ master.full_name }}>
+                          {% endthumbnail %}
+                      {% else %}
+                          <img src="{% static 'img/no_photo.png' %}" alt='no image'>
+                      {% endif %}
+                  </span>
                 </a>
                 <div class="master_desc">
                     <h4>{{ master.full_name }}</h4>
@@ -43,11 +43,6 @@
                         {% endif %}
                         <li>
                             <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
-                        </li>
-                        <li>
-                            {% for company in master.company.all %}
-                            <i aria-hidden="true"></i> {{ company.name }}
-                            {% endfor %}
                         </li>
                     </ul>
                 </div>
@@ -103,10 +98,10 @@
             <!--VUE App-->
             {% verbatim %}
             <div class="main-wrap">
-                <a class="main-wrap-arrows" id="prev-week" style="display: block;" onclick="app.moveToPreviousWeek()">
+                <a class="main-wrap-arrows" id="prev-week" onclick="app.moveToPreviousWeek()">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                 </a>
-                <a class="main-wrap-arrows" id="next-week" style="display: block;" onclick="app.moveToNextWeek();">
+                <a class="main-wrap-arrows" id="next-week" onclick="app.moveToNextWeek();">
                     <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </a>
                 <div id="app" class="main">
@@ -198,17 +193,17 @@
                                     <input type="hidden" class="true_input" id="id_day">
                                 </div>
                                 <div class="shedule_container">
-                                    <span>Sunrise Studio</span>
+                                    <span>{{schedule.companyName}}</span>
                                     <ul class="table_time">
-                                        <li class="get_time" data-key="day" data-first v-for="day of days">
+                                        <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of days">
                                             <input
                                                     type="checkbox"
                                                     class="day"
-                                                    :id="'day_'+day"
+                                                    :id="'day_'+day+index"
                                                     :checked="schedule[day].active"
                                                     v-on:change="schedule[day].active = $event.target.checked"
                                             >
-                                            <label class="control control--checkbox" :for="'day_'+day">{{day}}
+                                            <label class="control control--checkbox" :for="'day_'+day+index">{{localeDays[dayIndex]}}
                                                 <div class="control__indicator"></div>
                                             </label>
                                             <div class="time_limit">
@@ -216,6 +211,7 @@
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
+                                                           :readonly="!schedule[day].active"
                                                            :value="schedule[day].active ? schedule[day].time.start : ''">
                                                 </div>
                                             </div>
@@ -223,6 +219,7 @@
                                                 <div class="fieldset__wrapper">
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"
                                                            type="text"
+                                                           :readonly="!schedule[day].active"
                                                            class="next-timepicker timepicker to-time"
                                                            :value="schedule[day].active ? schedule[day].time.end : ''">
                                                 </div>
@@ -243,17 +240,18 @@
                                     <div class="live_turn">
                                         <ul>
                                             <li v-for="day of days">
-                                                <input type="checkbox" class="day" :id="'live_'+day"
+                                                <input type="checkbox" class="day" :id="'live_'+day+index"
                                                        :checked="schedule[day].active && schedule[day].liveState"
                                                        v-on:change="schedule[day].liveState = $event.target.checked"
                                                 >
-                                                <label class="control control--checkbox" :for="'live_'+day">Живая очередь
+                                                <label class="control control--checkbox" :for="'live_'+day+index">Живая очередь
                                                     <div class="control__indicator"></div>
                                                 </label>
                                                 <div class="turn_interval">
                                                     <div class="fieldset__wrapper">
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
                                                                type="text"
+                                                               :readonly="!schedule[day].active"
                                                                class="timepicker live-timepicker-start"
                                                                :value="(schedule[day].live_recording) ?
                                                                schedule[day].live_recording.start: 'c'">
@@ -262,6 +260,7 @@
                                                     <div class="fieldset__wrapper">
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
                                                                type="text"
+                                                               :readonly="!schedule[day].active"
                                                                class="timepicker live-timepicker-end"
                                                                :value="(schedule[day] && schedule[day].live_recording) ?
                                                                schedule[day].live_recording.end: 'до'">
@@ -279,9 +278,9 @@
                                                 <input
                                                         type="text"
                                                         class="timepicker from-time"
-                                                        placeholder="00:00"
-                                                        v-bind:value="lunchTime[index].start"
-                                                        v-on:change="lunchTime[index].start = $event.target.value">
+                                                        placeholder=""
+                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"
+                                                        v-on:change="updateLunchTime(index, $event.target.value, true)">
                                             </div>
                                         </div>
                                         <div class="time_limit">до
@@ -289,13 +288,13 @@
                                                 <input
                                                         type="text"
                                                         class="timepicker to-time"
-                                                        placeholder="00:00"
-                                                        v-bind:value="lunchTime[index].end"
-                                                        v-on:change="lunchTime[index].end = $event.target.value">
+                                                        placeholder=""
+                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"
+                                                        v-on:change="updateLunchTime(index, $event.target.value, false)">
                                             </div>
                                         </div>
                                     </div>
-                                    <button v-on:click="submitSchedule($event, index)" class="button">Отправить</button>
+                                    <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
                                 </div>
                             </form>
                         </div>
@@ -370,9 +369,16 @@
 <script src="{% static 'js/calendar.js' %}"></script>
 <script>
     let masterUser = false;
+    let companies = [];
     {% if request.user == master.user %}
         masterUser = true;
     {% endif %}
-    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}');
+    {% for company in master.company.all %}
+        companies.push({
+          name: '{{ company.name }}',
+          id: {{company.id}}
+        })
+    {% endfor %}
+    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies);
 </script>
 {% endblock %}
