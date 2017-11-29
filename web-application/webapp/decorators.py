@@ -137,7 +137,10 @@ def specialist_status_reservation(function):
     def decotator(request, *args, **kwargs):
         try:
             specialist = Specialist.all_objects.get(slug=kwargs['specialist__slug'])
-            if specialist.user == request.user:
+            company = Company.objects.filter(company_specialists=specialist).last()
+            owner = company.user.filter(owner=True).values_list('user', flat=True)
+            administrator = company.user.filter(administrator=True).values_list('user', flat=True)
+            if specialist.user == request.user or request.user.id in owner or request.user.id in administrator:
                 return function(request, *args, **kwargs)
             else:
                 raise PermissionDenied('Permission denied')
@@ -145,3 +148,5 @@ def specialist_status_reservation(function):
             raise Http404("Master not found")
 
     return decotator
+
+
