@@ -138,8 +138,14 @@ def specialist_status_reservation(function):
         try:
             specialist = Specialist.all_objects.get(slug=kwargs['specialist__slug'])
             company = Company.objects.filter(company_specialists=specialist).last()
-            owner = company.user.filter(owner=True).values_list('user', flat=True)
-            administrator = company.user.filter(administrator=True).values_list('user', flat=True)
+            try:
+                owner = company.user.filter(owner=True).values_list('user', flat=True)
+            except:
+                pass
+            try:
+                administrator = company.user.filter(administrator=True).values_list('user', flat=True)
+            except:
+                pass
             if specialist.user == request.user or request.user.id in owner or request.user.id in administrator:
                 return function(request, *args, **kwargs)
             else:
