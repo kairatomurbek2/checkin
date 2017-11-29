@@ -6,7 +6,7 @@
 {% block content %}
     <main class="become_specilalist">
         <div class="grid">
-            {% include 'messages.html' %}
+        {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 <p class="text-danger">{{ form.photo.errors|striptags }}</p>
@@ -72,44 +72,44 @@
         $(document).ready(
             function () {
                 $('#id_info').redactor({});
-
-                $('.contact-formset').formset({
-                    prefix: 'specialist_contacts',
-                    addText: 'Добавить контакт',
-                    deleteText: ''
-                });
-
-                var categories = [
-                    {% for category in all_categories %}
-                        {% if category.is_child_node and category.get_children %}
-                            {
-                                "text": "{{ category.name }}",
-                                "children": [
-                                    {% for child in category.get_children %}
-                                        {
-                                            "id": "{{ child.pk }}",
-                                            "text": "{{ child.name }}",
-                                            "element": HTMLOptionElement
-                                        },
-                                    {% endfor %}
-                                ],
-                                "element": HTMLOptGroupElement
-                            },
-                        {% endif %}
-                    {% endfor %}
-                ];
-                (function () {
-                    var html = '';
-                    for (var i = 0; i < categories.length; i++) {
-                        html += "<optgroup label=" + categories[i].text + ">";
-                        for (var j = 0; j < categories[i].children.length; j++) {
-                            html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
-                        }
-                        html += "</optgroup>";
-                    }
-                    $(".categories-select").html(html);
-                })();
             }
         );
+
+        $('.contact-formset').formset({
+            prefix: 'specialist_contacts',
+            addText: 'Добавить контакт',
+            deleteText: ''
+        });
+
+        var categories = [
+            {% for category in all_categories %}
+                {% if category.is_child_node and category.get_children %}
+                    {
+                        "text": "{{ category.name }}",
+                        "children": [
+                            {% for child in category.get_children %}
+                                {
+                                    "id": "{{ child.pk }}",
+                                    "text": "{{ child.name }}",
+                                    "element": HTMLOptionElement
+                                },
+                            {% endfor %}
+                        ],
+                        "element": HTMLOptGroupElement
+                    },
+                {% endif %}
+            {% endfor %}
+        ];
+        (function () {
+            var html = '';
+            for (var i = 0; i < categories.length; i++) {
+                html += "<optgroup label=" + categories[i].text + ">";
+                for (var j = 0; j < categories[i].children.length; j++) {
+                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                }
+                html += "</optgroup>";
+            }
+            $(".categories-select").html(html);
+        })();
     </script>
 {% endblock %}
