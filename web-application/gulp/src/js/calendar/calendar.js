@@ -22,7 +22,8 @@ let app = new Vue({
             current: ''
         },
         lunchTime: [],
-        companies: []
+        companies: [],
+        companiesForClass: []
     },
 
     mounted() {
@@ -436,13 +437,14 @@ let app = new Vue({
             })
         },
         makeClassFromCompany(time) {
-            let index = this.companies.indexOf(time.company);
-            if (index !== -1) {
-                return 'company-' + index
-            } else {
-                this.companies.push(time.company);
-                return 'company-' + (this.companies.length - 1);
-            }
+            let index = this.companies.filter(x => {
+              if (typeof x == 'object') {
+                return x.id === time.company;
+              }
+            })
+            if (index.length > 0) {
+                return 'company-' + index[0].id
+            };
         },
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
