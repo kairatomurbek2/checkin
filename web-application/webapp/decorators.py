@@ -156,3 +156,17 @@ def specialist_status_reservation(function):
     return decotator
 
 
+def administrator(function):
+    def decorator(request, *args, **kwargs):
+        try:
+            company = Company.all_objects.get(slug=kwargs['company_slug'])
+            owner = company.user.filter(owner=True).last().user
+            admin = company.user.filter(administrator=True).last().user
+            if owner == request.user or admin == request.user:
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Company.DoesNotExist:
+            raise Http404("Company not found")
+
+    return decorator

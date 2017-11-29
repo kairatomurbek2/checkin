@@ -18,9 +18,9 @@ from django.views.generic import UpdateView
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
-from webapp.models import Company, Category, Specialist, Invite, Rating, Employees
+from webapp.models import Company, Category, Specialist, Invite, Rating, Employees, Reservation
 from webapp.views.base_views import BaseFormView
-from webapp.views.filters import CompanyFilter
+from webapp.views.filters import CompanyFilter, ReservationFilter
 
 
 class CompanySpecialistList(ListView):
@@ -320,3 +320,19 @@ class AddAdministratorView(CreateView):
         company.user.add(employee)
         company.save()
         return super(AddAdministratorView, self).form_valid(form)
+
+
+class ReservationAdministratorListView(LoginRequiredMixin, ListView):
+    model = Reservation
+    filterset_class = ReservationFilter
+    template_name = 'company/reservation_list_administrator.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationAdministratorListView, self).get_context_data(**kwargs)
+        reservation_filter = self.filterset_class(self.request.GET, queryset=self._get_reservation_list())
+        context['reservation_filter'] = reservation_filter
+        return context
+
+    def _get_reservation_list(self):
+        empployy = Employees.objects.get(user=self.request.user)
+        return Reservation.objects.filter(specialist__company__user=empployy).order_by('-created_at')

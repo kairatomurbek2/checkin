@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% load staticfiles widget_tweaks pagination_tags %}
+
+{% block content %}
+    <main class="order_page">
+        <div class="grid">
+            <form action="" name="reservation_filter" method="get" class="sort">
+                <div class="sort_forms">
+                    <span>Диапазон дат</span>
+                    <div class="date_limit">
+                        c
+                        <div class="fieldset__wrapper">
+                            {{ reservation_filter.form.created_at_from|add_class:"datepicker" }}
+                        </div>
+                    </div>
+
+                    <div class="date_limit">
+                        до
+                        <div class="fieldset__wrapper">
+                            {{ reservation_filter.form.created_at_to|add_class:"datepicker" }}
+                        </div>
+                    </div>
+
+                    <label>Статус
+                        {{ reservation_filter.form.status }}
+                    </label>
+
+                    <button type="submit" class="button">Применить фильтр</button>
+                </div>
+
+                <div class="sort_search">
+                    {{ reservation_filter.form.search }}
+                </div>
+            </form>
+
+            <div class="list_application">
+                <table style="width:100%">
+                    <tr>
+                        <th>Специалист</th>
+                        <th>Время заявки</th>
+                        <th class="center">Имя</th>
+                        <th class="center">Время запиcи</th>
+                        <th class="center">Контакты</th>
+                        <th class="center">Статус</th>
+                    </tr>
+                    {% autopaginate reservation_filter.qs 50 as reservations %}
+                    {% for obj in reservations %}
+                        <tr>
+                        <td>
+                            <a href="{{ obj.specialist.get_absolute_url }}">{{ obj.specialist }}</a>
+                        </td>
+                            <td>
+                                <span>{{ obj.created_at }}</span>
+                            </td>
+                            <td>{{ obj.full_name }}</td>
+                            <td class="center">
+                                <span>{{ obj.date_time_reservation }}</span>
+                            </td>
+                            <td class="center">{{ obj.phone }}</td>
+                            <td class="center">
+                                {% if obj.status == 'armored' %}
+                                    <div class="form_td">
+                                        <form>
+                                            <button type="submit" class="button agree" onclick="setStatus({{obj.id}}, 'confirmed', '{{obj.specialist.slug}}')">Подтвердить</button>
+                                            <button type="submit" class="button disagree" onclick="setStatus({{obj.id}}, 'refused', '{{obj.specialist.slug}}')">Отказать</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                {% if obj.status == 'confirmed' %}
+                                    <div class="confirmed">Подтвержден</div>
+                                {% endif %}
+                                {% if obj.status == 'refused' %}
+                                    <div class="non_confirmed">Отказано</div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <p class="no_result">Нет записей</p>
+                    {% endfor %}
+                </table>
+                {% paginate %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block js %}
+<script>
+    function setStatus(id, status, slug){
+        $.ajax({
+            url: '/api/reservation/status/'+ slug +'/' + id + '/',
+            method: 'put',
+            headers: {
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: {
+                status: status
+            },
+            success: function (response) {
+                if (response.status === 'refused') {
+                    window.location.reload();
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

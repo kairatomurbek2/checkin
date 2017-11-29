@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
 from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check, \
-    user_specialist_create_check, user_company_create_check, login_check_favorite
+    user_specialist_create_check, user_company_create_check, login_check_favorite, specialist_status_reservation, \
+    administrator
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -47,5 +48,7 @@ urlpatterns = [
         name='company_reviews'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/reservations/$',
         specialist_owner(specialist_views.ReservationListView.as_view()), name='master_reservation'),
-    url(r'^favorite/add/', login_check_favorite(landing_views.FavoriteCreateView.as_view()), name='favorites')
+    url(r'^favorite/add/', login_check_favorite(landing_views.FavoriteCreateView.as_view()), name='favorites'),
+    url(r'^companies/(?P<company_slug>[-_\w]+)/reservations/$',
+        administrator(company_views.ReservationAdministratorListView.as_view()), name='administrator_reservation'),
 ]
