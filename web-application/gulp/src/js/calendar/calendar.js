@@ -416,7 +416,6 @@ let app = new Vue({
         },
         sortTimesInMainArray() {
             this.mainArray.forEach(item => {
-                // debugger;
 
                 if (item.times.length > 1 && item.times[0].status === 'holiday') {
                     item.times.splice(0, 1);
@@ -743,7 +742,6 @@ let app = new Vue({
             let sibling = {};
             let gotTime = {};
             let relative = {};
-            debugger;
             if (index === 0) {
                 if (this.scheduleSettings.length > 1) {
                     if (this.scheduleSettings[1][day] && this.scheduleSettings[1][day].time.start.indexOf(":") !== -1) {
@@ -774,11 +772,11 @@ let app = new Vue({
                     }
                 }
                 if (sibling.start) {
-                    if (this.compareScheduleTimes(sibling.start, gotTime) && this.compareScheduleTimes(sibling.end, gotTime)) {
-                        scheduleDay.time.start = value;
-                    } else {
+                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
                         scheduleDay.time.start = sibling.end.init;
                         event.target.value = sibling.end.init;
+                    } else {
+                        scheduleDay.time.start = value;
                     }
                 } else {
                     scheduleDay.time.start = value;
@@ -795,11 +793,11 @@ let app = new Vue({
                     }
                 }
                 if (sibling.end) {
-                    if (this.compareScheduleTimes(sibling.start, gotTime) && this.compareScheduleTimes(sibling.end, gotTime)) {
-                        scheduleDay.time.end = value;
-                    } else {
+                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
                         scheduleDay.time.end = sibling.end.init;
                         event.target.value = sibling.end.init;
+                    } else {
+                        scheduleDay.time.end = value;
                     }
                 } else {
                     scheduleDay.time.end = value;
