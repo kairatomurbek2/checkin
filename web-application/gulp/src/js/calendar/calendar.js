@@ -43,6 +43,10 @@ let app = new Vue({
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
                 this.schedule = response.body;
+                if (this.schedule.length > 0) {
+                    document.querySelector('#prev-week').style.display = 'block';
+                    document.querySelector('#next-week').style.display = 'block';
+                }
                 this.getMasterOrders();
             }, error => {
                 console.error(error);
