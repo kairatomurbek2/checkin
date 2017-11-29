@@ -1159,8 +1159,7 @@ input.day:checked ~ .control--checkbox
   & > a
     display: block
     text-align: center
-    img
-      width: 40px
+    padding-top: 30px
     span
       display: block
       padding: 10px 10px 0 10px
@@ -1176,12 +1175,16 @@ input.day:checked ~ .control--checkbox
 .work_place
   div.place:last-of-type
     border-left: 10px solid #5cacc9
-    & > a span
-      color: #5cacc9
+    & > a
+      background: url("../img/place2.png") center 0 no-repeat
+      span
+        color: #5cacc9
   div.place:first-of-type
     border-left: 10px solid $main-color
-    & > a span
-      color: $main-color
+    & > a
+      background: url("../img/place1.png") center 0 no-repeat
+      span
+        color: $main-color
 
 
 // -----------------EDIT-COMPANY-----------------
@@ -1341,7 +1344,8 @@ h4
   width: 285px
   height: 475px
   background-color: #FDFDFD
-// position: fixed
+  @include from(1400)
+    height: 525px
 
 
 
@@ -1395,6 +1399,8 @@ h4
       height: 330px
       overflow-y: auto
       background-color: #F9F9F9
+      @include from(1400)
+        height: 380px
     label
       display: block
       font-size: 12px
