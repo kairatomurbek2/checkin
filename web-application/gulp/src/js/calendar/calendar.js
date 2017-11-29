@@ -26,11 +26,6 @@ let app = new Vue({
     },
 
     mounted() {
-        if (this.companies.length > 0) {
-            $(".main-wrap-arrows").css("display", "block");
-        } else {
-            $(".main-wrap-arrows").css("display", "none");
-        }
     },
 
     methods: {
@@ -450,8 +445,10 @@ let app = new Vue({
             this.scheduleState = scheduleState;
             this.editorState = editorState;
             if (this.scheduleState) {
-                document.querySelector('#prev-week').style.display = 'block';
-                document.querySelector('#next-week').style.display = 'block';
+                if (this.schedule.length > 0) {
+                    document.querySelector('#prev-week').style.display = 'block';
+                    document.querySelector('#next-week').style.display = 'block';
+                }
                 this.getMasterSchedule();
             } else {
                 document.querySelector('#prev-week').style.display = 'none';
