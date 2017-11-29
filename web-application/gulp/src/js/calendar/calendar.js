@@ -1,8 +1,8 @@
 let app = new Vue({
     el: '#app',
     data: {
-        days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-        localeDays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+        days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+        localeDays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
         intervals: ['10', '15', '20', '30', '40', '1:00', '1:20'],
         dayTime: {},
         schedule: {},

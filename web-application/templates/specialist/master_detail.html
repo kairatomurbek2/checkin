@@ -115,7 +115,7 @@
                 <a class="main-wrap-arrows" style="display: none;" id="next-week" onclick="app.moveToNextWeek();">
                     <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </a>
-                <div id="app" class="main">
+                <div id="app" class="main" v-bind:class="{'editor-main': editorState}">
                     <div class="loader" v-if="!scheduleState && !editorState">
                         {% endverbatim %}
                         <img src="{% static 'img/loader.gif' %}" alt="loader">
