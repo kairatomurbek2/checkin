@@ -1151,6 +1151,39 @@ input.day:checked ~ .control--checkbox
     border-width: 0 2px 2px 0
     transform: rotate(45deg)
 
+
+.place
+  background-color: #fff
+  padding: 20px 0
+  margin-bottom: 4px
+  & > a
+    display: block
+    text-align: center
+    img
+      width: 40px
+    span
+      display: block
+      padding: 10px 10px 0 10px
+  span
+    display: block
+    text-align: center
+    padding: 10px 10px 0 10px
+    i
+      font-size: 16px
+      color: #D6D6D6
+      margin-right: 5px
+
+.work_place
+  div.place:last-of-type
+    border-left: 10px solid #5cacc9
+    & > a span
+      color: #5cacc9
+  div.place:first-of-type
+    border-left: 10px solid $main-color
+    & > a span
+      color: $main-color
+
+
 // -----------------EDIT-COMPANY-----------------
 
 .edit_company

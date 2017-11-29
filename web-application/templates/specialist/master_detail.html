@@ -62,6 +62,25 @@
                 <a href="{% url 'master_edit' master.slug %}">Редактировать</a>
                 {% endif %}
             </div>
+            <div class="work_place">
+                <div class="place">
+                    <a href="#">
+                        <img src="{% static 'img/place1.svg' %}" alt="loader">
+                        <span>Place 1</span>
+                    </a>
+
+                    <span><i class="fa fa-map-marker" aria-hidden="true"></i>  jasdhfaasd fsdafhasdfas 1234</span>
+                </div>
+
+                <div class="place">
+                    <a href="#">
+                        <img src="{% static 'img/place2.svg' %}" alt="loader">
+                        <span>Place 2</span>
+                    </a>
+
+                    <span><i class="fa fa-map-marker" aria-hidden="true"></i>  jasdhfaasd fsdafhasdfas 1234</span>
+                </div>
+            </div>
             {% include 'specialist/reviews.html' %}
         </div>
         <div class="shedule_block">
