@@ -224,11 +224,6 @@
                                                            class="initial-timepicker timepicker timepicker from-time"
                                                            :readonly="!scheduleItem[day].active"
                                                            :value="scheduleItem[day].active ? scheduleItem[day].time.start : ''">
-                                                    <!--<timepicker-->
-                                                            <!--:options="{scheduleItemDay: scheduleItem[day], day: day, index: index, startState: true }"-->
-                                                            <!--v-model="scheduleItem[day].time.start">-->
-                                                    <!--</timepicker>-->
-
                                                 </div>
                                             </div>
                                             <div class="time_limit">
@@ -250,7 +245,7 @@
                                             <select name="interval" v-on:change="scheduleItem[day].interval = $event.target.value;">
                                                 <option
                                                     v-for="interval of intervals"
-                                                    :selected="scheduleItem[day].interval == interval || interval == '30'"
+                                                    :selected="scheduleItem[day].interval == interval"
                                                 >{{interval}}</option>
                                             </select>
                                         </label>
