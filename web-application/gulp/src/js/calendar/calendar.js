@@ -48,6 +48,17 @@ let app = new Vue({
                     document.querySelector('#prev-week').style.display = 'block';
                     document.querySelector('#next-week').style.display = 'block';
                 }
+                this.schedule.forEach(schedule => {
+                   this.companies.forEach(company => {
+                       if (schedule.company === company.id) {
+                           if (this.companies.indexOf(company) === 0) {
+                               schedule.major = true;
+                           } else {
+                               schedule.major = false;
+                           }
+                       }
+                   })
+                });
                 this.getMasterOrders();
             }, error => {
                 console.error(error);
@@ -437,14 +448,13 @@ let app = new Vue({
             })
         },
         makeClassFromCompany(time) {
-            let index = this.companies.filter(x => {
-              if (typeof x == 'object') {
-                return x.id === time.company;
-              }
-            })
-            if (index.length > 0) {
-                return 'company-' + this.companies.indexOf(index[0]);
-            };
+            let result = '';
+            this.schedule.forEach((schedule => {
+                if (schedule.company === time.company) {
+                    schedule.major ? result = 'company-1' : result = 'company-0';
+                }
+            }));
+            return result;
         },
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
