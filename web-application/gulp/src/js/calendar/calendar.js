@@ -712,6 +712,7 @@ let app = new Vue({
                         start: '',
                         end: ''
                     };
+                    dayObj.company = null;
                     this.scheduleSettings.push(dayObj);
                 }
             }
