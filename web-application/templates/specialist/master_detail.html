@@ -64,13 +64,13 @@
             </div>
             <div class="work_place">
                 {% for company in master.company.all %}
-                    <div class="place">
-                        <a href="{{ company.get_absolute_url }}">
-                            <span>{{ company }}</span>
-                        </a>
+                <div class="place">
+                    <a href="{{ company.get_absolute_url }}">
+                        <span>{{ company }}</span>
+                    </a>
 
-                        <span><i class="fa fa-map-marker" aria-hidden="true"></i>{{ company.street_address }}</span>
-                    </div>
+                    <span><i class="fa fa-map-marker" aria-hidden="true"></i>{{ company.street_address }}</span>
+                </div>
                 {% endfor %}
             </div>
             {% include 'specialist/reviews.html' %}
@@ -99,12 +99,12 @@
                 </div>
             </div> -->
             {% else %}
-{#            {% if request.user == master.user %}#}
-{#            <div class="set_time">#}
-{#                <a href="{% url " add_schedule_setting" master.slug %}">#}
-{#                    <i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>#}
-{#            </div>#}
-{#            {% endif %}#}
+            {#            {% if request.user == master.user %}#}
+            {#            <div class="set_time">#}
+            {#                <a href="{% url " add_schedule_setting" master.slug %}">#}
+            {#                    <i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>#}
+            {#            </div>#}
+            {#            {% endif %}#}
             {% endif %}
             <!--VUE App-->
             {% verbatim %}
@@ -199,40 +199,38 @@
                         </a>
                         <div class="table_form">
                             <h4>Настройка времени</h4>
-                            <form v-for="(scheduleItem, index) of scheduleSettings">
+                            <form v-for="(schedule, index) of scheduleSettings">
                                 <div id="true-inputs">
                                     <input type="hidden" class="true_input" id="id_day">
                                 </div>
                                 <div class="shedule_container">
-                                    <span>{{scheduleItem.companyName}}</span>
+                                    <span>{{schedule.companyName}}</span>
                                     <ul class="table_time">
                                         <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of days">
                                             <input
                                                     type="checkbox"
                                                     class="day"
                                                     :id="'day_'+day+index"
-                                                    :checked="scheduleItem[day].active"
-                                                    v-on:change="scheduleItem[day].active = $event.target.checked"
+                                                    :checked="schedule[day].active"
+                                                    v-on:change="schedule[day].active = $event.target.checked"
                                             >
                                             <label class="control control--checkbox" :for="'day_'+day+index">{{localeDays[dayIndex]}}
                                                 <div class="control__indicator"></div>
                                             </label>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <input v-on:change="updateScheduleSettingsTime(scheduleItem[day], day, $event, index, true)"
+                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
-                                                           :readonly="!scheduleItem[day].active"
-                                                           :value="scheduleItem[day].active ? scheduleItem[day].time.start : ''">
+                                                           :value="schedule[day].active ? schedule[day].time.start : ''">
                                                 </div>
                                             </div>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <input v-on:change="updateScheduleSettingsTime(scheduleItem[day], day, $event, index, false)"
+                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"
                                                            type="text"
                                                            class="next-timepicker timepicker to-time"
-                                                           :readonly="!scheduleItem[day].active"
-                                                           :value="scheduleItem[day].active ? scheduleItem[day].time.end : ''">
+                                                           :value="schedule[day].active ? schedule[day].time.end : ''">
                                                 </div>
                                             </div>
                                         </li>
@@ -242,11 +240,9 @@
                                     <span>Интервал приема:</span>
                                     <div class="interval">
                                         <label v-for="day of days">
-                                            <select name="interval" v-on:change="scheduleItem[day].interval = $event.target.value;">
+                                            <select name="interval" v-on:change="schedule[day].interval = $event.target.value;">
                                                 <option
-                                                    v-for="interval of intervals"
-                                                    :selected="scheduleItem[day].interval == interval"
-                                                >{{interval}}</option>
+                                                        v-for="interval of intervals" :selected="schedule[day].interval == interval">{{interval}}</option>
                                             </select>
                                         </label>
                                     </div>
@@ -254,29 +250,27 @@
                                         <ul>
                                             <li v-for="day of days">
                                                 <input type="checkbox" class="day" :id="'live_'+day+index"
-                                                       :checked="scheduleItem[day].active && scheduleItem[day].liveState"
-                                                       v-on:change="scheduleItem[day].liveState = $event.target.checked"
+                                                       :checked="schedule[day].active && schedule[day].liveState"
+                                                       v-on:change="schedule[day].liveState = $event.target.checked"
                                                 >
                                                 <label class="control control--checkbox" :for="'live_'+day+index">Живая очередь
                                                     <div class="control__indicator"></div>
                                                 </label>
                                                 <div class="turn_interval">
                                                     <div class="fieldset__wrapper">
-                                                        <input v-on:change="updateLiveQueue(scheduleItem[day], $event, true)"
+                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
                                                                type="text"
                                                                class="timepicker live-timepicker-start"
-                                                               :readonly="!scheduleItem[day].active"
-                                                               :value="(scheduleItem[day].live_recording) ?
-                                                               scheduleItem[day].live_recording.start: 'c'">
+                                                               :value="(schedule[day].live_recording) ?
+                                                               schedule[day].live_recording.start: 'c'">
                                                     </div>
 
                                                     <div class="fieldset__wrapper">
-                                                        <input v-on:change="updateLiveQueue(scheduleItem[day], $event, false)"
+                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
                                                                type="text"
                                                                class="timepicker live-timepicker-end"
-                                                               :readonly="!scheduleItem[day].active"
-                                                               :value="(scheduleItem[day] && scheduleItem[day].live_recording) ?
-                                                               scheduleItem[day].live_recording.end: 'до'">
+                                                               :value="(schedule[day] && schedule[day].live_recording) ?
+                                                               schedule[day].live_recording.end: 'до'">
                                                     </div>
                                                 </div>
                                             </li>
@@ -292,7 +286,7 @@
                                                         type="text"
                                                         class="timepicker from-time"
                                                         placeholder=""
-                                                        v-bind:value="(scheduleItem.lunch_settings && scheduleItem.lunch_settings.start) ? scheduleItem.lunch_settings.start : ''"
+                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"
                                                         v-on:change="updateLunchTime(index, $event.target.value, true)">
                                             </div>
                                         </div>
@@ -302,12 +296,12 @@
                                                         type="text"
                                                         class="timepicker to-time"
                                                         placeholder=""
-                                                        v-bind:value="(scheduleItem.lunch_settings && scheduleItem.lunch_settings.end) ? scheduleItem.lunch_settings.end : ''"
+                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"
                                                         v-on:change="updateLunchTime(index, $event.target.value, false)">
                                             </div>
                                         </div>
                                     </div>
-                                    <button v-on:click="submitSchedule($event, index, scheduleItem.active)" class="button">Отправить</button>
+                                    <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
                                 </div>
                             </form>
                         </div>
@@ -384,14 +378,15 @@
     let masterUser = false;
     let companies = [];
     {% if request.user == master.user or user.id in owners or user.id in administrator %}
-        masterUser = true;
+    masterUser = true;
     {% endif %}
     {% for company in master.company.all %}
-        companies.push({
-          name: '{{ company.name }}',
-          id: {{company.id}}
-        })
+    companies.push({
+        name: '{{ company.name }}',
+        id: {{company.id}}
+    })
     {% endfor %}
     app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies);
 </script>
 {% endblock %}
+

@@ -3,7 +3,7 @@ let app = new Vue({
     data: {
         days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
         localeDays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-        intervals: ['30', '10', '15', '20', '40', '1:00', '1:20'],
+        intervals: ['10', '15', '20', '30', '40', '1:00', '1:20'],
         dayTime: {},
         schedule: {},
         scheduleSettings: [],
@@ -23,8 +23,7 @@ let app = new Vue({
         },
         lunchTime: [],
         companies: [],
-        companiesForClass: [],
-        testVar: ''
+        companiesForClass: []
     },
 
     mounted() {
@@ -50,15 +49,15 @@ let app = new Vue({
                     document.querySelector('#next-week').style.display = 'block';
                 }
                 this.schedule.forEach(schedule => {
-                   this.companies.forEach(company => {
-                       if (schedule.company === company.id) {
-                           if (this.companies.indexOf(company) === 0) {
-                               schedule.major = true;
-                           } else {
-                               schedule.major = false;
-                           }
-                       }
-                   })
+                    this.companies.forEach(company => {
+                        if (schedule.company === company.id) {
+                            if (this.companies.indexOf(company) === 0) {
+                                schedule.major = true;
+                            } else {
+                                schedule.major = false;
+                            }
+                        }
+                    })
                 });
                 this.getMasterOrders();
             }, error => {
@@ -654,8 +653,7 @@ let app = new Vue({
                                             start: '',
                                             end: ''
                                         },
-                                        interval: '',
-                                        active: false
+                                        interval: ''
                                     }
                                 });
                                 dayObj.active = false;
@@ -688,8 +686,7 @@ let app = new Vue({
                                     start: '',
                                     end: ''
                                 },
-                                interval: '',
-                                active: false
+                                interval: ''
                             }
                         });
                         dayObj.active = false;
@@ -717,8 +714,7 @@ let app = new Vue({
                                 start: '',
                                 end: ''
                             },
-                            interval: '',
-                            active: false
+                            interval: ''
                         }
                     });
                     dayObj.active = false;
@@ -919,3 +915,4 @@ let app = new Vue({
         }
     }
 });
+
