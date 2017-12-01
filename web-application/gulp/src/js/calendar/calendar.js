@@ -1,9 +1,11 @@
 let app = new Vue({
     el: '#app',
     data: {
-        days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-        localeDays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-        intervals: ['10', '15', '20', '30', '40', '1:00', '1:20'],
+        days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+        localeDays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+        editorDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+        editorLocaleDays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+        intervals: ['30', '10', '15', '20', '40', '1:00', '1:20'],
         dayTime: {},
         schedule: {},
         scheduleSettings: [],
@@ -513,7 +515,7 @@ let app = new Vue({
                                             start: '',
                                             end: ''
                                         };
-                                        schedule[day].interval = '';
+                                        schedule[day].interval = this.intervals[0];
                                     }
                                     if (schedule[day].active) {
                                         schedule[day].time = {
@@ -601,7 +603,7 @@ let app = new Vue({
                                                     start: '',
                                                     end: ''
                                                 };
-                                                schedule[day].interval = '';
+                                                schedule[day].interval = this.intervals[0];
                                             }
                                             if (schedule[day].active) {
                                                 schedule[day].time = {
@@ -653,7 +655,8 @@ let app = new Vue({
                                             start: '',
                                             end: ''
                                         },
-                                        interval: ''
+                                        interval: this.intervals[0],
+                                        active: false
                                     }
                                 });
                                 dayObj.active = false;
@@ -686,7 +689,8 @@ let app = new Vue({
                                     start: '',
                                     end: ''
                                 },
-                                interval: ''
+                                interval: this.intervals[0],
+                                active: false
                             }
                         });
                         dayObj.active = false;
@@ -714,7 +718,8 @@ let app = new Vue({
                                 start: '',
                                 end: ''
                             },
-                            interval: ''
+                            interval: this.intervals[0],
+                            active: false
                         }
                     });
                     dayObj.active = false;
@@ -915,4 +920,3 @@ let app = new Vue({
         }
     }
 });
-

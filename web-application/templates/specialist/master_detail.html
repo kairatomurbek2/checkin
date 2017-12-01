@@ -121,6 +121,7 @@
                         <img src="{% static 'img/loader.gif' %}" alt="loader">
                         {% verbatim %}
                     </div>
+
                     <div class="weekdays-wrap" v-if="scheduleState">
                         <div class="edit-schedule-wrap">
                             {% endverbatim %}
@@ -206,7 +207,7 @@
                                 <div class="shedule_container">
                                     <span>{{schedule.companyName}}</span>
                                     <ul class="table_time">
-                                        <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of days">
+                                        <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of editorDays">
                                             <input
                                                     type="checkbox"
                                                     class="day"
@@ -214,7 +215,7 @@
                                                     :checked="schedule[day].active"
                                                     v-on:change="schedule[day].active = $event.target.checked"
                                             >
-                                            <label class="control control--checkbox" :for="'day_'+day+index">{{localeDays[dayIndex]}}
+                                            <label class="control control--checkbox" :for="'day_'+day+index">{{editorLocaleDays[dayIndex]}}
                                                 <div class="control__indicator"></div>
                                             </label>
                                             <div class="time_limit">
@@ -222,6 +223,7 @@
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
+                                                           :readonly="!schedule[day].active"
                                                            :value="schedule[day].active ? schedule[day].time.start : ''">
                                                 </div>
                                             </div>
@@ -230,6 +232,7 @@
                                                     <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"
                                                            type="text"
                                                            class="next-timepicker timepicker to-time"
+                                                           :readonly="!schedule[day].active"
                                                            :value="schedule[day].active ? schedule[day].time.end : ''">
                                                 </div>
                                             </div>
@@ -239,16 +242,18 @@
                                 <div class="interval_block">
                                     <span>Интервал приема:</span>
                                     <div class="interval">
-                                        <label v-for="day of days">
+                                        <label v-for="day of editorDays">
                                             <select name="interval" v-on:change="schedule[day].interval = $event.target.value;">
                                                 <option
-                                                        v-for="interval of intervals" :selected="schedule[day].interval == interval">{{interval}}</option>
+                                                        v-for="interval of intervals"
+                                                        :selected="schedule[day].interval == interval"
+                                                        >{{interval}}</option>
                                             </select>
                                         </label>
                                     </div>
                                     <div class="live_turn">
                                         <ul>
-                                            <li v-for="day of days">
+                                            <li v-for="day of editorDays">
                                                 <input type="checkbox" class="day" :id="'live_'+day+index"
                                                        :checked="schedule[day].active && schedule[day].liveState"
                                                        v-on:change="schedule[day].liveState = $event.target.checked"
@@ -261,6 +266,7 @@
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
                                                                type="text"
                                                                class="timepicker live-timepicker-start"
+                                                               :readonly="!schedule[day].active"
                                                                :value="(schedule[day].live_recording) ?
                                                                schedule[day].live_recording.start: 'c'">
                                                     </div>
@@ -269,6 +275,7 @@
                                                         <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
                                                                type="text"
                                                                class="timepicker live-timepicker-end"
+                                                               :readonly="!schedule[day].active"
                                                                :value="(schedule[day] && schedule[day].live_recording) ?
                                                                schedule[day].live_recording.end: 'до'">
                                                     </div>
@@ -306,6 +313,7 @@
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
             {% endverbatim %}
@@ -389,4 +397,3 @@
     app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies);
 </script>
 {% endblock %}
-
