@@ -68,7 +68,7 @@
             <div class="shedule_block">
                 {% include 'messages.html' %}
                 {% if company.longitude and company.latitude %}
-                    <div id="mapholder" style="height: 250px;"></div>
+                    <div id="map" style="width:100%; height:300px; margin-bottom: 10px;"></div>
                 {% endif %}
                 <div class="p_description">
                     <div>
@@ -103,23 +103,42 @@
 {% endblock %}
 
 {% block js %}
+    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
     <script type="text/javascript">
 
-        function initMap() {
+        DG.then(function () {
+            var map,
+                marker;
+
             var tmp_lt = '{{ company.latitude|default_if_none:0 }}';
             var tmp_ln = '{{ company.longitude|default_if_none:0 }}';
             var lt = tmp_lt.replace(",", ".");
             var ln = tmp_ln.replace(",", ".");
-            var uluru = {lat: parseFloat(lt), lng: parseFloat(ln)};
-            var map = new google.maps.Map(document.getElementById('mapholder'), {
-                zoom: 17,
-                center: uluru
+
+            map = DG.map('map', {
+                center: [lt, ln],
+                zoom: 15
             });
-            var marker = new google.maps.Marker({
-                position: uluru,
-                map: map
-            });
-        }
+
+            marker = DG.marker([42.8735868, 74.5768934]).addTo(map);
+
+        });
+
+{#        function initMap() {#}
+{#            var tmp_lt = '{{ company.latitude|default_if_none:0 }}';#}
+{#            var tmp_ln = '{{ company.longitude|default_if_none:0 }}';#}
+{#            var lt = tmp_lt.replace(",", ".");#}
+{#            var ln = tmp_ln.replace(",", ".");#}
+{#            var uluru = {lat: parseFloat(lt), lng: parseFloat(ln)};#}
+{#            var map = new google.maps.Map(document.getElementById('mapholder'), {#}
+{#                zoom: 17,#}
+{#                center: uluru#}
+{#            });#}
+{#            var marker = new google.maps.Marker({#}
+{#                position: uluru,#}
+{#                map: map#}
+{#            });#}
+{#        }#}
 
     </script>
     <script async defer

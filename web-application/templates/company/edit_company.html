@@ -110,11 +110,13 @@
 
                         <p>Ваше расположение</p>
 
-                        <div id="mapholder-0" style="height: 250px; margin-bottom: 20px"></div>
-                        <button type="button" name="get-location-0" class="get_location"
-                                data-action="get-location">
-                            Определить местоположение
-                        </button>
+{#                        <div id="mapholder-0" style="height: 250px; margin-bottom: 20px"></div>#}
+{#                        <button type="button" name="get-location-0" class="get_location"#}
+{#                                data-action="get-location">#}
+{#                            Определить местоположение#}
+{#                        </button>#}
+                        <div id="map" style="width:100%; height:300px; margin-bottom: 10px;"></div>
+                        <button id="find-location">Определить местоположение</button>
                         <span id="notification-0" class="uk-text-danger"></span>
                         {{ form.latitude|add_class:"hidden" }} {{ form.longitude|add_class:"hidden" }}
 
@@ -155,7 +157,8 @@
 {% endblock %}
 {% block js %}
     <script src="{% static 'js/main.js' %}"></script>
-    {% load_google_map_js %}
+{#    {% load_google_map_js %}#}
+    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
@@ -189,14 +192,64 @@
             deleteText: ''
         });
 
-        $(document).ready(function () {
-            GoogleMap.mapHolder = $('#mapholder-0');
-            GoogleMap.latitudeInput = $('input[name="latitude"]');
-            GoogleMap.longitudeInput = $('input[name="longitude"]');
-            GoogleMap.notificationLabel = $('#notification-0');
-            GoogleMap.getLocationButton = $('button[data-action="get-location"]');
-            GoogleMap.initialize(true);
+        var latitude = $('#id_latitude');
+        var longitude = $('#id_longitude');
+        var findLocation = $('#find-location');
+
+        DG.then(function () {
+            var map,
+                marker;
+
+            map = DG.map('map', {
+                center: [42.8735868, 74.5768934],
+                zoom: 10
+            });
+
+            marker = DG.marker([42.8735868, 74.5768934], {
+                draggable: true
+            }).addTo(map).bindLabel('Перетащите маркер!');
+
+            latitude.val(42.8735868);
+            longitude.val(74.5768934);
+
+            marker.on('drag', function (e) {
+                var lat = e.target._latlng.lat.toFixed(3),
+                    lng = e.target._latlng.lng.toFixed(3);
+
+
+                latitude.val(lat);
+                longitude.val(lng);
+            });
+
+            findLocation.on('click', function (e) {
+                map.locate({setView: true})
+                    .on('locationfound', function (e) {
+
+                        marker.setLatLng([e.latitude, e.longitude]);
+
+                        latitude.val(e.latitude);
+                        longitude.val(e.longitude);
+                    })
+                    .on('locationerror', function (e) {
+                        DG.popup()
+                            .setLatLng(map.getCenter())
+                            .setContent('Доступ к определению местоположения отключён')
+                            .openOn(map);
+                    });
+
+                e.preventDefault();
+            });
+
         });
+
+{#        $(document).ready(function () {#}
+{#            GoogleMap.mapHolder = $('#mapholder-0');#}
+{#            GoogleMap.latitudeInput = $('input[name="latitude"]');#}
+{#            GoogleMap.longitudeInput = $('input[name="longitude"]');#}
+{#            GoogleMap.notificationLabel = $('#notification-0');#}
+{#            GoogleMap.getLocationButton = $('button[data-action="get-location"]');#}
+{#            GoogleMap.initialize(true);#}
+{#        });#}
 
         var categories = [
             {% for category in categories %}
