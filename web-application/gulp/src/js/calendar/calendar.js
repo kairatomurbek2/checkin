@@ -477,7 +477,7 @@ let app = new Vue({
         getScheduleSettings() {
             this.scheduleSettings = [];
             if (this.schedule.length > 0) {
-                if (this.schedule.length === this.companies.length) {
+                if (this.schedule.length >= this.companies.length) {
                     this.schedule.forEach((schedule, index) => {
                         let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
                         let options = {
@@ -552,7 +552,8 @@ let app = new Vue({
                             }
                         )
                     });
-                } else {
+                }
+                else {
                     this.companies.forEach(company => {
                         if (typeof company === 'object') {
                             let lunchIndex = 0;
