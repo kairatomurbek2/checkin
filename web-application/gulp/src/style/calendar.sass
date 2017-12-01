@@ -48,7 +48,7 @@
   .main
     position: relative
     width: 100%
-    max-height: 406px
+    //max-height: 406px
     padding-right: 25px
     display: flex
     justify-content: space-between
@@ -69,12 +69,12 @@
     display: flex
     justify-content: space-between
     width: 100%
-    padding: 5px
+    //padding: 5px
 
   .weekdays-scroll
     overflow-y: scroll
-    max-height: 350px
-
+    //max-height: 350px
+    height: 444px
   .weekday
     padding: 0 10px
     text-align: center
@@ -121,8 +121,11 @@
     &.company-4
       background: #5BACCA
 
-  .time:hover:not(.taken)
+  .time:hover
+    cursor: default
+  .free:hover
     background-color: #04c1bd
+    cursor: pointer
 
   .time.armored
     opacity: 0.7
@@ -256,13 +259,15 @@
 .order-action:hover
   cursor: pointer
 
+//.editor-main
+//  padding-right: 0
 
 .time-editor
   width: 100%
-  overflow-y: scroll
+  //overflow-y: scroll
 
   form
-    margin-bottom: 100px
+    //margin-bottom: 100px
 
   .weekday-input
     padding-bottom: 40px
