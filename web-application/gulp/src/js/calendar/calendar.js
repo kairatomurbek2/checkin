@@ -60,6 +60,9 @@ let app = new Vue({
                             }
                         }
                     })
+                    if (companies.length === 0) {
+                      this.schedule.forEach(schedule => { schedule.major = true });
+                    }
                 });
                 this.getMasterOrders();
             }, error => {
