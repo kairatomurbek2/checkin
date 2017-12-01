@@ -322,7 +322,8 @@ let app = new Vue({
             let body = {
                 full_name: this.record.name,
                 phone: this.record.phone,
-                date_time_reservation: '' + this.record.time.getFullYear() + '-' + (this.record.time.getMonth() + 1) + '-' + this.record.time.getDate() +
+                date_time_reservation: '' + this.record.time.getFullYear() + '-' + (this.record.time.getMonth() + 1) +
+                '-' + this.record.time.getDate() +
                 ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
                 ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
                 status: 'armored'
@@ -350,10 +351,10 @@ let app = new Vue({
                     this.reservations.push(this.record);
                     setTimeout(function () {
                         document.querySelector('.order-modal-wrap').style.display = 'none';
+                        document.querySelector('.blur').style.filter = 'none';
                         document.querySelector('.success').innerHTML = '';
                         document.querySelector('.success').style.display = '';
                         document.querySelector('.error').innerHTML = '';
-                        this.cleanOrderPopup();
                     }, 3000);
                 } else {
                     document.querySelector('.error').style.display = 'block';
