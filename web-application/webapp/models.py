@@ -307,8 +307,6 @@ class ScheduleSetting(models.Model):
     saturday = models.ForeignKey(WorkDay, verbose_name=_('Суббота'), related_name='saturdays', null=True, blank=True)
     sunday = models.ForeignKey(WorkDay, verbose_name=_('Воскресенье'), related_name='sundays', null=True, blank=True)
 
-    def __str__(self):
-        return self.specialist.full_name
 
     class Meta:
         verbose_name = _('Настройка расписание')
