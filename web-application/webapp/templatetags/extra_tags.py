@@ -33,3 +33,12 @@ def multiply(count):
 @register.simple_tag()
 def percent_converter(rating):
     return rating * 20
+#
+#
+# @register.simple_tag()
+# def user_company(company, request):
+#     user = request.user
+#     if user.employee in company:
+#         return company
+#     else:
+#         return ''
