@@ -1,3 +1,47 @@
+Vue.component('timepicker', {
+    props: ['options'],
+    template: '<input type="text">',
+
+
+    mounted: function () {
+        var vm = this;
+        $(this.$el)
+            .pickatime({
+                format: 'HH:i',
+                min: [6, 0],
+                max: [21, 0],
+                interval: 60,
+                clear: ''
+            })
+            .val(this.value)
+            .trigger('change')
+            // emit event on change.
+            .on('change', function () {
+                vm.$emit('input', this.value)
+            })
+    },
+    watch: {
+        value: function (value) {
+            // update value
+            
+            $(this.$el).val(value)
+          },
+        options: function (options) {
+            // update options
+            $(this.$el)
+                .empty()
+                .pickatime({
+                    format: 'HH:i',
+                    min: [6, 0],
+                    max: [21, 0],
+                    interval: 60,
+                    clear: ''
+            })
+        }
+    }
+})
+
+
 let app = new Vue({
     el: '#app',
     data: {
@@ -14,6 +58,7 @@ let app = new Vue({
         period: 6,
         record: {},
         reservations: null,
+        testTime: '',
         mainArray: [],
         _masterSlug: '',
         _masterUser: '',
