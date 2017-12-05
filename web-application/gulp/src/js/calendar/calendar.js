@@ -1,45 +1,51 @@
 Vue.component('timepicker', {
     props: ['options'],
-    template: '<input type="text">',
+    template: '<input class="timepicker" type="text" v-bind:readonly="!options.daySchedule.active">',
 
 
     mounted: function () {
         var vm = this;
-        $(this.$el)
-            .pickatime({
-                format: 'HH:i',
-                min: [6, 0],
-                max: [21, 0],
-                interval: 60,
-                clear: ''
-            })
-            .val(this.value)
-            .trigger('change')
-            // emit event on change.
-            .on('change', function () {
-                vm.$emit('input', this.value)
-            })
-    },
-    watch: {
-        value: function (value) {
-            // update value
-            
-            $(this.$el).val(value)
-          },
-        options: function (options) {
-            // update options
+        if (this.options.daySchedule.active) {
             $(this.$el)
-                .empty()
                 .pickatime({
                     format: 'HH:i',
                     min: [6, 0],
                     max: [21, 0],
                     interval: 60,
                     clear: ''
-            })
+                })
+                .val(this.value)
+                .trigger('change')
+                // emit event on change.
+                .on('change', function () {
+                    vm.$emit('input', this.value)
+                })
         }
+    },
+    watch: {
+        value: function (value) {
+            // update value
+            $(this.$el).val(value)
+        },
+        options: function (options) {
+            // update options
+            if (options.daySchedule.active) {
+                $(this.$el).pickatime('stop').pickatime({
+                    format: 'HH:i',
+                    min: [6, 0],
+                    max: [21, 0],
+                    interval: 60,
+                    clear: ''
+                })
+            } else {
+                $(this.$el).pickatime('stop');
+            }
+        }
+    },
+    destroyed: function () {
+        $(this.$el).pickatime('stop');
     }
-})
+});
 
 
 let app = new Vue({
@@ -106,7 +112,9 @@ let app = new Vue({
                         }
                     })
                     if (companies.length === 0) {
-                      this.schedule.forEach(schedule => { schedule.major = true });
+                        this.schedule.forEach(schedule => {
+                            schedule.major = true
+                        });
                     }
                 });
                 this.getMasterOrders();

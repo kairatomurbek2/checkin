@@ -220,11 +220,15 @@
                                             </label>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
+                                                    <!-- <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
                                                            :readonly="!schedule[day].active"
-                                                           :value="schedule[day].active ? schedule[day].time.start : ''">
+                                                           :value="schedule[day].active ? schedule[day].time.start : ''"> -->
+                                                    <timepicker 
+                                                        :options="{daySchedule: schedule[day], day: day, index: index}"
+                                                        v-model="schedule[day].time.start">
+                                                    </timepicker>
                                                 </div>
                                             </div>
                                             <div class="time_limit">
@@ -311,7 +315,6 @@
                                     <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
                                 </div>
                             </form>
-                            <timepicker :options="{hello: 123}"></timepicker>
                         </div>
                     </div>
                 </div>
