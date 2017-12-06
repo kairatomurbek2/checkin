@@ -220,20 +220,30 @@
                                             </label>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
+                                                    <!-- <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
                                                            type="text"
                                                            class="initial-timepicker timepicker timepicker from-time"
                                                            :readonly="!schedule[day].active"
-                                                           :value="schedule[day].active ? schedule[day].time.start : ''">
+                                                           :value="schedule[day].active ? schedule[day].time.start : ''"> -->
+                                                    <timepicker
+                                                        :value="this.value"
+                                                        :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
+                                                        v-model="schedule[day].time.start">
+                                                    </timepicker>
                                                 </div>
                                             </div>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"
-                                                           type="text"
-                                                           class="next-timepicker timepicker to-time"
-                                                           :readonly="!schedule[day].active"
-                                                           :value="schedule[day].active ? schedule[day].time.end : ''">
+                                                    <!--<input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"-->
+                                                           <!--type="text"-->
+                                                           <!--class="next-timepicker timepicker to-time"-->
+                                                           <!--:readonly="!schedule[day].active"-->
+                                                           <!--:value="schedule[day].active ? schedule[day].time.end : ''">-->
+                                                    <timepicker
+                                                            :value="this.value"
+                                                            :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
+                                                            v-model="schedule[day].time.end">
+                                                    </timepicker>
                                                 </div>
                                             </div>
                                         </li>
@@ -263,21 +273,29 @@
                                                 </label>
                                                 <div class="turn_interval">
                                                     <div class="fieldset__wrapper">
-                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, true)"
-                                                               type="text"
-                                                               class="timepicker live-timepicker-start"
-                                                               :readonly="!schedule[day].active"
-                                                               :value="(schedule[day].live_recording) ?
-                                                               schedule[day].live_recording.start: 'c'">
+                                                        <!--<input v-on:change="updateLiveQueue(schedule[day], $event, true)"-->
+                                                               <!--type="text"-->
+                                                               <!--class="timepicker live-input"-->
+                                                               <!--:value="(schedule[day].live_recording) ?-->
+                                                               <!--schedule[day].live_recording.start: 'c'">-->
+                                                        <live-timepicker
+                                                                :value="this.value"
+                                                                :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
+                                                                v-model="schedule[day].live_recording.start">
+                                                        </live-timepicker>
                                                     </div>
 
                                                     <div class="fieldset__wrapper">
-                                                        <input v-on:change="updateLiveQueue(schedule[day], $event, false)"
-                                                               type="text"
-                                                               class="timepicker live-timepicker-end"
-                                                               :readonly="!schedule[day].active"
-                                                               :value="(schedule[day] && schedule[day].live_recording) ?
-                                                               schedule[day].live_recording.end: 'до'">
+                                                        <!--<input v-on:change="updateLiveQueue(schedule[day], $event, false)"-->
+                                                               <!--type="text"-->
+                                                               <!--class="timepicker live-input"-->
+                                                               <!--:value="(schedule[day] && schedule[day].live_recording) ?-->
+                                                               <!--schedule[day].live_recording.end: 'до'">-->
+                                                        <live-timepicker
+                                                                :value="this.value"
+                                                                :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
+                                                                v-model="schedule[day].live_recording.end">
+                                                        </live-timepicker>
                                                     </div>
                                                 </div>
                                             </li>
@@ -291,7 +309,7 @@
                                             <div class="fieldset__wrapper">
                                                 <input
                                                         type="text"
-                                                        class="timepicker from-time"
+                                                        class="timepicker from-time lunch-time"
                                                         placeholder=""
                                                         v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"
                                                         v-on:change="updateLunchTime(index, $event.target.value, true)">
@@ -301,7 +319,7 @@
                                             <div class="fieldset__wrapper">
                                                 <input
                                                         type="text"
-                                                        class="timepicker to-time"
+                                                        class="timepicker to-time lunch-time"
                                                         placeholder=""
                                                         v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"
                                                         v-on:change="updateLunchTime(index, $event.target.value, false)">
@@ -313,7 +331,6 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
             {% endverbatim %}
