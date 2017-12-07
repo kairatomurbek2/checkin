@@ -205,6 +205,70 @@ Vue.component('live-timepicker', {
         this.picker.stop();
     }
 });
+Vue.component('lunch-timepicker', {
+    props: ['options', 'value'],
+    template: '<input class="timepicker" :value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
+    '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
+
+    data: function () {
+        return {
+            interval: 10,
+            picker: ''
+        }
+    },
+
+    mounted: function () {
+        let vm = this;
+        let picker = $(this.$el).pickatime({
+            format: 'HH:i',
+            min: [7, 0],
+            max: [20, 0],
+            interval: vm.interval,
+            clear: ''
+        }).val(this.value).trigger('change').on('change', function () {
+            vm.$emit('input', this.value)
+        });
+        this.picker = picker.pickatime('picker');
+    },
+    watch: {
+        value: function (value) {
+            if (this.options.start) {
+                this.options.schedule.lunch_settings.start = value;
+            } else {
+                this.options.schedule.lunch_settings.end = value;
+            }
+
+        },
+        options: function (options) {
+            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start);
+            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end);
+            if (!startTime) {
+                startTime = {
+                    hours: 7,
+                    minutes: 0
+                }
+            }
+            if (!endTime) {
+                endTime = {
+                    hours: 20,
+                    minutes: 0
+                }
+            }
+            if (this.options.start) {
+                this.picker.set({
+                    max: [endTime.hours, endTime.minutes]
+                })
+            } else {
+                this.picker.set({
+                    min: [startTime.hours, startTime.minutes]
+                })
+            }
+        }
+    },
+    destroyed: function () {
+        this.picker.stop();
+    }
+});
 
 let app = new Vue({
     el: '#app',

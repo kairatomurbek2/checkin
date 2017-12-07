@@ -99,12 +99,12 @@
                 </div>
             </div> -->
             {% else %}
-            {#            {% if request.user == master.user %}#}
-            {#            <div class="set_time">#}
-            {#                <a href="{% url " add_schedule_setting" master.slug %}">#}
-            {#                    <i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>#}
-            {#            </div>#}
-            {#            {% endif %}#}
+                <!--{% if request.user == master.user %}-->
+                <!--<div class="set_time">-->
+                    <!--<a href="{% url " add_schedule_setting" master.slug %}">-->
+                        <!--<i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>-->
+                <!--</div>-->
+                <!--{% endif %}-->
             {% endif %}
             <!--VUE App-->
             {% verbatim %}
@@ -307,22 +307,34 @@
                                         <span>Перерыв на обед:</span>
                                         <div class="time_limit">с
                                             <div class="fieldset__wrapper">
-                                                <input
-                                                        type="text"
-                                                        class="timepicker from-time lunch-time"
-                                                        placeholder=""
-                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"
-                                                        v-on:change="updateLunchTime(index, $event.target.value, true)">
+                                                <!--<input-->
+                                                        <!--type="text"-->
+                                                        <!--class="timepicker from-time lunch-time"-->
+                                                        <!--placeholder=""-->
+                                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"-->
+                                                        <!--v-on:change="updateLunchTime(index, $event.target.value, true)">-->
+                                                <lunch-timepicker
+                                                        :options="{index: index, schedule: schedule, start: true}"
+                                                        :value="this.value"
+                                                        v-model="schedule.lunch_settings.start"
+                                                >
+                                                </lunch-timepicker>
                                             </div>
                                         </div>
                                         <div class="time_limit">до
                                             <div class="fieldset__wrapper">
-                                                <input
-                                                        type="text"
-                                                        class="timepicker to-time lunch-time"
-                                                        placeholder=""
-                                                        v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"
-                                                        v-on:change="updateLunchTime(index, $event.target.value, false)">
+                                                <!--<input-->
+                                                        <!--type="text"-->
+                                                        <!--class="timepicker to-time lunch-time"-->
+                                                        <!--placeholder=""-->
+                                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"-->
+                                                        <!--v-on:change="updateLunchTime(index, $event.target.value, false)">-->
+                                                <lunch-timepicker
+                                                        :options="{index: index, schedule: schedule, start: false}"
+                                                        :value="this.value"
+                                                        v-model="schedule.lunch_settings.end"
+                                                >
+                                                </lunch-timepicker>
                                             </div>
                                         </div>
                                     </div>
@@ -331,6 +343,7 @@
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
             {% endverbatim %}
