@@ -172,6 +172,9 @@
                         </a>
                         <div class="table_form">
                             <h4>Настройка времени</h4>
+                            <div class="local-loader" :hidden="!localLoaderState">
+                                <img src="{% endverbatim %} {% static 'img/loader.gif' %} {% verbatim %}" alt="">
+                            </div>
                             <form v-for="(schedule, index) of scheduleSettings">
                                 <div id="true-inputs">
                                     <input type="hidden" class="true_input" id="id_day">

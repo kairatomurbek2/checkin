@@ -304,6 +304,7 @@ let app = new Vue({
         scheduleSettings: [],
         scheduleState: true,
         editorState: false,
+        localLoaderState: false,
         period: 6,
         record: {},
         reservations: null,
@@ -327,6 +328,7 @@ let app = new Vue({
     methods: {
         // calendar methods
         getDataFromDjango(val, slug, csrfToken, companies) {
+            this.toggleLocalLoader(true);
             this._masterSlug = slug;
             this._masterUser = val;
             this._csrfToken = csrfToken;
@@ -369,6 +371,7 @@ let app = new Vue({
                 this.reservations = response.body;
                 this.doCorrectDateInOrders();
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
+                this.toggleLocalLoader(false);
             }, error => {
                 console.error(error);
             })
@@ -772,8 +775,12 @@ let app = new Vue({
                 this.getScheduleSettings();
             }
         },
+        toggleLocalLoader(status) {
+            this.localLoaderState = status;
+        },
         // editor methods
         getScheduleSettings() {
+            this.toggleLocalLoader(true);
             this.scheduleSettings = [];
             if (this.schedule.length > 0) {
                 if (this.schedule.length >= this.companies.length) {
@@ -845,9 +852,11 @@ let app = new Vue({
                                 });
                                 schedule.active = true;
                                 this.scheduleSettings.push(schedule);
+                                this.toggleLocalLoader(false);
                             },
                             error => {
                                 console.log(error);
+                                this.toggleLocalLoader(false);
                             }
                         )
                     });
@@ -933,9 +942,11 @@ let app = new Vue({
                                         });
                                         schedule.active = true;
                                         this.scheduleSettings.push(schedule);
+                                        this.toggleLocalLoader(false);
                                     },
                                     error => {
                                         console.log(error);
+                                        this.toggleLocalLoader(false);                                        
                                     }
                                 )
                             }
@@ -966,6 +977,7 @@ let app = new Vue({
                                     end: ''
                                 };
                                 this.scheduleSettings.push(dayObj);
+                                this.toggleLocalLoader(false);                                
                             }
                         }
                     })
@@ -999,6 +1011,7 @@ let app = new Vue({
                             end: ''
                         };
                         this.scheduleSettings.push(dayObj);
+                        this.toggleLocalLoader(false);
                     })
                 } else {
                     let dayObj = {};
@@ -1026,6 +1039,7 @@ let app = new Vue({
                     };
                     dayObj.company = null;
                     this.scheduleSettings.push(dayObj);
+                    this.toggleLocalLoader(false);
                 }
             }
         },
