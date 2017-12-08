@@ -1,4 +1,5 @@
 import datetime
+import threading
 from smtplib import SMTPException
 from django.conf import settings
 from django.contrib import messages
@@ -112,7 +113,8 @@ class CompanyCreateView(CreateView):
             formset.instance = company
             formset.save()
         form.save_m2m()
-        self.send_email_notification(company)
+        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company, ))
+        thread.start()
         return super(CompanyCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
