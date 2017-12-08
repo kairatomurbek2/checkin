@@ -78,34 +78,6 @@
         <div class="shedule_block">
             {% include 'messages.html' %}
 
-            {% if master.schedule_setting_specialist.all %}
-            <!-- <div class="main-wrap">
-                <h4>Записаться к специалисту</h4>
-                {% if request.user == master.user %}
-                    <div class="edit_time">
-                        <a href=""><i class="fa fa-pencil" aria-hidden="true"></i>Редактировать график работы</a>
-                    </div>
-                {% endif %}
-                <a href="#" onclick="prevWeek()" id="prev-week"><i class="fa fa-angle-left fa-3x"
-                                                                   aria-hidden="true"></i></a>
-                <a href="#" onclick="nextWeek()" id="next-week"><i class="fa fa-angle-right fa-3x"
-                                                                   aria-hidden="true"></i></a>
-
-
-                <div class="main">
-                    <div class='loader'>
-                        <img src="{% static 'img/loader.gif' %}" alt="">
-                    </div>
-                </div>
-            </div> -->
-            {% else %}
-                <!--{% if request.user == master.user %}-->
-                <!--<div class="set_time">-->
-                    <!--<a href="{% url " add_schedule_setting" master.slug %}">-->
-                        <!--<i class="fa fa-clock-o fa-2x"aria-hidden="true"></i>Указать время работы</a>-->
-                <!--</div>-->
-                <!--{% endif %}-->
-            {% endif %}
             <!--VUE App-->
             {% verbatim %}
             <div class="main-wrap">
@@ -220,11 +192,6 @@
                                             </label>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <!-- <input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, true)"
-                                                           type="text"
-                                                           class="initial-timepicker timepicker timepicker from-time"
-                                                           :readonly="!schedule[day].active"
-                                                           :value="schedule[day].active ? schedule[day].time.start : ''"> -->
                                                     <timepicker
                                                         :value="this.value"
                                                         :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
@@ -234,11 +201,6 @@
                                             </div>
                                             <div class="time_limit">
                                                 <div class="fieldset__wrapper">
-                                                    <!--<input v-on:change="updateScheduleSettingsTime(schedule[day], day, $event, index, false)"-->
-                                                           <!--type="text"-->
-                                                           <!--class="next-timepicker timepicker to-time"-->
-                                                           <!--:readonly="!schedule[day].active"-->
-                                                           <!--:value="schedule[day].active ? schedule[day].time.end : ''">-->
                                                     <timepicker
                                                             :value="this.value"
                                                             :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
@@ -348,6 +310,7 @@
             </div>
             {% endverbatim %}
             <!--VUE App End-->
+
             <div class="p_description">
                 <div>
                     <h4>О специалисте</h4>

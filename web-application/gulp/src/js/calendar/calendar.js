@@ -31,6 +31,7 @@ Vue.component('timepicker', {
             } else {
                 this.options.daySchedule.time.end = value;
             }
+            this.applyTimesAsMonday(value);
         },
         options: function (options) {
 
@@ -106,6 +107,25 @@ Vue.component('timepicker', {
             }
         }
     },
+
+    methods: {
+        applyTimesAsMonday(value) {
+            if (this.options.day === 'monday') {
+                this.$root.days.forEach(day => {
+                    if (this.$root.scheduleSettings[this.options.index][day].active &&
+                        !this.$root.scheduleSettings[this.options.index][day].time.start &&
+                        this.options.start) {
+                            this.$root.scheduleSettings[this.options.index][day].time.start = value;
+                    }
+                    if (this.$root.scheduleSettings[this.options.index][day].active &&
+                        !this.$root.scheduleSettings[this.options.index][day].time.end &&
+                        !this.options.start) {
+                            this.$root.scheduleSettings[this.options.index][day].time.end = value;
+                    }
+                })
+            }
+        }
+    },
     destroyed: function () {
         $(this.$el).stop();
     }
@@ -113,7 +133,7 @@ Vue.component('timepicker', {
 Vue.component('live-timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
-    ':class="{\'disable-input\': (!options.daySchedule.active || !options.daySchedule.liveState)}"' +
+    ':class="{\'disable-input\': (!options.daySchedule.active)}"' +
     'v-bind:value="options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end" ' +
     ':readonly="!options.daySchedule.active || !options.daySchedule.liveState">',
 
@@ -166,6 +186,7 @@ Vue.component('live-timepicker', {
             }
         },
         options: function (options) {
+            console.log('options', options);
             this.minTime = this.$root.parseTime(options.daySchedule.time.start);
             this.maxTime = this.$root.parseTime(options.daySchedule.time.end);
             let nowVal = this.$root.parseTime(this.value);
@@ -935,10 +956,9 @@ let app = new Vue({
                                             end: ''
                                         },
                                         interval: this.intervals[0],
-                                        active: false
+                                        active: (day !== 'sunday') ? true : false
                                     }
                                 });
-                                dayObj.active = false;
                                 dayObj.company = company.id;
                                 dayObj.companyName = company.name;
                                 dayObj.lunch_settings = {
@@ -969,10 +989,9 @@ let app = new Vue({
                                     end: ''
                                 },
                                 interval: this.intervals[0],
-                                active: false
+                                active: (day !== 'sunday') ? true : false
                             }
                         });
-                        dayObj.active = false;
                         dayObj.company = company.id;
                         dayObj.companyName = company.name;
                         dayObj.lunch_settings = {
@@ -998,10 +1017,9 @@ let app = new Vue({
                                 end: ''
                             },
                             interval: this.intervals[0],
-                            active: false
+                            active: (day !== 'sunday') ? true : false
                         }
                     });
-                    dayObj.active = false;
                     dayObj.lunch_settings = {
                         start: '',
                         end: ''
