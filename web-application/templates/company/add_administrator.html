@@ -12,9 +12,11 @@
                 <h4>Добавить администратора</h4>
 
                 <label>Логин
+                    <p class="text-danger">{{ form.username.errors|striptags }}</p>
                     {{ form.username }}
                 </label>
                 <label>E-mail
+                    <p class="text-danger">{{ form.email.errors|striptags }}</p>
                     {{ form.email }}
                 </label>
                 <label>Имя
@@ -24,9 +26,11 @@
                     {{ form.last_name }}
                 </label>
                 <label>Пароль
+                    <p class="text-danger">{{ form.password1.errors|striptags }}</p>
                     {{ form.password1 }}
                 </label>
                 <label>Подтвердите пароль
+                    <p class="text-danger">{{ form.password2.errors|striptags }}</p>
                     {{ form.password2 }}
                 </label>
 
