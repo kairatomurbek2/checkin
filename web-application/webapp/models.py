@@ -13,7 +13,8 @@ from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION
-from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path
+from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path, \
+    category_icon_upload_path
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -29,6 +30,7 @@ class Category(MPTTModel):
     name = models.CharField(verbose_name=_('Название'), max_length=80)
     slug = models.SlugField(verbose_name=_('Ярлык'), max_length=90, unique=True)
     image = ImageField(verbose_name=_('Изображение'), upload_to=category_image_upload_path, blank=True)
+    icon = ImageField(verbose_name=_('Иконка для моб приложение'), upload_to=category_icon_upload_path, blank=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(verbose_name=_('Активна'), default=True)
     all_objects = models.Manager()

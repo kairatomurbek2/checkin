@@ -10,6 +10,13 @@ def category_image_upload_path(instance, filename):
     return 'categories/images/{0}'.format(filename)
 
 
+def category_icon_upload_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/categories/icons/<filename>
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (instance.slug, ext)
+    return 'categories/icons/{0}'.format(filename)
+
+
 def company_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/companies/company_slug/logo/<filename>
     ext = filename.split('.')[-1]

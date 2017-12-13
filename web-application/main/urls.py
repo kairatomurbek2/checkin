@@ -12,5 +12,6 @@ urlpatterns = [
                   url(r'^accounts/', include('allauth.urls')),
                   url(r'^autocomplete/$', TagAutocomplete.as_view(), name='autocomplete'),
                   url(r'^', include('webapp.urls')),
-                  url(r'^api/', include('api.urls'))
+                  url(r'^api/', include('api.urls')),
+                  url(r'^api/v1/', include('api_mob.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
