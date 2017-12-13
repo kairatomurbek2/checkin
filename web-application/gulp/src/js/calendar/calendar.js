@@ -9,11 +9,11 @@ Vue.component('timepicker', {
         return {
             picker: '',
             interval: 30
-        }
+        };
     },
     mounted: function () {
         var vm = this;
-        let picker = $(this.$el).pickatime({
+        var picker = $(this.$el).pickatime({
             format: 'HH:i',
             min: [7, 0],
             max: [20, 0],

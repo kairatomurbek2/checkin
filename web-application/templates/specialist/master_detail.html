@@ -87,13 +87,19 @@
                 <a class="main-wrap-arrows" style="display: none;" id="next-week" onclick="app.moveToNextWeek();">
                     <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </a>
-                <div id="app" class="main" v-bind:class="{'editor-main': editorState}">
-                    <div class="loader" v-if="!scheduleState && !editorState">
+                <div id="app" class="main" v-bind:class="{'editor-main': editorState}" v-cloak>
+
+                    <div class="main-loader">
                         {% endverbatim %}
                         <img src="{% static 'img/loader.gif' %}" alt="loader">
                         {% verbatim %}
                     </div>
 
+                    <div class="loader" v-if="!scheduleState && !editorState">
+                        {% endverbatim %}
+                        <img src="{% static 'img/loader.gif' %}" alt="loader">
+                        {% verbatim %}
+                    </div>
                     <div class="weekdays-wrap" v-if="scheduleState">
                         <div class="edit-schedule-wrap">
                             {% endverbatim %}
