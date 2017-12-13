@@ -13,3 +13,4 @@ web-application/staticfiles/bower_components/
 web-application/staticfiles/js/
 web-application/staticfiles/css/
 .DS_Store
+npm-debug*

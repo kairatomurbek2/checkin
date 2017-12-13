@@ -421,6 +421,17 @@ let app = new Vue({
             // when dates were added from different schedules, it's needed to sort it all
             this.sortTimesInMainArray();
         },
+        calculateLiveTimes(time, interval){
+            let timeInterval = (interval.hours > 0) ? ((60*interval.hours) + interval.minutes) : interval.minutes;
+            let counter = 0;
+            let start = new Date(time.start);
+            let end = new Date(time.end);
+            while (new Date(start) < new Date(end)) {
+                counter ++;
+                start.setMinutes(start.getMinutes() + timeInterval);
+            }
+            return counter;
+        },
         addDatesToArray(now, daySchedule, companyId) {
             let oneDay = {
                 initialDate: new Date(now),
@@ -447,6 +458,7 @@ let app = new Vue({
                     if (time) {
                         time.company = companyId;
                         time.status = 'live';
+                        time.liveCounter = this.calculateLiveTimes(time.time, daySchedule.interval);
                         times.push(time);
                         oneDay.date.setHours(daySchedule.live_recording.end.hours, daySchedule.live_recording.end.minutes, 0, 0);
                         continue;

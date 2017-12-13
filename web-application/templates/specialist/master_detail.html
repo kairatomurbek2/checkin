@@ -119,6 +119,7 @@
                                  style="width: 100%; text-align: center;">
                                 <div v-for="(time, index) of weekDay.times" class="time"
                                      :class="[time.status, makeClassFromCompany(time)]"
+                                     :style="{padding: time.liveCounter ? ((time.liveCounter*10) + ((time.liveCounter-1)*10))+'px 0' : '8px 0'}"
                                      v-on:click="toggleOrderPopup(time)">
                                     <div v-if="time.status !== 'lunch' && time.status !== 'live'
                                             && time.status !== 'holiday' && time.status !== 'left'"
@@ -131,9 +132,9 @@
                                          {%verbatim%}>
                                         {{prettyDate(time.time, 'time')}}
                                     </div>
-                                    <div v-if="time.status == 'live'">
+                                    <!-- <div v-if="time.status == 'live'">
                                         {{prettyDateRange(time.time, 'time')}}
-                                    </div>
+                                    </div> -->
                                     <div v-if="time.status == 'holiday'">
                                         Выходной
                                     </div>
