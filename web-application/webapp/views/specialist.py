@@ -1,4 +1,5 @@
 import datetime
+import threading
 from smtplib import SMTPException
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -86,7 +87,8 @@ class MasterCreateView(CreateView):
             formset.instance = specialist
             formset.save()
         form.save_m2m()
-        self.send_email_notification(specialist)
+        thread = threading.Thread(target=MasterCreateView.send_email_notification, args=(specialist,))
+        thread.start()
         return super(MasterCreateView, self).form_valid(form)
 
     @staticmethod
