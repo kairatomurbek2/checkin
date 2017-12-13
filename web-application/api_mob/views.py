@@ -25,6 +25,7 @@ class CategoryListView(generics.ListAPIView):
 
 class CategoryRetrieveView(generics.RetrieveAPIView):
     serializer_class = CategorySerializer
+    lookup_field = 'slug'
 
     def get_queryset(self):
-        return Category.objects.filter(pk=self.kwargs['pk'])
+        return Category.objects.filter(slug=self.kwargs['slug'])
