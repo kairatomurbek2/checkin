@@ -11,11 +11,18 @@
                 {% csrf_token %}
                 <p class="text-danger">{{ form.logo.errors|striptags }}</p>
                 <div class="control-group file-upload" id="file-upload">
-                    <div class="image-box text-center">
-                        <p>Логотип</p>
-                        <img src="" alt="">
+{#                    <div class="image-box text-center">#}
+{#                        <p>Логотип</p>#}
+{#                        <img src="" alt="">#}
+{#                    </div>#}
+{#                    <div class="controls">{{ form.logo }}</div>#}
+                    <div class="wrap-custom-file">
+{#                        <input type="file" name="image1" class="image_preview" id="image1" accept=".gif, .jpg, .png"/>#}
+                        {{ form.logo|add_class:"image_preview" }}
+                        <label for="id_logo">
+                            <span>Логотип</span>
+                        </label>
                     </div>
-                    <div class="controls">{{ form.logo }}</div>
                 </div>
 
                 <div class="general_information">

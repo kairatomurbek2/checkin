@@ -42,11 +42,12 @@ a
   margin: 0 auto
 
 header
+  height: 80px
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07)
   position: relative
   .grid
     position: relative
-    div
+    & > div
       display: -webkit-flex
       display: -moz-flex
       display: -ms-flex
@@ -284,9 +285,10 @@ header
       display: -ms-flex
       display: -o-flex
       display: flex
+      justify-content: center
+      align-items: center
       margin: 0 auto
-      img
-        margin: auto
+
 
 footer
   background-color: #2d2d2d
@@ -609,14 +611,8 @@ main
       background-color: $main-color
     .master_desc
       ul
-        li:first-of-type
+        li
           height: auto
-        li:nth-child(2)
-        //width: 140px
-        //background: url("../img/p_number_icon.png") left 3px no-repeat
-        li:last-of-type
-          height: auto
-      //background: url("../img/e-mail.png") left 3px no-repeat
       .total_review
         color: $main-color
         text-align: center
@@ -972,7 +968,7 @@ h5
       display: flex
       justify-content: space-between
       align-items: center
-      margin-bottom: 15px
+      margin-bottom: 14px
       & > label
         width: 125px
         color: $ldark-color
@@ -1602,10 +1598,11 @@ h4
     & > p
       color: #95989A
       width: 100%
-      height: 90px
+      height: 88px
       text-align: center
       line-height: 17px
       margin-bottom: 18px
+      overflow: hidden
     ul
       width: 100%
       margin: 0 auto
@@ -1618,8 +1615,8 @@ h4
       align-items: center
       li
         display: inline-block
+        height: 38px
         margin-bottom: 12px
-        //padding-left: 22px
         line-height: 17px
         overflow: hidden
         i
@@ -1757,21 +1754,42 @@ div.master:nth-child(3n)
   background-color: #fff
   cursor: pointer
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06)
-  .image-box
+  overflow: hidden
+  .wrap-custom-file
     position: relative
     width: 100%
     height: 100%
     overflow: hidden
-    img
+    & > input
+      position: absolute
+      top: 0
+      left: 0
+      width: 2px
+      height: 2px
+      overflow: hidden
+      opacity: 0
+    label
+      z-index: 1
+      position: absolute
+      left: 0
+      top: 0
+      bottom: 0
+      right: 0
       width: 100%
       height: 100%
-      object-fit: cover
-    p
-      @include vcenter
-      color: #B6B6B6
-      font-size: 14px
-      padding-top: 75px
-      background: url("../img/plus.png") center top no-repeat
+      overflow: hidden
+      cursor: pointer
+      span
+        @include vcenter
+        color: #B6B6B6
+        font-size: 14px
+        padding-top: 75px
+        background: url("../img/plus.png") center top no-repeat
+      &.file-ok
+        background-size: cover
+        background-position: center top
+        span
+          display: none
   .controls
     display: none
 

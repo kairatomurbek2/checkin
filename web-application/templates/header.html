@@ -5,14 +5,17 @@
 <header>
     <div class="grid">
         <div>
-            <ul class="menu" id="menu">
+            <nav class="menu-collapsed">
+                <div class="bar"></div>
+                <ul class="menu" id="menu">
 
-                <li><a href="{% url 'masters' %}" {% if request.path == master_url %}class="link_active"{% endif %}>Специалисты</a>
-                </li>
-                <li><a href="{% url 'company_list' %}"
-                       {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a></li>
-                <li><a href="#">О нас</a></li>
-            </ul>
+                    <li><a href="{% url 'masters' %}" {% if request.path == master_url %}class="link_active"{% endif %}>Специалисты</a>
+                    </li>
+                    <li><a href="{% url 'company_list' %}"
+                           {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a></li>
+                    <li><a href="#">О нас</a></li>
+                </ul>
+            </nav>
             <a href="/"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
             {% if not request.user.is_authenticated %}
                 <ul class="menu">

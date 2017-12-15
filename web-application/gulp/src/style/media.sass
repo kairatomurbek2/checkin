@@ -1,0 +1,9 @@
+@mixin until ($value)
+  @media screen and (max-width: $value + px)
+    @content
+
+@mixin from ($value)
+  @media screen and (min-width: $value + px)
+    @content
+
+@include until(1070)
