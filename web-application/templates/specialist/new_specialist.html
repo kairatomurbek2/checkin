@@ -12,10 +12,17 @@
                 <p class="text-danger">{{ form.photo.errors|striptags }}</p>
 
                 <div class="control-group file-upload" id="file-upload">
-                    <div class="controls">{{ form.photo }}</div>
-                    <div class="image-box text-center">
-                        <p>Фото профиля</p>
-                        <img src="" alt="">
+{#                    <div class="controls">{{ form.photo }}</div>#}
+{#                    <div class="image-box text-center">#}
+{#                        <p>Фото профиля</p>#}
+{#                        <img src="" alt="">#}
+{#                    </div>#}
+                    <div class="wrap-custom-file">
+{#                        <input type="file" name="image1" class="image_preview" id="image1" accept=".gif, .jpg, .png"/>#}
+                        {{ form.photo|add_class:"image_preview" }}
+                        <label for="id_photo">
+                            <span>Фото профиля</span>
+                        </label>
                     </div>
 
                 </div>

@@ -130,23 +130,24 @@ $(function () {
     });
 
 
-    $('.image-box').click(function (event) {
-        var imgg = $(this).children('img');
-        $(this).siblings().children("input").trigger('click');
+    var $file = $('.image_preview'),
+        $label = $file.next('label'),
+        $labelText = $label.find('span');
 
-        $(this).siblings().children("input").change(function () {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                var urll = e.target.result;
-                $(imgg).attr('src', urll);
-                imgg.parent().css('background', 'transparent');
-                imgg.show();
-                imgg.siblings('p').hide();
-
-            };
-            reader.readAsDataURL(this.files[0]);
-        });
+    // When a new file is selected
+    $file.on('change', function (event) {
+        var fileName = $file.val().split('\\').pop(),
+            tmppath = URL.createObjectURL(event.target.files[0]);
+        //Check successfully selection
+        if (fileName) {
+            $label
+                .addClass('file-ok')
+                .css('background-image', 'url(' + tmppath + ')');
+            // $labelText.text(fileName);
+        } else {
+            $label.removeClass('file-ok');
+            // $labelText.text(labelDefault);
+        }
     });
 
     $('#lightgallery').lightGallery({
@@ -235,9 +236,6 @@ $(function () {
     if ($('.certificate_slider a').length > 6) {
         slick_init('.certificate_slider');
     }
-
-
-    $('[data-toggle="tooltip"]').tooltip();
 
     $('.favourite').click(function (event) {
         if ($(this).hasClass('fav_active')) {
@@ -366,6 +364,10 @@ $(function () {
     $('.star_rating').barrating({
         theme: 'fontawesome-stars',
         showSelectedRating: false
+    });
+
+    $(".menu-collapsed").click(function() {
+        $(this).toggleClass("menu-expanded");
     });
 
 
