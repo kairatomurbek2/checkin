@@ -33,8 +33,8 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
 
 
 class MastersPagination(LimitOffsetPagination):
-    default_limit = 2
-    max_limit = 2
+    default_limit = 20
+    max_limit = 100
 
 
 class MastersListView(generics.ListAPIView):
