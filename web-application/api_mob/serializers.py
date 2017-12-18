@@ -17,11 +17,15 @@ class CategoryMainSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    children = ChildrenSerializer(many=True, required=False)
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug', 'icon', 'children')
+        fields = ('id', 'name', 'slug', 'icon')
+
+    def get_fields(self):
+        fields = super(CategorySerializer, self).get_fields()
+        fields['children'] = CategorySerializer(many=True)
+        return fields
 
 
 class SpecialistContactSerializer(serializers.ModelSerializer):
