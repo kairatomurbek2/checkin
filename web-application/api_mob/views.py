@@ -1,7 +1,10 @@
 from rest_framework import filters
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import SAFE_METHODS
 
+from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer
 from webapp.models import Category, Specialist, Company
 
@@ -45,6 +48,29 @@ class MastersListView(generics.ListAPIView):
     ordering_fields = ('created_at',)
     pagination_class = Pagination
     queryset = Specialist.objects.all()
+
+
+class MasterRetrieveUpdateViewApi(generics.RetrieveUpdateAPIView):
+    permission_classes = [MasterOwnerOrReadOnly]
+    lookup_field = 'slug'
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), slug=self.kwargs["slug"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def get_serializer(self, *args, **kwargs):
+        instance = self.get_object()
+        if self.request.method in SAFE_METHODS and self.request.user.is_authenticated:
+            return MasterSerializer(instance)
+        elif self.request.method not in SAFE_METHODS:
+            serializer_class = MasterSerializer
+            return serializer_class(*args, **kwargs)
+        else:
+            return MasterSerializer(instance)
+
+    def get_queryset(self):
+        return Specialist.objects.filter(slug=self.kwargs['slug'])
 
 
 class CompaniesListView(generics.ListAPIView):

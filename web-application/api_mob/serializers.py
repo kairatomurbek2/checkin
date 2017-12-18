@@ -33,10 +33,17 @@ class SpecialistContactSerializer(serializers.ModelSerializer):
         fields = ('id', 'phone')
 
 
+class CompanyByMaster(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('id', 'name', 'slug', 'logo', 'street_address', 'short_info')
+
+
 class MasterSerializer(serializers.ModelSerializer):
     tags = TagListSerializerField()
     categories = serializers.StringRelatedField(many=True)
     specialist_contacts = SpecialistContactSerializer(many=True)
+    company = CompanyByMaster(many=True)
 
     class Meta:
         model = Specialist
@@ -58,4 +65,6 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
 
     class Meta:
         model = Company
-        fields = ('id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'short_info', 'email', 'categories', 'contacts')
+        fields = (
+            'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'short_info', 'email', 'categories',
+            'contacts')
