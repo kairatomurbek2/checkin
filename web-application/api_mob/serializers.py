@@ -58,4 +58,4 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
 
     class Meta:
         model = Company
-        fields = ('id', 'name', 'slug', 'company_tags', 'street_address', 'short_info', 'email', 'categories', 'contacts')
+        fields = ('id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'short_info', 'email', 'categories', 'contacts')
