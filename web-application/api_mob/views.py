@@ -2,8 +2,8 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.pagination import LimitOffsetPagination
 
-from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer
-from webapp.models import Category, Specialist
+from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer
+from webapp.models import Category, Specialist, Company
 
 
 class CategoryMainListView(generics.ListAPIView):
@@ -32,7 +32,7 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
         return Category.objects.filter(slug=self.kwargs['slug'])
 
 
-class MastersPagination(LimitOffsetPagination):
+class Pagination(LimitOffsetPagination):
     default_limit = 20
     max_limit = 100
 
@@ -43,7 +43,15 @@ class MastersListView(generics.ListAPIView):
     search_fields = ('name', 'info', 'tags__name')
     filter_fields = ('categories',)
     ordering_fields = ('created_at',)
-    pagination_class = MastersPagination
+    pagination_class = Pagination
+    queryset = Specialist.objects.all()
 
-    def get_queryset(self):
-        return Specialist.objects.all()
+
+class CompaniesListView(generics.ListAPIView):
+    serializer_class = CompaniesSerializer
+    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
+    search_fields = ('name', 'short_info', 'tags__name')
+    filter_fields = ('categories',)
+    ordering_fields = ('created_at',)
+    pagination_class = Pagination
+    queryset = Company.objects.all()

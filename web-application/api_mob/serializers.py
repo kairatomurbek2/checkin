@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from taggit_serializer.serializers import TagListSerializerField
+from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
-from webapp.models import Category, Specialist, SpecialistContact
+from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact
 
 
 class ChildrenSerializer(serializers.ModelSerializer):
@@ -17,7 +17,6 @@ class CategoryMainSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ('id', 'name', 'slug', 'icon')
@@ -44,3 +43,19 @@ class MasterSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user', 'company', 'photo', 'full_name', 'sex', 'slug', 'street_address', 'short_info', 'info',
             'categories', 'tags', 'specialist_contacts')
+
+
+class CompanyContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyContact
+        fields = ('id', 'phone')
+
+
+class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
+    company_tags = TagListSerializerField()
+    categories = serializers.StringRelatedField(many=True)
+    contacts = CompanyContactSerializer(many=True)
+
+    class Meta:
+        model = Company
+        fields = ('id', 'name', 'slug', 'company_tags', 'street_address', 'short_info', 'email', 'categories', 'contacts')
