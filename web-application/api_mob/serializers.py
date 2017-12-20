@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
-from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact
+from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating
 
 
 class ChildrenSerializer(serializers.ModelSerializer):
@@ -44,12 +44,17 @@ class MasterSerializer(serializers.ModelSerializer):
     categories = serializers.StringRelatedField(many=True)
     specialist_contacts = SpecialistContactSerializer(many=True)
     company = CompanyByMaster(many=True)
+    review_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Specialist
         fields = (
             'id', 'user', 'company', 'photo', 'full_name', 'sex', 'slug', 'street_address', 'short_info', 'info',
-            'categories', 'tags', 'specialist_contacts')
+            'categories', 'tags', 'specialist_contacts', 'rating', 'review_count')
+
+    def get_review_count(self, obj):
+        review_count = obj.rating_specialist.all().count()
+        return review_count
 
 
 class CompanyContactSerializer(serializers.ModelSerializer):
