@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
-    MasterCompanyListViewApi
+    MasterCompanyListViewApi, CompanyReviewsListApi
 
 router = DefaultRouter()
 
@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'companies/(?P<slug>[-_\w]+)/detail/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
     url(r'companies/(?P<company__slug>[-_\w]+)/specialists/$', MasterCompanyListViewApi.as_view(),
         name='masters_company_api_v1'),
+    url(r'companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),
+        name='company_reviews_api_v1'),
 ]

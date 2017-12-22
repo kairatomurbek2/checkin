@@ -105,3 +105,11 @@ class MasterCompanyListViewApi(generics.ListAPIView):
 
     def get_queryset(self):
         return Specialist.objects.filter(company__slug=self.kwargs['company__slug'])
+
+
+class CompanyReviewsListApi(generics.ListAPIView):
+    serializer_class = RatingSerializer
+    lookup_field = 'company__slug'
+
+    def get_queryset(self):
+        return Rating.objects.filter(company__slug=self.kwargs['company_slug'])
