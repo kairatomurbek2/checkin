@@ -9,8 +9,9 @@
             {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p class="text-danger">{{ form.logo.errors|striptags }}</p>
+
                 <div class="control-group file-upload" id="file-upload">
+                    <p class="text-danger">{{ form.logo.errors|striptags }}</p>
 {#                    <div class="image-box text-center">#}
 {#                        <p>Логотип</p>#}
 {#                        <img src="" alt="">#}

@@ -9,9 +9,10 @@
         {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
-                <p class="text-danger">{{ form.photo.errors|striptags }}</p>
+
 
                 <div class="control-group file-upload" id="file-upload">
+
 {#                    <div class="controls">{{ form.photo }}</div>#}
 {#                    <div class="image-box text-center">#}
 {#                        <p>Фото профиля</p>#}
@@ -24,7 +25,7 @@
                             <span>Фото профиля</span>
                         </label>
                     </div>
-
+                      <p class="text-danger">{{ form.photo.errors|striptags }}</p>
                 </div>
                 <div class="general_information">
                     <p>Персональная информация</p>

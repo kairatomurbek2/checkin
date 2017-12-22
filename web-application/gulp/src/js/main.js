@@ -118,7 +118,6 @@ $(function () {
     });
 
 
-
     $('#id_categories').selectize({
         sortField: 'text'
     });
@@ -222,13 +221,23 @@ $(function () {
     function slick_init(obj) {
         $(obj).slick({
             cssEase: 'ease-in',
-            autoplay: true,
-            autoplaySpeed: 3000,
+            // autoplay: true,
+            // autoplaySpeed: 3000,
             variableWidth: true,
             // infinite: false
             slidesToShow: 6,
             slidesToScroll: 1,
-            draggable: false
+            draggable: false,
+            responsive: [
+                {
+                    breakpoint: 420,
+                    settings: {
+                        centerMode: true,
+                        centerPadding: '20px',
+                        slidesToShow: 1
+                    }
+                }
+            ]
         });
     }
 
@@ -366,10 +375,40 @@ $(function () {
         showSelectedRating: false
     });
 
-    $(".menu-collapsed").click(function() {
+    $(".menu-collapsed").click(function () {
         $(this).toggleClass("menu-expanded");
     });
 
+    var wWidth = $(window).width();
+    console.log(wWidth);
+
+    if (wWidth <= 1070) {
+        $('.favourite_text').html('');
+    }
+
+    if (wWidth <= 400) {
+        $('#search-field').attr('placeholder', 'Найти сервис...');
+    }
+
+    if (wWidth <= 700) {
+        $('#sticker').unstick();
+    }
+
+    var touch = $('.hidden_menu');
+    var menu = $('.signup-menu');
+
+    $(touch).on('click', function(e){
+        e.preventDefault();
+        menu.slideToggle();
+    });
+
+    $(window).resize(function(){
+        var wid = $(window).width();
+        if(wid > 760 && menu.is(':hidden')){
+            menu.removeAttr('style');
+        }
+
+    });
 
 
 });
