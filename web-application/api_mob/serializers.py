@@ -80,3 +80,20 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
         fields = (
             'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'short_info', 'email', 'categories',
             'contacts')
+
+
+class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
+    company_tags = TagListSerializerField()
+    categories = serializers.StringRelatedField(many=True)
+    contacts = CompanyContactSerializer(many=True)
+    review_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Company
+        fields = (
+            'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'info', 'email', 'latitude', 'longitude',
+            'legal_data', 'review_count', 'categories', 'contacts')
+
+    def get_review_count(self, obj):
+        review_count = obj.rating_company.all().count()
+        return review_count

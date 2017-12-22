@@ -6,7 +6,7 @@ from rest_framework.permissions import SAFE_METHODS
 
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
-    RatingSerializer
+    RatingSerializer, CompanySerializer
 from webapp.models import Category, Specialist, Company, Rating
 
 
@@ -90,3 +90,9 @@ class CompaniesListView(generics.ListAPIView):
     ordering_fields = ('created_at',)
     pagination_class = Pagination
     queryset = Company.objects.all()
+
+
+class CompaniesDetailViewApi(generics.RetrieveAPIView):
+    lookup_field = 'slug'
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
