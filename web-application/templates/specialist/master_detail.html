@@ -81,12 +81,8 @@
             <!--VUE App-->
             {% verbatim %}
             <div class="main-wrap">
-                <a class="main-wrap-arrows" style="display: none;" id="prev-week" onclick="app.moveToPreviousWeek()">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                </a>
-                <a class="main-wrap-arrows" style="display: none;" id="next-week" onclick="app.moveToNextWeek();">
-                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                </a>
+
+
                 <div id="app" class="main" v-bind:class="{'editor-main': editorState}" v-cloak>
 
                     <div class="main-loader">
@@ -114,10 +110,16 @@
                             {% verbatim %}
                         </div>
                         <div class="weekdays weekdays-title">
+                            <a class="main-wrap-arrows" style="display: none;" id="prev-week" onclick="app.moveToPreviousWeek()">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
                             <div v-for="weekDay of mainArray" class="weekday">
                                 <span>{{localeDays[weekDay.date.getDay()]}}</span>
                                 <span>{{prettyDate(weekDay.date, 'date')}}</span>
                             </div>
+                        <a class="main-wrap-arrows" style="display: none;" id="next-week" onclick="app.moveToNextWeek();">
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
                         </div>
                         <div class="weekdays weekdays-scroll">
                             <div v-for="weekDay of mainArray" class="weekday"

@@ -9,20 +9,20 @@
                 <div class="sort_forms">
                     <span>Диапазон дат</span>
                     <div class="date_limit">
-                        c
+                        <span>c</span>
                         <div class="fieldset__wrapper">
                             {{ reservation_filter.form.created_at_from|add_class:"datepicker" }}
                         </div>
                     </div>
 
                     <div class="date_limit">
-                        до
+                        <span>до</span>
                         <div class="fieldset__wrapper">
                             {{ reservation_filter.form.created_at_to|add_class:"datepicker" }}
                         </div>
                     </div>
 
-                    <label>Статус
+                    <label><span>Статус</span>
                         {{ reservation_filter.form.status }}
                     </label>
 

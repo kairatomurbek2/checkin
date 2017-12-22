@@ -42,7 +42,6 @@ a
   margin: 0 auto
 
 header
-  height: 80px
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07)
   position: relative
   .grid
@@ -56,8 +55,12 @@ header
       justify-content: space-between
       align-items: center
       height: 80px
-      & > a
+      a.logotype
         @include vcenter
+      .hidden_menu
+        display: none
+        img
+          width: 16px
 
 .menu
   display: -webkit-flex
@@ -597,7 +600,7 @@ main
     flex-wrap: wrap
 
 .personal_block
-  width: 24%
+  width: 285px
   height: auto
   .master
     width: 100%
@@ -847,7 +850,7 @@ h5
   -moz-border-radius: 3px
   border-radius: 3px
   display: block
-  margin: auto
+  margin: 0 auto 15px auto
   line-height: 40px
   color: $ldark-color
   border: 1px solid #e4e4e4
@@ -1574,8 +1577,9 @@ h4
       display: -o-flex
       display: flex
       justify-content: center
-      align-items: center
+      align-items: flex-start
       text-align: center
+      overflow: hidden
     & > span:first-of-type
       font-size: 14px
       color: #0FD2CD

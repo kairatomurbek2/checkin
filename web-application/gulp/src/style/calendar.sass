@@ -1,7 +1,7 @@
 .main-wrap
   width: 100%
   background-color: #fff
-  padding: 35px 15px 40px 40px
+  padding: 35px 10px 40px 15px
   position: relative
 
   .loader
@@ -12,29 +12,30 @@
 
   a.main-wrap-arrows
     color: #11EBE6
-    position: absolute
-    top: 78px
-    width: 30px
-    height: 36px
-    display: flex
-    z-index: 10
+    //position: absolute
+    //top: 78px
+    //width: 30px
+    //height: 36px
+    //display: flex
+    //z-index: 10
     font-size: 24px
     &:hover
       cursor: pointer
 
 
-  #prev-week
-    left: 20px
-    top: 80px
-
-  #next-week
-    right: 10px
-    top: 80px
+  //#prev-week
+  //  left: 20px
+  //  top: 80px
+  //
+  //#next-week
+  //  right: 10px
+  //  top: 80px
 
   .edit-schedule-wrap
     display: block
     width: 100%
     padding-bottom: 20px
+    padding-right: 5px
   .edit-schedule
     float: right
     color: #6ED3CF
@@ -49,7 +50,7 @@
     position: relative
     width: 100%
     //max-height: 406px
-    padding-right: 25px
+    //padding-right: 25px
     display: flex
     justify-content: space-between
     &.editor-main
@@ -70,18 +71,27 @@
     justify-content: space-between
     width: 100%
     //padding: 5px
+  .weekdays-title
+    padding-right: 5px
+    margin-bottom: 15px
+    align-items: center
 
   .weekdays-scroll
     overflow-y: scroll
-    //max-height: 350px
-    height: 444px
+    max-height: 445px
+    padding: 0 10px 0 15px
   .weekday
     padding: 0 10px
     text-align: center
     width: 100%
 
-  .weekday.holiday
+  .weekday .holiday
     background: rgb(236, 236, 236)
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    color: #333333
 
   .weekday > span
     display: block
@@ -91,7 +101,8 @@
 
   .weekday > span:last-of-type
     display: block
-    padding-bottom: 15px
+    padding-bottom: 0
+
 
   .time
     background: #11EBE6
@@ -144,8 +155,8 @@
   .time.lunch
     background: #998f0f
 
-  .time.holiday
-    background: #ff76f8
+  //.time.holiday
+  //  background: #ff76f8
 
   .time.left
     background: #8B8B8B

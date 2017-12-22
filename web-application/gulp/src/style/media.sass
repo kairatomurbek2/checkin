@@ -1,9 +1,647 @@
-@mixin until ($value)
+@mixin until($value)
   @media screen and (max-width: $value + px)
     @content
 
-@mixin from ($value)
+@mixin from($value)
   @media screen and (min-width: $value + px)
     @content
 
+$main-color: #11EBE6
+
+// -----------------MAIN-PAGE-----------------
+
 @include until(1070)
+  .b-a, .bar, .bar:before, .bar:after
+    transition: all .25s
+    content: ""
+    position: absolute
+    right: 0
+    height: 4px
+    width: 32px
+    background-color: $main-color
+
+  .menu-collapsed
+    transition: all .25s
+    position: fixed
+    top: 10px
+    left: 0
+    height: 36px
+    width: 56px
+    margin: 0
+    z-index: 1
+    cursor: pointer
+
+  .menu-collapsed ul
+    position: fixed
+    left: -9000px
+    width: 100%
+    margin-left: 0
+    text-align: center
+    transition: all 0s
+
+  .menu-collapsed .menu
+    display: block
+
+  .menu-collapsed .menu li
+    margin-bottom: 10px
+
+  .menu-collapsed .menu a
+    display: block
+    color: #fff
+    font-size: 18px
+
+  .bar
+    position: fixed
+    top: 30px
+    left: 15px
+
+  .bar:before
+    top: -10px
+
+  .bar:after
+    top: 10px
+
+  .b-a-expanded, .menu-expanded .bar:before, .menu-expanded .bar:after
+    transition: all .25s
+    top: -0px
+
+  .menu-expanded
+    transition: all .25s
+    text-align: center
+    line-height: 35px
+    height: 100%
+    width: 100%
+    border-radius: 0
+    top: 0
+    right: 0
+    background-color: rgba(0, 0, 0, 0.6)
+    z-index: 1001
+
+  .menu-expanded ul
+    transition: all 0s
+    position: relative
+    top: 70px
+    left: 0
+    z-index: 2
+
+  .menu-expanded .bar
+    background-color: transparent
+    transition: all .25s
+
+  .menu-expanded .bar:before
+    transform: rotate(45deg)
+
+  .menu-expanded .bar:after
+    transform: rotate(-45deg)
+
+  header .grid > div
+    height: 65px
+    justify-content: flex-end
+
+  header .grid > div > a img
+    width: 160px
+    height: auto
+
+  .authorised_user > li ul
+    top: 44px
+
+  footer > div.grid
+    padding-right: 10px
+    padding-left: 10px
+
+
+@include until(750)
+  .search_block .grid
+    height: 320px
+    padding-top: 100px
+  .search_container
+    width: 95%
+  .filter_form
+    height: 50px
+    z-index: 10
+  .filter_form label input
+    font-size: 12px
+    padding-left: 15px
+  .result_block
+    width: 100%
+    height: 250px
+    padding-top: 15px
+    position: relative
+  .category_block .grid
+    padding: 0 10px
+  .category
+    padding: 30px 0 40px 0
+    li
+      width: 150px
+      margin: 5px
+      border: 1px solid #e8e8e8 !important
+  .f_block
+    justify-content: flex-start
+    & > ul
+      width: 50%
+      margin-bottom: 20px
+      padding-left: 15px
+    & > div
+      width: 80%
+      margin-bottom: 20px
+      padding-left: 15px
+    & > ul.f_menu:last-of-type
+      margin: 0 0 20px 0
+
+@include until(500)
+  .authorised_user>li:first-child a
+    padding: 5px 0 5px 34px
+    border-right: 0
+  .authorised_user>li:last-child
+    padding: 0 22px 0 15px
+    background-position: 34px center
+  header .grid>div>a img
+    width: 120px
+  .b-a, .bar, .bar:before, .bar:after
+    height: 2px
+    width: 28px
+  .bar:before
+    top: -8px
+  .bar:after
+    top: 8px
+  .result_block ul a
+    padding: 10px 10px 10px 125px
+  .result_block span
+    left: 10px
+
+@include until(400)
+  header .grid>div>a
+    left: 42%
+  .search_block .grid
+    height: 220px
+    padding-top: 70px
+
+
+// -----------------MY-PROFILE-----------------
+
+@include until(1200)
+  .edit_information .grid
+    padding: 50px 15px 330px 15px
+  .create_administrator .grid
+    padding: 50px 15px 60px 15px
+
+@include until(420)
+  .edit_information .grid
+    padding: 30px 15px 40px 15px
+  .edit_information form input
+    width: 100%
+
+
+// -----------------SPECIALISTS-PAGE-----------------
+
+@include until(1200)
+  .all_specialists .grid
+    padding: 55px 10px 180px 10px
+  #pagediv-id
+    justify-content: center
+  .master
+    margin: 0 20px 20px 0
+  div.master:nth-child(3n)
+    margin-right: 20px
+
+@include until(700)
+  .all_specialists .grid
+    display: block
+  .base-filter
+    width: 100%
+    margin-bottom: 40px
+  .filter-item.filter-categories .live-search input
+    background-position: 95% center
+  .masters
+    width: 100%
+
+@include until(500)
+  .all_specialists .grid
+    padding: 55px 10px 70px 10px
+  .master
+    margin: 0 0 20px 0
+  div.master:nth-child(3n)
+    margin-right: 0
+
+
+// -----------------CATEGORY-PAGE-----------------
+
+@include until(1200)
+  .category_page .grid
+    padding-right: 10px
+    padding-left: 10px
+
+@include until(700)
+  .category_page .grid
+    display: block
+
+  .category_page .grid .category_result
+    width: 100%
+  .category_result .tabs-nav a
+    font-size: 12px
+  .category_page .grid
+    padding-bottom: 60px
+
+
+// -----------------COMPANY-PAGE-----------------
+
+@include until(1200)
+  .company_detail .grid
+    padding-right: 15px
+    padding-left: 15px
+
+  .certificates #lightgallery .slick-next,
+  .certificates #lightgallery .slick-prev
+    width: 40px
+    height: 40px
+  .certificates #lightgallery .slick-prev
+    left: 10px
+    -webkit-background-size:
+    background-size: auto 25px
+  .certificates #lightgallery .slick-next
+    right: 10px
+    -webkit-background-size:
+    background-size: auto 25px
+
+@include until(1140)
+  .company_detail .shedule_block
+    width: 65.5%
+
+@include until(850)
+  .company_detail
+    .grid
+      justify-content: center
+    .personal_block
+      width: 80%
+      padding-bottom: 30px
+    .shedule_block
+      width: 100%
+    .p_description
+      padding: 0
+    .employees>h4
+      padding-left: 0
+
+@include until(500)
+  .company
+    .personal_block
+      width: 100%
+    .p_description p
+      overflow: hidden
+    .p_description h4
+      padding-bottom: 15px
+    #map
+      height: 200px !important
+
+
+// -----------------SPECIALIST-PAGE-----------------
+
+@include until(1200)
+  .specialist .grid
+    padding-right: 15px
+    padding-left: 15px
+  .main-wrap
+    overflow-x: scroll
+  #app
+    width: 870px
+    padding-right: 10px
+
+@include until(1150)
+  .specialist
+    .shedule_block
+      width: 65%
+
+@include until(850)
+  .specialist
+    .grid
+      justify-content: center
+    .personal_block
+      width: 80%
+    .shedule_block
+      width: 100%
+    .p_description
+      padding: 0
+      h4
+        padding-bottom: 15px
+
+@include until(500)
+  .specialist
+    .personal_block
+      width: 100%
+
+
+// -----------------FAVOURITES-----------------
+
+@include until(1200)
+  .favourites .grid
+    padding-right: 15px
+    padding-left: 15px
+  .favourites .grid>div .master
+    margin: 0 10px 20px 10px
+  .favourites .grid>div .master:nth-child(4n)
+    margin-right: 10px
+
+@include until(500)
+  .favourites .grid>div .master
+    width: 100%
+    margin: 0!important
+  .favourites
+    .master .favourite
+      left: 80%
+
+// ----------------BECOME-SPECIALIST-----------------
+
+@include until(1200)
+  .become_specilalist .grid
+    padding-right: 15px
+    padding-left: 15px
+
+@include until(1030)
+  .file-upload
+    height: 250px
+
+@include until(700)
+  .form_inf
+    justify-content: center
+    flex-wrap: wrap
+  .file-upload
+    width: 80%
+    margin-bottom: 40px
+  .general_information
+    width: 100%
+
+@include until(550)
+  .general_information .first_block>div
+    width: 98%
+  .contact-formset .delete-row
+    right: -18px
+  .general_information>p
+    padding-bottom: 20px
+  .general_information .first_block input
+    margin-bottom: 10px
+  .add_block
+    margin-bottom: 20px
+  .general_information .second_block .selectize-control
+    width: 100%
+  .general_information .second_block .selectize-control:first-of-type
+    margin-bottom: 15px
+  .general_information>.button
+    margin-top: 30px
+
+@include until(400)
+  .file-upload
+    width: 90%
+  .become_company
+    #map
+      height: 250px !important
+
+
+// ----------------EDIT-SPECIALIST-----------------
+
+
+@include until(1200)
+  .specialist_author .grid
+    padding-right: 15px
+    padding-left: 15px
+
+@include until(700)
+  .edit_specialist
+    .grid
+      justify-content: center
+      flex-wrap: wrap
+      .personal_block
+        width: 80%
+        .master_img label[for=upload]
+          left: 58%
+      .shedule_block
+        width: 100%
+      .edit_block
+        padding-left: 0
+      .general_information>p
+        padding-bottom: 20px
+
+@include until(550)
+  .edit_specialist .general_information .first_block>.add_block
+    width: 100%
+  .edit_specialist .general_information .first_block>div
+    width: 100%
+  .edit_specialist
+    .master_img label[for=upload]
+      left: 62%!important
+
+  .edit_company_certificates
+    width: 100%
+    td input
+      width: 100%
+  .edit_company_certificates .chosen_certificate a
+    width: 0
+    overflow: hidden
+
+@include until(340)
+  .edit_specialist
+    .personal_block
+      width: 100% !important
+
+
+
+// ----------------EDIT-COMPANY-----------------
+
+@include until(1200)
+  .edit_company
+    .grid
+      padding-right: 15px
+      padding-left: 15px
+      flex-wrap: nowrap
+
+@include until(880)
+  .edit_company
+    .grid
+      justify-content: center
+      flex-wrap: wrap
+    .general_information
+      padding-left: 0
+    .personal_block
+      width: 80%
+      .master_img label[for=upload]
+        left: 58%
+    .shedule_block
+      width: 100%
+
+@include until(550)
+  .edit_company .general_information .first_block>div
+    width: 100%!important
+  .edit_company
+    .personal_block
+      .master_img label[for=upload]
+        left: 62%
+
+@include until(400)
+  .edit_company
+    .personal_block
+      width: 100%
+
+
+
+// ----------------REGISTER-----------------
+
+@include until(450)
+  .account_page
+    .grid
+      padding-right: 15px
+      padding-left: 15px
+
+// ----------------INVITE-SPECIALIST-----------------
+
+@include until(950)
+  .search_user_page .grid
+    padding-right: 15px
+    padding-left: 15px
+  .search_user_page .search_master
+    width: 100%
+  .search_user_page ul
+    width: 100%
+    li
+      width: 100%
+    li:first-child
+      order: 0
+    li:nth-child(5)
+      order: 1
+    li:nth-child(2)
+      order: 2
+    li:nth-child(6)
+      order: 3
+    li:nth-child(3)
+      order: 4
+    li:nth-child(7)
+      order: 5
+    li:nth-child(4)
+      order: 6
+    li:nth-child(8)
+      order: 7
+    li:last-child
+      order: 8
+
+@include until(600)
+  .search_user_page .search_master div
+    height: 50px
+  .search_user_page .search_master input
+    font-size: 14px
+  .search_user_page .grid
+    padding-top: 40px
+    padding-bottom: 50px
+  .search_user_page ul .watch_profile
+    left: 80%
+  .search_user_page ul
+    padding-top: 30px
+
+@include until(530)
+  .search_user_page ul
+    padding-bottom: 65px
+  .search_user_page ul .watch_profile
+    top: 55px
+    right: 15px
+    left: auto
+
+// ----------------INVITE-SPECIALIST-----------------
+
+@include until(850)
+  .list_review
+    .shedule_block
+      padding-left: 0
+      padding-top: 30px
+    .all_reviews .single_review>p:first-of-type
+      padding-bottom: 10px
+    .all_reviews .single_review .rating
+      padding-bottom: 10px
+    .all_reviews .single_review
+      margin-bottom: 30px
+
+// ----------------INVITE-SPECIALIST-----------------
+
+@include until(1200)
+  .order_page
+    .grid
+      padding-right: 10px
+      padding-left: 10px
+      .list_application
+        overflow-x: scroll
+        & > table
+          width: 1200px !important
+      .sort
+        justify-content: center
+        flex-wrap: wrap
+        .sort_search
+          width: 80%
+          order: 0
+          margin-bottom: 20px
+        .sort_forms
+          width: 100%
+          order: 1
+
+@include until(850)
+  .sort_forms
+    flex-wrap: wrap
+    justify-content: space-around!important
+    & > span
+      margin-bottom: 15px
+    & > div.date_limit
+      width: 40%
+      margin-bottom: 15px
+      justify-content: space-between
+      & > span
+        width: 18px
+      & > div.fieldset__wrapper
+        width: 85%
+        & > input
+          width: 100%
+          margin-left: 0
+    & > label
+      width: 40%
+      display: flex
+      justify-content: space-between
+      align-items: center
+      & > span
+        width: 25px
+      & > select
+        width: 75%!important
+        margin-left: 0!important
+
+@include until(560)
+  .sort_forms
+    justify-content: flex-start!important
+    & > span
+      width: 100%
+    & > div.date_limit
+      width: 100%
+      & > span
+        width: 22px
+    & > label
+      width: 100%
+      margin-bottom: 15px
+      & > span
+        width: 22px
+      & > select
+        width: 85%!important
+  .sort .sort_forms .button
+    margin: 0 auto
+  .order_page .grid .sort .sort_search
+    width: 100%
+
+// -----------------HIDDEN-MENU-----------------
+
+@include until(775)
+  .hidden_menu
+    display: block!important
+    padding-right: 15px
+  .signup-menu
+    position: absolute
+    top: 99%
+    right: 0
+    flex-direction: column
+    background-color: #fff
+    padding: 15px 0 5px 0
+    display: none
+    box-shadow: 0 5px 15px rgba(0,0,0,.06)
+    li
+      margin-bottom: 10px
+  header ul.signup-menu:first-of-type a
+    border-left: 0
