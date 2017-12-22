@@ -5,8 +5,9 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS
 
 from api.permissions import MasterOwnerOrReadOnly
-from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer
-from webapp.models import Category, Specialist, Company
+from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
+    RatingSerializer
+from webapp.models import Category, Specialist, Company, Rating
 
 
 class CategoryMainListView(generics.ListAPIView):
@@ -71,6 +72,14 @@ class MasterRetrieveUpdateViewApi(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return Specialist.objects.filter(slug=self.kwargs['slug'])
+
+
+class MasterReviewsListViewApi(generics.ListAPIView):
+    serializer_class = RatingSerializer
+    lookup_field = 'specialist__slug'
+
+    def get_queryset(self):
+        return Rating.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
 
 
 class CompaniesListView(generics.ListAPIView):

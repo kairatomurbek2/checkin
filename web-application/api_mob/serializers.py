@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
@@ -55,6 +56,12 @@ class MasterSerializer(serializers.ModelSerializer):
     def get_review_count(self, obj):
         review_count = obj.rating_specialist.all().count()
         return review_count
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('id', 'created_at', 'get_user', 'comment')
 
 
 class CompanyContactSerializer(serializers.ModelSerializer):

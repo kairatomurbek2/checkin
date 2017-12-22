@@ -345,6 +345,9 @@ class Rating(models.Model):
     def __str__(self):
         return str(self.count)
 
+    def get_user(self):
+        return self.user.username
+
     def save(self, *args, **kwargs):
         super(Rating, self).save(*args, **kwargs)
         if self.specialist:
