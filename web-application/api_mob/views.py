@@ -96,3 +96,12 @@ class CompaniesDetailViewApi(generics.RetrieveAPIView):
     lookup_field = 'slug'
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+
+
+class MasterCompanyListViewApi(generics.ListAPIView):
+    lookup_field = 'company__slug'
+    serializer_class = MasterSerializer
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        return Specialist.objects.filter(company__slug=self.kwargs['company__slug'])

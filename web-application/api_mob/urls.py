@@ -2,7 +2,8 @@ from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
-    CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi
+    CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
+    MasterCompanyListViewApi
 
 router = DefaultRouter()
 
@@ -17,4 +18,6 @@ urlpatterns = [
     url(r'masters/$', MastersListView.as_view(), name='masters_api_v1'),
     url(r'companies/$', CompaniesListView.as_view(), name='companies_api_v1'),
     url(r'companies/(?P<slug>[-_\w]+)/detail/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
+    url(r'companies/(?P<company__slug>[-_\w]+)/specialists/$', MasterCompanyListViewApi.as_view(),
+        name='masters_company_api_v1'),
 ]
