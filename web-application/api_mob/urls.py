@@ -17,7 +17,7 @@ urlpatterns = [
         name='masters__reviews_api_v1'),
     url(r'masters/$', MastersListView.as_view(), name='masters_api_v1'),
     url(r'companies/$', CompaniesListView.as_view(), name='companies_api_v1'),
-    url(r'companies/(?P<slug>[-_\w]+)/detail/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
+    url(r'companies/(?P<slug>[-_\w]+)/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
     url(r'companies/(?P<company__slug>[-_\w]+)/specialists/$', MasterCompanyListViewApi.as_view(),
         name='masters_company_api_v1'),
     url(r'companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),

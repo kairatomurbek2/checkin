@@ -61,7 +61,7 @@ class MasterSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('id', 'created_at', 'get_user', 'comment')
+        fields = ('id', 'created_at', 'get_user', 'comment', 'count')
 
 
 class CompanyContactSerializer(serializers.ModelSerializer):
@@ -79,7 +79,7 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
         model = Company
         fields = (
             'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'short_info', 'email', 'categories',
-            'contacts')
+            'contacts', 'rating')
 
 
 class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
