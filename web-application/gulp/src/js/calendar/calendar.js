@@ -673,6 +673,17 @@ let app = new Vue({
                 }
             }, response => {
                 console.error(response);
+                if (response.body.phone) {
+                    document.querySelector('.error').innerHTML += '<div> '+ response.body.phone +'</div>';
+                    document.querySelector('.error').style.display = 'block';
+                    input = document.querySelector('#phone');
+                    input.classList.add('error');
+                    setTimeout(function () {
+                        input.classList.remove('error');
+                        document.querySelector('.error').innerHTML = '';
+                        document.querySelector('.error').style.display = '';
+                    }, 3000);
+                }
             })
         },
         cleanOrderPopup() {
