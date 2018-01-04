@@ -44,7 +44,7 @@ class Pagination(LimitOffsetPagination):
 class MastersListView(generics.ListAPIView):
     serializer_class = MasterSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('name', 'info', 'tags__name')
+    search_fields = ('full_name', 'tags__name')
     filter_fields = ('categories',)
     ordering_fields = ('created_at',)
     pagination_class = Pagination
@@ -85,7 +85,7 @@ class MasterReviewsListViewApi(generics.ListAPIView):
 class CompaniesListView(generics.ListAPIView):
     serializer_class = CompaniesSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('name', 'short_info', 'tags__name')
+    search_fields = ('name', 'company_tags__name')
     filter_fields = ('categories',)
     ordering_fields = ('created_at',)
     pagination_class = Pagination
