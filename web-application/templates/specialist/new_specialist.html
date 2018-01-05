@@ -58,7 +58,7 @@
                     <p>Ваши услуги</p>
                     <div class="second_block">
                         <select multiple class="categories-select" id="id_categories" name="categories" required
-                                placeholder="Сфера деятельности">
+                                placeholder="Сфера деятельности" style="width: 50%;">
 
                         </select>
                         {{ form.tags }}
@@ -67,7 +67,7 @@
                     <p>Подробная информация</p>
                     <p class="text-danger">{{ form.tags.errors|striptags }}</p>
                     {{ form.info }}
-                    <button type="submit" class="button">Сохранить</button>
+                    <button type="submit" class="button">Создать</button>
                 </div>
             </form>
         </div>

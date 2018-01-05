@@ -58,9 +58,8 @@
                     </div>
                     <p>Ваши услуги</p>
                     <div class="second_block">
-                        <select multiple class="categories-select" id="id_categories" name="categories" required
-                                placeholder="Сфера деятельности">
-
+                        <select multiple class="categories-select " id="id_categories" name="categories" required
+                                placeholder="Сфера деятельности" style="width: 50%;">
                         </select>
 
                         {{ form.company_tags }}
@@ -102,7 +101,7 @@
                         </div>
                         {{ formset.management_form }}
                     </div>
-                    <button type="submit" class="button">Сохранить</button>
+                    <button type="submit" class="button">Создать</button>
 
                 </div>
             </form>
@@ -213,7 +212,6 @@
             }
             $(".categories-select").html(html);
         })();
-
 
     </script>
 {% endblock %}
