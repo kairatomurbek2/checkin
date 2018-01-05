@@ -1,4 +1,5 @@
 @import "../../../staticfiles/bower_components/selectize/dist/css/selectize.css"
+@import "../libs/select2.css"
 @import "../../../staticfiles/bower_components/lightgallery/dist/css/lightgallery.css"
 @import "../../../staticfiles/bower_components/jquery-bar-rating/dist/themes/fontawesome-stars.css"
 @import "../libs/slick/slick.css"
@@ -548,6 +549,40 @@ footer
 
 .evaluation
   padding: 20px 113px 0 113px
+
+.select2-container--default.select2-container--focus
+  .select2-selection--multiple
+    border-color: $main-color
+    padding-left: 15px
+
+.select2-container--default
+  .select2-results__group
+    font-family: "GothamBold", sans-serif
+    background: url("../img/polygon.png") 97% center no-repeat
+    &.active
+      background: url("../img/f_active_polygon.png") 97% center no-repeat
+
+.select2-results__options--nested
+  display: none
+
+.select2-container--default
+  .select2-selection--multiple
+    padding: 5px 24px 5px 5px
+    border-color: #e4e4e4
+    -webkit-transition: .2s ease
+    -moz-transition: .2s ease
+    -ms-transition: .2s ease
+    -o-transition: .2s ease
+    transition: .2s ease
+    background: #fff url("../img/polygon.png") 97% center no-repeat
+    &:hover, &:focus
+      border-color: $main-color
+      -webkit-transition: .2s ease
+      -moz-transition: .2s ease
+      -ms-transition: .2s ease
+      -o-transition: .2s ease
+      transition: .2s ease
+
 
 .star-cb-group
   display: flex
@@ -1896,6 +1931,10 @@ div.master:nth-child(3n)
       &:hover,
       &:focus
         border-color: $main-color
+
+
+    .option
+      display: none
     .selectize-dropdown
       z-index: 10
       border: 1px solid #e4e4e4

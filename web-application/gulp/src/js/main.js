@@ -117,11 +117,28 @@ $(function () {
         preview(this);
     });
 
+    // $('#id_categories').selectize({
+    //     sortField: 'text',
+    //     onDropdownClose: function(dropdown) {
+    //         dropdown.show();
+    //         $(".second_block .selectize-input").addClass('dropdown-active');
+    //     }
+    // });
 
-    $('#id_categories').selectize({
-        sortField: 'text'
+    $("#id_categories").select2({
+        closeOnSelect: false
     });
 
+
+    $("body").on('click', '.select2-results__option strong.select2-results__group', function () {
+        if ($(this).hasClass('active')) {
+            $(this).siblings(".select2-results__options").slideUp(200);
+            $(this).removeClass('active');
+        } else {
+            $(this).siblings(".select2-results__options").slideDown(200);
+            $(this).addClass('active');
+        }
+    });
 
     $('.no').click(function (event) {
         $('.logout_modal').fadeOut(250);
@@ -397,18 +414,28 @@ $(function () {
     var touch = $('.hidden_menu');
     var menu = $('.signup-menu');
 
-    $(touch).on('click', function(e){
+    $(touch).on('click', function (e) {
         e.preventDefault();
         menu.slideToggle();
     });
 
-    $(window).resize(function(){
+    $(window).resize(function () {
         var wid = $(window).width();
-        if(wid > 760 && menu.is(':hidden')){
+        if (wid > 760 && menu.is(':hidden')) {
             menu.removeAttr('style');
         }
 
     });
+
+
+    $(".second_block .selectize-dropdown-content .optgroup").click(function () {
+        console.log("clicked");
+        if ($(this).children(".optgroup-header").hasClass('active')) {
+            $(this).children(".option").show();
+        } else {
+            $(this).children(".option").hide();
+        }
+    })
 
 
 });

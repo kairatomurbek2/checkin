@@ -90,7 +90,7 @@
                         <p>Ваши услуги</p>
                         <div class="second_block">
                             <select multiple class="categories-select" id="id_categories" name="categories" required
-                                    placeholder="Сфера деятельности">
+                                    placeholder="Сфера деятельности" style="width: 50%;">
 
                             </select>
 
@@ -156,7 +156,8 @@
 
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/main.js' %}"></script>
+    <!--<script src="{% static 'js/main.js' %}"></script>-->
+    <script src="{% static 'js/select2.js' %}"></script>
 {#    {% load_google_map_js %}#}
     <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
     <script src="{% static 'redactor/redactor.js' %}"></script>
@@ -270,13 +271,25 @@
         ];
         (function () {
             var html = '';
+            var selectedCategories = [];
             {% for cat in object.categories.all %}
-                html += "<option value={{ cat.id }} selected='selected'>{{ cat }}</option>";
+            selectedCategories.push({{cat.id}});
             {% endfor %}
             for (var i = 0; i < categories.length; i++) {
                 html += "<optgroup label=" + categories[i].text + ">";
                 for (var j = 0; j < categories[i].children.length; j++) {
-                    html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                    var state = false;
+                    for (var k=0; k<selectedCategories.length; k++) {
+                        if (selectedCategories[k] == categories[i].children[j].id) {
+                            state = true;
+                            break;
+                        }
+                    }
+                    if (state) {
+                        html += "<option selected='selected' value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                    } else {
+                        html += "<option value='" + categories[i].children[j].id + "'>" + categories[i].children[j].text + "</option>"
+                    }
                 }
                 html += "</optgroup>";
             }
