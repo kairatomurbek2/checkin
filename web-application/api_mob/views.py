@@ -78,6 +78,7 @@ class MasterRetrieveUpdateViewApi(generics.RetrieveUpdateAPIView):
 class MasterReviewsListViewApi(generics.ListAPIView):
     serializer_class = RatingSerializer
     lookup_field = 'specialist__slug'
+    pagination_class = None
 
     def get_queryset(self):
         return Rating.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
@@ -110,6 +111,7 @@ class MasterCompanyListViewApi(generics.ListAPIView):
 class CompanyReviewsListApi(generics.ListAPIView):
     serializer_class = RatingSerializer
     lookup_field = 'company__slug'
+    pagination_class = None
 
     def get_queryset(self):
         return Rating.objects.filter(company__slug=self.kwargs['company_slug'])
