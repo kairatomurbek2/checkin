@@ -337,7 +337,7 @@ class Rating(models.Model):
     class Meta:
         verbose_name = _('Рейтинг')
         verbose_name_plural = _('Рейтинги (Отзывы)')
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def __init__(self, *args, **kwargs):
         super(Rating, self).__init__(*args, **kwargs)
