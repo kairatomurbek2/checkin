@@ -1,8 +1,15 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import serializers
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating
+
+
+class DateTimeFieldWihTZ(serializers.DateTimeField):
+    def to_representation(self, value):
+        value = timezone.localtime(value)
+        return super(DateTimeFieldWihTZ, self).to_representation(value)
 
 
 class ChildrenSerializer(serializers.ModelSerializer):
@@ -59,6 +66,8 @@ class MasterSerializer(serializers.ModelSerializer):
 
 
 class RatingSerializer(serializers.ModelSerializer):
+    created_at = DateTimeFieldWihTZ(format="%d.%m.%Y %H:%M")
+
     class Meta:
         model = Rating
         fields = ('id', 'created_at', 'get_user', 'comment', 'count')
