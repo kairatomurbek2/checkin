@@ -10,6 +10,11 @@ from api_mob.serializers import CategoryMainSerializer, CategorySerializer, Mast
 from webapp.models import Category, Specialist, Company, Rating
 
 
+class Pagination(LimitOffsetPagination):
+    default_limit = 20
+    max_limit = 100
+
+
 class CategoryMainListView(generics.ListAPIView):
     serializer_class = CategoryMainSerializer
     pagination_class = None
