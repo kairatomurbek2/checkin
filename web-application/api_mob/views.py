@@ -12,6 +12,7 @@ from webapp.models import Category, Specialist, Company, Rating
 
 class CategoryMainListView(generics.ListAPIView):
     serializer_class = CategoryMainSerializer
+    pagination_class = None
 
     def get_queryset(self):
         queryset = Category.objects.filter(parent=None)
@@ -22,6 +23,7 @@ class CategoryListView(generics.ListAPIView):
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend,)
     filter_fields = ('parent',)
+    pagination_class = None
 
     def get_queryset(self):
         queryset = Category.objects.all()
@@ -34,11 +36,6 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Category.objects.filter(slug=self.kwargs['slug'])
-
-
-class Pagination(LimitOffsetPagination):
-    default_limit = 1
-    max_limit = 2
 
 
 class MastersListView(generics.ListAPIView):
