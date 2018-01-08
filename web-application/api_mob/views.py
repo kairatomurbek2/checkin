@@ -47,7 +47,6 @@ class MastersListView(generics.ListAPIView):
     search_fields = ('full_name', 'tags__name')
     filter_fields = ('categories',)
     ordering_fields = ('created_at',)
-    pagination_class = Pagination
     queryset = Specialist.objects.all()
 
 
@@ -88,7 +87,6 @@ class CompaniesListView(generics.ListAPIView):
     search_fields = ('name', 'company_tags__name')
     filter_fields = ('categories',)
     ordering_fields = ('created_at',)
-    pagination_class = Pagination
     queryset = Company.objects.all()
 
 
