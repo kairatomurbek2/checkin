@@ -96,13 +96,18 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
     categories = serializers.StringRelatedField(many=True)
     contacts = CompanyContactSerializer(many=True)
     review_count = serializers.SerializerMethodField()
+    specialist_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
         fields = (
             'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'info', 'email', 'latitude', 'longitude',
-            'legal_data', 'rating', 'review_count', 'categories', 'contacts')
+            'legal_data', 'rating', 'review_count', 'specialist_count', 'categories', 'contacts')
 
     def get_review_count(self, obj):
         review_count = obj.rating_company.all().count()
         return review_count
+
+    def get_specialist_count(self, obj):
+        specialist_count = obj.company_specialists.all().count()
+        return specialist_count
