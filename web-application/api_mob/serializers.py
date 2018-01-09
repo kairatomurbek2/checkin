@@ -42,14 +42,14 @@ class SpecialistContactSerializer(serializers.ModelSerializer):
 
 
 class CompanyByMaster(serializers.ModelSerializer):
-    photo_url = serializers.SerializerMethodField()
+    logo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
-        fields = ('id', 'name', 'slug', 'photo_url', 'street_address', 'short_info')
+        fields = ('id', 'name', 'slug', 'logo_url', 'street_address', 'short_info')
 
-    def get_photo_url(self, obj):
-        return obj.photo.url
+    def get_logo_url(self, obj):
+        return obj.logo.url
 
 
 class MasterSerializer(serializers.ModelSerializer):
