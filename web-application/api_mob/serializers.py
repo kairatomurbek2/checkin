@@ -42,9 +42,14 @@ class SpecialistContactSerializer(serializers.ModelSerializer):
 
 
 class CompanyByMaster(serializers.ModelSerializer):
+    photo_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Company
-        fields = ('id', 'name', 'slug', 'logo', 'street_address', 'short_info')
+        fields = ('id', 'name', 'slug', 'photo_url', 'street_address', 'short_info')
+
+    def get_photo_url(self, obj):
+        return obj.photo.url
 
 
 class MasterSerializer(serializers.ModelSerializer):
@@ -105,11 +110,13 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
     contacts = CompanyContactSerializer(many=True)
     review_count = serializers.SerializerMethodField()
     specialist_count = serializers.SerializerMethodField()
+    logo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
         fields = (
-            'id', 'name', 'slug', 'logo', 'company_tags', 'street_address', 'info', 'email', 'latitude', 'longitude',
+            'id', 'name', 'slug', 'logo_url', 'company_tags', 'street_address', 'info', 'email', 'latitude',
+            'longitude',
             'legal_data', 'rating', 'review_count', 'specialist_count', 'categories', 'contacts')
 
     def get_review_count(self, obj):
@@ -119,3 +126,6 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
     def get_specialist_count(self, obj):
         specialist_count = obj.company_specialists.all().count()
         return specialist_count
+
+    def get_logo_url(self, obj):
+        return obj.logo.url
