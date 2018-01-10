@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
-    MasterCompanyListViewApi, CompanyReviewsListApi
+    MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin
 
 router = DefaultRouter()
 
@@ -22,4 +22,7 @@ urlpatterns = [
         name='masters_company_api_v1'),
     url(r'companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),
         name='company_reviews_api_v1'),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
+    url(r'^rest-auth/google/$', GoogleLogin.as_view(), name='google_login'),
 ]

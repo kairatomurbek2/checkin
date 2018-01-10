@@ -2,17 +2,35 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, AllowAny
+from rest_framework.views import APIView
 
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer
+from api_mob.social_auth import SocialAuth
 from webapp.models import Category, Specialist, Company, Rating
 
 
 class Pagination(LimitOffsetPagination):
     default_limit = 20
     max_limit = 100
+
+
+class FacebookLogin(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        social_auth = SocialAuth(token_key='social_token', provider='facebook')
+        return social_auth.login(request)
+
+
+class GoogleLogin(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        social_auth = SocialAuth(token_key='social_token', provider='google')
+        return social_auth.login(request)
 
 
 class CategoryMainListView(generics.ListAPIView):
