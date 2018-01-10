@@ -313,6 +313,7 @@ let app = new Vue({
         _masterSlug: '',
         _masterUser: '',
         _csrfToken: '',
+        _authToken: '',
         range: {
             start: new Date().setHours(0, 0, 0, 0),
             end: new Date(new Date().setDate(new Date().getDate() + 30)).setHours(0, 0, 0, 0),
@@ -327,11 +328,13 @@ let app = new Vue({
 
     methods: {
         // calendar methods
-        getDataFromDjango(val, slug, csrfToken, companies) {
+        getDataFromDjango(val, slug, csrfToken, companies, authToken) {
             this.toggleLocalLoader(true);
             this._masterSlug = slug;
             this._masterUser = val;
             this._csrfToken = csrfToken;
+            this._authToken = authToken;
+            Vue.http.headers.common['Authorization'] = 'Token ' + this._authToken;
             companies = companies.filter(company => {
                 return typeof company === 'object';
             });

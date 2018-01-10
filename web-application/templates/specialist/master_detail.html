@@ -397,6 +397,6 @@
         id: {{company.id}}
     })
     {% endfor %}
-    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies);
+    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies, '{{request.session.token_key}}');
 </script>
 {% endblock %}
