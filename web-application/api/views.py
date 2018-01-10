@@ -4,8 +4,9 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_202_ACCEPTED
 
@@ -64,6 +65,8 @@ class ReservationListView(generics.ListAPIView):
 
 
 class ReservationCreateView(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationCreteSerializer
 
     def create(self, request, *args, **kwargs):
@@ -76,6 +79,8 @@ class ReservationCreateView(generics.CreateAPIView):
 
 
 class ReservationStatusView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationSerializer
 
     def get_queryset(self):
@@ -90,6 +95,8 @@ class ReservationStatusView(generics.UpdateAPIView):
 
 
 class ScheduleSettingAddView(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = ScheduleSettingSerializer
 
     def get_serializer_context(self):
@@ -107,6 +114,8 @@ class ScheduleSettingAddView(generics.CreateAPIView):
 
 
 class ScheduleSettingUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     lookup_field = 'specialist__slug'
     serializer_class = ScheduleSettingUpdateSerializer
 
