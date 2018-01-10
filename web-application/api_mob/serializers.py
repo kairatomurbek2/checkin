@@ -49,7 +49,10 @@ class CompanyByMaster(serializers.ModelSerializer):
         fields = ('id', 'name', 'slug', 'logo_url', 'street_address', 'short_info')
 
     def get_logo_url(self, obj):
-        return obj.logo.url
+        if obj.logo:
+            return obj.logo.url
+        else:
+            pass
 
 
 class MasterSerializer(serializers.ModelSerializer):
@@ -101,7 +104,10 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
             'contacts', 'rating')
 
     def get_logo_url(self, obj):
-        return obj.logo.url
+        if obj.logo:
+            return obj.logo.url
+        else:
+            pass
 
 
 class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
@@ -128,4 +134,7 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
         return specialist_count
 
     def get_logo_url(self, obj):
-        return obj.logo.url
+        if obj.logo:
+            return obj.logo.url
+        else:
+            pass
