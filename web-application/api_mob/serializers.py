@@ -138,3 +138,9 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
             return obj.logo.url
         else:
             pass
+
+
+class RatingCreteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('id', 'created_at', 'comment', 'count')

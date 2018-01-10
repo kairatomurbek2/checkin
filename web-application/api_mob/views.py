@@ -1,15 +1,17 @@
 from rest_framework import filters
 from rest_framework import generics
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS, AllowAny
+from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.views import APIView
-
+from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
-    RatingSerializer, CompanySerializer
+    RatingSerializer, CompanySerializer, RatingCreteSerializer
 from api_mob.social_auth import SocialAuth
 from webapp.models import Category, Specialist, Company, Rating
+from rest_framework import status
 
 
 class Pagination(LimitOffsetPagination):
@@ -133,3 +135,17 @@ class CompanyReviewsListApi(generics.ListAPIView):
 
     def get_queryset(self):
         return Rating.objects.filter(company__slug=self.kwargs['company_slug'])
+
+
+class RatingAddViewApi(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = RatingCreteSerializer
+
+    def create(self, request, *args, **kwargs):
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(specialist=specialist, user=self.request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

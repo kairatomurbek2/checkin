@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
-    MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin
+    MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddViewApi
+from webapp.decorators import rating_check
 
 router = DefaultRouter()
 
@@ -26,4 +27,6 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^rest-auth/google/$', GoogleLogin.as_view(), name='google_login'),
+    url(r'masters/(?P<specialist__slug>[-_\w]+)/add-rating/$', rating_check(RatingAddViewApi.as_view()),
+        name='add_rating'),
 ]

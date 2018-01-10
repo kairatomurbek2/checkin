@@ -170,3 +170,17 @@ def administrator(function):
             raise Http404("Company not found")
 
     return decorator
+
+
+def rating_check(function):
+    def decorator(request, *args, **kwargs):
+        specialist = Specialist.objects.get(slug=kwargs['specialist__slug'])
+        if specialist.rating_specialist.all().count() >= 1 and request.user.rating_set.all().count() >= 1:
+            return JsonResponse({
+                "status": "forbidden",
+                "message": _("Вы уже добавляли отзыв")
+            })
+        else:
+            return function(request, *args, **kwargs)
+
+    return decorator
