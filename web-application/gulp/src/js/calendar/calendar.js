@@ -340,7 +340,7 @@ let app = new Vue({
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
-                this.schedule = response.body.results;
+                this.schedule = response.body;
                 if (this.schedule.length > 0) {
                     document.querySelector('#prev-week').style.display = 'block';
                     document.querySelector('#next-week').style.display = 'block';
@@ -368,7 +368,7 @@ let app = new Vue({
         },
         getMasterOrders() {
             this.$http.get('/api/reservation/' + this._masterSlug).then(response => {
-                this.reservations = response.body.results;
+                this.reservations = response.body;
                 this.doCorrectDateInOrders();
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
                 this.toggleLocalLoader(false);
