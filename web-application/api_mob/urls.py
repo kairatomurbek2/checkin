@@ -4,8 +4,8 @@ from rest_framework.routers import DefaultRouter
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
-    RatingAddCompanyViewApi
-from webapp.decorators import rating_check_specialist, rating_check_company
+    RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi
+from webapp.decorators import rating_check_specialist, rating_check_company, login_check_favorite
 
 router = DefaultRouter()
 
@@ -28,8 +28,11 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^rest-auth/google/$', GoogleLogin.as_view(), name='google_login'),
-    url(r'masters/(?P<specialist__slug>[-_\w]+)/add-rating/$', rating_check_specialist(RatingAddSpecialistViewApi.as_view()),
+    url(r'masters/(?P<specialist__slug>[-_\w]+)/add-rating/$',
+        rating_check_specialist(RatingAddSpecialistViewApi.as_view()),
         name='add_rating_for_master'),
     url(r'companies/(?P<company__slug>[-_\w]+)/add-rating/$', rating_check_company(RatingAddCompanyViewApi.as_view()),
         name='add_rating_for_company'),
+    url(r'^favorite/add/', login_check_favorite(FavoriteAddViewApi.as_view()), name='favorites_api'),
+    url(r'^favorite/(?P<slug>[-_\w]+)/$', ProfileFavoriteListViewApi.as_view(), name='favorite_list_api'),
 ]

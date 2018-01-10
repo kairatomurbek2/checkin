@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
-from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating
+from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
@@ -144,3 +144,11 @@ class RatingCreteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('id', 'created_at', 'comment', 'count')
+
+
+class FavoriteSpecialistSerializer(serializers.ModelSerializer):
+    specialist = MasterSerializer(many=False)
+
+    class Meta:
+        model = FavoriteSpecialist
+        fields = ('id', 'specialist')

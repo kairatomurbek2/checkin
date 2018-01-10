@@ -1,6 +1,9 @@
+from django.http import JsonResponse
+from django.views import View
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import ParseError
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
@@ -8,9 +11,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
-    RatingSerializer, CompanySerializer, RatingCreteSerializer
+    RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer
 from api_mob.social_auth import SocialAuth
-from webapp.models import Category, Specialist, Company, Rating
+from main.parameters import Messages
+from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist
 from rest_framework import status
 
 
@@ -163,3 +167,46 @@ class RatingAddCompanyViewApi(generics.CreateAPIView):
         serializer.save(company=company, user=self.request.user)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class FavoriteAddViewApi(View):
+    def get(self, request):
+        specialist_slug = request.GET.get("specialist")
+        if specialist_slug:
+            favorite, created = FavoriteSpecialist.objects.get_or_create(specialist_id=specialist_slug,
+                                                                         user=request.user)
+        else:
+            return JsonResponse({
+                "status": "error",
+                "message": "specialist query param is required"
+            })
+        if not created:
+            favorite.delete()
+            flash_message = Messages.Favorite.delete_success
+        else:
+            flash_message = Messages.Favorite.add_success
+        favorites_count = request.user.favoritespecialist_set.count()
+        data = {
+            "created": created,
+            "flash_message": flash_message,
+            "favorites_count": favorites_count
+        }
+        return JsonResponse(data)
+
+
+class ProfileFavoriteListViewApi(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = FavoriteSpecialistSerializer
+    lookup_field = 'username'
+    pagination_class = None
+
+    def get_queryset(self):
+        user = self.request.user
+        username = self.kwargs['slug']
+        if user.username == username:
+            return FavoriteSpecialist.objects.filter(user=self.request.user)
+        else:
+            raise ParseError(Messages.Favorite.error)
+
+

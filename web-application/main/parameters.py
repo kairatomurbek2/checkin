@@ -38,3 +38,8 @@ class Messages:
     class AddScheduleSetting:
         adding_success = _('Настройка расписание успешно созданы !')
         update_success = _('Настройка расписание успешно обновлены !')
+
+    class Favorite:
+        error = _('У вас нет доступа')
+        delete_success = _('Специалист успешно удален из избранных')
+        add_success = _('Специалист успешно добавлен в избранное')
