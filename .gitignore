@@ -14,3 +14,4 @@ web-application/staticfiles/js/
 web-application/staticfiles/css/
 .DS_Store
 npm-debug*
+package-lock.json

@@ -340,7 +340,7 @@ let app = new Vue({
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
-                this.schedule = response.body;
+                this.schedule = response.body.results;
                 if (this.schedule.length > 0) {
                     document.querySelector('#prev-week').style.display = 'block';
                     document.querySelector('#next-week').style.display = 'block';
@@ -368,7 +368,7 @@ let app = new Vue({
         },
         getMasterOrders() {
             this.$http.get('/api/reservation/' + this._masterSlug).then(response => {
-                this.reservations = response.body;
+                this.reservations = response.body.results;
                 this.doCorrectDateInOrders();
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
                 this.toggleLocalLoader(false);
@@ -786,15 +786,19 @@ let app = new Vue({
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
             this.editorState = editorState;
-            if (this.scheduleState) {
+            if (scheduleState) {
                 if (this.schedule.length > 0) {
-                    document.querySelector('#prev-week').style.display = 'block';
-                    document.querySelector('#next-week').style.display = 'block';
+                    setTimeout(() => {
+                        document.querySelector('#prev-week').style.display = 'block';
+                        document.querySelector('#next-week').style.display = 'block';
+                    });
                 }
                 this.getMasterSchedule();
             } else {
-                document.querySelector('#prev-week').style.display = 'none';
-                document.querySelector('#next-week').style.display = 'none';
+                setTimeout(() => {
+                    document.querySelector('#prev-week').style.display = 'none';
+                    document.querySelector('#next-week').style.display = 'none';
+                });
                 this.getScheduleSettings();
             }
         },
