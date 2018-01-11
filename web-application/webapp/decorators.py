@@ -175,7 +175,8 @@ def administrator(function):
 def rating_check_specialist(function):
     def decorator(request, *args, **kwargs):
         specialist = Specialist.objects.get(slug=kwargs['specialist__slug'])
-        if specialist.rating_specialist.all().count() >= 1 and request.user.rating_set.all().count() >= 1:
+        check_rating = specialist.rating_specialist.filter(user=request.user).exists()
+        if check_rating:
             return JsonResponse({
                 "status": "forbidden",
                 "message": _("Вы уже добавляли отзыв")
@@ -189,7 +190,8 @@ def rating_check_specialist(function):
 def rating_check_company(function):
     def decorator(request, *args, **kwargs):
         company = Company.objects.get(slug=kwargs['company__slug'])
-        if company.rating_company.all().count() >= 1 and request.user.rating_set.all().count() >= 1:
+        check_rating = company.rating_specialist.filter(user=request.user).exists()
+        if check_rating:
             return JsonResponse({
                 "status": "forbidden",
                 "message": _("Вы уже добавляли отзыв")

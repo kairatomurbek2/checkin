@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles extra_tags %}
 {% url 'masters' as master_url %}
 {% url 'company_list' as company_url %}
 
@@ -35,8 +35,9 @@
                     <img src="{% static 'img/user-icon.svg' %}" alt="image">
                     <ul class="sub_menu">
                         <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
-                        {% if request.user.employee.companies.exists %}
-                            {% for company in request.user.employee.companies.all %}
+                          {% user_company user as companies %}
+
+                         {% for company in companies %}
                                 <li>
                                     <a href="{% url 'company_detail' company.slug %}">
                                         {{ company }}
@@ -46,7 +47,6 @@
                                     <a href="{% url "add_administrator" company.slug %}">Добавить администратора</a>
                                 </li>
                             {% endfor %}
-                        {% endif %}
                         {% if request.user.user_specialists.exists %}
                             {% for specialist in request.user.user_specialists.all %}
                                 <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>

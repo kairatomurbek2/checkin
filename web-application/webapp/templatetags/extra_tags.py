@@ -1,6 +1,8 @@
 from django import template
 from django.template import TemplateDoesNotExist
 
+from webapp.models import Employees, Company
+
 register = template.Library()
 
 
@@ -33,12 +35,18 @@ def multiply(count):
 @register.simple_tag()
 def percent_converter(rating):
     return rating * 20
-#
-#
-# @register.simple_tag()
-# def user_company(company, request):
-#     user = request.user
-#     if user.employee in company:
-#         return company
-#     else:
-#         return ''
+
+
+@register.simple_tag()
+def user_company(current_user):
+    return Company.objects.filter(user__user=current_user, user__owner=True)
+
+
+@register.assignment_tag()
+def check_rating_user_specialist(master, current_user):
+    return master.rating_specialist.filter(user=current_user).exists()
+
+
+@register.assignment_tag()
+def check_rating_user_company(company, current_user):
+    return company.rating_company.filter(user=current_user).exists()
