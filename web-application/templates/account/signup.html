@@ -19,11 +19,11 @@
                     {% csrf_token %}
                     <p class="text-danger">{{ form.username.errors|striptags }}</p>
                     <input type="text" placeholder="ФИО" name="username" required="">
-                    <p class="text-danger">{{ form.email|striptags }}</p>
+                    <p class="text-danger">{{ form.email.errors|striptags }}</p>
                     {{ form.email }}
-                    <p class="text-danger">{{ form.password1|striptags }}</p>
+                    <p class="text-danger">{{ form.password1.errors|striptags }}</p>
                     {{ form.password1|attr:'required' }}
-                    <p class="text-danger">{{ form.password2|striptags }}</p>
+                    <p class="text-danger">{{ form.password2.errors|striptags }}</p>
                     {{ form.password2|attr:'required' }}
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
