@@ -46,6 +46,8 @@ urlpatterns = [
         name='specialist_reviews'),
     url(r'^company/(?P<company_slug>[-_\w]+)/reviews/$', company_views.ReviewCompanyListView.as_view(),
         name='company_reviews'),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/reservations-table/$',
+        specialist_owner(specialist_views.ReservationTableListView.as_view()), name='master_reservation_table'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/reservations/$',
         specialist_owner(specialist_views.ReservationListView.as_view()), name='master_reservation'),
     url(r'^favorite/add/', login_check_favorite(landing_views.FavoriteCreateView.as_view()), name='favorites'),

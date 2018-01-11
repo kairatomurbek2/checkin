@@ -51,7 +51,7 @@
                             {% for specialist in request.user.user_specialists.all %}
                                 <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>
                                 </li>
-                                <li><a href="{% url 'master_reservation' specialist.slug %}">Мои записи</a>
+                                <li><a href="{% url 'master_reservation_table' specialist.slug %}">Мои записи</a>
                                 </li>
                             {% endfor %}
                         {% endif %}

@@ -270,16 +270,36 @@ class ReviewSpecialistListView(ListView):
         return queryset
 
 
-class ReservationListView(LoginRequiredMixin, ListView):
+class ReservationTableListView(LoginRequiredMixin, ListView):
     model = Reservation
     template_name = 'specialist/reservation_list.html'
     filterset_class = ReservationFilter
 
     def get_context_data(self, **kwargs):
-        context = super(ReservationListView, self).get_context_data(**kwargs)
+        context = super(ReservationTableListView, self).get_context_data(**kwargs)
         reservation_filter = self.filterset_class(self.request.GET, queryset=self._get_reservation_list())
         context['reservation_filter'] = reservation_filter
         return context
 
     def _get_reservation_list(self):
         return Reservation.objects.filter(specialist__slug=self.kwargs['master_slug']).order_by('-created_at')
+
+
+class ReservationListView(LoginRequiredMixin, TemplateView):
+    template_name = 'specialist/master_detail_reservition.html'
+    model = Specialist
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationListView, self).get_context_data(**kwargs)
+        master = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        company = Company.objects.filter(company_specialists=master).last()
+        context['master'] = master
+        try:
+            context['owners'] = company.user.filter(owner=True).values_list('user', flat=True)
+        except:
+            pass
+        try:
+            context['administrator'] = company.user.filter(administrator=True).values_list('user', flat=True)
+        except:
+            pass
+        return context
