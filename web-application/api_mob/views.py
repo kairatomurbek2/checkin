@@ -3,6 +3,7 @@ from django.views import View
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
@@ -202,11 +203,7 @@ class ProfileFavoriteListViewApi(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        user = self.request.user
-        username = self.kwargs['slug']
-        if user.username == username:
-            return FavoriteSpecialist.objects.filter(user=self.request.user)
-        else:
-            raise ParseError(Messages.Favorite.error)
+        return FavoriteSpecialist.objects.filter(user=self.request.user)
+
 
 
