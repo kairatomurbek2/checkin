@@ -170,40 +170,33 @@ class RatingAddCompanyViewApi(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class FavoriteAddViewApi(View):
-    def get(self, request):
-        specialist_slug = request.GET.get("specialist")
-        if specialist_slug:
-            favorite, created = FavoriteSpecialist.objects.get_or_create(specialist_id=specialist_slug,
-                                                                         user=request.user)
+class FavoriteAddViewApi(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+
+    def post(self, request, slug):
+        favorite = FavoriteSpecialist.objects.filter(specialist__slug=slug, user=request.user)
+        if favorite:
+            favorite.first().delete()
+            status = "success"
+            message = Messages.Favorite.delete_success
         else:
-            return JsonResponse({
-                "status": "error",
-                "message": "specialist query param is required"
-            })
-        if not created:
-            favorite.delete()
-            flash_message = Messages.Favorite.delete_success
-        else:
-            flash_message = Messages.Favorite.add_success
-        favorites_count = request.user.favoritespecialist_set.count()
-        data = {
-            "created": created,
-            "flash_message": flash_message,
-            "favorites_count": favorites_count
-        }
-        return JsonResponse(data)
+            specialist = get_object_or_404(Specialist, slug=slug)
+            favorite = FavoriteSpecialist(specialist=specialist, user=request.user)
+            favorite.save()
+            status = "success"
+            message = Messages.Favorite.add_success
+        return JsonResponse({
+            "status": status,
+            "message": message
+        })
 
 
 class ProfileFavoriteListViewApi(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
     serializer_class = FavoriteSpecialistSerializer
-    lookup_field = 'username'
     pagination_class = None
 
     def get_queryset(self):
         return FavoriteSpecialist.objects.filter(user=self.request.user)
-
-
-
