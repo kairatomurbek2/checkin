@@ -435,7 +435,13 @@ $(function () {
         } else {
             $(this).children(".option").hide();
         }
-    })
+    });
+
+
+    $('.free-cell').on('click', function () {
+       $('.order-modal-wrap').fadeIn(400);
+       $('.blur').css('filter', 'blur(5px)');
+    });
 
 
 });
