@@ -149,11 +149,18 @@ class RatingAddSpecialistViewApi(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(specialist=specialist, user=self.request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        check_rating = specialist.rating_specialist.filter(user=request.user).exists()
+        if check_rating:
+            return JsonResponse({
+                "status": "forbidden",
+                "message": Messages.Rating.forbidden
+            })
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(specialist=specialist, user=self.request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class RatingAddCompanyViewApi(generics.CreateAPIView):
@@ -163,11 +170,18 @@ class RatingAddCompanyViewApi(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         company = get_object_or_404(Company, slug=self.kwargs['company__slug'])
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(company=company, user=self.request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        check_rating = company.rating_company.filter(user=request.user).exists()
+        if check_rating:
+            return JsonResponse({
+                "status": "forbidden",
+                "message": Messages.Rating.forbidden
+            })
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(company=company, user=self.request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class FavoriteAddViewApi(APIView):

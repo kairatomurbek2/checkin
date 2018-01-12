@@ -190,7 +190,7 @@ def rating_check_specialist(function):
 def rating_check_company(function):
     def decorator(request, *args, **kwargs):
         company = Company.objects.get(slug=kwargs['company__slug'])
-        check_rating = company.rating_specialist.filter(user=request.user).exists()
+        check_rating = company.rating_company.filter(user=request.user).exists()
         if check_rating:
             return JsonResponse({
                 "status": "forbidden",
