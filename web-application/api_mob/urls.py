@@ -33,6 +33,6 @@ urlpatterns = [
         name='add_rating_for_master'),
     url(r'companies/(?P<company__slug>[-_\w]+)/add-rating/$', rating_check_company(RatingAddCompanyViewApi.as_view()),
         name='add_rating_for_company'),
-    url(r'^favorite/add/', login_check_favorite(FavoriteAddViewApi.as_view()), name='favorites_api'),
+    url(r'^favorite/add/', FavoriteAddViewApi.as_view(), name='favorites_api'),
     url(r'^favorite/$', ProfileFavoriteListViewApi.as_view(), name='favorite_list_api'),
 ]
