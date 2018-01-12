@@ -293,7 +293,6 @@ header
       align-items: center
       margin: 0 auto
 
-
 footer
   background-color: #2d2d2d
   .logo
@@ -585,7 +584,6 @@ footer
       -ms-transition: .2s ease
       -o-transition: .2s ease
       transition: .2s ease
-
 
 .star-cb-group
   display: flex
@@ -1094,7 +1092,6 @@ h5
             &:hover
               border-color: #0089ec
 
-
   .break
     width: 100%
     height: auto
@@ -1188,7 +1185,6 @@ input.day:checked ~ .control--checkbox
     border-width: 0 2px 2px 0
     transform: rotate(45deg)
 
-
 .place
   background-color: #fff
   padding: 20px 0
@@ -1222,7 +1218,6 @@ input.day:checked ~ .control--checkbox
       background: url("../img/place1.png") center 0 no-repeat
       span
         color: $main-color
-
 
 // -----------------EDIT-COMPANY-----------------
 
@@ -1383,8 +1378,6 @@ h4
   background-color: #FDFDFD
   @include from(1400)
     height: 525px
-
-
 
 .live-search
   display: block
@@ -1935,7 +1928,6 @@ div.master:nth-child(3n)
       &:focus
         border-color: $main-color
 
-
     .option
       display: none
     .selectize-dropdown
@@ -2320,7 +2312,6 @@ div.master:nth-child(3n)
       background: transparent url("../img/rejected.png") 0 center no-repeat
       color: #EB1152
 
-
 // -----------------CREATE-ADMINISTRATOR-----------------
 
 .create_administrator
@@ -2394,7 +2385,7 @@ div.master:nth-child(3n)
     @include transition
     &:hover
       text-decoration: underline
-      
+
 #find-location
   margin-bottom: 40px
   background-color: transparent
@@ -2615,6 +2606,154 @@ div.master:nth-child(3n)
 
 .verify_email
   padding: 150px 0 200px 0
+
+// -----------------SPECIALIST-SHEDULE-----------------
+
+.specialist-shedule-page
+  .grid
+    padding: 40px 0 70px 0
+
+.specialist-shedule
+  background-color: #fff
+  padding: 35px 50px 50px 50px
+  position: relative
+  h4
+    padding-bottom: 30px
+  .date-table
+    position: relative
+    margin-bottom: 25px
+    ul
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: space-between
+      align-items: flex-start
+      li
+        width: 170px
+        height: auto
+        text-align: center
+        span
+          display: block
+          color: #95989A
+          font-size: 14px
+          &:first-child
+            padding-bottom: 6px
+    .date-prev,
+    .date-next
+      position: absolute
+      top: 50%
+      -webkit-transform: translateY(-50%)
+      -moz-transform: translateY(-50%)
+      -ms-transform: translateY(-50%)
+      -o-transform: translateY(-50%)
+      transform: translateY(-50%)
+      a
+        display: block
+      i
+        color: #6ED3CF
+        font-size: 30px
+    .date-next
+      right: -10px
+    .date-prev
+      left: -10px
+  .time-table
+    & > div
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: space-between
+      align-items: flex-start
+    ul
+      width: 170px
+      height: auto
+      li
+        width: 100%
+        height: 75px
+        border-radius: 5px
+        margin-bottom: 15px
+      .booked-cell,
+      .lunch-cell
+        background-color: #F5F5F5
+      .free-cell
+        display: -webkit-flex
+        display: -moz-flex
+        display: -ms-flex
+        display: -o-flex
+        display: flex
+        justify-content: center
+        align-items: center
+        cursor: pointer
+        span
+          font-size: 16px
+          color: #fff
+      .booked-cell
+        display: -webkit-flex
+        display: -moz-flex
+        display: -ms-flex
+        display: -o-flex
+        display: flex
+        justify-content: center
+        align-items: center
+        div
+          text-align: center
+          p
+            padding: 5px 0
+      .lunch-cell
+        display: -webkit-flex
+        display: -moz-flex
+        display: -ms-flex
+        display: -o-flex
+        display: flex
+        justify-content: center
+        align-items: center
+        span
+          color: #B5B5B5
+          font-size: 16px
+      .queue-cell
+        background-color: #5BCA87
+        height: 255px
+        display: -webkit-flex
+        display: -moz-flex
+        display: -ms-flex
+        display: -o-flex
+        display: flex
+        justify-content: center
+        align-items: center
+        text-align: center
+        span
+          display: block
+          color: #fff
+    .first-institution
+      .free-cell
+        background-color: #6ED3CF
+    .second-institution
+      .free-cell
+        background-color: #5BACCA
+
+.shedule-switcher
+  position: absolute
+  top: 0
+  left: -65px
+  li
+    width: 50px
+    height: 50px
+    border-radius: 50%
+    overflow: hidden
+    a
+      display: block
+      width: 100%
+      height: 100%
+    &:first-child
+      a
+        background: #fff url('../img/list-icon.png') center no-repeat
+      margin-bottom: 10px
+    &:last-child
+      a
+        background: #fff url('../img/calendar-icon.png') center no-repeat
 
 .hidden
   visibility: hidden
