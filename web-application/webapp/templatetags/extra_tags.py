@@ -42,6 +42,11 @@ def user_company(current_user):
     return Company.objects.filter(user__user=current_user, user__owner=True)
 
 
+@register.simple_tag()
+def user_administrator(current_user):
+    return Company.objects.filter(user__user=current_user, user__administrator=True)
+
+
 @register.assignment_tag()
 def check_rating_user_specialist(master, current_user):
     return master.rating_specialist.filter(user=current_user).exists()
