@@ -2755,6 +2755,70 @@ div.master:nth-child(3n)
       a
         background: #fff url('../img/calendar-icon.png') center no-repeat
 
+//-----------------ADDITION-PAGE2-----------------
+
+.result_page
+  .grid
+    padding-top: 50px
+    padding-bottom: 280px
+
+.applicants_list
+  width: 100%
+  height: auto
+  background-color: #fff
+  padding: 0 55px 20px 55px
+  li
+    width: 100%
+    height: auto
+    display: -webkit-flex
+    display: -moz-flex
+    display: -ms-flex
+    display: -o-flex
+    display: flex
+    justify-content: flex-start
+    align-items: stretch
+    padding-bottom: 30px
+    div
+      width: 25%
+      span
+        display: block
+        line-height: 1.4
+    .applicant_status
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: center
+      align-items: center
+      span
+        padding: 10px 10px 10px 35px
+      .confirmed
+        color: $main-color
+        background: url('../img/confirmed.png') left center no-repeat
+      .expect
+        color: #D6D6D6
+        background: url('../img/expect-icon.png') left center no-repeat
+
+  .list_header
+    div
+      width: 100%
+      padding: 30px 0
+      border-bottom: 1px solid #E4E5E6
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: flex-start
+      align-items: flex-start
+      span
+        width: 25%
+        color: $main-color
+        // &:nth-child(3),
+        &:nth-child(4)
+          text-align: center
+
 .hidden
   visibility: hidden
 

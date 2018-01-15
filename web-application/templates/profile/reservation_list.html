@@ -1,7 +1,63 @@
 {% extends 'base.html' %}
 {% load staticfiles thumbnail %}
 {% block content %}
-   {% for reservation in reservation_list %}
-       {{ reservation }}
+    {% for reservation in reservation_list %}
+        {{ reservation }}
     {% endfor %}
+    <main class="result_page">
+        <div class="grid">
+            <ul class="applicants_list">
+                <li class="list_header">
+                    <div>
+                        <span>Специалист</span>
+                        <span>Время записи</span>
+                        <span>Контакты</span>
+                        <span>Статус</span>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <p>Давыдова Мадина</p>
+                    </div>
+
+                    <div>
+                        <span>26.12.2017</span>
+                        <span>12:00</span>
+                    </div>
+
+                    <div>
+                        <span>г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37</span>
+                        <span>+996 705 578 842</span>
+                    </div>
+
+                    <div class="applicant_status">
+                        <!-- <span class="confirmed">Подтвержден</span> -->
+                        <span class="expect">Ожидает подтверждения</span>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <p>Давыдова Мадина</p>
+                    </div>
+
+                    <div>
+                        <span>26.12.2017</span>
+                        <span>12:00</span>
+                    </div>
+
+                    <div>
+                        <span>г. Бишкек, ул. Уметалиева, тц. "Весна", 3 этаж, кабинет 37</span>
+                        <span>+996 705 578 842</span>
+                    </div>
+
+                    <div class="applicant_status">
+                        <span class="confirmed">Подтвержден</span>
+                        <!-- <span class="expect">Ожидает подтверждения</span> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </main>
 {% endblock %}
