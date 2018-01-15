@@ -317,7 +317,8 @@ class AddAdministratorView(CreateView):
 
     def form_valid(self, form):
         user = form.save(commit=False)
-        user.username = form.cleaned_data['email']
+        fm_email = form.cleaned_data['email']
+        user.username = fm_email.replace("@", "").replace(".", "")
         user.save()
         email = EmailAddress(user=user, email=user.email, verified=True, primary=True)
         email.save()
