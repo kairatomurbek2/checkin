@@ -85,7 +85,6 @@ class MasterSerializer(serializers.ModelSerializer):
                 return True
             else:
                 return False
-
         return False
 
 

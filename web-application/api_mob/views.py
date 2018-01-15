@@ -22,7 +22,7 @@ from rest_framework import status
 class CustomTokenAuthentication(TokenAuthentication):
     def authenticate(self, request):
         try:
-            return super(TokenAuthentication1, self).authenticate(request=request)
+            return super(CustomTokenAuthentication, self).authenticate(request=request)
         except AuthenticationFailed:
             pass
 
@@ -87,28 +87,11 @@ class MastersListView(generics.ListAPIView):
     queryset = Specialist.objects.all()
 
 
-class MasterRetrieveUpdateViewApi(generics.RetrieveUpdateAPIView):
-    permission_classes = [MasterOwnerOrReadOnly]
+class MasterDetailViewApi(generics.RetrieveAPIView):
+    authentication_classes = (CustomTokenAuthentication,)
     lookup_field = 'slug'
-
-    def get_object(self):
-        obj = get_object_or_404(self.get_queryset(), slug=self.kwargs["slug"])
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    def get_serializer(self, *args, **kwargs):
-        instance = self.get_object()
-        if self.request.method in SAFE_METHODS and self.request.user.is_authenticated:
-            return MasterSerializer(instance)
-        elif self.request.method not in SAFE_METHODS:
-            serializer_class = MasterSerializer
-            return serializer_class(*args, **kwargs)
-        else:
-            return MasterSerializer(instance)
-
-    def get_queryset(self):
-        return Specialist.objects.filter(slug=self.kwargs['slug'])
-
+    queryset = Specialist.objects.all()
+    serializer_class = MasterSerializer
 
 class MasterReviewsListViewApi(generics.ListAPIView):
     serializer_class = RatingSerializer
