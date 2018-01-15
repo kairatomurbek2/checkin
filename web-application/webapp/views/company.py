@@ -1,6 +1,8 @@
 import datetime
 import threading
 from smtplib import SMTPException
+
+from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -315,7 +317,10 @@ class AddAdministratorView(CreateView):
 
     def form_valid(self, form):
         user = form.save(commit=False)
+        user.username = form.cleaned_data['email']
         user.save()
+        email = EmailAddress(user=user, email=user.email, verified=True, primary=True)
+        email.save()
         employee = Employees(user=user, administrator=True)
         employee.save()
         company = Company.objects.get(slug=self.kwargs.get('company_slug'))
