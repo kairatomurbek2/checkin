@@ -6,11 +6,15 @@
 {% block content %}
     <!-- VUE App -->
     {% verbatim %}
-    <main class="specialist-shedule-page" id="app"> 
-
-        <div class="grid">
-
+    <main class="specialist-shedule-page" id="app">
+        <div class="grid" v-cloak>
             <div class="specialist-shedule">
+
+                <div class="main-loader" v-cloak>
+                    {% endverbatim %}
+                    <img src="{% static 'img/loader.gif' %}" alt="loader">
+                    {% verbatim %}
+                </div>
 
                 {% endverbatim %}
                 <h4>Мои записи</h4>
