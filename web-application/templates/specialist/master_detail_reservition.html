@@ -13,11 +13,7 @@
             <div class="specialist-shedule">
 
                 {% endverbatim %}
-                {% if request.user == master.user %}
-                    <h4>Мои записи</h4>
-                {% else %}
-                    <h4>Записи специалиста {{master.full_name}}</h4>
-                {% endif %}
+                <h4>Мои записи</h4>
                 {% verbatim %}
 
                 <div class="date-table">
