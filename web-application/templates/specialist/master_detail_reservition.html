@@ -97,11 +97,16 @@
                             </li>
                     </div>
                 </div>
-
+                {% endverbatim %}
                 <ul class="shedule-switcher">
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
+                    {% if request.user.user_specialists.exists %}
+                        {% for specialist in request.user.user_specialists.all %}
+                            <li><a href="{% url 'master_reservation_table' specialist.slug %}"></a></li>
+                            <li><a href="{% url 'master_reservation' specialist.slug %}"></a></li>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
+                {% verbatim %}
 
             </div>
         </div>

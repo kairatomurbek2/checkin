@@ -19,6 +19,14 @@ from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecial
 from rest_framework import status
 
 
+class CustomTokenAuthentication(TokenAuthentication):
+    def authenticate(self, request):
+        try:
+            return super(TokenAuthentication1, self).authenticate(request=request)
+        except AuthenticationFailed:
+            pass
+
+
 class Pagination(LimitOffsetPagination):
     default_limit = 20
     max_limit = 100
@@ -69,6 +77,8 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
 
 
 class MastersListView(generics.ListAPIView):
+    authentication_classes = (CustomTokenAuthentication,)
+
     serializer_class = MasterSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
     search_fields = ('full_name', 'tags__name')

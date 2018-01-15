@@ -79,13 +79,14 @@ class MasterSerializer(serializers.ModelSerializer):
 
     def get_is_favorite(self, specialist):
         request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user = request.user
-            if user.is_authenticated:
-                if specialist.specialist_favorites.filter(user=user).exists():
-                    return True
-                else:
-                    return False
+        user = request.user
+        if user.is_authenticated:
+            if specialist.specialist_favorites.filter(user=user).exists():
+                return True
+            else:
+                return False
+
+        return False
 
 
 class RatingSerializer(serializers.ModelSerializer):
