@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.views.generic import UpdateView
 
 from webapp import forms
-from webapp.models import FavoriteSpecialist
+from webapp.models import FavoriteSpecialist, Reservation
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
@@ -30,3 +30,14 @@ class ProfileFavoriteListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
+
+
+class HistoryReservationUser(LoginRequiredMixin, ListView):
+    model = Reservation
+    template_name = 'profile/reservation_list.html'
+    slug_field = 'username'
+    context_object_name = 'reservation_list'
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return self.model.objects.filter(user=self.request.user)

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+{% block content %}
+   {% for reservation in reservation_list %}
+       {{ reservation }}
+    {% endfor %}
+{% endblock %}
