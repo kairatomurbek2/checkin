@@ -607,7 +607,7 @@ let app = new Vue({
             if (time.status === 'free' || time.status === 'refused') {
                 this.record = time;
                 document.querySelector('.blur').style.filter = 'blur(5px)';
-                document.querySelector('.order-modal-wrap').style.display = 'block';
+                document.querySelector('.modal-calendar-admin').style.display = 'block';
                 document.querySelector('.title-time').innerHTML = 'Запись на ' + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
 
             }
@@ -664,7 +664,7 @@ let app = new Vue({
                     this.record.date_time_reservation = this.record.time;
                     this.reservations.push(this.record);
                     setTimeout(function () {
-                        document.querySelector('.order-modal-wrap').style.display = 'none';
+                        document.querySelector('.modal-calendar-admin').style.display = 'none';
                         document.querySelector('.blur').style.filter = 'none';
                         document.querySelector('.success').innerHTML = '';
                         document.querySelector('.success').style.display = '';
@@ -691,7 +691,7 @@ let app = new Vue({
             })
         },
         cleanOrderPopup() {
-            document.querySelector('.order-modal-wrap').style.display = 'none';
+            document.querySelector('.modal-calendar-admin').style.display = 'none';
             document.querySelector('.blur').style.filter = 'blur(0px)';
             document.querySelector('.title-time').innerHTML = '';
         },

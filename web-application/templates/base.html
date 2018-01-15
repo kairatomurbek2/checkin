@@ -42,6 +42,21 @@
     </div>
 </div>
 
+<div class="order-modal-wrap modal-calendar-admin" style="display: none;">
+    <div class="order-modal">
+        <span class="close_modal"><i class="fa fa-times" aria-hidden="true"></i></span>
+        <div class="title">Записать</div>
+        <div class="title-time"></div> 
+        <div class="inputs">
+            <input type="text" placeholder="Имя" id="full_name" value="{{request.user.get_full_name}}">
+            <input type="phone" class="mask" placeholder="Телефон" id="phone">
+            <button id="make-order" onclick="app.makeOrder()">Записать</button>
+        </div>
+        <div class="error"></div>
+        <div class="success"></div>
+    </div>
+</div>
+
 <div class="blur">
     {% include 'header.html' %}
     {% block content %}{% endblock %}
