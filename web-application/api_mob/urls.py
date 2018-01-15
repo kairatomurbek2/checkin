@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
-    CompaniesListView, MasterRetrieveUpdateViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
+    CompaniesListView, MasterDetailViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi
 from webapp.decorators import rating_check_specialist, rating_check_company, login_check_favorite
@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^categories/main/', CategoryMainListView.as_view(), name='main_category'),
     url(r'categories/$', CategoryListView.as_view(), name='categories'),
     url(r'categories/(?P<slug>[-_\w]+)/$', CategoryRetrieveView.as_view(), name='category'),
-    url(r'masters/(?P<slug>[-_\w]+)/$', MasterRetrieveUpdateViewApi.as_view(), name='masters_api_v1_detail'),
+    url(r'masters/(?P<slug>[-_\w]+)/$', MasterDetailViewApi.as_view(), name='masters_api_v1_detail'),
     url(r'masters/(?P<specialist__slug>[-_\w]+)/reviews/$', MasterReviewsListViewApi.as_view(),
         name='masters__reviews_api_v1'),
     url(r'masters/$', MastersListView.as_view(), name='masters_api_v1'),
