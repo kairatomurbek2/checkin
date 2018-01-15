@@ -22,7 +22,7 @@ from rest_framework import status
 class CustomTokenAuthentication(TokenAuthentication):
     def authenticate(self, request):
         try:
-            return super(TokenAuthentication1, self).authenticate(request=request)
+            return super(CustomTokenAuthentication, self).authenticate(request=request)
         except AuthenticationFailed:
             pass
 
