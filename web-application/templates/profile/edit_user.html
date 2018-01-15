@@ -17,7 +17,8 @@
                 <button type="submit" class="button">Сохранить</button>
             </form>
 
-            <a href="{% url 'account_change_password' %}">Сменить пароль</a>
+            <a href="{% url 'account_change_password' %}">Сменить пароль</a> <br>
+            <a href="{% url 'reservation_list' user %}">Мои записи</a>
         </div>
     </main>
 {% endblock %}

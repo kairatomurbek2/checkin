@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+{% block content %}
+    <main class="result_page">
+        <div class="grid">
+            <ul class="applicants_list">
+                <li class="list_header">
+                    <div>
+                        <span>Специалист</span>
+                        <span>Время записи</span>
+                        <span>Контакты</span>
+                        <span>Статус</span>
+                    </div>
+                </li>
+                {% for reservation in reservation_list %}
+                    <li>
+                        <div>
+                            <p>{{ reservation.specialist }}</p>
+                        </div>
+
+                        <div>
+                            <span>{{ reservation.date_time_reservation }}</span>
+                        </div>
+
+                        <div>
+                            <span>{{ reservation.specialist.street_address }}</span>
+                            {% for contact in reservation.specialist.specialist_contacts.all %}
+                                <span>{{ contact.phone }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="applicant_status">
+                            {% if reservation.status == 'confirmed' %}
+                                <span class="confirmed">Подтвержден</span>
+                            {% endif %}
+                            {% if reservation.status == 'armored' %}
+                                <span class="expect">Ожидает подтверждения</span>
+                            {% endif %}
+                        {% if  reservation.status == 'refused' %}
+                            <span class="non_confirmed">Отказано</span>
+                        {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+{% endblock %}

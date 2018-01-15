@@ -62,12 +62,13 @@ class MasterSerializer(serializers.ModelSerializer):
     company = CompanyByMaster(many=True)
     review_count = serializers.SerializerMethodField()
     photo_url = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Specialist
         fields = (
             'id', 'user', 'company', 'photo_url', 'full_name', 'sex', 'slug', 'street_address', 'short_info', 'info',
-            'categories', 'tags', 'specialist_contacts', 'rating', 'review_count')
+            'categories', 'tags', 'specialist_contacts', 'rating', 'review_count', 'is_favorite')
 
     def get_review_count(self, obj):
         review_count = obj.rating_specialist.all().count()
@@ -75,6 +76,16 @@ class MasterSerializer(serializers.ModelSerializer):
 
     def get_photo_url(self, obj):
         return obj.photo.url
+
+    def get_is_favorite(self, specialist):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+            if user.is_authenticated:
+                if specialist.specialist_favorites.filter(user=user).exists():
+                    return True
+                else:
+                    return False
 
 
 class RatingSerializer(serializers.ModelSerializer):
