@@ -4,336 +4,93 @@
     <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
 {% endblock %}
 {% block content %}
-    <main class="specialist-shedule-page">
+    <!-- VUE App -->
+    {% verbatim %}
+    <main class="specialist-shedule-page" id="app"> 
+
         <div class="grid">
+
             <div class="specialist-shedule">
-                <h4>Записи Айгуль Бабуровны</h4>
+
+                {% endverbatim %}
+                <h4>Записи специалиста {{master.full_name}}</h4>
+                {% verbatim %}
 
                 <div class="date-table">
+
                     <ul>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
-                        </li>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
-                        </li>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
-                        </li>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
-                        </li>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
-                        </li>
-                        <li>
-                            <span>1 ноября</span>
-                            <span>Среда</span>
+                        <li v-for="weekDay of mainArray">
+                            <span>{{localeDays[weekDay.date.getDay()]}}</span>
+                            <span>{{prettyDate(weekDay.date, 'date')}}<div>
                         </li>
                     </ul>
 
-                    <span class="date-prev"><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a></span>
-                    <span class="date-next"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i></a></span>
+                    <span class="date-prev" id="prev-week" onclick="app.moveToPreviousWeek();">
+                        <a><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                    </span>
+                    <span class="date-next" id="next-week" onclick="app.moveToNextWeek();">
+                        <a><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                    </span>
 
                 </div>
 
                 <div class="time-table">
                     <div class="first-institution">
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
+                        <ul v-for="weekDay of mainArray" v-bind:class="{holiday: (weekDay.times.length < 3)}">
+                            <li 
+                                v-for="(time, index) of weekDay.times"
+                                :class="[
+                                    (time.status.match(/free|refused/) ? 'free-cell' : null), 
+                                    (time.status === 'left' ? 'left-cell' : null),
+                                    (time.status.match(/confirmed|armored/) ? 'booked-cell' : null),
+                                    (time.status === 'confirmed' ? 'confirmed-cell' : null), 
+                                    (time.status === 'lunch' ? 'lunch-cell' : null), 
+                                    (time.status === 'live' ? 'queue-cell' : null),
+                                    (weekDay.times.length < 3 ? 'holiday-cell' : null),
+                                    makeClassFromCompany(time)
+                                ]"
+                                v-on:click="toggleOrderPopup(time)">
+                                <div v-if="time.status == 'free'">
+                                    <span>{{prettyDate(time.time, 'time')}}</span>
+                                </div>
+                                <div v-if="time.status == 'left'">
+                                    <span>------</span>
+                                </div>
+                                <div v-if="time.status.match(/armored|confirmed/)">
+                                    {% endverbatim %}
+                                        {% if request.user == master.user %}
+                                            {% verbatim %}
+                                                <span>{{prettyDate(time.time, 'time')}}</span>
+                                                <p>{{time.name? time.name : null}}</p>
+                                                <span>{{time.phone}}</span>
+                                            {% endverbatim %}
+                                        {% endif %}
+                                    {% verbatim %}
+                                    <div class="action-icons" v-if="time.status == 'armored'">
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
+                                            {% endverbatim %}<img class="action-icon" src="{% static 'img/confirm.png' %}" alt="">{% verbatim %}
+                                        </button>
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                            {% endverbatim %}<img class="action-icon" src="{% static 'img/decline.png' %}" alt="">{% verbatim %}
+                                        </button>
+                                    </div>
+                                    <div class="action-icons" v-if="time.status == 'confirmed'">
+                                        <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                            {% endverbatim %}<img class="action-icon decline-action" src="{% static 'img/decline.svg' %}" alt="">{% verbatim %}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div v-if="time.status === 'live'">
+                                    <span>Очередь</span>
+                                    <span>{{prettyDateRange(time.time, 'time')}}</span>
+                                </div>
+                                <div v-if="time.status === 'lunch'">
+                                    <span>Обед</span>
+                                </div>
+                                <div v-if="weekDay.times.length < 3">
+                                    <span>Выходной</span>
                                 </div>
                             </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="queue-cell">
-                                <div>
-                                    <span>Живая <br> очередь</span>
-                                    <span>09:30 - 15:00</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="lunch-cell">
-                                <span>Обед</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="second-institution">
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
-
-                        <ul>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                            <li class="booked-cell">
-                                <div>
-                                    <span>11:30</span>
-                                    <p>Давыдова Мадина</p>
-                                    <span>+996 705 57 88 42</span>
-                                </div>
-                            </li>
-                            <li class="free-cell">
-                                <span>09:30</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 
@@ -341,8 +98,30 @@
                     <li><a href="#"></a></li>
                     <li><a href="#"></a></li>
                 </ul>
+
             </div>
         </div>
     </main>
+    {% endverbatim %}
+    <!-- VUE App End -->
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+    <script src="{% static 'js/vue-resource.min.js' %}"></script>
+    <script src="{% static 'js/calendar-admin.js' %}"></script>
+    <script>
+        let masterUser = false;
+        let companies = [];
+        {% if request.user == master.user or user.id in owners or user.id in administrator %}
+        masterUser = true;
+        {% endif %}
+        {% for company in master.company.all %}
+        companies.push({
+            name: '{{ company.name }}',
+            id: {{company.id}}
+        })
+        {% endfor %}
+        app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies, '{{request.session.token_key}}');
+    </script>
 {% endblock %}
 
