@@ -304,7 +304,7 @@ let app = new Vue({
         scheduleSettings: [],
         scheduleState: true,
         editorState: false,
-        localLoaderState: false,
+        localLoaderState: true,
         period: 5,
         record: {},
         reservations: null,
@@ -339,7 +339,6 @@ let app = new Vue({
                 return typeof company === 'object';
             });
             this.companies = companies;
-
             this.getMasterSchedule();
         },
         getMasterSchedule() {
