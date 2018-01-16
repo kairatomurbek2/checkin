@@ -662,13 +662,9 @@ let app = new Vue({
                     this.setOrderStatusInArray(this.record);
                     this.record.date_time_reservation = this.record.time;
                     this.reservations.push(this.record);
-                    setTimeout(function () {
-                        document.querySelector('.order-modal-wrap').style.display = 'none';
-                        document.querySelector('.blur').style.filter = 'none';
-                        document.querySelector('.success').innerHTML = '';
-                        document.querySelector('.success').style.display = '';
-                        document.querySelector('.error').innerHTML = '';
-                    }, 3000);
+                    setTimeout(() => {
+                        this.cleanOrderPopup();
+                    }, 1500);
                 } else {
                     document.querySelector('.error').style.display = 'block';
                     document.querySelector('.error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
@@ -691,8 +687,10 @@ let app = new Vue({
         },
         cleanOrderPopup() {
             document.querySelector('.order-modal-wrap').style.display = 'none';
-            document.querySelector('.blur').style.filter = 'blur(0px)';
-            document.querySelector('.title-time').innerHTML = '';
+            document.querySelector('.blur').style.filter = 'none';
+            document.querySelector('.success').innerHTML = '';
+            document.querySelector('.success').style.display = '';
+            document.querySelector('.error').innerHTML = '';
         },
         setRecordStatus(time, status) {
             if (this._masterUser) {
