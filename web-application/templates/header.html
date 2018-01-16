@@ -43,7 +43,7 @@
             {% if request.user.is_authenticated %}
                 <ul class="authorised_user">
                 {% if not administrator %}
-                    <li><a href="{% url 'favorite_list' request.user %}">
+                    <li class="fav-link"><a href="{% url 'favorite_list' request.user %}">
                         <span class="favourite_text">Избранные</span>
                         (<span>{% if request.user.favoritespecialist_set.count > 0 %}
                         {{ request.user.favoritespecialist_set.count }}{% else %}0{% endif %}</span>)</a></li>
