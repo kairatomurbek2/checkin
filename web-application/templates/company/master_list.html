@@ -6,7 +6,7 @@
 
             <div class="company_name">
                 <div>
-                    <h4>Sunrise Studio</h4>
+                    <h4>{{ company.name }}</h4>
                     <p>Вы ведете запись этих <br> специалистов</p>
                 </div>
                 <form action="#" method="post" class="filter_form">
@@ -18,98 +18,29 @@
             </div>
 
             <div class="administrator-specialists">
-                <div class="master">
-
-                    <a href="#" class="master_img">
+                {% for master in master_list %}
+                    <div class="master">
+                        <a href="#" class="master_img">
 					<span>
-						<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
+                        {% if master.photo %}
+                            {% thumbnail master.photo "154x154" as im %}
+                                <img src="{{ im.url }}" alt={{ master.full_name }}>
+                            {% endthumbnail %}
+                        {% else %}
+                            <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                        {% endif %}
 					</span>
-                    </a>
-
-                    <div class="master_desc">
-                        <h4>Джонни Депп</h4>
-                        <span>Педиатр, детский лор, аллерголог...</span>
-                        <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque
-                            quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
+                        </a>
+                        <div class="master_desc">
+                            <h4>{{ master.full_name }}</h4>
+                            <span>{{ master.get_categories }}</span>
+                            <span></span>
+                            <p>{{ master.short_info }}</p>
+                        </div>
+                        <a href="#">ЗАПИСЬ</a>
                     </div>
-                    <a href="#">ЗАПИСЬ</a>
-                </div>
-
-                <div class="master">
-
-                    <a href="#" class="master_img">
-					<span>
-						<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-					</span>
-                    </a>
-
-                    <div class="master_desc">
-                        <h4>Джонни Депп</h4>
-                        <span>Педиатр, детский лор, аллерголог...</span>
-                        <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque
-                            quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-                    </div>
-                    <a href="#">ЗАПИСЬ</a>
-                </div>
-
-                <div class="master">
-
-                    <a href="#" class="master_img">
-					<span>
-						<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-					</span>
-                    </a>
-
-                    <div class="master_desc">
-                        <h4>Джонни Депп</h4>
-                        <span>Педиатр, детский лор, аллерголог...</span>
-                        <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque
-                            quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-                    </div>
-                    <a href="#">ЗАПИСЬ</a>
-                </div>
-
-                <div class="master">
-
-                    <a href="#" class="master_img">
-					<span>
-						<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-					</span>
-                    </a>
-
-                    <div class="master_desc">
-                        <h4>Джонни Депп</h4>
-                        <span>Педиатр, детский лор, аллерголог...</span>
-                        <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque
-                            quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-                    </div>
-                    <a href="#">ЗАПИСЬ</a>
-                </div>
-
-                <div class="master">
-
-                    <a href="#" class="master_img">
-					<span>
-						<img src="img/Johnny-Depp-Net-Worth-and-Sal.svg" alt="image">
-					</span>
-                    </a>
-
-                    <div class="master_desc">
-                        <h4>Джонни Депп</h4>
-                        <span>Педиатр, детский лор, аллерголог...</span>
-                        <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque turpis purus, pellentesque
-                            quis rhoncus non, consectetur a diam. Fusce volutpat amet</p>
-                    </div>
-                    <a href="#">ЗАПИСЬ</a>
-                </div>
+                {% endfor %}
             </div>
-
-
         </div>
     </main>
 {% endblock %}

@@ -4,7 +4,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy as _
-from webapp.models import Company, Specialist, Rating
+from webapp.models import Company, Specialist, Rating, Employees
+from django.db.models import Q
 
 
 def user_profile_permission(function):
@@ -36,9 +37,24 @@ def specialist_owner(function):
 def company_owner(function):
     def decorator(request, *args, **kwargs):
         try:
-            company = Company.all_objects.get(slug=kwargs['company_slug'])
-            owner = company.user.filter(owner=True).last().user
-            if owner == request.user:
+            owner = Company.all_objects.get(slug=kwargs['company_slug'], user__owner=True, user__user=request.user)
+            if owner:
+                return function(request, *args, **kwargs)
+            else:
+                raise PermissionDenied('Permission denied')
+        except Company.DoesNotExist:
+            raise Http404("Company not found")
+
+    return decorator
+
+
+def company_owners(function):
+    def decorator(request, *args, **kwargs):
+        try:
+            p = Company.all_objects.get(
+                Q(slug=kwargs['company_slug'], user__administrator=True, user__user=request.user) |
+                Q(slug=kwargs['company_slug'], user__owner=True, user__user=request.user))
+            if p:
                 return function(request, *args, **kwargs)
             else:
                 raise PermissionDenied('Permission denied')

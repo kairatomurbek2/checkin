@@ -86,6 +86,11 @@ class MasterCompanyListView(ListView):
     model = Specialist
     context_object_name = 'master_list'
 
+    def get_context_data(self, **kwargs):
+        context = super(MasterCompanyListView, self).get_context_data(**kwargs)
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
     def get_queryset(self):
         return Specialist.objects.filter(company__slug=self.kwargs['company_slug'])
 

@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check, \
     user_specialist_create_check, user_company_create_check, login_check_favorite, specialist_status_reservation, \
-    administrator
+    administrator, company_owners
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -38,7 +38,7 @@ urlpatterns = [
         company_owner(company_views.SpecialistSearchView.as_view()),
         name='user_search'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/masters/$',
-        company_owner(company_views.MasterCompanyListView.as_view()),
+        company_owners(company_views.MasterCompanyListView.as_view()),
         name='master_list_company'),
     url(r'^search/$', landing_views.SearchView.as_view(), name='search'),
     url(r'^invite-accept/$', specialist_views.SpecialistInviteAcceptView.as_view(), name='invite_accept'),
