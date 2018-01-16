@@ -2,24 +2,22 @@
 {% load staticfiles thumbnail %}
 {% block content %}
     <main class="administrator-page">
-     {% include "messages.html" %}
+        {% include "messages.html" %}
         <div class="grid">
-
             <div class="company_name">
                 <div>
                     <h4>{{ company.name }}</h4>
                     <p>Вы ведете запись этих <br> специалистов</p>
                 </div>
-                <form action="#" method="post" class="filter_form">
+                <form action="" method="get" class="filter_form">
                     <label>
-                        <input type="text" placeholder="Найти специалиста...">
+                        {{ master_list.form.search }}
                     </label>
                     <button type="submit"></button>
                 </form>
             </div>
-
             <div class="administrator-specialists">
-                {% for master in master_list %}
+                {% for master in master_list.qs %}
                     <div class="master">
                         <a href="#" class="master_img">
 					<span>
@@ -40,6 +38,8 @@
                         </div>
                         <a href="#">ЗАПИСЬ</a>
                     </div>
+                {% empty %}
+                    <p class="no_result">По вашему запросу спициалситов не найдено...</p>
                 {% endfor %}
             </div>
         </div>

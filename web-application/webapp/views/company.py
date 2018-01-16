@@ -23,7 +23,7 @@ from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
 from webapp.models import Company, Category, Specialist, Invite, Rating, Employees, Reservation
 from webapp.views.base_views import BaseFormView
-from webapp.views.filters import CompanyFilter, ReservationFilter
+from webapp.views.filters import CompanyFilter, ReservationFilter, SpecialistFilter
 
 
 class CompanySpecialistList(ListView):
@@ -83,16 +83,17 @@ class CompanyList(ListView):
 
 class MasterCompanyListView(ListView):
     template_name = 'company/master_list.html'
+    filterset_class = SpecialistFilter
     model = Specialist
     context_object_name = 'master_list'
 
     def get_context_data(self, **kwargs):
         context = super(MasterCompanyListView, self).get_context_data(**kwargs)
+        master_filter = self.filterset_class(self.request.GET, queryset=Specialist.objects.filter(
+            company__slug=self.kwargs['company_slug']))
+        context['master_list'] = master_filter
         context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
         return context
-
-    def get_queryset(self):
-        return Specialist.objects.filter(company__slug=self.kwargs['company_slug'])
 
 
 class CompanyCreateView(CreateView):
