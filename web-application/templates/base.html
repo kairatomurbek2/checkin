@@ -49,8 +49,8 @@
         <div class="title-time"></div> 
         <div class="inputs">
             <input type="text" placeholder="Имя" id="full_name_admin" value="">
-            <input type="phone" class="mask" placeholder="Телефон" id="phone_admin">
-            <button id="make-order_admin" onclick="app.makeOrder()">Записать</button>
+            <input type="phone" class="mask" placeholder="Телефон" id="phone_admin" onkeypress="app.makeOrder(true, event);">
+            <button id="make-order_admin" onclick="app.makeOrder(false, null)">Записать</button>
         </div>
         <div class="error"></div>
         <div class="success"></div>
