@@ -723,6 +723,9 @@ let app = new Vue({
         },
         moveToNextWeek() {
             this.mainArray = [];
+
+            this.range.current = new Date(this.range.current).setDate(new Date(this.range.current).getDate() + 1);
+
             let start = new Date(this.range.current);
             let end = new Date(this.range.current).setDate(new Date(this.range.current).getDate() + this.period);
             if (new Date(end).getTime() >= new Date(this.range.end).getTime()) {
@@ -734,6 +737,9 @@ let app = new Vue({
         },
         moveToPreviousWeek() {
             this.mainArray = [];
+
+            this.range.current = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - 1);
+            
             let start = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - (this.period * 2));
             let end = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - this.period);
             if (new Date(start).getTime() <= new Date(this.range.start).getTime()) {
