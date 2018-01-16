@@ -51,11 +51,14 @@ def company_owner(function):
 def company_owners(function):
     def decorator(request, *args, **kwargs):
         try:
-            p = Company.all_objects.get(
-                Q(slug=kwargs['company_slug'], user__administrator=True, user__user=request.user) |
-                Q(slug=kwargs['company_slug'], user__owner=True, user__user=request.user))
-            if p:
-                return function(request, *args, **kwargs)
+            if request.user.is_authenticated:
+                owner_admin = Company.all_objects.get(
+                    Q(slug=kwargs['company_slug'], user__administrator=True, user__user=request.user) |
+                    Q(slug=kwargs['company_slug'], user__owner=True, user__user=request.user))
+                if owner_admin:
+                    return function(request, *args, **kwargs)
+                else:
+                    raise PermissionDenied('Permission denied')
             else:
                 raise PermissionDenied('Permission denied')
         except Company.DoesNotExist:
