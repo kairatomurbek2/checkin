@@ -58,8 +58,14 @@
                                 {% if obj.status == 'armored' %}
                                     <div class="form_td">
                                         <form>
-                                            <button type="submit" class="button agree" onclick="setStatus({{obj.id}}, 'confirmed', '{{obj.specialist.slug}}')">Подтвердить</button>
-                                            <button type="submit" class="button disagree" onclick="setStatus({{obj.id}}, 'refused', '{{obj.specialist.slug}}')">Отказать</button>
+                                            <button type="submit" class="button agree"
+                                                    onclick="setStatus({{ obj.id }}, 'confirmed', '{{ obj.specialist.slug }}')">
+                                                Подтвердить
+                                            </button>
+                                            <button type="submit" class="button disagree"
+                                                    onclick="setStatus({{ obj.id }}, 'refused', '{{ obj.specialist.slug }}')">
+                                                Отказать
+                                            </button>
                                         </form>
                                     </div>
                                 {% endif %}
@@ -78,8 +84,12 @@
                 {% paginate %}
 
                 <ul class="shedule-switcher">
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
+                    {% if request.user.user_specialists.exists %}
+                        {% for specialist in request.user.user_specialists.all %}
+                            <li><a href="{% url 'master_reservation_table' specialist.slug %}"></a></li>
+                            <li><a href="{% url 'master_reservation' specialist.slug %}"></a></li>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -87,23 +97,23 @@
 {% endblock %}
 
 {% block js %}
-<script>
-    function setStatus(id, status, slug){
-        $.ajax({
-            url: '/api/reservation/status/'+ slug +'/' + id + '/',
-            method: 'put',
-            headers: {
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: {
-                status: status
-            },
-            success: function (response) {
-                if (response.status === 'refused') {
-                    window.location.reload();
+    <script>
+        function setStatus(id, status, slug) {
+            $.ajax({
+                url: '/api/reservation/status/' + slug + '/' + id + '/',
+                method: 'put',
+                headers: {
+                    'X-CSRFToken': '{{csrf_token}}'
+                },
+                data: {
+                    status: status
+                },
+                success: function (response) {
+                    if (response.status === 'refused') {
+                        window.location.reload();
+                    }
                 }
-            }
-        });
-    }
-</script>
+            });
+        }
+    </script>
 {% endblock %}
