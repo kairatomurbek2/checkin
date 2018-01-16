@@ -81,17 +81,29 @@ class CompanyList(ListView):
         return context
 
 
-class MasterCompanyListView(ListView):
+class MastersCompanyListView(ListView):
     template_name = 'company/master_list.html'
     filterset_class = SpecialistFilter
     model = Specialist
     context_object_name = 'master_list'
 
     def get_context_data(self, **kwargs):
-        context = super(MasterCompanyListView, self).get_context_data(**kwargs)
+        context = super(MastersCompanyListView, self).get_context_data(**kwargs)
         master_filter = self.filterset_class(self.request.GET, queryset=Specialist.objects.filter(
             company__slug=self.kwargs['company_slug']))
         context['master_list'] = master_filter
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
+
+class MasterCompanyDetailView(TemplateView):
+    template_name = 'company/master_reservation.html'
+    model = Specialist
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterCompanyDetailView, self).get_context_data(**kwargs)
+        master = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        context['master'] = master
         context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
         return context
 

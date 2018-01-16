@@ -19,7 +19,7 @@
             <div class="administrator-specialists">
                 {% for master in master_list.qs %}
                     <div class="master">
-                        <a href="#" class="master_img">
+                        <a href="{% url 'master_company' company.slug master.slug %}" class="master_img">
 					<span>
                         {% if master.photo %}
                             {% thumbnail master.photo "154x154" as im %}
@@ -36,7 +36,7 @@
                             <span></span>
                             <p>{{ master.short_info }}</p>
                         </div>
-                        <a href="#">ЗАПИСЬ</a>
+                        <a href="{% url 'master_company' company.slug master.slug %}">ЗАПИСЬ</a>
                     </div>
                 {% empty %}
                     <p class="no_result">По вашему запросу спициалситов не найдено...</p>
