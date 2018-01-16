@@ -81,6 +81,15 @@ class CompanyList(ListView):
         return context
 
 
+class MasterCompanyListView(ListView):
+    template_name = 'company/master_list.html'
+    model = Specialist
+    context_object_name = 'master_list'
+
+    def get_queryset(self):
+        return Specialist.objects.filter(company__slug=self.kwargs['company_slug'])
+
+
 class CompanyCreateView(CreateView):
     success_message = Messages.AddCompany.adding_success
     error_message = Messages.AddCompany.adding_error
@@ -115,7 +124,7 @@ class CompanyCreateView(CreateView):
             formset.instance = company
             formset.save()
         form.save_m2m()
-        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company, ))
+        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company,))
         thread.start()
         return super(CompanyCreateView, self).form_valid(form)
 
