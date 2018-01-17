@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail %}
+{% block content %}
+    <main class="administrator-page">
+        {% include "messages.html" %}
+        <div class="grid">
+            <div class="company_name">
+                <div>
+                    <h4>{{ company.name }}</h4>
+                    <p>Вы ведете запись этих <br> специалистов</p>
+                </div>
+                <form action="" method="get" class="filter_form">
+                    <label>
+                        {{ master_list.form.search }}
+                    </label>
+                    <button type="submit"></button>
+                </form>
+            </div>
+            <div class="administrator-specialists">
+                {% for master in master_list.qs %}
+                    <div class="master">
+                        <a href="{% url 'master_company' company.slug master.slug %}" class="master_img">
+					<span>
+                        {% if master.photo %}
+                            {% thumbnail master.photo "154x154" as im %}
+                                <img src="{{ im.url }}" alt={{ master.full_name }}>
+                            {% endthumbnail %}
+                        {% else %}
+                            <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                        {% endif %}
+					</span>
+                        </a>
+                        <div class="master_desc">
+                            <h4>{{ master.full_name }}</h4>
+                            <span>{{ master.get_categories }}</span>
+                            <span></span>
+                            <p>{{ master.short_info }}</p>
+                        </div>
+                        <a href="{% url 'master_company' company.slug master.slug %}">ЗАПИСЬ</a>
+                    </div>
+                {% empty %}
+                    <p class="no_result">По вашему запросу спициалситов не найдено...</p>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

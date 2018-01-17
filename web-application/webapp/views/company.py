@@ -23,7 +23,7 @@ from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
 from webapp.models import Company, Category, Specialist, Invite, Rating, Employees, Reservation
 from webapp.views.base_views import BaseFormView
-from webapp.views.filters import CompanyFilter, ReservationFilter
+from webapp.views.filters import CompanyFilter, ReservationFilter, SpecialistFilter
 
 
 class CompanySpecialistList(ListView):
@@ -81,6 +81,33 @@ class CompanyList(ListView):
         return context
 
 
+class MastersCompanyListView(ListView):
+    template_name = 'company/master_list.html'
+    filterset_class = SpecialistFilter
+    model = Specialist
+    context_object_name = 'master_list'
+
+    def get_context_data(self, **kwargs):
+        context = super(MastersCompanyListView, self).get_context_data(**kwargs)
+        master_filter = self.filterset_class(self.request.GET, queryset=Specialist.objects.filter(
+            company__slug=self.kwargs['company_slug']))
+        context['master_list'] = master_filter
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
+
+class MasterCompanyDetailView(TemplateView):
+    template_name = 'company/master_reservation.html'
+    model = Specialist
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterCompanyDetailView, self).get_context_data(**kwargs)
+        master = get_object_or_404(self.model, slug=self.kwargs.get('master_slug'))
+        context['master'] = master
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
+
 class CompanyCreateView(CreateView):
     success_message = Messages.AddCompany.adding_success
     error_message = Messages.AddCompany.adding_error
@@ -115,7 +142,7 @@ class CompanyCreateView(CreateView):
             formset.instance = company
             formset.save()
         form.save_m2m()
-        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company, ))
+        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company,))
         thread.start()
         return super(CompanyCreateView, self).form_valid(form)
 

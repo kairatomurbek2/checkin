@@ -138,7 +138,7 @@ header
         @include transition
         &:hover
           background-color: #F5F5F5
-  & > li:first-child
+  & > li.fav-link
     a
       padding: 5px 15px 5px 34px
       background: url("../img/fav_menu.png") left center no-repeat
@@ -2751,9 +2751,9 @@ div.master:nth-child(3n)
           color: #B5B5B5
           font-size: 16px
       .holiday-cell
-          background: #ff8d8d
-          span
-            color: #000000
+        background: #ff8d8d
+        span
+          color: #000000
       .queue-cell
         background-color: #5BCA87
         height: 255px
@@ -2779,7 +2779,7 @@ div.master:nth-child(3n)
         height: 20px
       .order-action
         padding: 0 2px
-    
+
     .first-institution
       .free-cell
         background-color: #6ED3CF
@@ -2807,6 +2807,51 @@ div.master:nth-child(3n)
     &:last-child
       a
         background: #fff url('../img/calendar-icon.png') center no-repeat
+
+//-----------------ADDITION-PAGE1-----------------
+
+.administrator-page
+  .grid
+    padding: 70px 0
+    .company_name
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: space-between
+      align-items: flex-start
+      padding-bottom: 60px
+      label
+        width: 90%
+      & > div
+        width: 285px
+        height: auto
+        h4
+          color: $main-color
+          padding-bottom: 10px
+      .filter_form
+        width: 74.5%
+
+.administrator-specialists
+  display: -webkit-flex
+  display: -moz-flex
+  display: -ms-flex
+  display: -o-flex
+  display: flex
+  justify-content: flex-start
+  align-items: flex-start
+  flex-wrap: wrap
+  .master
+    height: 485px
+    margin-right: 20px
+  & > div.master:nth-child(3)
+    margin-right: 20px
+  & > div.master:nth-child(4)
+    margin-right: 0
+
+
+
 
 //-----------------ADDITION-PAGE2-----------------
 

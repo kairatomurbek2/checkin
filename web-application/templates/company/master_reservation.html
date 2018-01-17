@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail extra_tags %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+{% endblock %}
+{% block content %}
+    {% admin_reservation company.slug master.slug user as admin_company %}
+{% endblock %}
+
+
