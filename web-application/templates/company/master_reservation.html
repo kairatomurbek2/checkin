@@ -4,7 +4,279 @@
     <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
 {% endblock %}
 {% block content %}
+{% admin_reservation company.slug master.slug user as admin_company %}
+<!-- VUE App -->
+{% verbatim %}
+<main class="specialist-shedule-page" id="app" v-cloak>
+    <div class="grid">
+        <div class="specialist-shedule">
+            {% endverbatim %}
+            <h4>Записи специалиста {{master.full_name}}</h4>
+            {% verbatim %}
+
+            <div class="date-table">
+
+                <div class="main-loader-2" v-if="localLoaderState">
+                    {% endverbatim %}
+                    <img src="{% static 'img/loader.gif' %}" alt="loader">
+                    {% verbatim %}
+                </div>
+
+                <ul v-if="scheduleState">
+                    <li v-for="weekDay of mainArray">
+                        <span>{{localeDays[weekDay.date.getDay()]}}</span>
+                        <span>{{prettyDate(weekDay.date, 'date')}}<div>
+                    </li>
+                </ul>
+
+                <span class="date-prev" id="prev-week" onclick="app.moveToPreviousWeek();">
+                        <a><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                    </span>
+                <span class="date-next" id="next-week" onclick="app.moveToNextWeek();">
+                        <a><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                    </span>
+
+            </div>
+            <div class="time-table" v-if="scheduleState">
+                <a v-on:click="toggleContent(false, true)" class="edit-schedule">
+                    Редактировать график
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <div class="first-institution">
+                    <ul v-for="weekDay of mainArray" v-bind:class="{holiday: (weekDay.times.length < 3)}">
+                        <li
+                                v-for="(time, index) of weekDay.times"
+                                :class="[
+                                    (time.status.match(/free|refused/) ? 'free-cell' : null),
+                                    (time.status === 'left' ? 'left-cell' : null),
+                                    (time.status.match(/confirmed|armored/) ? 'booked-cell' : null),
+                                    (time.status === 'confirmed' ? 'confirmed-cell' : null),
+                                    (time.status === 'lunch' ? 'lunch-cell' : null),
+                                    (time.status === 'live' ? 'queue-cell' : null),
+                                    (weekDay.times.length < 3 ? 'holiday-cell' : null),
+                                    makeClassFromCompany(time)
+                                ]"
+                                v-on:click="toggleOrderPopup(time)">
+                            <div v-if="time.status == 'free'">
+                                <span>{{prettyDate(time.time, 'time')}}</span>
+                            </div>
+                            <div v-if="time.status == 'left'">
+                                <span>------</span>
+                            </div>
+                            <div v-if="time.status.match(/armored|confirmed/)">
+                                {% endverbatim %}
+                                {% if master == admin_company %}
+                                {% verbatim %}
+                                <span>{{prettyDate(time.time, 'time')}}</span>
+                                <p>{{time.name? time.name : null}}</p>
+                                <span>{{time.phone}}</span>
+                                {% endverbatim %}
+                                {% endif %}
+                                {% verbatim %}
+                                <div class="action-icons" v-if="time.status == 'armored'">
+                                    <button class="order-action" v-on:click="setRecordStatus(time, 'confirmed')">
+                                        {% endverbatim %}<img class="action-icon" src="{% static 'img/confirm.png' %}"
+                                                              alt="">{% verbatim %}
+                                    </button>
+                                    <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                        {% endverbatim %}<img class="action-icon" src="{% static 'img/decline.png' %}"
+                                                              alt="">{% verbatim %}
+                                    </button>
+                                </div>
+                                <div class="action-icons" v-if="time.status == 'confirmed'">
+                                    <button class="order-action" v-on:click="setRecordStatus(time, 'refused')">
+                                        {% endverbatim %}<img class="action-icon decline-action"
+                                                              src="{% static 'img/decline.svg' %}" alt="">{% verbatim %}
+                                    </button>
+                                </div>
+                            </div>
+                            <div v-if="time.status === 'live'">
+                                <span>Очередь</span>
+                                <span>{{prettyDateRange(time.time, 'time')}}</span>
+                            </div>
+                            <div v-if="time.status === 'lunch'">
+                                <span>Обед</span>
+                            </div>
+                            <div v-if="weekDay.times.length < 3">
+                                <span>Выходной</span>
+                            </div>
+                        </li>
+                </div>
+            </div>
+            <div class="time-editor" v-if="editorState">
+                <a v-on:click="toggleContent(true, false)" class="edit-schedule">
+                    Вернуться к расписанию
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
+                <div class="table_form">
+                    <h4>Настройка времени</h4>
+                    <form v-for="(schedule, index) of scheduleSettings">
+                        <div id="true-inputs">
+                            <input type="hidden" class="true_input" id="id_day">
+                        </div>
+                        <div class="shedule_container">
+                            <span>{{schedule.companyName}}</span>
+                            <ul class="table_time">
+                                <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of editorDays">
+                                    <input
+                                            type="checkbox"
+                                            class="day"
+                                            :id="'day_'+day+index"
+                                            :checked="schedule[day].active"
+                                            v-on:change="schedule[day].active = $event.target.checked"
+                                    >
+                                    <label class="control control--checkbox" :for="'day_'+day+index">{{editorLocaleDays[dayIndex]}}
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <div class="time_limit">
+                                        <div class="fieldset__wrapper">
+                                            <timepicker
+                                                    :value="this.value"
+                                                    :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
+                                                    v-model="schedule[day].time.start">
+                                            </timepicker>
+                                        </div>
+                                    </div>
+                                    <div class="time_limit">
+                                        <div class="fieldset__wrapper">
+                                            <timepicker
+                                                    :value="this.value"
+                                                    :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
+                                                    v-model="schedule[day].time.end">
+                                            </timepicker>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="interval_block">
+                            <span>Интервал приема:</span>
+                            <div class="interval">
+                                <label v-for="day of editorDays">
+                                    <select name="interval" v-on:change="schedule[day].interval = $event.target.value;">
+                                        <option
+                                                v-for="interval of intervals"
+                                                :selected="schedule[day].interval == interval"
+                                        >{{interval}}</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="live_turn">
+                                <ul>
+                                    <li v-for="day of editorDays">
+                                        <input type="checkbox" class="day" :id="'live_'+day+index"
+                                               :checked="schedule[day].active && schedule[day].liveState"
+                                               v-on:change="schedule[day].liveState = $event.target.checked"
+                                        >
+                                        <label class="control control--checkbox" :for="'live_'+day+index">Живая очередь
+                                            <div class="control__indicator"></div>
+                                        </label>
+                                        <div class="turn_interval">
+                                            <div class="fieldset__wrapper">
+                                                <!--<input v-on:change="updateLiveQueue(schedule[day], $event, true)"-->
+                                                <!--type="text"-->
+                                                <!--class="timepicker live-input"-->
+                                                <!--:value="(schedule[day].live_recording) ?-->
+                                                <!--schedule[day].live_recording.start: 'c'">-->
+                                                <live-timepicker
+                                                        :value="this.value"
+                                                        :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
+                                                        v-model="schedule[day].live_recording.start">
+                                                </live-timepicker>
+                                            </div>
+
+                                            <div class="fieldset__wrapper">
+                                                <!--<input v-on:change="updateLiveQueue(schedule[day], $event, false)"-->
+                                                <!--type="text"-->
+                                                <!--class="timepicker live-input"-->
+                                                <!--:value="(schedule[day] && schedule[day].live_recording) ?-->
+                                                <!--schedule[day].live_recording.end: 'до'">-->
+                                                <live-timepicker
+                                                        :value="this.value"
+                                                        :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
+                                                        v-model="schedule[day].live_recording.end">
+                                                </live-timepicker>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="break">
+                            <div class="get_time" data-key="break">
+                                <span>Перерыв на обед:</span>
+                                <div class="time_limit">с
+                                    <div class="fieldset__wrapper">
+                                        <!--<input-->
+                                        <!--type="text"-->
+                                        <!--class="timepicker from-time lunch-time"-->
+                                        <!--placeholder=""-->
+                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"-->
+                                        <!--v-on:change="updateLunchTime(index, $event.target.value, true)">-->
+                                        <lunch-timepicker
+                                                :options="{index: index, schedule: schedule, start: true}"
+                                                :value="this.value"
+                                                v-model="schedule.lunch_settings.start"
+                                        >
+                                        </lunch-timepicker>
+                                    </div>
+                                </div>
+                                <div class="time_limit">до
+                                    <div class="fieldset__wrapper">
+                                        <!--<input-->
+                                        <!--type="text"-->
+                                        <!--class="timepicker to-time lunch-time"-->
+                                        <!--placeholder=""-->
+                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"-->
+                                        <!--v-on:change="updateLunchTime(index, $event.target.value, false)">-->
+                                        <lunch-timepicker
+                                                :options="{index: index, schedule: schedule, start: false}"
+                                                :value="this.value"
+                                                v-model="schedule.lunch_settings.end"
+                                        >
+                                        </lunch-timepicker>
+                                    </div>
+                                </div>
+                            </div>
+                            <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% endverbatim %}
+            <ul class="shedule-switcher">
+                {% if request.user.user_specialists.exists %}
+                {% for specialist in request.user.user_specialists.all %}
+                <li><a href="{% url 'master_reservation_table' specialist.slug %}"></a></li>
+                <li><a href="{% url 'master_reservation' specialist.slug %}"></a></li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+            {% verbatim %}
+
+        </div>
+    </div>
+</main>
+{% endverbatim %}
+<!-- VUE App End -->
+
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/vue.min.js' %}"></script>
+<script src="{% static 'js/vue-resource.min.js' %}"></script>
+<script src="{% static 'js/calendar-admin.js' %}"></script>
+<script>
     {% admin_reservation company.slug master.slug user as admin_company %}
+
+    let masterUser = false;
+    let companies = [];
+    {% if master == admin_company %}
+        masterUser = true;
+    {% endif %}
+    companies.push({ name: '{{ company.name }}', id: {{company.id}} });
+    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies, '{{request.session.token_key}}');
+</script>
 {% endblock %}
 
 

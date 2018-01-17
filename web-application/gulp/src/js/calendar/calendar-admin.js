@@ -1,3 +1,296 @@
+Vue.component('timepicker', {
+    props: ['options', 'value'],
+    template: '<input class="timepicker" type="text" ' +
+    ':class="{\'disable-input\': !options.daySchedule.active}"' +
+    'v-bind:value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
+    ':readonly="!options.daySchedule.active">',
+
+    data: function () {
+        return {
+            picker: '',
+            interval: 30
+        };
+    },
+    mounted: function () {
+        var vm = this;
+        var picker = $(this.$el).pickatime({
+            format: 'HH:i',
+            min: [7, 0],
+            max: [20, 0],
+            interval: 30,
+            clear: ''
+        }).val(this.value).trigger('change').on('change', function () {
+            vm.$emit('input', this.value)
+        });
+        this.picker = picker.pickatime('picker');
+    },
+    watch: {
+        value: function (value) {
+            if (this.options.start) {
+                this.options.daySchedule.time.start = value;
+            } else {
+                this.options.daySchedule.time.end = value;
+            }
+            this.applyTimesAsMonday(value);
+        },
+        options: function (options) {
+
+            if (this.options.daySchedule.interval.indexOf(":") !== -1) {
+                this.interval = (60*parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
+            } else {
+                this.interval = parseInt(this.options.daySchedule.interval);
+            }
+
+            let indexToWatch = (this.options.index === 0) ? 1 : 0;
+
+            let siblingStart = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
+            let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
+
+            if (options.daySchedule.active) {
+                if (!this.options.start) {
+                    let timeStart = this.$root.parseTime(this.options.daySchedule.time.start);
+                    if (!timeStart) {
+                        timeStart = {
+                            hours: 7,
+                            minutes: 0
+                        }
+                    }
+                    if (siblingStart && siblingEnd) {
+                        this.picker.set({
+                            min: [timeStart.hours, timeStart.minutes],
+                            disable: [
+                                {
+                                    from: [siblingStart.hours, siblingStart.minutes],
+                                    to: [siblingEnd.hours, siblingEnd.minutes]
+                                }
+                            ],
+                            interval: this.interval
+                        })
+                    } else {
+                        this.picker.set({
+                            min: [timeStart.hours, timeStart.minutes],
+                            interval: this.interval
+                        })
+                    }
+                } else {
+                    let timeEnd = this.$root.parseTime(this.options.daySchedule.time.end);
+                    if (!timeEnd) {
+                        timeEnd = {
+                            hours: 20,
+                            minutes: 0
+                        }
+                    }
+                    if (siblingStart && siblingEnd) {
+                        this.picker.set({
+                            max: [timeEnd.hours, timeEnd.minutes],
+                            disable: [
+                                {
+                                    from: [siblingStart.hours, siblingStart.minutes],
+                                    to: [siblingEnd.hours, siblingEnd.minutes]
+                                }
+                            ],
+                            interval: this.interval
+                        });
+                    } else {
+                        this.picker.set({
+                            max: [timeEnd.hours, timeEnd.minutes],
+                            interval: this.interval
+                        });
+                    }
+                }
+            } else {
+                if (this.options.start) {
+                    this.options.daySchedule.time.start = ''
+                } else {
+                    this.options.daySchedule.time.end = ''
+                }
+            }
+        }
+    },
+
+    methods: {
+        applyTimesAsMonday(value) {
+            if (this.options.day === 'monday') {
+                this.$root.days.forEach(day => {
+                    if (this.$root.scheduleSettings[this.options.index][day].active &&
+                        !this.$root.scheduleSettings[this.options.index][day].time.start &&
+                        this.options.start) {
+                        this.$root.scheduleSettings[this.options.index][day].time.start = value;
+                    }
+                    if (this.$root.scheduleSettings[this.options.index][day].active &&
+                        !this.$root.scheduleSettings[this.options.index][day].time.end &&
+                        !this.options.start) {
+                        this.$root.scheduleSettings[this.options.index][day].time.end = value;
+                    }
+                })
+            }
+        }
+    },
+    destroyed: function () {
+        $(this.$el).stop();
+    }
+});
+Vue.component('live-timepicker', {
+    props: ['options', 'value'],
+    template: '<input class="timepicker" type="text" ' +
+    ':class="{\'disable-input\': (!options.daySchedule.active)}"' +
+    'v-bind:value="options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end" ' +
+    ':readonly="!options.daySchedule.active || !options.daySchedule.liveState">',
+
+    data: function () {
+        return {
+            picker: '',
+            minTime: '',
+            maxTime: '',
+            interval: 30
+        }
+    },
+
+    mounted: function () {
+        var vm = this;
+
+        this.minTime = this.$root.parseTime(this.options.daySchedule.time.start);
+        this.maxTime = this.$root.parseTime(this.options.daySchedule.time.end);
+
+        if (!this.minTime) {
+            this.minTime = {
+                hours: 7,
+                minutes: 0
+            }
+        }
+
+        if (!this.maxTime) {
+            this.maxTime = {
+                hours: 20,
+                minutes: 0
+            }
+        }
+
+        let picker = $(this.$el).pickatime({
+            format: 'HH:i',
+            min: [this.minTime.hours, this.minTime.minutes],
+            max: [this.maxTime.hours, this.maxTime.minutes],
+            interval: 30,
+            clear: ''
+        }).val(this.value).trigger('change').on('change', function () {
+            vm.$emit('input', this.value)
+        });
+        this.picker = picker.pickatime('picker');
+    },
+    watch: {
+        value: function (value) {
+            if (this.options.start) {
+                this.options.daySchedule.live_recording.start = value;
+            } else {
+                this.options.daySchedule.live_recording.end = value;
+            }
+        },
+        options: function (options) {
+            console.log('options', options);
+            this.minTime = this.$root.parseTime(options.daySchedule.time.start);
+            this.maxTime = this.$root.parseTime(options.daySchedule.time.end);
+            let nowVal = this.$root.parseTime(this.value);
+            if (this.$root.compareScheduleTimes(this.minTime, nowVal)) {
+                this.value = options.daySchedule.time.start
+            }
+            if (this.$root.compareScheduleTimes(nowVal, this.maxTime)) {
+                this.value = options.daySchedule.time.end
+            }
+            if (!this.minTime) {
+                this.minTime = {
+                    hours: 7,
+                    minutes: 0
+                }
+            }
+            if (!this.maxTime) {
+                this.maxTime = {
+                    hours: 20,
+                    minutes: 0
+                }
+            }
+
+            if (this.options.daySchedule.interval.indexOf(":") !== -1) {
+                this.interval = (60 * parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
+            } else {
+                this.interval = parseInt(this.options.daySchedule.interval);
+            }
+
+            this.picker.set({
+                min: [this.minTime.hours, this.minTime.minutes],
+                max: [this.maxTime.hours, this.maxTime.minutes],
+                interval: this.interval
+            })
+        }
+    },
+    destroyed: function () {
+        this.picker.stop();
+    }
+});
+Vue.component('lunch-timepicker', {
+    props: ['options', 'value'],
+    template: '<input class="timepicker" :value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
+    '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
+
+    data: function () {
+        return {
+            interval: 10,
+            picker: ''
+        }
+    },
+
+    mounted: function () {
+        let vm = this;
+        let picker = $(this.$el).pickatime({
+            format: 'HH:i',
+            min: [7, 0],
+            max: [20, 0],
+            interval: vm.interval,
+            clear: ''
+        }).val(this.value).trigger('change').on('change', function () {
+            vm.$emit('input', this.value)
+        });
+        this.picker = picker.pickatime('picker');
+    },
+    watch: {
+        value: function (value) {
+            if (this.options.start) {
+                this.options.schedule.lunch_settings.start = value;
+            } else {
+                this.options.schedule.lunch_settings.end = value;
+            }
+
+        },
+        options: function (options) {
+            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start);
+            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end);
+            if (!startTime) {
+                startTime = {
+                    hours: 7,
+                    minutes: 0
+                }
+            }
+            if (!endTime) {
+                endTime = {
+                    hours: 20,
+                    minutes: 0
+                }
+            }
+            if (this.options.start) {
+                this.picker.set({
+                    max: [endTime.hours, endTime.minutes]
+                })
+            } else {
+                this.picker.set({
+                    min: [startTime.hours, startTime.minutes]
+                })
+            }
+        }
+    },
+    destroyed: function () {
+        this.picker.stop();
+    }
+});
+
 let app = new Vue({
     el: '#app',
     data: {
@@ -50,7 +343,11 @@ let app = new Vue({
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
-                this.schedule = response.body;
+
+                // filter only for one company added to this.companies from response
+                this.schedule = response.body.filter(x => {
+                    return x.company === companies[0].id;
+                });
                 if (this.schedule.length > 0) {
                     document.querySelector('#prev-week').style.display = 'block';
                     document.querySelector('#next-week').style.display = 'block';
@@ -174,16 +471,16 @@ let app = new Vue({
                         continue;
                     }
                 }
-                // check if record is out of real time
-                if (oneDay.date.getTime() <= new Date().getTime()) {
-                    times.push({
-                        time: new Date(oneDay.date),
-                        status: 'left'
-                    });
-                    oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
-                    oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
-                    continue;
-                }
+                // check if record is out of real time - removed here because of admin functionality
+                // if (oneDay.date.getTime() <= new Date().getTime()) {
+                //     times.push({
+                //         time: new Date(oneDay.date),
+                //         status: 'left'
+                //     });
+                //     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                //     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                //     continue;
+                // }
                 let record = this.orderFreeRecords(oneDay.date);
                 if (record) {
                     record.company = companyId;
@@ -507,6 +804,7 @@ let app = new Vue({
             if (scheduleState) {
                 if (this.schedule.length > 0) {
                     setTimeout(() => {
+                        document.querySelector(".specialist-shedule > h4").style.display = '';
                         document.querySelector('#prev-week').style.display = 'block';
                         document.querySelector('#next-week').style.display = 'block';
                     });
@@ -514,6 +812,7 @@ let app = new Vue({
                 this.getMasterSchedule();
             } else {
                 setTimeout(() => {
+                    document.querySelector(".specialist-shedule > h4").style.display = 'none';
                     document.querySelector('#prev-week').style.display = 'none';
                     document.querySelector('#next-week').style.display = 'none';
                 });
@@ -522,6 +821,473 @@ let app = new Vue({
         },
         toggleLocalLoader(status) {
             this.localLoaderState = status;
+        },
+        // editor methods
+        getScheduleSettings() {
+            this.toggleLocalLoader(true);
+            this.scheduleSettings = [];
+            if (this.schedule.length > 0) {
+                if (this.schedule.length >= this.companies.length) {
+                    this.schedule.forEach((schedule, index) => {
+                        let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                        let options = {
+                            headers: {
+                                'X-CSRFToken': this._csrfToken
+                            }
+                        };
+                        this.$http.get(url, options).then(
+                            response => {
+                                let schedule = response.body;
+                                this.companies.forEach(company => {
+                                    if (typeof company === 'object' && company.id === schedule.company) {
+                                        schedule.companyName = company.name;
+                                    }
+                                });
+                                schedule.lunch_settings = {
+                                    init: '',
+                                    start: '',
+                                    end: ''
+                                };
+                                this.days.forEach(day => {
+                                    if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                        schedule[day].active = true;
+                                    } else {
+                                        schedule[day].active = false;
+                                        schedule[day].time = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].live_recording = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].lunch_settings = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        schedule[day].interval = this.intervals[0];
+                                    }
+                                    if (schedule[day].active) {
+                                        schedule[day].time = {
+                                            start: schedule[day].time.split('-')[0],
+                                            end: schedule[day].time.split('-')[1],
+                                            init: schedule[day].time,
+                                        };
+                                        if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
+                                            schedule[day].liveState = true;
+                                            schedule[day].live_recording = {
+                                                init: schedule[day].live_recording,
+                                                start: schedule[day].live_recording.split('-')[0],
+                                                end: schedule[day].live_recording.split('-')[1],
+                                            }
+                                        } else {
+                                            schedule[day].liveState = false;
+                                            schedule[day].live_recording = {
+                                                start: '',
+                                                end: ''
+                                            }
+                                        }
+                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                            schedule.lunch_settings.init = schedule[day].lunch_settings;
+                                            schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
+                                            schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                        }
+                                    }
+                                });
+                                schedule.active = true;
+                                this.scheduleSettings.push(schedule);
+                                this.toggleLocalLoader(false);
+                            },
+                            error => {
+                                console.log(error);
+                                this.toggleLocalLoader(false);
+                            }
+                        )
+                    });
+                }
+                else {
+                    this.companies.forEach(company => {
+                        if (typeof company === 'object') {
+                            let lunchIndex = 0;
+                            let schedule = this.schedule.filter((x, index) => {
+                                if (x.company === company.id) {
+                                    lunchIndex = index;
+                                    return true;
+                                }
+                            });
+                            schedule.lunch_settings = {
+                                start: '',
+                                end: ''
+                            };
+                            if (schedule.length > 0) {
+                                schedule = schedule[0];
+                                let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                                let options = {
+                                    headers: {
+                                        'X-CSRFToken': this._csrfToken
+                                    }
+                                };
+                                this.$http.get(url, options).then(
+                                    response => {
+                                        let schedule = response.body;
+                                        this.companies.forEach(company => {
+                                            if (typeof company === 'object' && company.id === schedule.company) {
+                                                schedule.companyName = company.name;
+                                            }
+                                        });
+                                        schedule.lunch_settings = {
+                                            start: '',
+                                            end: ''
+                                        };
+                                        this.days.forEach(day => {
+                                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                                schedule[day].active = true;
+                                            } else {
+                                                schedule[day].active = false;
+                                                schedule[day].time = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].live_recording = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].lunch_settings = {
+                                                    start: '',
+                                                    end: ''
+                                                };
+                                                schedule[day].interval = this.intervals[0];
+                                            }
+                                            if (schedule[day].active) {
+                                                schedule[day].time = {
+                                                    start: schedule[day].time.split('-')[0],
+                                                    end: schedule[day].time.split('-')[1],
+                                                    init: schedule[day].time,
+                                                };
+                                                if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
+                                                    schedule[day].liveState = true;
+                                                    schedule[day].live_recording = {
+                                                        init: schedule[day].live_recording,
+                                                        start: schedule[day].live_recording.split('-')[0],
+                                                        end: schedule[day].live_recording.split('-')[1],
+                                                    }
+                                                } else {
+                                                    schedule[day].liveState = false;
+                                                    schedule[day].live_recording = {
+                                                        start: '',
+                                                        end: ''
+                                                    }
+                                                }
+                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                                    schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
+                                                    schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                                }
+                                            }
+                                        });
+                                        schedule.active = true;
+                                        this.scheduleSettings.push(schedule);
+                                        this.toggleLocalLoader(false);
+                                    },
+                                    error => {
+                                        console.log(error);
+                                        this.toggleLocalLoader(false);
+                                    }
+                                )
+                            }
+                            else {
+                                let dayObj = {};
+                                this.days.forEach(day => {
+                                    dayObj[day] = {
+                                        time: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        live_recording: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        lunch_settings: {
+                                            start: '',
+                                            end: ''
+                                        },
+                                        interval: this.intervals[0],
+                                        active: (day !== 'sunday') ? true : false
+                                    }
+                                });
+                                dayObj.company = company.id;
+                                dayObj.companyName = company.name;
+                                dayObj.lunch_settings = {
+                                    start: '',
+                                    end: ''
+                                };
+                                this.scheduleSettings.push(dayObj);
+                                this.toggleLocalLoader(false);
+                            }
+                        }
+                    })
+                }
+            } else {
+                if (this.companies.length > 0 && this.companies.some(comp => typeof comp === 'object')) {
+                    this.companies.forEach(company => {
+                        let dayObj = {};
+                        this.days.forEach(day => {
+                            dayObj[day] = {
+                                time: {
+                                    start: '',
+                                    end: ''
+                                },
+                                live_recording: {
+                                    start: '',
+                                    end: ''
+                                },
+                                lunch_settings: {
+                                    start: '',
+                                    end: ''
+                                },
+                                interval: this.intervals[0],
+                                active: (day !== 'sunday') ? true : false
+                            }
+                        });
+                        dayObj.company = company.id;
+                        dayObj.companyName = company.name;
+                        dayObj.lunch_settings = {
+                            start: '',
+                            end: ''
+                        };
+                        this.scheduleSettings.push(dayObj);
+                        this.toggleLocalLoader(false);
+                    })
+                } else {
+                    let dayObj = {};
+                    this.days.forEach(day => {
+                        dayObj[day] = {
+                            time: {
+                                start: '',
+                                end: ''
+                            },
+                            live_recording: {
+                                start: '',
+                                end: ''
+                            },
+                            lunch_settings: {
+                                start: '',
+                                end: ''
+                            },
+                            interval: this.intervals[0],
+                            active: (day !== 'sunday') ? true : false
+                        }
+                    });
+                    dayObj.lunch_settings = {
+                        start: '',
+                        end: ''
+                    };
+                    dayObj.company = null;
+                    this.scheduleSettings.push(dayObj);
+                    this.toggleLocalLoader(false);
+                }
+            }
+        },
+        parseTime(val) {
+            if (val && val.indexOf(':') !== -1) {
+                return {
+                    init: val,
+                    hours: parseInt(val.split(':')[0]),
+                    minutes: parseInt(val.split(':')[1])
+                }
+            }
+        },
+        compareScheduleTimes(time1, time2) {
+            if (!time2) return true;
+            if (!time1) return false;
+            if (time1.hours > time2.hours) {
+                return true;
+            } else if (time1.hours < time2.hours) {
+                return false;
+            } else if (time1.hours === time2.hours) {
+                if (time1.minutes >= time2.minutes) {
+                    return true;
+                } else return time1.minutes > time2.minutes;
+            }
+
+        },
+        updateScheduleSettingsTime(scheduleDay, day, event, index, startState) {
+            // startState - is a state, which signs that element shows start of the day or end of the day;
+            // index - first element in scheduleSettings or second element
+            let value = event.target ? event.target.value : event;
+            let sibling = {};
+            let gotTime = {};
+            let relative = {};
+            if (index === 0) {
+                if (this.scheduleSettings.length > 1) {
+                    if (this.scheduleSettings[1][day] && this.scheduleSettings[1][day].time.start.indexOf(":") !== -1) {
+                        sibling.init = this.scheduleSettings[1][day].time;
+                        sibling.start = this.parseTime(this.scheduleSettings[1][day].time.start);
+                        sibling.end = this.parseTime(this.scheduleSettings[1][day].time.end);
+                    }
+                }
+            }
+
+            if (index === 1) {
+                if (this.scheduleSettings[0][day] && this.scheduleSettings[0][day].time.end.indexOf(":") !== -1) {
+                    sibling.init = this.scheduleSettings[0][day].time;
+                    sibling.start = this.parseTime(this.scheduleSettings[0][day].time.start);
+                    sibling.end = this.parseTime(this.scheduleSettings[0][day].time.end);
+                }
+            }
+
+            if (startState) {
+                gotTime = this.parseTime(value);
+                relative = this.parseTime(scheduleDay.time.end);
+                if (relative) {
+                    if (this.compareScheduleTimes(relative, gotTime)) {
+                        scheduleDay.time.start = value;
+                    } else {
+                        scheduleDay.time.start = scheduleDay.time.end;
+                        if (event.target) {
+                            event.target.value = scheduleDay.time.end;
+                        }
+                    }
+                    return;
+                }
+                if (sibling.start) {
+                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
+                        scheduleDay.time.start = sibling.end.init;
+                        if (event.target) {
+                            event.target.value = sibling.end.init;
+                        }
+                    } else {
+                        scheduleDay.time.start = value;
+                    }
+                } else {
+                    scheduleDay.time.start = value;
+                }
+            } else {
+                gotTime = this.parseTime(value);
+                relative = this.parseTime(scheduleDay.time.start);
+                if (relative) {
+                    if (this.compareScheduleTimes(relative, gotTime)) {
+                        scheduleDay.time.end = scheduleDay.time.start;
+                        if (event.target) {
+                            event.target.end = scheduleDay.time.start;
+                        }
+                    } else {
+                        scheduleDay.time.end = value;
+                    }
+                    return;
+                }
+                if (sibling.end) {
+                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
+                        scheduleDay.time.end = sibling.end.init;
+                        if (event.target) {
+                            event.target.value = sibling.end.init;
+                        }
+                    } else {
+                        scheduleDay.time.end = value;
+                    }
+                } else {
+                    scheduleDay.time.end = value;
+                }
+            }
+        },
+        updateLiveQueue(scheduleDay, event, startState) {
+            let value = this.parseTime(event.target.value);
+            let start = this.parseTime(scheduleDay.time.start);
+            let end = this.parseTime(scheduleDay.time.end);
+
+            if (this.compareScheduleTimes(start, value) || this.compareScheduleTimes(value, end)) {
+                if (startState) {
+                    scheduleDay.live_recording.start = scheduleDay.time.start;
+                    if (event.target) {
+                        event.target.value = scheduleDay.time.start;
+                    }
+                } else {
+                    scheduleDay.live_recording.end = scheduleDay.time.end;
+                    if (event.target) {
+                        event.target.value = scheduleDay.time.end;
+                    }
+                }
+            } else {
+                if (startState) {
+                    scheduleDay.live_recording.start = event.target.value;
+                } else {
+                    scheduleDay.live_recording.end = event.target.value;
+                }
+            }
+        },
+        submitSchedule(event, index, active) {
+            event.preventDefault();
+            let schedule = JSON.parse(JSON.stringify(this.scheduleSettings[index]));
+            if (!schedule.lunch_settings.start || !schedule.lunch_settings.end) {
+                alert("Вы не ввели время обеда");
+                return;
+            }
+            this.days.forEach(day => {
+                if (schedule[day] && schedule[day].active) {
+                    schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
+                    if (schedule[day].liveState) {
+                        schedule[day].live_recording = schedule[day].live_recording.start + '-' + schedule[day].live_recording.end;
+                    } else {
+                        schedule[day].live_recording = '';
+                    }
+                    schedule[day].lunch_settings = schedule.lunch_settings.start + '-' + schedule.lunch_settings.end;
+                } else {
+                    schedule[day].time = '';
+                    schedule[day].lunch_settings = '';
+                    schedule[day].interval = '';
+                    schedule[day].live_recording = '';
+                    schedule[day].active = false;
+                }
+            });
+
+            if (active) {
+                let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
+                let body = schedule;
+                let options = {
+                    headers: {
+                        'X-CSRFToken': this._csrfToken
+                    }
+                };
+                this.$http.put(url, body, options).then(response => {
+                    alert('Вы успешно обновили расписание');
+                }, error => {
+                    console.error(error);
+                })
+            } else {
+                let url = `/api/work_day/${this._masterSlug}/add/`;
+                let body = schedule;
+                let options = {
+                    headers: {
+                        'X-CSRFToken': this._csrfToken
+                    }
+                };
+                this.$http.post(url, body, options).then(response => {
+                    alert('Вы успешно создали расписание');
+                    this.updateSchduleAfterEditing();
+                }, error => {
+                    console.error(error);
+                })
+            }
+        },
+        updateLunchTime(index, val, state) {
+            if (!this.scheduleSettings[index].lunch_settings.start) {
+                this.scheduleSettings[index].lunch_settings = {
+                    start: '',
+                    end: ''
+                }
+            }
+            if (state) {
+                this.scheduleSettings[index].lunch_settings.start = val;
+            } else {
+                this.scheduleSettings[index].lunch_settings.end = val;
+            }
+        },
+        updateSchduleAfterEditing() {
+            this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
+                this.schedule = response.body;
+                this.getScheduleSettings();
+            }, error => {
+                console.error(error);
+            })
         }
     }
 });

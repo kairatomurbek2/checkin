@@ -40,7 +40,7 @@
                 <div class="time-table">
                     <div class="first-institution">
                         <ul v-for="weekDay of mainArray" v-bind:class="{holiday: (weekDay.times.length < 3)}">
-                            <li 
+                            <li
                                 v-for="(time, index) of weekDay.times"
                                 :class="[
                                     (time.status.match(/free|refused/) ? 'free-cell' : null), 
@@ -116,7 +116,7 @@
 {% block js %}
     <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/vue-resource.min.js' %}"></script>
-    <script src="{% static 'js/calendar-admin.js' %}"></script>
+    <script src="{% static 'js/calendar-master.js' %}"></script>
     <script>
         let masterUser = false;
         let companies = [];
