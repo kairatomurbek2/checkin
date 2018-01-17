@@ -34,6 +34,8 @@ urlpatterns = [
         name='company_edit'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/add-administrator/$',
         company_owner(company_views.AddAdministratorView.as_view()), name='add_administrator'),
+    url(r'^companies/(?P<company_slug>[-_\w]+)/administrators/$',
+        company_owner(company_views.EmployeesListView.as_view()), name='administrator_list'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/user-search/$',
         company_owner(company_views.SpecialistSearchView.as_view()),
         name='user_search'),

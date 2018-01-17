@@ -371,3 +371,8 @@ class ReservationAdministratorListView(LoginRequiredMixin, ListView):
     def _get_reservation_list(self):
         empployy = Employees.objects.get(user=self.request.user)
         return Reservation.objects.filter(specialist__company__user=empployy).order_by('-created_at')
+
+
+class EmployeesListView(LoginRequiredMixin, ListView):
+    model = Employees
+    template_name = 'company/employees_list.html'
