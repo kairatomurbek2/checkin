@@ -1,67 +1,61 @@
 {% extends 'base.html' %}
 {% load staticfiles thumbnail %}
 {% block content %}
+    {% url 'administrator_list' company.slug as links %}
     <main class="personal-management">
+    {% include 'messages.html' %}
         <div class="grid">
             <ul class="tabs_nav">
                 <li><a href="#">СПЕЦИАЛИСТЫ</a></li>
-                <li><a href="#">АДМИНИСТРАТОРЫ</a></li>
+                <li><a href="{{ links }}" {% if request.path == links %}class="tab-active"{% endif %}>АДМИНИСТРАТОРЫ</a>
+                </li>
             </ul>
-
             <div class="workers">
                 <div>
                     <div class="w-institutions">
-                        <h4>Sunrise Studio</h4>
+                        <h4>{{ company }}</h4>
                         <p>Администраторы компании (имеют доступ к специалистам компании и могут вести запись
                             клиентов)</p>
                     </div>
-
-                    <a href="#" class="button">Добавить администратора &nbsp+</a>
+                    <a href="{% url 'add_administrator' company.slug %}" class="button">Добавить администратора
+                        &nbsp+</a>
                 </div>
-
                 <ul class="list-workers">
                     <li>
-                        <span>Имя администратора</span>
+                        <span>E-mail администратора</span>
                         <span>Дата добавления</span>
                         <span>Действия</span>
                     </li>
-
-                    <li>
-                        <span>Мадина Давыдова</span>
-                        <span>14 декабря 2017 г. 16:29</span>
-                        <span>
-						<button class="lay-off">Уволить</button>
+                    {% for employ in employees_list %}
+                        <li>
+                            <span>{{ employ.user.email }}</span>
+                            <span>{{ employ.created_at }}</span>
+                            <span>
+                            <form action="{% url 'administrator_delete' company.slug %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ employ.id }}" name="employe_id">
+						        <button class="lay-off" name="action_remove">Уволить</button>
+                            </form>
 					</span>
-                    </li>
-
-                    <li>
-                        <span>Мадина Давыдова</span>
-                        <span>14 декабря 2017 г. 16:29</span>
-                        <span>
-						<button class="lay-off">Уволить</button>
-					</span>
-                    </li>
-
-                    <li>
-                        <span>Мадина Давыдова</span>
-                        <span>14 декабря 2017 г. 16:29</span>
-                        <span>
-						    <button class="lay-off">Уволить</button>
-					    </span>
-                    </li>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
     </main>
-
-    <div class="confirm-modal">
-        <div class="confirm-modal-content">
-            <p>Вы уверены что хотите уволить?</p>
-
-            <button class="agree">Да</button>
-            <button class="disagree">Нет</button>
-        </div>
-    </div>
-
-
+{% endblock %}
+{% block js %}
+    <script>
+        (function () {
+            var message = "Вы действительно хотите уволить администратора ?";
+            var actions = document.getElementsByName('action_remove');
+            if (actions.length) {
+                actions[0].addEventListener("click", function (e) {
+                    if (!confirm(message)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        })();
+    </script>
 {% endblock %}

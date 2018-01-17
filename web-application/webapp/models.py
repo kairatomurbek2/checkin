@@ -51,6 +51,7 @@ class Employees(models.Model):
     user = models.OneToOneField(User, related_name='employee')
     owner = models.BooleanField(default=False, verbose_name=_('Владелец компании'))
     administrator = models.BooleanField(default=False, verbose_name=_('Администратор компании'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата добавления'))
 
     def __str__(self):
         return self.user.username

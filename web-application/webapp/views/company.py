@@ -14,6 +14,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.views import View
 from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
@@ -340,7 +341,7 @@ class AddAdministratorView(CreateView):
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, self.success_message)
         com = Company.objects.get(slug=self.kwargs.get('company_slug'))
-        return reverse('company_detail', kwargs={'company_slug': com.slug})
+        return reverse('administrator_list', kwargs={'company_slug': com.slug})
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -376,3 +377,27 @@ class ReservationAdministratorListView(LoginRequiredMixin, ListView):
 class EmployeesListView(LoginRequiredMixin, ListView):
     model = Employees
     template_name = 'company/employees_list.html'
+    context_object_name = 'employees_list'
+
+    def get_context_data(self, **kwargs):
+        context = super(EmployeesListView, self).get_context_data(**kwargs)
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
+    def get_queryset(self):
+        return self.model.objects.filter(companies__slug=self.kwargs['company_slug'], administrator=True)
+
+
+class EmployeesDelete(View):
+    success_message = Messages.Employees.delete_employe_success
+    warning_message = Messages.Employees.employe_warning_message
+
+    def post(self, *args, **kwargs):
+        try:
+            employe = Employees.objects.get(pk=self.request.POST.get('employe_id'))
+            employe.user.delete()
+            employe.delete()
+            messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        except Employees.DoesNotExist:
+            messages.add_message(self.request, messages.WARNING, self.warning_message)
+        return redirect(self.request.META['HTTP_REFERER'])

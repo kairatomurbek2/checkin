@@ -58,8 +58,8 @@ def admin_reservation(company_slug, slug, current_user):
     try:
         return Specialist.objects.get(company__slug=company_slug, slug=slug, company__user__administrator=True,
                                       company__user__user=current_user)
-    except Company.DoesNotExist:
-        raise Http404("Company not found")
+    except Specialist.DoesNotExist:
+        raise Http404("Master not found")
 
 
 @register.assignment_tag()
