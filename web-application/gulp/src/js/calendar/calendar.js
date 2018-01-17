@@ -616,7 +616,10 @@ let app = new Vue({
                 }
             }
         },
-        makeOrder() {
+        makeOrder(keypressState, event) {
+            if (keypressState) {
+                if (event.keyCode !== 13) return false;
+            }
             if (!document.querySelector('#phone').value) {
                 document.querySelector('.error').innerHTML += '<div> Поле телефон не введено </div>';
                 document.querySelector('.error').style.display = 'block';
