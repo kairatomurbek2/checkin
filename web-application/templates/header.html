@@ -18,20 +18,20 @@
                                {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a></li>
                         <li><a href="#">О нас</a></li>
                     {% endif %}
-                    {% if request.user.is_authenticated %}
-                        {% if administrator %}
-                            {% for company in administrator %}
-                                {% url 'master_list_company' company.slug as master_list_company %}
-                                <li><a href="{% url 'master_list_company' company.slug %}"
-                                       {% if request.path == master_list_company %}class="link_active"{% endif %}>Специалисты</a>
-                                </li>
-                            {% endfor %}
-                        {% endif %}
-
-                    {% endif %}
                 </ul>
             </nav>
-            <a href="/" class="logotype"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
+            {% if not administrator %}
+                <a href="/" class="logotype"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                {% if administrator %}
+                    {% for company in administrator %}
+                        <a href="{% url 'master_list_company' company.slug %}" class="logotype"><img
+                                src="{% static 'img/logo.png' %}" alt="logo"></a>
+                    {% endfor %}
+                {% endif %}
+
+            {% endif %}
             {% if not request.user.is_authenticated %}
                 <a href="#" class="hidden_menu"><img src="{% static 'img/user-icon.svg' %}" alt="image"></a>
                 <ul class="menu signup-menu">
