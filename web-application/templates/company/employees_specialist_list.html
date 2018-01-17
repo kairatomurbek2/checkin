@@ -1,37 +1,34 @@
 {% extends 'base.html' %}
 {% load staticfiles thumbnail %}
 {% block content %}
-
     <main class="personal-management">
-    {% include 'messages.html' %}
+        {% include 'messages.html' %}
         <div class="grid">
             <ul class="tabs_nav">
-                <li><a href="{% url 'employees_specialist_list' company.slug %}">СПЕЦИАЛИСТЫ</a></li>
-                <li><a href="{% url 'administrator_list' company.slug %}" class="tab-active">АДМИНИСТРАТОРЫ</a>
+                <li><a href="{% url 'employees_specialist_list' company.slug %}" class="tab-active">СПЕЦИАЛИСТЫ</a></li>
+                <li><a href="{% url 'administrator_list' company.slug %}">АДМИНИСТРАТОРЫ</a>
                 </li>
             </ul>
             <div class="workers">
                 <div>
                     <div class="w-institutions">
                         <h4>{{ company }}</h4>
-                        <p>Администраторы компании (имеют доступ к специалистам компании и могут вести запись
-                            клиентов)</p>
                     </div>
-                    <a href="{% url 'add_administrator' company.slug %}" class="button">Добавить администратора
+                    <a href="#" class="button">Добавить специалиста
                         &nbsp+</a>
                 </div>
                 <ul class="list-workers">
                     <li>
-                        <span>E-mail администратора</span>
+                        <span>E-mail Специалиста</span>
                         <span>Дата добавления</span>
                         <span>Действия</span>
                     </li>
-                    {% for employ in employees_list %}
+                    {% for employ in employees_specialist_list %}
                         <li>
-                            <span>{{ employ.user.email }}</span>
+                            <span>{{ employ.full_name }}, {{ employ.user.email }}</span>
                             <span>{{ employ.created_at }}</span>
                             <span>
-                            <form action="{% url 'administrator_delete' company.slug %}" method="post">
+                            <form action="{% url 'specialist_delete' company.slug %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{ employ.id }}" name="employe_id">
 						        <button class="lay-off" name="action_remove">Уволить</button>
@@ -47,7 +44,7 @@
 {% block js %}
     <script>
         (function () {
-            var message = "Вы действительно хотите уволить администратора ?";
+            var message = "Вы действительно хотите уволить специалиста ?";
             var actions = document.getElementsByName('action_remove');
             if (actions.length) {
                 actions[0].addEventListener("click", function (e) {

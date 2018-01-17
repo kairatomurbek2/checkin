@@ -50,3 +50,5 @@ class Messages:
     class Employees:
         delete_employe_success = _('Администратор успешно уволен!')
         employe_warning_message = _('Администратор не существует')
+        delete_employe_specialist_success = _('Специалист успешно уволен!')
+        employe_specialist_warning_message = _('Специалист не существует')

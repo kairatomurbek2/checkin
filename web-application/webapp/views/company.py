@@ -401,3 +401,33 @@ class EmployeesDelete(View):
         except Employees.DoesNotExist:
             messages.add_message(self.request, messages.WARNING, self.warning_message)
         return redirect(self.request.META['HTTP_REFERER'])
+
+
+class EmployeesSpecialistListView(LoginRequiredMixin, ListView):
+    model = Specialist
+    template_name = 'company/employees_specialist_list.html'
+    context_object_name = 'employees_specialist_list'
+
+    def get_context_data(self, **kwargs):
+        context = super(EmployeesSpecialistListView, self).get_context_data(**kwargs)
+        context['company'] = Company.objects.get(slug=self.kwargs['company_slug'])
+        return context
+
+    def get_queryset(self):
+        return self.model.objects.filter(company__slug=self.kwargs['company_slug'])
+
+
+class EmployeesSpecialistDelete(View):
+    success_message = Messages.Employees.delete_employe_specialist_success
+    warning_message = Messages.Employees.employe_specialist_warning_message
+
+    def post(self, *args, **kwargs):
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+        try:
+            employe = Specialist.objects.get(pk=self.request.POST.get('employe_id'))
+            employe.company.remove(company)
+            employe.save()
+            messages.add_message(self.request, messages.SUCCESS, self.success_message)
+        except Specialist.DoesNotExist:
+            messages.add_message(self.request, messages.WARNING, self.warning_message)
+        return redirect(self.request.META['HTTP_REFERER'])
