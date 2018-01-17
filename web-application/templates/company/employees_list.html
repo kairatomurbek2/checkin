@@ -1,5 +1,67 @@
 {% extends 'base.html' %}
 {% load staticfiles thumbnail %}
 {% block content %}
+    <main class="personal-management">
+        <div class="grid">
+            <ul class="tabs_nav">
+                <li><a href="#">СПЕЦИАЛИСТЫ</a></li>
+                <li><a href="#">АДМИНИСТРАТОРЫ</a></li>
+            </ul>
+
+            <div class="workers">
+                <div>
+                    <div class="w-institutions">
+                        <h4>Sunrise Studio</h4>
+                        <p>Администраторы компании (имеют доступ к специалистам компании и могут вести запись
+                            клиентов)</p>
+                    </div>
+
+                    <a href="#" class="button">Добавить администратора &nbsp+</a>
+                </div>
+
+                <ul class="list-workers">
+                    <li>
+                        <span>Имя администратора</span>
+                        <span>Дата добавления</span>
+                        <span>Действия</span>
+                    </li>
+
+                    <li>
+                        <span>Мадина Давыдова</span>
+                        <span>14 декабря 2017 г. 16:29</span>
+                        <span>
+						<button class="lay-off">Уволить</button>
+					</span>
+                    </li>
+
+                    <li>
+                        <span>Мадина Давыдова</span>
+                        <span>14 декабря 2017 г. 16:29</span>
+                        <span>
+						<button class="lay-off">Уволить</button>
+					</span>
+                    </li>
+
+                    <li>
+                        <span>Мадина Давыдова</span>
+                        <span>14 декабря 2017 г. 16:29</span>
+                        <span>
+						    <button class="lay-off">Уволить</button>
+					    </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <div class="confirm-modal">
+        <div class="confirm-modal-content">
+            <p>Вы уверены что хотите уволить?</p>
+
+            <button class="agree">Да</button>
+            <button class="disagree">Нет</button>
+        </div>
+    </div>
+
 
 {% endblock %}
