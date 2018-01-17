@@ -45,18 +45,19 @@
                 <div class="first-institution">
                     <ul v-for="weekDay of mainArray" v-bind:class="{holiday: (weekDay.times.length < 3)}">
                         <li
-                                v-for="(time, index) of weekDay.times"
-                                :class="[
-                                    (time.status.match(/free|refused/) ? 'free-cell' : null),
-                                    (time.status === 'left' ? 'left-cell' : null),
-                                    (time.status.match(/confirmed|armored/) ? 'booked-cell' : null),
-                                    (time.status === 'confirmed' ? 'confirmed-cell' : null),
-                                    (time.status === 'lunch' ? 'lunch-cell' : null),
-                                    (time.status === 'live' ? 'queue-cell' : null),
-                                    (weekDay.times.length < 3 ? 'holiday-cell' : null),
-                                    makeClassFromCompany(time)
-                                ]"
-                                v-on:click="toggleOrderPopup(time)">
+                            v-for="(time, index) of weekDay.times"
+                            :class="[
+                                (time.status.match(/free|refused/) ? 'free-cell' : null),
+                                (time.status === 'left' ? 'left-cell' : null),
+                                (time.status.match(/confirmed|armored/) ? 'booked-cell' : null),
+                                (time.status === 'confirmed' ? 'confirmed-cell' : null),
+                                (time.status === 'lunch' ? 'lunch-cell' : null),
+                                (time.status === 'live' ? 'queue-cell' : null),
+                                (time.status === 'history' ? 'history-cell' : null),
+                                (weekDay.times.length < 3 ? 'holiday-cell' : null),
+                                makeClassFromCompany(time)
+                            ]" v-on:click="toggleOrderPopup(time)">
+
                             <div v-if="time.status == 'free'">
                                 <span>{{prettyDate(time.time, 'time')}}</span>
                             </div>
@@ -99,6 +100,11 @@
                             </div>
                             <div v-if="weekDay.times.length < 3">
                                 <span>Выходной</span>
+                            </div>
+                            <div v-if="time.status === 'history'">
+                                <span>{{prettyDate(time.time, 'time')}}</span>
+                                <p v-if="time.name" style="line-height: 8px">{{time.name? time.name : null}}</p>
+                                <p v-if="time.phone" style="line-height: 8px">{{time.phone}}</p>
                             </div>
                         </li>
                 </div>
@@ -243,18 +249,6 @@
                     </form>
                 </div>
             </div>
-
-            {% endverbatim %}
-            <ul class="shedule-switcher">
-                {% if request.user.user_specialists.exists %}
-                {% for specialist in request.user.user_specialists.all %}
-                <li><a href="{% url 'master_reservation_table' specialist.slug %}"></a></li>
-                <li><a href="{% url 'master_reservation' specialist.slug %}"></a></li>
-                {% endfor %}
-                {% endif %}
-            </ul>
-            {% verbatim %}
-
         </div>
     </div>
 </main>

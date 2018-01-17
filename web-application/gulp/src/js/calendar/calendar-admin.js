@@ -472,15 +472,22 @@ let app = new Vue({
                     }
                 }
                 // check if record is out of real time - removed here because of admin functionality
-                // if (oneDay.date.getTime() <= new Date().getTime()) {
-                //     times.push({
-                //         time: new Date(oneDay.date),
-                //         status: 'left'
-                //     });
-                //     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
-                //     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
-                //     continue;
-                // }
+                if (oneDay.date.getTime() <= new Date().getTime()) {
+                    let record = this.orderFreeRecords(oneDay.date);
+                    if (record) {
+                        record.company = companyId;
+                        record.status = 'history';
+                        times.push(record);
+                    } else {
+                        times.push({
+                            time: new Date(oneDay.date),
+                            status: 'history'
+                        });
+                    }
+                    oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                    oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                    continue;
+                }
                 let record = this.orderFreeRecords(oneDay.date);
                 if (record) {
                     record.company = companyId;
