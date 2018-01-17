@@ -1744,7 +1744,8 @@ div.master:nth-child(3n)
     label
       width: 90%
 
-.tabs-nav
+.tabs-nav,
+.tabs_nav
   width: 100%
   height: auto
   display: -webkit-flex
@@ -2850,9 +2851,6 @@ div.master:nth-child(3n)
   & > div.master:nth-child(4)
     margin-right: 0
 
-
-
-
 //-----------------ADDITION-PAGE2-----------------
 
 .result_page
@@ -2919,6 +2917,114 @@ div.master:nth-child(3n)
         // &:nth-child(3),
         &:nth-child(4)
           text-align: center
+
+//-----------------ADDITION-PAGE3-----------------
+
+.personal-management
+  .grid
+    padding-top: 50px
+    padding-bottom: 120px
+    .tabs_nav
+      width: 85%
+      margin: 0 auto 50px auto
+
+.workers
+  width: 100%
+  height: auto
+  padding: 30px 45px 25px 45px
+  background-color: #fff
+  & > div
+    display: -webkit-flex
+    display: -moz-flex
+    display: -ms-flex
+    display: -o-flex
+    display: flex
+    justify-content: space-between
+    align-items: flex-end
+    margin-bottom: 10px
+    .button
+      width: 240px
+      line-height: 40px
+      text-decoration: none
+      color: #fff
+  .w-institutions
+    h4
+      color: $main-color
+      padding-bottom: 25px
+  .list-workers
+    li
+      display: -webkit-flex
+      display: -moz-flex
+      display: -ms-flex
+      display: -o-flex
+      display: flex
+      justify-content: flex-start
+      align-items: flex-start
+      padding-bottom: 25px
+      span
+        width: 33.3%
+        &:nth-child(2)
+          text-align: center
+        &:last-child
+          text-align: right
+        .lay-off
+          width: 140px
+          height: 40px
+          border: 1px solid #D6D6D6
+          border-radius: 5px
+          background-color: transparent
+      &:first-child
+        border-bottom: 1px solid #95989A
+        padding-top: 25px
+        margin-bottom: 25px
+        span
+          color: $main-color
+        span:nth-child(2)
+          text-align: center
+        span:last-child
+          text-align: right
+
+.confirm-modal
+  display: none
+  position: fixed
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  background-color: rgba(255, 255, 255, 0.6)
+  .confirm-modal-content
+    @include vcenter
+    width: 100%
+    max-width: 390px
+    height: auto
+    padding: 30px 40px
+    background-color: #fff
+    box-shadow: 0 0 20px 3px rgba(0,0,0,.15)
+    -webkit-border-radius: 6px
+    -moz-border-radius: 6px
+    border-radius: 6px
+    text-align: center
+    p
+      padding-bottom: 30px
+    .agree,
+    .disagree
+      width: 60px
+      height: 30px
+      -webkit-border-radius: 4px
+      -moz-border-radius: 4px
+      border-radius: 4px
+      margin: 0 5px
+      cursor: pointer
+    .agree
+      background-color: $main-color
+      border: 0
+      color: #fff
+    .disagree
+      background-color: transparent
+      border: 1px solid #777676
+      color: #777676
 
 .hidden
   visibility: hidden
