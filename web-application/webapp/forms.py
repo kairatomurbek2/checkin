@@ -183,3 +183,22 @@ class AddAdministratorForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['email', ]
+
+
+class CompanyUserAddForm(UserCreationForm):
+    email = forms.EmailField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Введите email мастера')}))
+    password1 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'placeholder': _('Пароль')}))
+    password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'placeholder': _('Пароль (еще раз)')}))
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if User.objects.filter(email=data).exists():
+            raise ValidationError(_('Пользователь с таким email уже существует'), code='email_used')
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super(CompanyUserAddForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = User
+        fields = ['email', ]

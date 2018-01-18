@@ -178,6 +178,12 @@ $(function () {
         create: true
     });
 
+     $('#id_form-tags').selectize({
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+
     $('#id_company_tags').selectize({
         persist: false,
         createOnBlur: true,

@@ -16,9 +16,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView
+from django.views.generic import FormView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
+
+from main.choices import ACTIVE
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
@@ -431,3 +434,64 @@ class EmployeesSpecialistDelete(View):
         except Specialist.DoesNotExist:
             messages.add_message(self.request, messages.WARNING, self.warning_message)
         return redirect(self.request.META['HTTP_REFERER'])
+
+
+class AddMasterCompany(LoginRequiredMixin, FormView):
+    success_message = Messages.AddMaster.owner_adding_success
+    error_message = Messages.AddMaster.adding_error
+    template_name = 'company/add_master.html'
+
+    def get(self, request, *args, **kwargs):
+        user_form = forms.CompanyUserAddForm
+        user_form.prefix = 'user_form'
+        form = forms.MasterCreateForm
+        form.prefix = 'form'
+        return self.render_to_response(self.get_context_data(user_form=user_form, form=form))
+
+    def post(self, request, *args, **kwargs):
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+        user_form = forms.CompanyUserAddForm(self.request.POST, prefix='user_form')
+        form = forms.MasterCreateForm(self.request.POST, self.request.FILES, prefix='form')
+        if user_form.is_valid() and form.is_valid():
+            user = self._create_user(user_form)
+            specialist = self._create_specialist(form, user)
+            specialist.company.add(company)
+            specialist.status = ACTIVE
+            specialist.edited_by = self.request.user
+            specialist.save()
+            for category in self.request.POST.getlist('form-categories'):
+                specialist.categories.add(category)
+            for tag in self.request.POST.getlist('form-tags'):
+                specialist.tags.add(tag)
+            messages.add_message(self.request, messages.SUCCESS, self.success_message)
+            return redirect(reverse('employees_specialist_list', kwargs={'company_slug': company.slug}))
+        else:
+            return self.form_invalid(user_form, form, **kwargs)
+
+    def form_invalid(self, user_form, form, **kwargs):
+        user_form.prefix = 'user_form'
+        form.prefix = 'form'
+        messages.add_message(self.request, messages.ERROR, self.error_message)
+        return self.render_to_response(self.get_context_data(user_form=user_form, form=form))
+
+    def _create_user(self, user_form):
+        password = user_form.cleaned_data['password1']
+        fm_email = user_form.cleaned_data['email']
+        user = user_form.save()
+        user.set_password(password)
+        user.username = fm_email.replace("@", "").replace(".", "")
+        user.save()
+        email = EmailAddress(user=user, email=user.email, verified=True, primary=True)
+        email.save()
+        return user
+
+    def _create_specialist(self, form, user):
+        full_name = form.cleaned_data['full_name']
+        short_info = form.cleaned_data['short_info']
+        info = form.cleaned_data['info']
+        photo = form.cleaned_data.get('photo')
+        street_address = form.cleaned_data['street_address']
+        sex = form.cleaned_data['sex']
+        specialist = Specialist.objects.create(full_name=full_name, short_info=short_info, info=info, photo=photo,
+                                               user=user, street_address=street_address, sex=sex)
+        return specialist

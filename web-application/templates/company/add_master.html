@@ -6,25 +6,30 @@
 {% block content %}
     <main class="become_specilalist">
         <div class="grid">
-        {% include 'messages.html' %}
-            <form action="" method="post" class="form_inf" enctype="multipart/form-data" novalidate>
+            {% include 'messages.html' %}
+            <form action="" method="post" class="form_inf" enctype="multipart/form-data">
                 {% csrf_token %}
-
-
                 <div class="control-group file-upload" id="file-upload">
-
                     <div class="wrap-custom-file">
                         {{ form.photo|add_class:"image_preview" }}
-                        <label for="id_photo">
-                            <span>Фото профиля</span>
+                        <label for="id_form-photo">
+                            <span>Фото мастера</span>
                         </label>
                     </div>
-                      <p class="text-danger">{{ form.photo.errors|striptags }}</p>
+                    <p class="text-danger">{{ form.photo.errors|striptags }}</p>
                 </div>
                 <div class="general_information">
                     <p>Персональная информация</p>
                     <div class="first_block">
                         <div class="add_block">
+                            <p class="text-danger">{{ user_form.email.errors|striptags }}</p>
+                            {{ user_form.email }}
+
+                            <p class="text-danger">{{ user_form.password1.errors|striptags }}</p>
+                            {{ user_form.password1 }}
+                            <p class="text-danger">{{ user_form.password2.errors|striptags }}</p>
+                            {{ user_form.password2 }}
+
                             <p class="text-danger">{{ form.full_name.errors|striptags }}</p>
                             {{ form.full_name }}
 
@@ -32,13 +37,13 @@
                             {{ form.sex|add_class:"s_sex" }}
 
 
-                            <div class="contact-formset">
-                                {% for form in formset %}
-                                    <p class="text-danger">{{ form.phone.errors|striptags }}</p>
-                                    {{ form.phone|add_class:"mask" }}
-                                {% endfor %}
-                            </div>
-                            {{ formset.management_form }}
+                            {#                            <div class="contact-formset">#}
+                            {#                                {% for form in formset %}#}
+                            {#                                    <p class="text-danger">{{ form.phone.errors|striptags }}</p>#}
+                            {#                                    {{ form.phone|add_class:"mask" }}#}
+                            {#                                {% endfor %}#}
+                            {#                            </div>#}
+                            {#                            {{ formset.management_form }}#}
                         </div>
                         <div>
                             <p class="text-danger">{{ form.street_address.errors|striptags }}</p>
@@ -51,7 +56,7 @@
                     <p class="text-danger">{{ form.categories.errors|striptags }}</p>
                     <p>Ваши услуги</p>
                     <div class="second_block">
-                        <select multiple class="categories-select" id="id_categories" name="categories" required
+                        <select multiple class="categories-select" id="id_categories" name="form-categories" required
                                 placeholder="Сфера деятельности" style="width: 50%;">
 
                         </select>
@@ -73,7 +78,7 @@
     <script>
         $(document).ready(
             function () {
-                $('#id_info').redactor({});
+                $('#id_form-info').redactor({});
             }
         );
 
