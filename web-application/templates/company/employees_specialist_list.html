@@ -29,9 +29,7 @@
                             <span>{{ employ.created_at }}</span>
                             <span>
                             <form action="{% url 'specialist_delete' company.slug %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" value="{{ employ.id }}" name="employe_id">
-						        <button class="lay-off" name="action_remove">Уволить</button>
+						        <button class="lay-off" onclick="processDelete(event, {{employ.id}})" data-toggle="modal" data-target="#make-modal">Уволить</button>
                             </form>
 					</span>
                         </li>
@@ -40,19 +38,45 @@
             </div>
         </div>
     </main>
+    <div class="modal fade" tabindex="-1" role="dialog" id="make-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4>Подтвердите действие</h4>
+            </div>
+            <div class="modal-body">
+                <p>Вы действительно хотите уволить администратора?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="removeAdmin()">Да</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}
 {% block js %}
-    <script>
-        (function () {
-            var message = "Вы действительно хотите уволить специалиста ?";
-            var actions = document.getElementsByName('action_remove');
-            if (actions.length) {
-                actions[0].addEventListener("click", function (e) {
-                    if (!confirm(message)) {
-                        e.preventDefault();
-                    }
-                });
+<script>
+    var adminId = null;
+    function processDelete(event, id) {
+        event.preventDefault();
+        adminId = id;
+    }
+    function removeAdmin() {
+        $.post({
+            url: '/companies/{{company.slug}}/specialist/delete',
+            headers: {
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: {
+                'employe_id': adminId
+            },
+            success: function (response) {
+                window.location.reload();
             }
-        })();
-    </script>
+        })
+    }
+</script>
 {% endblock %}
