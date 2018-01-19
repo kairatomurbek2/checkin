@@ -426,7 +426,7 @@ var app = new Vue({
                 now.setDate(now.getDate() + 1);
             }
             // when dates were added from different schedules, it's needed to sort it all
-            this.mainArray = this.sortTimesInMainArray(this.mainArray);
+            this.sortTimesInMainArray();
         },
         calculateLiveTimes(time, interval){
             let timeInterval = (interval.hours > 0) ? ((60*interval.hours) + interval.minutes) : interval.minutes;

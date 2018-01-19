@@ -53,7 +53,6 @@ describe('Calendar unit test', function () {
     // });
 
     // it("should test doCorrectDateInOrders", function () {
-    //     assert.expect(2);
     //     var obj1 = {
     //         'date_time_reservation': '19.12.2018 09:00'
     //     };
