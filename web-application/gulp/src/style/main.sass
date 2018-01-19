@@ -26,6 +26,7 @@ body
   font-size: 12px
   color: $dark-color
   position: relative
+  padding-bottom: 313px
 
 *
   margin: 0
@@ -295,6 +296,9 @@ header
 
 footer
   background-color: #2d2d2d
+  position: absolute
+  bottom: 0
+  width: 100%
   .logo
     padding: 35px 0 20px 0
     border-bottom: 1px solid #555555
@@ -2792,9 +2796,9 @@ div.master:nth-child(3n)
         background-color: #5BACCA
 
 .shedule-switcher
-  position: absolute
-  top: 0
-  left: -65px
+  position: fixed
+  top: 120px
+  left: 60px
   li
     width: 50px
     height: 50px
@@ -3031,6 +3035,25 @@ div.master:nth-child(3n)
       background-color: transparent
       border: 1px solid #777676
       color: #777676
+
+
+.go-top
+  position: fixed
+  bottom: 2em
+  right: 2em
+  text-decoration: none
+  color: white
+  background-color: rgba(0, 0, 0, 0.3)
+  font-size: 12px
+  padding: 1em
+  z-index: 101
+  display: none
+
+.go-top:hover
+  background-color: rgba(0, 0, 0, 0.6)
+
+
+
 
 .hidden
   visibility: hidden
