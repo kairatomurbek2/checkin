@@ -1,3 +1,7 @@
+if (typeof process != 'undefined') {
+    var Vue = require('vue');
+}
+
 Vue.component('timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
@@ -291,7 +295,7 @@ Vue.component('lunch-timepicker', {
     }
 });
 
-let app = new Vue({
+var app = new Vue({
     el: '#app',
     data: {
         days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
@@ -608,6 +612,7 @@ let app = new Vue({
                 document.querySelector('.blur').style.filter = 'blur(5px)';
                 document.querySelector('.order-modal-wrap').style.display = 'block';
                 document.querySelector('.title-time').innerHTML = 'Запись на ' + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
+                document.querySelector('#full_name').focus();
 
             }
             if (!this._masterUser) {
@@ -771,18 +776,18 @@ let app = new Vue({
                 }
 
                 item.times.sort((a, b) => {
+                    if (a.time.start && b.time.start) {
+                        return new Date(a.time.start) - new Date(b.time.start);
+                    }
                     if (a.time.start) {
                         return new Date(a.time.start) - new Date(b.time);
                     }
                     if (b.time.start) {
                         return new Date(a.time) - new Date(b.time.start);
                     }
-                    if (a.time.start && b.time.start) {
-                        return new Date(a.time.start) - new Date(b.time.start);
-                    }
                     return new Date(a.time) - new Date(b.time);
                 });
-            })
+            });
         },
         makeClassFromCompany(time) {
             let result = '';
@@ -1285,3 +1290,6 @@ let app = new Vue({
     }
 });
 
+if (typeof process != 'undefined') {
+    module.exports = app;
+}
