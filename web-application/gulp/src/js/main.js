@@ -11,6 +11,21 @@
 //=../libs/ru_RU.js
 
 $(function () {
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 300) {
+            $('.go-top').fadeIn(300);
+        } else {
+            $('.go-top').fadeOut(300);
+        }
+    });
+
+    // Animate the scroll to top
+    $('.go-top').click(function (event) {
+        event.preventDefault();
+
+        $('html, body').animate({scrollTop: 0}, 300);
+    });
+
     $('.tabs-stage > div').hide();
 
 
@@ -95,7 +110,7 @@ $(function () {
         $('.blur').css('filter', 'none');
     });
 
-    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form, .order-modal, .confirm-modal-content').click(function (event) {
+    $('.s_register, .c_register, .registered_person, .book, .logout_modal > div, .review_form, .order-modal, .confirm-modal-content, .modal-header > h4, .modal-body').click(function (event) {
         event.stopPropagation();
     });
 
