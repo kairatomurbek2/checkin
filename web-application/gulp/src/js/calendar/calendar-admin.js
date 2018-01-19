@@ -619,6 +619,7 @@ let app = new Vue({
                 document.querySelector('.blur').style.filter = 'blur(5px)';
                 document.querySelector('.modal-calendar-admin').style.display = 'block';
                 document.querySelector('.modal-calendar-admin .title-time').innerHTML = 'Запись на ' + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
+                document.querySelector('#full_name_admin').focus();
             }
             if (!this._masterUser) {
                 if (time.status === 'armored') {

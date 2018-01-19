@@ -612,6 +612,7 @@ var app = new Vue({
                 document.querySelector('.blur').style.filter = 'blur(5px)';
                 document.querySelector('.order-modal-wrap').style.display = 'block';
                 document.querySelector('.title-time').innerHTML = 'Запись на ' + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
+                document.querySelector('#full_name').focus();
 
             }
             if (!this._masterUser) {
