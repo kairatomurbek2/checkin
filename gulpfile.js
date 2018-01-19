@@ -12,6 +12,7 @@ var gulp = require('gulp'),
     pngquant = require('imagemin-pngquant'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
+    mocha = require('gulp-mocha'),
     reload = browserSync.reload;
 
 var path = {
@@ -31,6 +32,7 @@ var path = {
         js: 'web-application/gulp/src/js/**/*.js',
         style: 'web-application/gulp/src/style/**/*.sass'
     },
+    test: 'web-application/gulp/src/js/calendar/unit/*.test.js',
     clean: './build'
 };
 
@@ -44,11 +46,9 @@ var config = {
     logPrefix: "Frontend_Devil"
 };
 
-
 gulp.task('clean', function (cb) {
     rimraf(path.clean, cb);
 });
-
 
 gulp.task('js:build', function () {
     gulp.src(path.src.js)
@@ -89,7 +89,6 @@ gulp.task('build', [
     'style:build'
 ]);
 
-
 gulp.task('watch', function(){
     watch([path.watch.style], function(event, cb) {
         gulp.start('style:build');
@@ -100,5 +99,11 @@ gulp.task('watch', function(){
     });
 });
 
+gulp.task('test', function () {
+    return gulp.src([path.test], { read: false })
+    .pipe(mocha({
+      reporter: 'spec',
+    }));
+})
 
 gulp.task('default', ['build', 'watch']);

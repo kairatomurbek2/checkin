@@ -1,3 +1,7 @@
+if (typeof process != 'undefined') {
+    var Vue = require('vue');
+}
+
 Vue.component('timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
@@ -291,7 +295,7 @@ Vue.component('lunch-timepicker', {
     }
 });
 
-let app = new Vue({
+var app = new Vue({
     el: '#app',
     data: {
         days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
@@ -422,7 +426,7 @@ let app = new Vue({
                 now.setDate(now.getDate() + 1);
             }
             // when dates were added from different schedules, it's needed to sort it all
-            this.sortTimesInMainArray();
+            this.mainArray = this.sortTimesInMainArray(this.mainArray);
         },
         calculateLiveTimes(time, interval){
             let timeInterval = (interval.hours > 0) ? ((60*interval.hours) + interval.minutes) : interval.minutes;
@@ -771,18 +775,18 @@ let app = new Vue({
                 }
 
                 item.times.sort((a, b) => {
+                    if (a.time.start && b.time.start) {
+                        return new Date(a.time.start) - new Date(b.time.start);
+                    }
                     if (a.time.start) {
                         return new Date(a.time.start) - new Date(b.time);
                     }
                     if (b.time.start) {
                         return new Date(a.time) - new Date(b.time.start);
                     }
-                    if (a.time.start && b.time.start) {
-                        return new Date(a.time.start) - new Date(b.time.start);
-                    }
                     return new Date(a.time) - new Date(b.time);
                 });
-            })
+            });
         },
         makeClassFromCompany(time) {
             let result = '';
@@ -1285,3 +1289,6 @@ let app = new Vue({
     }
 });
 
+if (typeof process != 'undefined') {
+    module.exports = app;
+}
