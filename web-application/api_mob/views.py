@@ -93,6 +93,7 @@ class MasterDetailViewApi(generics.RetrieveAPIView):
     queryset = Specialist.objects.all()
     serializer_class = MasterSerializer
 
+
 class MasterReviewsListViewApi(generics.ListAPIView):
     serializer_class = RatingSerializer
     lookup_field = 'specialist__slug'
@@ -118,6 +119,7 @@ class CompaniesDetailViewApi(generics.RetrieveAPIView):
 
 
 class MasterCompanyListViewApi(generics.ListAPIView):
+    authentication_classes = (CustomTokenAuthentication,)
     lookup_field = 'company__slug'
     serializer_class = MasterSerializer
     pagination_class = Pagination

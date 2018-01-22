@@ -5,83 +5,111 @@
     {% user_administrator user as administrator %}
 {% endif %}
 <header>
-    <div class="grid">
-        <div>
-            <nav class="menu-collapsed">
-                <div class="bar"></div>
-                <ul class="menu" id="menu">
-                    {% if not administrator %}
+    {% if not request.user.is_authenticated %}
+        <div class="grid">
+            <div>
+                <nav class="menu-collapsed">
+                    <div class="bar"></div>
+                    <ul class="menu" id="menu">
                         <li><a href="{% url 'masters' %}"
                                {% if request.path == master_url %}class="link_active"{% endif %}>Специалисты</a>
                         </li>
                         <li><a href="{% url 'company_list' %}"
-                               {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a></li>
+                               {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a>
+                        </li>
                         <li><a href="#">О нас</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% if not administrator %}
+                    </ul>
+                </nav>
                 <a href="/" class="logotype"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-                {% if administrator %}
-                    {% for company in administrator %}
-                        <a href="{% url 'master_list_company' company.slug %}" class="logotype"><img
-                                src="{% static 'img/logo.png' %}" alt="logo"></a>
-                    {% endfor %}
-                {% endif %}
-
-            {% endif %}
-            {% if not request.user.is_authenticated %}
                 <a href="#" class="hidden_menu"><img src="{% static 'img/user-icon.svg' %}" alt="image"></a>
                 <ul class="menu signup-menu">
-                    {#                    <li><a href="{% url 'account_login' %}">Избранные(<span>0</span>)</a></li>#}
+                                        <li><a href="{% url 'account_login' %}">Избранные(<span>0</span>)</a></li>
                     <li id="log-in"><a href="{% url 'account_login' %}">Вход</a></li>
                     <li id="sign-up"><a href="{% url 'account_signup' %}">Регистрация</a></li>
                 </ul>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-                <ul class="authorised_user">
-                {% if not administrator %}
-                    <li class="fav-link"><a href="{% url 'favorite_list' request.user %}">
-                        <span class="favourite_text">Избранные</span>
-                        (<span>{% if request.user.favoritespecialist_set.count > 0 %}
-                        {{ request.user.favoritespecialist_set.count }}{% else %}0{% endif %}</span>)</a></li>
-                {% endif %}
-                <li>
-                    <img src="{% static 'img/user-icon.svg' %}" alt="image">
-                    <ul class="sub_menu">
+            </div>
+        </div>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <div class="grid">
+            <div>
+                <nav class="menu-collapsed">
+                    <div class="bar"></div>
+                    <ul class="menu" id="menu">
                         {% if not administrator %}
-                            <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
-                        {% endif %}
-                        {% if administrator %}
-                            <li><a href="{% url 'profile_update' request.user.username %}">Мой профиль</a></li>
-                        {% endif %}
-                        {% user_company user as companies %}
-
-                        {% for company in companies %}
-                            <li>
-                                <a href="{% url 'company_detail' company.slug %}">
-                                    {{ company }}
-                                </a>
+                            <li><a href="{% url 'masters' %}"
+                                   {% if request.path == master_url %}class="link_active"{% endif %}>Специалисты</a>
                             </li>
-                            <li>
-                                <a href="{% url "administrator_list" company.slug %}">Управление Персоналом</a>
+                            <li><a href="{% url 'company_list' %}"
+                                   {% if request.path == company_url %}class="link_active"{% endif %}>Учреждения</a>
                             </li>
+                            <li><a href="#">О нас</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% if not administrator %}
+                    <a href="/" class="logotype"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    {% if administrator %}
+                        {% for company in administrator %}
+                            <a href="{% url 'master_list_company' company.slug %}" class="logotype"><img
+                                    src="{% static 'img/logo.png' %}" alt="logo"></a>
                         {% endfor %}
-                        {% if request.user.user_specialists.exists %}
-                            {% for specialist in request.user.user_specialists.all %}
-                                <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>
+                    {% endif %}
+
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <a href="#" class="hidden_menu"><img src="{% static 'img/user-icon.svg' %}" alt="image"></a>
+                    <ul class="menu signup-menu">
+                        {#                    <li><a href="{% url 'account_login' %}">Избранные(<span>0</span>)</a></li>#}
+                        <li id="log-in"><a href="{% url 'account_login' %}">Вход</a></li>
+                        <li id="sign-up"><a href="{% url 'account_signup' %}">Регистрация</a></li>
+                    </ul>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    <ul class="authorised_user">
+                    {% if not administrator %}
+                        <li class="fav-link"><a href="{% url 'favorite_list' request.user %}">
+                            <span class="favourite_text">Избранные</span>
+                            (<span>{% if request.user.favoritespecialist_set.count > 0 %}
+                            {{ request.user.favoritespecialist_set.count }}{% else %}0{% endif %}</span>)</a></li>
+                    {% endif %}
+                    <li>
+                        <img src="{% static 'img/user-icon.svg' %}" alt="image">
+                        <ul class="sub_menu">
+                            {% if not administrator %}
+                                <li><a href="{% url 'profile_update' request.user %}">Мой профиль</a></li>
+                            {% endif %}
+                            {% if administrator %}
+                                <li><a href="{% url 'profile_update' request.user.username %}">Мой профиль</a></li>
+                            {% endif %}
+                            {% user_company user as companies %}
+
+                            {% for company in companies %}
+                                <li>
+                                    <a href="{% url 'company_detail' company.slug %}">
+                                        {{ company }}
+                                    </a>
                                 </li>
-                                <li><a href="{% url 'master_reservation' specialist.slug %}">Мои записи</a>
+                                <li>
+                                    <a href="{% url "administrator_list" company.slug %}">Управление Персоналом</a>
                                 </li>
                             {% endfor %}
-                        {% endif %}
-                        <li class="log-out"><a href="#">Выход</a></li>
-                    </ul>
-                </li>
-            {% endif %}
-            </ul>
+                            {% if request.user.user_specialists.exists %}
+                                {% for specialist in request.user.user_specialists.all %}
+                                    <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>
+                                    </li>
+                                    <li><a href="{% url 'master_reservation' specialist.slug %}">Мои записи</a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="log-out"><a href="#">Выход</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
+    {% endif %}
 </header>
