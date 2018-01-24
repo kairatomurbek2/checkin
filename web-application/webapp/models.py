@@ -14,7 +14,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path, \
-    category_icon_upload_path
+    category_icon_upload_path, specialist_mobile_path
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -163,6 +163,7 @@ class Specialist(models.Model):
     company = models.ManyToManyField(Company, related_name='company_specialists', verbose_name=_('Учреждение'),
                                      blank=True)
     photo = models.ImageField(verbose_name=_('Фото'), upload_to=specialist_path)
+    mobile_photo = models.ImageField(verbose_name=_('Фото для мобильного приложение'), upload_to=specialist_mobile_path)
     full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
     sex = models.CharField(verbose_name=_('Пол'), choices=SEX_CHOICES, max_length=10, blank=True, null=True)
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=250)

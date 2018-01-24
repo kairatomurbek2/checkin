@@ -39,3 +39,11 @@ def specialist_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return 'specialists/{0}/photo/{1}'.format(instance.slug, filename)
+
+
+def specialist_mobile_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/specialists/specialist_slug/mobile_photo/<filename>
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return 'specialists/{0}/mobile_photo/{1}'.format(instance.slug, filename)
+
