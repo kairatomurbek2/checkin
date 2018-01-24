@@ -50,7 +50,7 @@ class CompanyByMaster(serializers.ModelSerializer):
 
     def get_logo_url(self, obj):
         if obj.logo:
-            return obj.logo.url
+            return obj.mobile_logo.url
         else:
             pass
 
@@ -116,7 +116,7 @@ class CompaniesSerializer(serializers.ModelSerializer, TaggitSerializer):
 
     def get_logo_url(self, obj):
         if obj.logo:
-            return obj.logo.url
+            return obj.mobile_logo.url
         else:
             pass
 
@@ -146,7 +146,7 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
 
     def get_logo_url(self, obj):
         if obj.logo:
-            return obj.logo.url
+            return obj.mobile_logo.url
         else:
             pass
 
