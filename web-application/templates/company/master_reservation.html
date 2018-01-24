@@ -125,11 +125,11 @@
                             <ul class="table_time">
                                 <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of editorDays">
                                     <input
-                                            type="checkbox"
-                                            class="day"
-                                            :id="'day_'+day+index"
-                                            :checked="schedule[day].active"
-                                            v-on:change="schedule[day].active = $event.target.checked"
+                                        type="checkbox"
+                                        class="day"
+                                        :id="'day_'+day+index"
+                                        :checked="schedule[day].active"
+                                        v-on:change="schedule[day].active = $event.target.checked"
                                     >
                                     <label class="control control--checkbox" :for="'day_'+day+index">{{editorLocaleDays[dayIndex]}}
                                         <div class="control__indicator"></div>

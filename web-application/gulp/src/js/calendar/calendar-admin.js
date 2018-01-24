@@ -34,18 +34,15 @@ Vue.component('timepicker', {
             this.applyTimesAsMonday(value);
         },
         options: function (options) {
-
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
                 this.interval = (60*parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
             } else {
                 this.interval = parseInt(this.options.daySchedule.interval);
             }
-
+            
             let indexToWatch = (this.options.index === 0) ? 1 : 0;
-
-            let siblingStart = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
-            let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
-
+            let siblingStart = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.start : '' );
+            let siblingEnd = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.end : '' );
             if (options.daySchedule.active) {
                 if (!this.options.start) {
                     let timeStart = this.$root.parseTime(this.options.daySchedule.time.start);
@@ -186,7 +183,6 @@ Vue.component('live-timepicker', {
             }
         },
         options: function (options) {
-            console.log('options', options);
             this.minTime = this.$root.parseTime(options.daySchedule.time.start);
             this.maxTime = this.$root.parseTime(options.daySchedule.time.end);
             let nowVal = this.$root.parseTime(this.value);
@@ -308,6 +304,7 @@ let app = new Vue({
         period: 5,
         record: {},
         reservations: null,
+        siblingCompany: null,
         testTime: '',
         mainArray: [],
         _masterSlug: '',
@@ -343,8 +340,14 @@ let app = new Vue({
         },
         getMasterSchedule() {
             this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
-
-                // filter only for one company added to this.companies from response
+                // filter only for one company added to this.companies from response, another goes to sibling company
+                // next we have to make object from time string (8:00-10:00)
+                this.siblingCompany = response.body.find(x => {
+                    return x.company !== companies[0].id;
+                });
+                this.days.forEach(day => {
+                    this.getWorkInterval(this.siblingCompany[day], 'time');
+                });
                 this.schedule = response.body.filter(x => {
                     return x.company === companies[0].id;
                 });
