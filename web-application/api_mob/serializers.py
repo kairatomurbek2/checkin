@@ -163,3 +163,22 @@ class FavoriteSpecialistSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteSpecialist
         fields = ('id', 'specialist')
+
+
+class CustomUserDetailsSerializer(serializers.ModelSerializer):
+    is_specialist = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('pk', 'username', 'email', 'first_name', 'last_name', 'is_specialist')
+        read_only_fields = ('email',)
+
+    def get_is_specialist(self, specialist):
+        request = self.context.get('request')
+        user = request.user
+        if user.is_authenticated:
+            if user.user_specialists.all().exists():
+                return True
+            else:
+                return False
+        return False

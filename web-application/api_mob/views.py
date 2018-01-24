@@ -1,18 +1,22 @@
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
+from rest_auth.serializers import UserDetailsSerializer
+from rest_auth.views import UserDetailsView
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ParseError
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
-    RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer
+    RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
+    CustomUserDetailsSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist
@@ -93,6 +97,7 @@ class MasterDetailViewApi(generics.RetrieveAPIView):
     queryset = Specialist.objects.all()
     serializer_class = MasterSerializer
 
+
 class MasterReviewsListViewApi(generics.ListAPIView):
     serializer_class = RatingSerializer
     lookup_field = 'specialist__slug'
@@ -118,6 +123,7 @@ class CompaniesDetailViewApi(generics.RetrieveAPIView):
 
 
 class MasterCompanyListViewApi(generics.ListAPIView):
+    authentication_classes = (CustomTokenAuthentication,)
     lookup_field = 'company__slug'
     serializer_class = MasterSerializer
     pagination_class = Pagination
@@ -207,3 +213,15 @@ class ProfileFavoriteListViewApi(generics.ListAPIView):
 
     def get_queryset(self):
         return FavoriteSpecialist.objects.filter(user=self.request.user)
+
+
+class UserDetailsViewApi(RetrieveUpdateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomUserDetailsSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return get_user_model().objects.none()
