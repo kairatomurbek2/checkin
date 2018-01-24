@@ -5,7 +5,6 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     CompaniesListView, MasterDetailViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi
-from webapp.decorators import rating_check_specialist, rating_check_company, login_check_favorite
 
 
 schema_view = get_swagger_view(title='Pastebin API')
