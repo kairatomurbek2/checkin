@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
@@ -20,6 +21,7 @@ from django.views.generic import FormView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
+from sorl.thumbnail import get_thumbnail
 
 from main.choices import ACTIVE
 from main.parameters import Messages
@@ -142,6 +144,8 @@ class CompanyCreateView(CreateView):
         company.save()
         company.user.add(employee)
         company.save()
+        resized = get_thumbnail(company.logo, "150x150")
+        company.mobile_logo.save(resized.name, ContentFile(resized.read()), True)
         if formset.is_valid():
             formset.instance = company
             formset.save()
@@ -219,6 +223,8 @@ class CompanyEditView(LoginRequiredMixin, UpdateView):
         company.edited_at = datetime.datetime.now()
         company.edited_by = self.request.user
         company.save()
+        resized = get_thumbnail(company.logo, "150x150")
+        company.mobile_logo.save(resized.name, ContentFile(resized.read()), True)
         if phones.is_valid() and formset.is_valid():
             phones.save()
             formset.save()
