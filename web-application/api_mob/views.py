@@ -15,7 +15,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
-    RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer
+    RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
+    CustomUserDetailsSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist
@@ -214,5 +215,13 @@ class ProfileFavoriteListViewApi(generics.ListAPIView):
         return FavoriteSpecialist.objects.filter(user=self.request.user)
 
 
-class UserDetailsViewApi(UserDetailsView):
+class UserDetailsViewApi(RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomUserDetailsSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def get_queryset(self):
+        return get_user_model().objects.none()
