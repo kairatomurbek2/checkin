@@ -14,7 +14,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path, \
-    category_icon_upload_path, specialist_mobile_path
+    category_icon_upload_path, specialist_mobile_path, mobile_company_path
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -71,6 +71,8 @@ class CompanyManager(models.Manager):
 class Company(models.Model):
     user = models.ManyToManyField(Employees, related_name='companies', verbose_name=_('Пользователь'))
     logo = models.ImageField(verbose_name=_('Логотип'), upload_to=company_path, blank=True, null=True)
+    mobile_logo = models.ImageField(verbose_name=_('Логотип для телефонов'), upload_to=mobile_company_path, blank=True,
+                                    null=True)
     name = models.CharField(verbose_name=_('Название'), max_length=200)
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=150)
     street_address = models.CharField(verbose_name=_('Адрес'), max_length=250, blank=True, null=True)
@@ -310,7 +312,6 @@ class ScheduleSetting(models.Model):
     friday = models.ForeignKey(WorkDay, verbose_name=_('Пятница'), related_name='fridays', null=True, blank=True)
     saturday = models.ForeignKey(WorkDay, verbose_name=_('Суббота'), related_name='saturdays', null=True, blank=True)
     sunday = models.ForeignKey(WorkDay, verbose_name=_('Воскресенье'), related_name='sundays', null=True, blank=True)
-
 
     class Meta:
         verbose_name = _('Настройка расписание')

@@ -24,6 +24,13 @@ def company_path(instance, filename):
     return 'companies/{0}/company_logo/{1}'.format(instance.slug, filename)
 
 
+def mobile_company_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/companies/mobile_company_slug/logo/<filename>
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return 'companies/{0}/mobile_company_logo/{1}'.format(instance.slug, filename)
+
+
 def certificate_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/companies/company_slug/certifications/<filename>
     ext = filename.split('.')[-1]
@@ -46,4 +53,3 @@ def specialist_mobile_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return 'specialists/{0}/mobile_photo/{1}'.format(instance.slug, filename)
-
