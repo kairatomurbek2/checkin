@@ -7,7 +7,7 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, AuthenticationFailed
 from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
@@ -16,10 +16,10 @@ from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
-from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist
+from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
 from rest_framework import status
 
 
@@ -225,3 +225,19 @@ class UserDetailsViewApi(RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return get_user_model().objects.none()
+
+
+class CertificatesSpecialistListViewApi(generics.ListAPIView):
+    serializer_class = CertificatesSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return Certificate.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+
+
+class CertificatesCompanyListViewApi(generics.ListAPIView):
+    serializer_class = CertificatesSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return Certificate.objects.filter(company__slug=self.kwargs['company__slug'])
