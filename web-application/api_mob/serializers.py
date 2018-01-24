@@ -75,7 +75,7 @@ class MasterSerializer(serializers.ModelSerializer):
         return review_count
 
     def get_photo_url(self, obj):
-        return obj.photo.url
+        return obj.mobile_photo.url
 
     def get_is_favorite(self, specialist):
         request = self.context.get("request")
