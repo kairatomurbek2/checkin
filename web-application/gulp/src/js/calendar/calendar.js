@@ -1,4 +1,4 @@
-if (typeof process != 'undefined') {
+if (typeof process !== 'undefined') {
     var Vue = require('vue');
 }
 
@@ -30,26 +30,23 @@ Vue.component('timepicker', {
     },
     watch: {
         value: function (value) {
-            if (this.options.start) {
-                this.options.daySchedule.time.start = value;
-            } else {
-                this.options.daySchedule.time.end = value;
+            if (this.options.day === 'monday') {
+                this.applyTimesAsMonday(value);
             }
-            this.applyTimesAsMonday(value);
         },
         options: function (options) {
-
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
                 this.interval = (60*parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
             } else {
                 this.interval = parseInt(this.options.daySchedule.interval);
             }
-
             let indexToWatch = (this.options.index === 0) ? 1 : 0;
 
-            let siblingStart = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
-            let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ? this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
-
+            let siblingStart = (this.$root.scheduleSettings[indexToWatch] ?
+                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
+            let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ?
+                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
+            
             if (options.daySchedule.active) {
                 if (!this.options.start) {
                     let timeStart = this.$root.parseTime(this.options.daySchedule.time.start);
@@ -190,7 +187,6 @@ Vue.component('live-timepicker', {
             }
         },
         options: function (options) {
-            console.log('options', options);
             this.minTime = this.$root.parseTime(options.daySchedule.time.start);
             this.maxTime = this.$root.parseTime(options.daySchedule.time.end);
             let nowVal = this.$root.parseTime(this.value);
@@ -1093,6 +1089,9 @@ var app = new Vue({
                     minutes: parseInt(val.split(':')[1])
                 }
             }
+            if (typeof val === 'object') {
+                return val;
+            }
         },
         compareScheduleTimes(time1, time2) {
             if (!time2) return true;
@@ -1107,110 +1106,6 @@ var app = new Vue({
                 } else return time1.minutes > time2.minutes;
             }
 
-        },
-        updateScheduleSettingsTime(scheduleDay, day, event, index, startState) {
-            // startState - is a state, which signs that element shows start of the day or end of the day;
-            // index - first element in scheduleSettings or second element
-            let value = event.target ? event.target.value : event;
-            let sibling = {};
-            let gotTime = {};
-            let relative = {};
-            if (index === 0) {
-                if (this.scheduleSettings.length > 1) {
-                    if (this.scheduleSettings[1][day] && this.scheduleSettings[1][day].time.start.indexOf(":") !== -1) {
-                        sibling.init = this.scheduleSettings[1][day].time;
-                        sibling.start = this.parseTime(this.scheduleSettings[1][day].time.start);
-                        sibling.end = this.parseTime(this.scheduleSettings[1][day].time.end);
-                    }
-                }
-            }
-
-            if (index === 1) {
-                if (this.scheduleSettings[0][day] && this.scheduleSettings[0][day].time.end.indexOf(":") !== -1) {
-                    sibling.init = this.scheduleSettings[0][day].time;
-                    sibling.start = this.parseTime(this.scheduleSettings[0][day].time.start);
-                    sibling.end = this.parseTime(this.scheduleSettings[0][day].time.end);
-                }
-            }
-
-            if (startState) {
-                gotTime = this.parseTime(value);
-                relative = this.parseTime(scheduleDay.time.end);
-                if (relative) {
-                    if (this.compareScheduleTimes(relative, gotTime)) {
-                        scheduleDay.time.start = value;
-                    } else {
-                        scheduleDay.time.start = scheduleDay.time.end;
-                        if (event.target) {
-                            event.target.value = scheduleDay.time.end;
-                        }
-                    }
-                    return;
-                }
-                if (sibling.start) {
-                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
-                        scheduleDay.time.start = sibling.end.init;
-                        if (event.target) {
-                            event.target.value = sibling.end.init;
-                        }
-                    } else {
-                        scheduleDay.time.start = value;
-                    }
-                } else {
-                    scheduleDay.time.start = value;
-                }
-            } else {
-                gotTime = this.parseTime(value);
-                relative = this.parseTime(scheduleDay.time.start);
-                if (relative) {
-                    if (this.compareScheduleTimes(relative, gotTime)) {
-                        scheduleDay.time.end = scheduleDay.time.start;
-                        if (event.target) {
-                            event.target.end = scheduleDay.time.start;
-                        }
-                    } else {
-                        scheduleDay.time.end = value;
-                    }
-                    return;
-                }
-                if (sibling.end) {
-                    if (this.compareScheduleTimes(gotTime, sibling.start) && this.compareScheduleTimes(sibling.end, gotTime)) {
-                        scheduleDay.time.end = sibling.end.init;
-                        if (event.target) {
-                            event.target.value = sibling.end.init;
-                        }
-                    } else {
-                        scheduleDay.time.end = value;
-                    }
-                } else {
-                    scheduleDay.time.end = value;
-                }
-            }
-        },
-        updateLiveQueue(scheduleDay, event, startState) {
-            let value = this.parseTime(event.target.value);
-            let start = this.parseTime(scheduleDay.time.start);
-            let end = this.parseTime(scheduleDay.time.end);
-
-            if (this.compareScheduleTimes(start, value) || this.compareScheduleTimes(value, end)) {
-                if (startState) {
-                    scheduleDay.live_recording.start = scheduleDay.time.start;
-                    if (event.target) {
-                        event.target.value = scheduleDay.time.start;
-                    }
-                } else {
-                    scheduleDay.live_recording.end = scheduleDay.time.end;
-                    if (event.target) {
-                        event.target.value = scheduleDay.time.end;
-                    }
-                }
-            } else {
-                if (startState) {
-                    scheduleDay.live_recording.start = event.target.value;
-                } else {
-                    scheduleDay.live_recording.end = event.target.value;
-                }
-            }
         },
         submitSchedule(event, index, active) {
             event.preventDefault();
@@ -1290,6 +1185,6 @@ var app = new Vue({
     }
 });
 
-if (typeof process != 'undefined') {
+if (typeof process !== 'undefined') {
     module.exports = app;
 }
