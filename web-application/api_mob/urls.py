@@ -4,7 +4,7 @@ from rest_framework_swagger.views import get_swagger_view
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterDetailViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
-    RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi
+    RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi
 from webapp.decorators import rating_check_specialist, rating_check_company, login_check_favorite
 
 
@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),
         name='company_reviews_api_v1'),
     url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/profile/$', UserDetailsViewApi.as_view(), name='user_detail_api'),
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^rest-auth/google/$', GoogleLogin.as_view(), name='google_login'),

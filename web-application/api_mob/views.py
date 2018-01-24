@@ -1,11 +1,14 @@
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
+from rest_auth.serializers import UserDetailsSerializer
+from rest_auth.views import UserDetailsView
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ParseError
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -209,3 +212,34 @@ class ProfileFavoriteListViewApi(generics.ListAPIView):
 
     def get_queryset(self):
         return FavoriteSpecialist.objects.filter(user=self.request.user)
+
+
+class UserDetailsViewApi(UserDetailsView):
+    authentication_classes = (TokenAuthentication,)
+
+
+# class UserDetailsViewApi(RetrieveUpdateAPIView):
+#     """
+#     Reads and updates UserModel fields
+#     Accepts GET, PUT, PATCH methods.
+#
+#     Default accepted fields: username, first_name, last_name
+#     Default display fields: pk, username, email, first_name, last_name
+#     Read-only fields: pk, email
+#
+#     Returns UserModel fields.
+#     """
+#     serializer_class = UserDetailsSerializer
+#     permission_classes = (IsAuthenticated,)
+#     authentication_classes = (TokenAuthentication,)
+#
+#     def get_object(self):
+#         return self.request.user
+#
+#     def get_queryset(self):
+#         """
+#         Adding this method since it is sometimes called when using
+#         django-rest-swagger
+#         https://github.com/Tivix/django-rest-auth/issues/275
+#         """
+#         return get_user_model().objects.none()
