@@ -345,9 +345,11 @@ let app = new Vue({
                 this.siblingCompany = response.body.find(x => {
                     return x.company !== companies[0].id;
                 });
-                this.days.forEach(day => {
-                    this.getWorkInterval(this.siblingCompany[day], 'time');
-                });
+                if (this.siblingCompany) {
+                    this.days.forEach(day => {
+                        this.getWorkInterval(this.siblingCompany[day], 'time');
+                    });
+                }
                 this.schedule = response.body.filter(x => {
                     return x.company === companies[0].id;
                 });
