@@ -6,7 +6,7 @@ Vue.component('timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
     ':class="{\'disable-input\': !options.daySchedule.active}"' +
-    'v-bind:value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
+    ':value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
     ':readonly="!options.daySchedule.active">',
 
     data: function () {
@@ -41,69 +41,52 @@ Vue.component('timepicker', {
                 this.interval = parseInt(this.options.daySchedule.interval);
             }
             let indexToWatch = (this.options.index === 0) ? 1 : 0;
+            let siblingStart = this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start);
+            let siblingEnd = this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end);
 
-            let siblingStart = (this.$root.scheduleSettings[indexToWatch] ?
-                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
-            let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ?
-                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
-            
-            if (options.daySchedule.active) {
-                if (!this.options.start) {
-                    let timeStart = this.$root.parseTime(this.options.daySchedule.time.start);
-                    if (!timeStart) {
-                        timeStart = {
-                            hours: 7,
-                            minutes: 0
-                        }
-                    }
-                    if (siblingStart && siblingEnd) {
-                        this.picker.set({
-                            min: [timeStart.hours, timeStart.minutes],
-                            disable: [
-                                {
-                                    from: [siblingStart.hours, siblingStart.minutes],
-                                    to: [siblingEnd.hours, siblingEnd.minutes]
-                                }
-                            ],
-                            interval: this.interval
-                        })
-                    } else {
-                        this.picker.set({
-                            min: [timeStart.hours, timeStart.minutes],
-                            interval: this.interval
-                        })
-                    }
+            if (!this.options.start) {
+                let timeStart = this.$root.parseTime(this.$root.scheduleSettings[this.options.index][this.options.day].time.start) ||
+                    {hours: 7, minutes: 0};
+                if (siblingStart && siblingEnd) {
+                    this.picker.set({enable: true});
+                    this.picker.set({
+                        min: [timeStart.hours, timeStart.minutes],
+                        disable: [
+                            {
+                                from: [siblingStart.hours, siblingStart.minutes],
+                                to: [siblingEnd.hours, siblingEnd.minutes]
+                            }
+                        ],
+                        interval: this.interval
+                    })
                 } else {
-                    let timeEnd = this.$root.parseTime(this.options.daySchedule.time.end);
-                    if (!timeEnd) {
-                        timeEnd = {
-                            hours: 20,
-                            minutes: 0
-                        }
-                    }
-                    if (siblingStart && siblingEnd) {
-                        this.picker.set({
-                            max: [timeEnd.hours, timeEnd.minutes],
-                            disable: [
-                                {
-                                    from: [siblingStart.hours, siblingStart.minutes],
-                                    to: [siblingEnd.hours, siblingEnd.minutes]
-                                }
-                            ],
-                            interval: this.interval
-                        });
-                    } else {
-                        this.picker.set({
-                            max: [timeEnd.hours, timeEnd.minutes],
-                            interval: this.interval
-                        });
-                    }
+                    this.picker.set({enable: true});
+                    this.picker.set({
+                        min: [timeStart.hours, timeStart.minutes],
+                        interval: this.interval
+                    })
                 }
             } else {
-                if (this.options.start) {
-                    this.options.daySchedule.time.start = ''
+                let timeEnd = this.$root.parseTime(this.$root.scheduleSettings[this.options.index][this.options.day].time.end) ||
+                    {hours: 20, minutes: 0};
+                if (siblingStart && siblingEnd) {
+                    this.picker.set({enable: true});
+                    this.picker.set({
+                        max: [timeEnd.hours, timeEnd.minutes],
+                        disable: [
+                            {
+                                from: [siblingStart.hours, siblingStart.minutes],
+                                to: [siblingEnd.hours, siblingEnd.minutes]
+                            }
+                        ],
+                        interval: this.interval
+                    });
                 } else {
-                    this.options.daySchedule.time.end = ''
+                    this.picker.set({enable: true});
+                    this.picker.set({
+                        max: [timeEnd.hours, timeEnd.minutes],
+                        interval: this.interval
+                    });
                 }
             }
         }
@@ -1082,15 +1065,15 @@ var app = new Vue({
             }
         },
         parseTime(val) {
+            if (typeof val === 'object') {
+                return val;
+            }
             if (val && val.indexOf(':') !== -1) {
                 return {
                     init: val,
                     hours: parseInt(val.split(':')[0]),
                     minutes: parseInt(val.split(':')[1])
                 }
-            }
-            if (typeof val === 'object') {
-                return val;
             }
         },
         compareScheduleTimes(time1, time2) {
