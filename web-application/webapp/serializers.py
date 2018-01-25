@@ -79,12 +79,8 @@ class ScheduleSettingSerializer(serializers.ModelSerializer):
             schedule = ScheduleSetting.objects.create(monday=mondayObj, tuesday=tuesdayObj, wednesday=wednesdayObj,
                                                       thursday=thursdayObj, friday=fridayObj, saturday=saturdayObj,
                                                       sunday=sundayObj)
-
-            request = self.context.get('request')
-            user = request.user
-            if user.is_authenticated:
-                specialist = Specialist.objects.get(user=user)
-                schedule.specialist = specialist
+            specialist = Specialist.objects.get(slug=self.context['specialist__slug'].slug)
+            schedule.specialist = specialist
             schedule.company = company
             schedule.save()
             return schedule

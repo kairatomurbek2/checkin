@@ -99,6 +99,11 @@ class ScheduleSettingAddView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = ScheduleSettingSerializer
 
+    def get_serializer_context(self):
+        context = super(ScheduleSettingAddView, self).get_serializer_context()
+        context['specialist__slug'] = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+        return context
+
     def create(self, request, *args, **kwargs):
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
         serializer = self.get_serializer(data=request.data)
