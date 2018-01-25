@@ -4,6 +4,7 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
@@ -15,6 +16,8 @@ from django.views.generic import CreateView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
+from sorl.thumbnail import get_thumbnail
+
 from main.parameters import Messages
 from webapp import forms
 from webapp.forms import ContactFormSet, CertSpecialistFormSet
@@ -83,6 +86,8 @@ class MasterCreateView(CreateView):
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save()
+        resized = get_thumbnail(specialist.photo, "150x150")
+        specialist.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
         if formset.is_valid():
             formset.instance = specialist
             formset.save()
@@ -154,6 +159,8 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save()
+        resized = get_thumbnail(specialist.photo, "150x150")
+        specialist.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
 
         if formset.is_valid() and certificates.is_valid():
             formset.save()

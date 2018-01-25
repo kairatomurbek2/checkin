@@ -3,7 +3,8 @@ from django.utils import timezone
 from rest_framework import serializers
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
-from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist
+from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist, \
+    Certificate
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
@@ -182,3 +183,17 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
             else:
                 return False
         return False
+
+
+class CertificatesSerializer(serializers.ModelSerializer):
+    certificate_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Certificate
+        fields = ('id', 'certificate_url')
+
+    def get_certificate_url(self, obj):
+        if obj.certificate:
+            return obj.certificate.url
+        else:
+            pass
