@@ -176,7 +176,11 @@
 }
         $(document).ready(
             function () {
-                $('#id_info').redactor({});
+                $('#id_info').redactor({
+                    changeCallback(html) {
+                        $("#id_info").trigger('change');
+                    }
+                });
                 check_true_link()
             }
         );
