@@ -238,8 +238,8 @@ Vue.component('lunch-timepicker', {
         let vm = this;
         let picker = $(this.$el).pickatime({
             format: 'HH:i',
-            min: [7, 0],
-            max: [20, 0],
+            min: [10, 0],
+            max: [16, 0],
             interval: vm.interval,
             clear: ''
         }).val(this.value).trigger('change').on('change', function () {
@@ -257,20 +257,8 @@ Vue.component('lunch-timepicker', {
 
         },
         options: function (options) {
-            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start);
-            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end);
-            if (!startTime) {
-                startTime = {
-                    hours: 7,
-                    minutes: 0
-                }
-            }
-            if (!endTime) {
-                endTime = {
-                    hours: 20,
-                    minutes: 0
-                }
-            }
+            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start) || {hours: 11, minutes: 0};
+            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end) || {hours: 16, minutes: 0};
             if (this.options.start) {
                 this.picker.set({
                     max: [endTime.hours, endTime.minutes]
