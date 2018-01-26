@@ -27,24 +27,26 @@
                     <span>{{ master.get_categories }}</span>
                     <span></span>
                     <p>{{ master.short_info }}</p>
-                    <ul>
-                        <li>
-                            <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
-                        </li>
-                        <li>
-                            {% for contact in master.specialist_contacts.all %}
-                            <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
-                            {% endfor %}
-                        </li>
-                        {% if master.sex %}
-                        <li>
-                            <i class="fa fa-venus-mars" aria-hidden="true"></i> {{ master.sex }}
-                        </li>
-                        {% endif %}
-                        <li>
-                            <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
-                        </li>
-                    </ul>
+                    {% if not master.company.all %}
+                        <ul>
+                            <li>
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ master.street_address }}
+                            </li>
+                            <li>
+                                {% for contact in master.specialist_contacts.all %}
+                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                {% endfor %}
+                            </li>
+                            {% if master.sex %}
+                                <li>
+                                    <i class="fa fa-venus-mars" aria-hidden="true"></i> {{ master.sex }}
+                                </li>
+                            {% endif %}
+                            <li>
+                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ master.user.email }}
+                            </li>
+                        </ul>
+                    {% endif %}
                 </div>
                 {% if master.rating %}
                 <div class="rating">
