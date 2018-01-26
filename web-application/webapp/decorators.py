@@ -104,7 +104,7 @@ def user_specialist_create_check(function):
     def decorator(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return HttpResponseRedirect('/accounts/login/')
-        specialist = Specialist.objects.filter(user=request.user).count()
+        specialist = Specialist.all_objects.filter(user=request.user).count()
         if specialist >= 1:
             raise Http404("Page not found")
         else:
