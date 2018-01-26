@@ -173,6 +173,21 @@ class ReservationFullSerializer(serializers.ModelSerializer):
         fields = ('id', 'full_name', 'date_time_reservation', 'status', 'phone')
 
 
+class SpecialistForReservation(serializers.ModelSerializer):
+    class Meta:
+        model = Specialist
+        fields = ('id', 'full_name')
+
+
+class ReservationFullUserSerializer(serializers.ModelSerializer):
+    date_time_reservation = DateTimeFieldWihTZ(format="%d.%m.%Y %H:%M")
+    specialist = SpecialistForReservation(many=False)
+
+    class Meta:
+        model = Reservation
+        fields = ('id', 'specialist', 'date_time_reservation', 'status')
+
+
 class ReservationCreteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation

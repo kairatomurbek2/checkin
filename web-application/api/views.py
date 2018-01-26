@@ -13,7 +13,7 @@ from rest_framework.status import HTTP_202_ACCEPTED
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
     ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer, \
-    ScheduleSettingUpdateSerializer
+    ScheduleSettingUpdateSerializer, ReservationFullUserSerializer
 from datetime import date, timedelta
 
 
@@ -61,6 +61,19 @@ class ReservationListView(generics.ListAPIView):
         month = today + timedelta(days=30)
         return Reservation.objects.filter(specialist__slug=self.kwargs['specialist__slug'],
                                           date_time_reservation__gte=today,
+                                          date_time_reservation__lte=month)
+
+
+class ReservationListViewUser(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ReservationFullUserSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        today = date.today()
+        month = today + timedelta(days=30)
+        return Reservation.objects.filter(user=self.request.user, date_time_reservation__gte=today,
                                           date_time_reservation__lte=month)
 
 
