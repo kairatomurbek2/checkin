@@ -312,6 +312,11 @@
                                                 </lunch-timepicker>
                                             </div>
                                         </div>
+                                        <div class="delete-lunch"
+                                             v-on:click="schedule.lunch_settings.start = ''; schedule.lunch_settings.end = '';">
+                                            <i class="fa fa-close"></i>
+                                            <span>Удалить время обеда</span>
+                                        </div>
                                     </div>
                                     <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
                                 </div>
