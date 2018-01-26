@@ -136,7 +136,10 @@
                                          {% endverbatim %}
                                          {% endif %}
                                          {%verbatim%}>
+                                        <span style="display: block; font-size: 12px; margin-bottom: 5px;"
+                                              v-if="time.userRecord">Ваша запись у {{time.userRecord.specialist.full_name}} на </span>
                                         {{prettyDate(time.time, 'time')}}
+                                        <div v-if="time.userRecord">{{time.userRecord.name}}</div>
                                     </div>
                                     <!-- <div v-if="time.status == 'live'">
                                         {{prettyDateRange(time.time, 'time')}}

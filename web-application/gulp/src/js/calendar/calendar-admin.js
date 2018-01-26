@@ -388,6 +388,13 @@ let app = new Vue({
                 console.error(error);
             })
         },
+        getUserOrders() {
+            this.$http.get('/api/user/reservations').then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            })
+        },
         fillRange(start, end) {
             this.mainArray = [];
             this.range.current = end;

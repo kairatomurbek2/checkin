@@ -292,6 +292,7 @@ var app = new Vue({
         dayTime: {},
         schedule: {},
         scheduleSettings: [],
+        userReservations: null,
         scheduleState: true,
         editorState: false,
         localLoaderState: false,
@@ -354,19 +355,46 @@ var app = new Vue({
                         });
                     }
                 });
-                this.getMasterOrders();
+
+                // check if user has any orders
+                if (!this._masterUser && this._authToken) {
+                    this.getUserOrders().then(() => {
+                        this.getMasterOrders();
+                    }).catch(error => {
+                        console.log(error);
+                        this.getMasterOrders();
+                    })
+                } else {
+                    this.getMasterOrders();
+                }
+
             }, error => {
                 console.error(error);
             })
         },
         getMasterOrders() {
             this.$http.get('/api/reservation/' + this._masterSlug).then(response => {
-                this.reservations = response.body;
-                this.doCorrectDateInOrders();
+                this.reservations = this.doCorrectDateInOrders(response.body);
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
                 this.toggleLocalLoader(false);
             }, error => {
                 console.error(error);
+            })
+        },
+        getUserOrders() {
+            return new Promise((resolve, reject) => {
+                this.$http.get('/api/user/reservations').then(response => {
+                    if (response.ok) {
+                        this.userReservations = this.doCorrectDateInOrders(response.body);
+                        resolve();
+                    } else {
+                        console.log(response.statusText);
+                        reject();
+                    }
+                }, error => {
+                    console.log(error);
+                    reject();
+                })
             })
         },
         fillRange(start, end) {
@@ -467,10 +495,23 @@ var app = new Vue({
                     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
                     continue;
                 }
-                let record = this.orderFreeRecords(oneDay.date);
+                // check if user already made a record to the specialist
+                if (!this._masterUser && this._authToken) {
+                    let userRecord = this.orderUserRecords(this.userReservations, oneDay.date);
+                    if (userRecord) {
+                        userRecord.company = companyId;
+                        times.push(userRecord);
+
+                        oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                        oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                        continue;
+                    }
+                }
+                let record = this.orderFreeRecords(this.reservations, oneDay.date);
                 if (record) {
                     record.company = companyId;
                     times.push(record);
+
                     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
                     oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
                     continue;
@@ -485,8 +526,8 @@ var app = new Vue({
             }
             this.dayTime = {date: oneDay.date, times: times};
         },
-        doCorrectDateInOrders() {
-            this.reservations.map(order => {
+        doCorrectDateInOrders(reservations) {
+            reservations.map(order => {
                 let date = {
                     date: order.date_time_reservation.split(' ')[0].split('.'),
                     time: order.date_time_reservation.split(' ')[1].split(':'),
@@ -494,7 +535,8 @@ var app = new Vue({
                 };
                 date.jsDate = new Date('' + date.date[1] + '/' + date.date[0] + '/' + date.date[2]).setHours(parseInt(date.time[0]), parseInt(date.time[1]), 0, 0);
                 order.date_time_reservation = new Date(date.jsDate);
-            })
+            });
+            return reservations;
         },
         getWorkInterval(item, key) {
             if (typeof item[key] !== 'object') {
@@ -541,9 +583,9 @@ var app = new Vue({
             }
             return time;
         },
-        orderFreeRecords(dateToCheck) {
+        orderFreeRecords(reservations, dateToCheck) {
             let record = null;
-            this.reservations.forEach(reservation => {
+            reservations.forEach(reservation => {
                 if (reservation.date_time_reservation.getTime() === dateToCheck.getTime() && reservation.status !== 'refused') {
                     record = {
                         time: reservation.date_time_reservation,
@@ -552,6 +594,26 @@ var app = new Vue({
                         phone: reservation.phone,
                         companyId: reservation.companyId,
                         id: reservation.id
+                    };
+                }
+            });
+            return record;
+        },
+        orderUserRecords(reservations, dateToCheck) {
+            let record = null;
+            reservations.forEach(reservation => {
+                if (reservation.date_time_reservation.getTime() === dateToCheck.getTime() && reservation.status !== 'refused') {
+                    record = {
+                        time: reservation.date_time_reservation,
+                        status: reservation.status,
+                        name: reservation.full_name,
+                        phone: reservation.phone,
+                        companyId: reservation.companyId,
+                        id: reservation.id,
+                        userRecord: {
+                            status: true,
+                            specialist: reservation.specialist
+                        }
                     };
                 }
             });
