@@ -1100,10 +1100,10 @@ var app = new Vue({
         submitSchedule(event, index, active) {
             event.preventDefault();
             let schedule = JSON.parse(JSON.stringify(this.scheduleSettings[index]));
-            if (!schedule.lunch_settings.start || !schedule.lunch_settings.end) {
-                alert("Вы не ввели время обеда");
-                return;
-            }
+            // if (!schedule.lunch_settings.start || !schedule.lunch_settings.end) {
+            //     alert("Вы не ввели время обеда");
+            //     return;
+            // }
             this.days.forEach(day => {
                 if (schedule[day] && schedule[day].active) {
                     schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
