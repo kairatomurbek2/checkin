@@ -207,7 +207,6 @@ $(function () {
                 },
                 success: function (response) {
                     var results = response.results;
-                    self.clearOptions();
                     for (var i=0; i<results.length; i++) {
                         self.addOption({value: results[i].id, text: results[i].text});
                     }
@@ -240,7 +239,6 @@ $(function () {
                 },
                 success: function (response) {
                     var results = response.results;
-                    self.clearOptions();
                     for (var i=0; i<results.length; i++) {
                         self.addOption({value: results[i].id, text: results[i].text});
                     }
@@ -273,7 +271,6 @@ $(function () {
                 },
                 success: function (response) {
                     var results = response.results;
-                    self.clearOptions();
                     for (var i=0; i<results.length; i++) {
                         self.addOption({value: results[i].id, text: results[i].text});
                     }
