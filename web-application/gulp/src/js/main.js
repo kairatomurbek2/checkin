@@ -208,7 +208,7 @@ $(function () {
                 success: function (response) {
                     var results = response.results;
                     for (var i=0; i<results.length; i++) {
-                        self.addOption({value: results[i].id, text: results[i].text});
+                        self.addOption({value: results[i].text, text: results[i].text});
                     }
                     self.refreshOptions();
                 },
@@ -240,7 +240,7 @@ $(function () {
                 success: function (response) {
                     var results = response.results;
                     for (var i=0; i<results.length; i++) {
-                        self.addOption({value: results[i].id, text: results[i].text});
+                        self.addOption({value: results[i].text, text: results[i].text});
                     }
                     self.refreshOptions();
                 },
@@ -257,7 +257,7 @@ $(function () {
         create: true,
         render: {
             option: function (item, escape) {
-                return '<div>' + escape(item.text)  + '</div>';
+                return '<div data-value=' + item.text + '>' + escape(item.text)  + '</div>';
             }
         },
         load: function (query, callback) {
@@ -272,7 +272,7 @@ $(function () {
                 success: function (response) {
                     var results = response.results;
                     for (var i=0; i<results.length; i++) {
-                        self.addOption({value: results[i].id, text: results[i].text});
+                        self.addOption({value: results[i].text, text: results[i].text});
                     }
                     self.refreshOptions();
                 },
