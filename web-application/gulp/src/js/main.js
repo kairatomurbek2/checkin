@@ -190,19 +190,97 @@ $(function () {
     $('#id_tags').selectize({
         persist: false,
         createOnBlur: true,
-        create: true
+        create: true,
+        render: {
+            option: function (item, escape) {
+                return '<div>' + escape(item.text)  + '</div>';
+            }
+        },
+        load: function (query, callback) {
+            if (!query.length) return callback();
+            var self = this;
+            $.ajax({
+                url: '/autocomplete/',
+                type: 'GET',
+                data: {
+                    q: query
+                },
+                success: function (response) {
+                    var results = response.results;
+                    for (var i=0; i<results.length; i++) {
+                        self.addOption({value: results[i].text, text: results[i].text});
+                    }
+                    self.refreshOptions();
+                },
+                error: function () {
+                    callback();
+                }
+            })
+        }
     });
 
-     $('#id_form-tags').selectize({
+    $('#id_form-tags').selectize({
         persist: false,
         createOnBlur: true,
-        create: true
+        create: true,
+        render: {
+            option: function (item, escape) {
+                return '<div>' + escape(item.text)  + '</div>';
+            }
+        },
+        load: function (query, callback) {
+            if (!query.length) return callback();
+            var self = this;
+            $.ajax({
+                url: '/autocomplete/',
+                type: 'GET',
+                data: {
+                    q: query
+                },
+                success: function (response) {
+                    var results = response.results;
+                    for (var i=0; i<results.length; i++) {
+                        self.addOption({value: results[i].text, text: results[i].text});
+                    }
+                    self.refreshOptions();
+                },
+                error: function () {
+                    callback();
+                }
+            })
+        }
     });
 
     $('#id_company_tags').selectize({
         persist: false,
         createOnBlur: true,
-        create: true
+        create: true,
+        render: {
+            option: function (item, escape) {
+                return '<div data-value=' + item.text + '>' + escape(item.text)  + '</div>';
+            }
+        },
+        load: function (query, callback) {
+            if (!query.length) return callback();
+            var self = this;
+            $.ajax({
+                url: '/autocomplete/',
+                type: 'GET',
+                data: {
+                    q: query
+                },
+                success: function (response) {
+                    var results = response.results;
+                    for (var i=0; i<results.length; i++) {
+                        self.addOption({value: results[i].text, text: results[i].text});
+                    }
+                    self.refreshOptions();
+                },
+                error: function () {
+                    callback();
+                }
+            })
+        }
     });
 
     $("#sticker").sticky({
