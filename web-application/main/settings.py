@@ -14,7 +14,7 @@ SECRET_KEY = 'f1p+^!5dp@dcy-sfzugpgmkx($pw^9h^g)6%n)#^=u3*$y$c4s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['51.254.188.57']
 
 # Application definition
 
@@ -196,6 +196,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+
+DOMAIN_URL = 'http://51.254.188.57'
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':

@@ -7,15 +7,16 @@
     "url": "git+https://github.com/Insayt/frontend-devil.git"
   },
   "dependencies": {
-    "browser-sync": "^2.2.3",
+    "browser-sync": "^2.23.6",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.1.0",
     "gulp-imagemin": "^2.2.1",
     "gulp-minify-css": "^1.0.0",
     "gulp-mocha": "^5.0.0",
     "gulp-rigger": "^0.5.8",
-    "gulp-sourcemaps": "^1.5.0",
+    "gulp-sourcemaps": "^1.12.1",
     "gulp-uglify": "^1.1.0",
+    "gulp-update": "0.0.2",
     "gulp-watch": "^4.1.1",
     "imagemin-pngquant": "^4.0.0",
     "latest-version": "^3.1.0",
