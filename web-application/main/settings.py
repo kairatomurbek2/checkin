@@ -14,7 +14,7 @@ SECRET_KEY = 'f1p+^!5dp@dcy-sfzugpgmkx($pw^9h^g)6%n)#^=u3*$y$c4s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['51.254.188.57']
+ALLOWED_HOSTS = ['51.254.188.57', 'www.checkin.kg', 'checkin.kg']
 
 # Application definition
 
