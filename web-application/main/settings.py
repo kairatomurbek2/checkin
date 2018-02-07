@@ -91,8 +91,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'checkin_db',
-        'USER': 'root',
-        'PASSWORD': 'root'
+        'USER': 'checkin',
+        'PASSWORD': '3B4q2C5d'
     }
 }
 
