@@ -122,7 +122,7 @@ class Company(models.Model):
             }
 
             message = get_html_message("decline")
-            mail = EmailMessage('Отказано в регистриции', message, to=[self.email])
+            mail = EmailMessage('Отказано в регистрации', message, to=[self.email])
             mail.content_subtype = 'html'
             mail.send()
 
