@@ -121,8 +121,8 @@ PhoneFormSet = forms.inlineformset_factory(Company, CompanyContact, form=Company
 
 
 class SpecialistSearchForm(forms.Form):
-    email = forms.EmailField(required=True,
-                             widget=forms.EmailInput(attrs={'placeholder': _('Введите email специалиста')}))
+    email = forms.CharField(required=True,
+                             widget=forms.TextInput(attrs={'placeholder': _('Введите email или ФИО специалиста')}))
     prefix = 'search'
 
     def is_valid(self):

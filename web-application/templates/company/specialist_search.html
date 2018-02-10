@@ -31,21 +31,19 @@
                         <li class="list_bold">Email</li>
                         <li class="list_bold">Логин</li>
                         {% for user in users %}
-                            <li>{{ user.first_name }}</li>
-                            <li>{{ user.last_name }}</li>
-                            <li>{{ user.email }}</li>
-                            <li>{{ user.username }}</li>
+                            <li>{{ user.user.first_name }}</li>
+                            <li>{{ user.user.last_name }}</li>
+                            <li>{{ user.user.email }}</li>
+                            <li>{{ user.user.username }}</li>
                         {% endfor %}
                         <li>
                             <button class="button" type="submit" name="invite_user">
                                 Пригласить
                             </button>
                             {% for user in users %}
-                                {% for l in user.user_specialists.all %}
-                                    <a href="{% url 'master_detail' l.slug %}"
+                                    <a href="{% url 'master_detail' user.slug %}"
                                        class="watch_profile" data-toggle="tooltip" data-placement="top"
                                        title="Просмотреть профиль" target="_blank"></a>
-                                {% endfor %}
                             {% endfor %}
                         </li>
                     </ul>

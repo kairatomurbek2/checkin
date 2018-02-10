@@ -14,6 +14,7 @@
                     <div class="w-institutions">
                         <h4>{{ company }}</h4>
                     </div>
+                    <a href="{% url 'user_search' company.slug %}" class="button">Пригласить специалиста</a>
                     <a href="{% url 'add_master_company' company.slug %}" class="button">Добавить специалиста
                         &nbsp+</a>
                 </div>
