@@ -1,7 +1,7 @@
 import datetime
 import threading
 from smtplib import SMTPException
-
+from django.db.models import Q
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib import messages
@@ -264,21 +264,23 @@ class SpecialistSearchView(BaseFormView):
     def __get_users(self, form):
         company = Company.objects.get(slug=self.kwargs['company_slug'])
         email = form.cleaned_data['email']
-        if not Specialist.objects.filter(user__email=email, company=company):
-            users = User.objects.filter(email=email)
+        if not Specialist.objects.filter(Q(full_name__icontains=email, company=company) | Q(user__email=email, company=company)):
             if email:
-                users = users.filter(email=email)
-            return users
+                return Specialist.objects.filter(
+                    Q(full_name=email) | Q(user__email=email))
 
     def invite_form_valid(self, invite_form):
         invite = self.__create_invite(invite_form)
         company = Company.objects.get(slug=self.kwargs['company_slug'])
-        self.__send_email_to_user(invite, invite_form.cleaned_data['user'])
+        spec = invite_form.cleaned_data['user']
+        user = User.objects.filter(user_specialists=spec).first()
+        self.__send_email_to_user(invite, user)
         return HttpResponseRedirect(company.get_absolute_url())
 
     def __create_invite(self, invite_form):
         company = Company.objects.get(slug=self.kwargs['company_slug'])
-        user = invite_form.cleaned_data['user']
+        user_specialist = invite_form.cleaned_data['user']
+        user = User.objects.filter(user_specialists=user_specialist).first()
         invite = Invite.objects.create(invite_from=self.request.user, invite_to=user, invite_company=company)
         return invite
 
