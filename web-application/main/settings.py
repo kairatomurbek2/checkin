@@ -230,5 +230,6 @@ SOCIALACCOUNT_PROVIDERS = \
 
 try:
     from settings_local import *
+    from settings_prod import *
 except ImportError:
     pass
