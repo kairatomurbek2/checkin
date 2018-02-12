@@ -18,7 +18,7 @@
                 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}
                     <p class="text-danger">{{ form.username.errors|striptags }}</p>
-                    <input type="text" placeholder="ФИО" name="username" required="">
+                    <input type="hidden" placeholder="ФИО" name="username" required="">
                     <p class="text-danger">{{ form.email.errors|striptags }}</p>
                     {{ form.email }}
                     <p class="text-danger">{{ form.password1.errors|striptags }}</p>
@@ -46,4 +46,14 @@
             </div>
         </div>
     </main>
+
+    <script>
+        document.querySelector("#id_email").addEventListener('change', function(event){
+            let value = event.target.value;
+            value = value.split('@').join('');
+            value = value.split('.').join('');
+            document.querySelector("input[name=username]").value = value;
+        });
+    </script>
+
 {% endblock %}
