@@ -25,6 +25,7 @@
                     {% for contact in company.contacts.all %}
                         <i class="fa fa-map-marker" aria-hidden="true"></i> {{ contact.phone }}
                     {% endfor %}
+                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ company.short_phone }}
                 </li>
             </ul>
         </div>

@@ -79,6 +79,7 @@ class Company(models.Model):
     short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
     info = RedactorField(verbose_name=_('Подробная информация'))
     phone = PhoneNumberField(verbose_name=_('Номер телефона'))
+    short_phone = models.CharField(max_length=6, blank=True, null=True, verbose_name=('Короткий номер'))
     email = models.EmailField(verbose_name=_('Эл. адрес'))
     legal_data = models.TextField(verbose_name=_('Юридистические данные'), max_length=500, blank=True, null=True)
     website = models.URLField(verbose_name=_('Веб-сайт'), blank=True, null=True)
