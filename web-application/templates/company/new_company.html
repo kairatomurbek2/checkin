@@ -7,7 +7,7 @@
     <main class="become_specilalist become_company">
         <div class="grid">
             {% include 'messages.html' %}
-            <form action="" method="post" class="form_inf" enctype="multipart/form-data">
+            <form action="" method="post" class="form_inf" enctype="multipart/form-data" onsubmit="onSubmitForm()">
                 {% csrf_token %}
 
                 <div class="control-group file-upload" id="file-upload">
@@ -109,6 +109,9 @@
             </form>
         </div>
     </main>
+    <div class="form-sending-container">
+        <img src="{% static 'img/loader.gif' %}" alt="">    
+    </div>
 {% endblock %}
 {% block js %}
     {#    {% load_google_map_js %}#}
@@ -116,6 +119,9 @@
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
+        function onSubmitForm() {
+            document.querySelector(".form-sending-container").style.display = 'flex';
+        }
         $(document).ready(
             function () {
                 $('#id_info').redactor({
