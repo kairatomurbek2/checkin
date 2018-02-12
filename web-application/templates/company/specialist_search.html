@@ -29,12 +29,12 @@
                         <li class="list_bold">Фамилия</li>
 
                         <li class="list_bold">Email</li>
-                        <li class="list_bold">Логин</li>
-                        {% for user in users %}
-                            <li>{{ user.user.first_name }}</li>
-                            <li>{{ user.user.last_name }}</li>
-                            <li>{{ user.user.email }}</li>
-                            <li>{{ user.user.username }}</li>
+                        <li class="list_bold"></li>
+                        {% for master in users %}
+                            <li>{{ master.user.first_name }}</li>
+                            <li>{{ master.user.last_name }}</li>
+                            <li>{{ master.user.email }}</li>
+                            <li></li>
                         {% endfor %}
                         <li>
                             <button class="button" type="submit" name="invite_user">
