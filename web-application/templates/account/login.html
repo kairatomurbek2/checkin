@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load widget_tweaks %}
 {% load account socialaccount %}
+{% load extra_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -15,10 +16,17 @@
                 <span></span>
                 <form class="login" method="POST" action="{% url 'account_login' %}">
                     {% csrf_token %}
-                    <p class="text-danger">{{ form.login.errors|striptags }}</p>
+
+                    {% if form.errors %}
+                        {% for err in form.errors|get_form_errors %}
+                            <p class="text-danger">{{ err }}</p>
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+
                     {{ form.login|attr:'required' }}
-                    <p class="text-danger">{{ form.password.errors|striptags }}</p>
                     {{ form.password|attr:'required' }}
+
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                     {% endif %}

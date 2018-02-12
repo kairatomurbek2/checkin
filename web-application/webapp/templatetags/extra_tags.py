@@ -65,3 +65,11 @@ def admin_reservation(company_slug, slug, current_user):
 @register.assignment_tag()
 def check_rating_user_company(company, current_user):
     return company.rating_company.filter(user=current_user).exists()
+
+
+@register.filter
+def get_form_errors(errors_dict):
+    output = []
+    for field, errors in errors_dict.items():
+        output.append('\n'.join('  * %s' % e for e in errors))
+    return output
