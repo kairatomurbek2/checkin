@@ -25,7 +25,7 @@ def specialist_owner(function):
         try:
             if Specialist.all_objects.get(slug=kwargs['master_slug'], user=request.user):
                 return function(request, *args, **kwargs)
-            if Specialist.all_objects.get(slug=kwargs['master_slug'], company__user__owner=True,
+            elif Specialist.all_objects.get(slug=kwargs['master_slug'], company__user__owner=True,
                                           company__user__user=request.user):
                 return function(request, *args, **kwargs)
             else:
