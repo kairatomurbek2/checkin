@@ -146,7 +146,7 @@ class UserInviteForm(forms.Form):
     prefix = 'invite'
 
     def __init__(self, *args, **kwargs):
-        users = kwargs.pop('users', Specialist.objects.none())
+        users = kwargs.pop('users', User.objects.none())
         super(UserInviteForm, self).__init__(*args, **kwargs)
         self.fields['user'].queryset = users
 
