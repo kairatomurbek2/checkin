@@ -29,7 +29,7 @@
                             <span>{{ employ.full_name }}, {{ employ.user.email }}</span>
                             <span>{{ employ.created_at }}</span>
                             <span class="specialist-actions">
-                                <a class="specialist-edit" href="{% url 'master_edit' employ.slug %}">Редактировать</a>
+                                <a class="specialist-edit" href="{% url 'master_edit_company' employ.slug %}">Редактировать</a>
                             <form action="{% url 'specialist_delete' company.slug %}" method="post">
 						        <button class="lay-off" onclick="processDelete(event, {{ employ.id }})"
                                         data-toggle="modal" data-target="#make-modal">Уволить</button>

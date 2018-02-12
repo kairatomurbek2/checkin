@@ -25,7 +25,18 @@ def specialist_owner(function):
         try:
             if Specialist.all_objects.get(slug=kwargs['master_slug'], user=request.user):
                 return function(request, *args, **kwargs)
-            elif Specialist.all_objects.get(slug=kwargs['master_slug'], company__user__owner=True,
+            else:
+                raise PermissionDenied('Permission denied')
+        except Specialist.DoesNotExist:
+            raise Http404("Master not found")
+
+    return decotator
+
+
+def specialist_owner_company(function):
+    def decotator(request, *args, **kwargs):
+        try:
+            if Specialist.all_objects.get(slug=kwargs['master_slug'], company__user__owner=True,
                                           company__user__user=request.user):
                 return function(request, *args, **kwargs)
             else:
