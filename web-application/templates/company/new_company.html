@@ -2,6 +2,7 @@
 {% load staticfiles extra_tags widget_tweaks %}
 {% block head %}
     <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'bower_components/cropper/dist/cropper.min.css' %}">
 {% endblock %}
 {% block content %}
     <main class="become_specilalist become_company">
@@ -9,7 +10,7 @@
             {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" onsubmit="onSubmitForm()">
                 {% csrf_token %}
-
+                <input type="hidden" id="image-crop-data">
                 <div class="control-group file-upload" id="file-upload">
                     <p class="text-danger">{{ form.logo.errors|striptags }}</p>
 {#                    <div class="image-box text-center">#}
@@ -18,11 +19,11 @@
 {#                    </div>#}
 {#                    <div class="controls">{{ form.logo }}</div>#}
                     <div class="wrap-custom-file">
-{#                        <input type="file" name="image1" class="image_preview" id="image1" accept=".gif, .jpg, .png"/>#}
                         {{ form.logo|add_class:"image_preview" }}
-                        <label for="id_logo">
-                            <span>Логотип</span>
-                        </label>
+                        <img class="imagePreview" style="max-width: 100%">
+                    </div>
+                    <div class="create-logo-wrap">
+                        <label for="id_logo" class="create-logo">Добавить логотип</label>
                     </div>
                 </div>
 
@@ -104,7 +105,7 @@
                         {{ formset.management_form }}
                     </div>
                     <button type="submit" class="button">Создать</button>
-
+                    
                 </div>
             </form>
         </div>
@@ -118,7 +119,37 @@
     <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'bower_components/cropper/dist/cropper.min.js' %}"></script>
     <script>
+        // --------------------- Cropper ---------------------
+        // =------------ render image from file --------------
+        $("#id_logo").change(function(){
+            if ($(this)[0].files && $(this)[0].files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $(".imagePreview").attr('src', e.target.result);
+                    $(".imagePreview").cropper('destroy');
+                    $(".create-logo-confirm").css("display", "inline");
+                    var cropData = $("#image-crop-data");
+                    var cropper = $(".imagePreview").cropper({
+                        viewMode: 3,
+                        dragMode: 'move',
+                        aspectRatio: 1 / 1,
+                        crop: function(e) {
+                            cropData.val(JSON.stringify({
+                                x1: Math.round(e.x),
+                                x2: Math.round(e.x) + Math.round(e.width),
+                                y1: Math.round(e.y),
+                                y2: Math.round(e.y) + Math.round(e.height)
+                            }))
+                        }
+                    })
+                }
+                reader.readAsDataURL($(this)[0].files[0]);
+            }
+
+        });
+
         function onSubmitForm() {
             document.querySelector(".form-sending-container").style.display = 'flex';
         }

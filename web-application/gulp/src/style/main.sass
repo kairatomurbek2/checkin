@@ -1805,19 +1805,26 @@ div.master:nth-child(3n)
   background-color: #fff
   cursor: pointer
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06)
-  overflow: hidden
+  .create-logo-wrap
+    text-align: center
+    padding-top: 20px
+  .create-logo
+    padding: 10px
+    font-size: 14px
+    font-family: inherit
+    background: #eaeaea
+    cursor: pointer
+
   .wrap-custom-file
     position: relative
     width: 100%
     height: 100%
-    overflow: hidden
     & > input
       position: absolute
       top: 0
       left: 0
-      width: 2px
-      height: 2px
-      overflow: hidden
+      width: 1px
+      height: 1px
       opacity: 0
     label
       z-index: 1

@@ -2,6 +2,7 @@
 {% load staticfiles widget_tweaks %}
 {% block head %}
     <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'bower_components/cropper/dist/cropper.min.css' %}">
 {% endblock %}
 {% block content %}
     <main class="become_specilalist">
@@ -9,16 +10,17 @@
         {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" onsubmit="onSubmitForm()">
                 {% csrf_token %}
-
+                <input type="hidden" id="image-crop-data">
 
                 <div class="control-group file-upload" id="file-upload">
 
-                    <div class="wrap-custom-file">
-                        {{ form.photo|add_class:"image_preview" }}
-                        <label for="id_photo">
-                            <span>Фото профиля</span>
-                        </label>
-                    </div>
+                        <div class="wrap-custom-file">
+                            {{ form.photo|add_class:"image_preview" }}
+                            <img class="imagePreview" style="max-width: 100%">
+                        </div>
+                        <div class="create-logo-wrap">
+                            <label for="id_photo" class="create-logo">Добавить фото профиля</label>
+                        </div>
                       <p class="text-danger">{{ form.photo.errors|striptags }}</p>
                 </div>
                 <div class="general_information">
@@ -73,7 +75,37 @@
 {% block js %}
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'bower_components/cropper/dist/cropper.min.js' %}"></script>
     <script>
+
+        // --------------------- Cropper ---------------------
+        // =------------ render image from file --------------
+        $("#id_photo").change(function(){
+            if ($(this)[0].files && $(this)[0].files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $(".imagePreview").attr('src', e.target.result);
+                    $(".imagePreview").cropper('destroy');
+                    $(".create-logo-confirm").css("display", "inline");
+                    var cropData = $("#image-crop-data");
+                    var cropper = $(".imagePreview").cropper({
+                        viewMode: 3,
+                        dragMode: 'move',
+                        aspectRatio: 1 / 1,
+                        crop: function(e) {
+                            cropData.val(JSON.stringify({
+                                x1: Math.round(e.x),
+                                x2: Math.round(e.x) + Math.round(e.width),
+                                y1: Math.round(e.y),
+                                y2: Math.round(e.y) + Math.round(e.height)
+                            }))
+                        }
+                    })
+                }
+                reader.readAsDataURL($(this)[0].files[0]);
+            }
+
+        });
 
         function onSubmitForm() {
             document.querySelector(".form-sending-container").style.display = 'flex';
