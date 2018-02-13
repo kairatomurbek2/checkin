@@ -36,6 +36,10 @@
                                 {% for contact in company.contacts.all %}
                                     <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                                 {% endfor %}
+                                {% if company.short_phone %}
+                                    <i class="fa fa-phone" aria-hidden="true"></i>
+                                    {{ company.short_phone|default_if_none:"" }}
+                                {% endif %}
                             </li>
                             <li>
                                 <i class="fa fa-envelope" aria-hidden="true"></i> {{ company.email }}
@@ -59,7 +63,7 @@
                         <a href="{% url 'company_edit' company.slug %}">Редактировать</a>
                     {% endif %}
                 </div>
-             {% include 'company/reviews.html' %}
+                {% include 'company/reviews.html' %}
             </div>
 
             <div class="shedule_block">
@@ -121,24 +125,24 @@
 
         });
 
-{#        function initMap() {#}
-{#            var tmp_lt = '{{ company.latitude|default_if_none:0 }}';#}
-{#            var tmp_ln = '{{ company.longitude|default_if_none:0 }}';#}
-{#            var lt = tmp_lt.replace(",", ".");#}
-{#            var ln = tmp_ln.replace(",", ".");#}
-{#            var uluru = {lat: parseFloat(lt), lng: parseFloat(ln)};#}
-{#            var map = new google.maps.Map(document.getElementById('mapholder'), {#}
-{#                zoom: 17,#}
-{#                center: uluru#}
-{#            });#}
-{#            var marker = new google.maps.Marker({#}
-{#                position: uluru,#}
-{#                map: map#}
-{#            });#}
-{#        }#}
+        {#        function initMap() {#}
+        {#            var tmp_lt = '{{ company.latitude|default_if_none:0 }}';#}
+        {#            var tmp_ln = '{{ company.longitude|default_if_none:0 }}';#}
+        {#            var lt = tmp_lt.replace(",", ".");#}
+        {#            var ln = tmp_ln.replace(",", ".");#}
+        {#            var uluru = {lat: parseFloat(lt), lng: parseFloat(ln)};#}
+        {#            var map = new google.maps.Map(document.getElementById('mapholder'), {#}
+        {#                zoom: 17,#}
+        {#                center: uluru#}
+        {#            });#}
+        {#            var marker = new google.maps.Marker({#}
+        {#                position: uluru,#}
+        {#                map: map#}
+        {#            });#}
+        {#        }#}
 
     </script>
-{#    <script async defer#}
-{#            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDesqzrUZme031xt28r-4vQTkaBSm96Teo&callback=initMap">#}
-{#    </script>#}
+    {#    <script async defer#}
+    {#            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDesqzrUZme031xt28r-4vQTkaBSm96Teo&callback=initMap">#}
+    {#    </script>#}
 {% endblock %}

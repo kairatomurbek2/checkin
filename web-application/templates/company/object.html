@@ -7,8 +7,8 @@
                     {% thumbnail company.logo "154x154" as im %}
                         <img src="{{ im.url }}" alt={{ logo.name }}>
                     {% endthumbnail %}
-                    {% else %}
-                        <img src="{% static 'img/no_photo.png' %}" alt="no image">
+                {% else %}
+                    <img src="{% static 'img/no_photo.png' %}" alt="no image">
                 {% endif %}
             </span>
         </a>
@@ -23,13 +23,14 @@
                 </li>
                 <li>
                     {% for contact in company.contacts.all %}
-                        <i class="fa fa-map-marker" aria-hidden="true"></i> {{ contact.phone }}
+                        <i class="fa fa-map-phone" aria-hidden="true"></i> {{ contact.phone }}
                     {% endfor %}
+                    {{ company.short_phone|default_if_none:"" }}
                 </li>
             </ul>
         </div>
         <a href="{{ company.get_absolute_url }}">посмотреть</a>
     </div>
-    {% empty %}
-     <p class="no_result">По вашему запросу ничего не найдено...</p>
+{% empty %}
+    <p class="no_result">По вашему запросу ничего не найдено...</p>
 {% endfor %}

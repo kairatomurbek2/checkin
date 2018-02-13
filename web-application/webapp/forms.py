@@ -58,11 +58,13 @@ class CompanyCreateForm(forms.ModelForm):
     email = forms.EmailField(required=True,
                              widget=forms.EmailInput(attrs={'placeholder': _('Эл. адрес компании')}))
     website = forms.URLField(required=False, widget=forms.URLInput(attrs={'placeholder': _('Веб-сайт')}))
-    phone = PhoneNumberField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Номер телефона')}))
+    phone = PhoneNumberField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Введите номер телефона')}))
     street_address = forms.CharField(required=False,
                                      widget=forms.Textarea(attrs={'placeholder': _('Адрес'), 'rows': 4}))
     short_info = forms.CharField(required=False,
                                  widget=forms.Textarea(attrs={'placeholder': _('Краткая информация')}))
+    short_phone = forms.CharField(required=False,
+                                  widget=forms.TextInput(attrs={'placeholder': _('Введите короткий номер')}))
 
     class Meta:
         model = Company
@@ -70,7 +72,7 @@ class CompanyCreateForm(forms.ModelForm):
             'info': RedactorEditor(),
             'company_tags': TagWidget()
         }
-        fields = ['logo', 'slug', 'name', 'street_address', 'short_info', 'phone', 'legal_data', 'website',
+        fields = ['logo', 'slug', 'name', 'street_address', 'short_info', 'phone', 'short_phone', 'legal_data', 'website',
                   'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
 
 
@@ -83,6 +85,8 @@ class CompanyUpdateForm(forms.ModelForm):
                                      widget=forms.Textarea(attrs={'placeholder': _('Адрес'), 'rows': 4}))
     short_info = forms.CharField(required=False,
                                  widget=forms.Textarea(attrs={'placeholder': _('Краткая информация')}))
+    short_phone = forms.CharField(required=False,
+                                  widget=forms.TextInput(attrs={'placeholder': _('Введите короткий номер')}))
 
     class Meta:
         model = Company
@@ -90,7 +94,7 @@ class CompanyUpdateForm(forms.ModelForm):
             'info': RedactorEditor(),
             'company_tags': TagWidget()
         }
-        fields = ['logo', 'name', 'street_address', 'short_info', 'legal_data', 'website',
+        fields = ['logo', 'name', 'street_address', 'short_phone', 'short_info', 'legal_data', 'website',
                   'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
 
 

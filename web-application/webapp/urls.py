@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from webapp.decorators import user_profile_permission, specialist_owner, company_owner, user_review_count_check, \
     user_specialist_create_check, user_company_create_check, login_check_favorite, specialist_status_reservation, \
-    administrator, company_owners
+    administrator, company_owners, specialist_owner_company
 from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^masters/(?P<master_slug>[-_\w]+)/$', specialist_views.MasterDetailView.as_view(), name='master_detail'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/update/$', specialist_owner(specialist_views.MasterEditView.as_view()),
         name='master_edit'),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/update/company/$', specialist_owner_company(specialist_views.MasterEditView.as_view()),
+        name='master_edit_company'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/$', company_views.CompanyDetail.as_view(), name='company_detail'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/update/$', company_owner(company_views.CompanyEditView.as_view()),
         name='company_edit'),
