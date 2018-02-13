@@ -1,24 +1,37 @@
 {% extends "socialaccount/base.html" %}
 
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-    <div class="container account-page">
-        <h1>{% trans "Sign Up" %}</h1>
+    <main class="account_page">
+        <div class="grid">
 
-        <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your
-            {{ provider_name }} account to login to
-            {{ site_name }}. As a final step, please complete the following form:{% endblocktrans %}</p>
+            <div class="s_register c_register">
+                <p>Регистрация</p>
+                <span></span>
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-            {% endif %}
-            <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-        </form>
-    </div>
+                <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+                    {% csrf_token %}
+                    <p class="text-danger">
+                        {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}Вы хотите использователь ваш
+                            {{ provider_name }} аккаунт чтобы войти в
+                            {{ site_name }}. Пожалуйста, заполните форму для завершения регистрации:{% endblocktrans %}</p>
+                    <br>
+                    <p class="text-danger">{{ form.username.errors|striptags }}</p>
+                    {{ form.username }}
+                    <p class="text-danger">{{ form.email.errors|striptags }}</p>
+                    {{ form.email|attr:'required' }}
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+
+                    <button type="submit" class="button">{% trans "Sign Up" %}</button>
+                </form>
+            </div>
+        </div>
+    </main>
 {% endblock %}
