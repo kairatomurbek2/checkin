@@ -1,15 +1,12 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework import status
-from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_202_ACCEPTED
-
+from api.permissions import MasterOwnerOrReadOnly
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
     ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer, \
@@ -108,9 +105,10 @@ class ReservationStatusView(generics.UpdateAPIView):
 
 
 class ScheduleSettingAddView(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, MasterOwnerOrReadOnly)
     authentication_classes = (TokenAuthentication,)
     serializer_class = ScheduleSettingSerializer
+    lookup_field = 'specialist__slug'
 
     def get_serializer_context(self):
         context = super(ScheduleSettingAddView, self).get_serializer_context()
@@ -127,7 +125,7 @@ class ScheduleSettingAddView(generics.CreateAPIView):
 
 
 class ScheduleSettingUpdateView(generics.RetrieveUpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, MasterOwnerOrReadOnly)
     authentication_classes = (TokenAuthentication,)
     lookup_field = 'specialist__slug'
     serializer_class = ScheduleSettingUpdateSerializer
