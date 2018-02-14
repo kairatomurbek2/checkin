@@ -32,7 +32,8 @@
   "homepage": "https://github.com/Insayt/frontend-devil#readme",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "python3 web-application/manage.py runserver --settings=main.settings_local",
+    "migrate": "python3 web-application/manage.py migrate --settings=main.settings_local"
   },
   "author": "",
   "license": "ISC"

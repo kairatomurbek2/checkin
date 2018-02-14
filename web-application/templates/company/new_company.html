@@ -137,10 +137,10 @@
                         aspectRatio: 1 / 1,
                         crop: function(e) {
                             cropData.val(JSON.stringify({
-                                x1: Math.round(e.x),
-                                x2: Math.round(e.x) + Math.round(e.width),
-                                y1: Math.round(e.y),
-                                y2: Math.round(e.y) + Math.round(e.height)
+                                x: Math.round(e.x),
+                                width: Math.round(e.width),
+                                y: Math.round(e.y),
+                                height: Math.round(e.height)
                             }))
                         }
                     })
