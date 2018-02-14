@@ -156,13 +156,16 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
         return reverse('master_detail', args=(self.object.slug,))
 
     def form_valid(self, form):
+        image_crop_data = self.request.POST.get('image-crop-data')
+        crop_data_json = json.loads(image_crop_data) if image_crop_data else None
+
         context = self.get_context_data()
         formset = context['formset']
         certificates = context['certificates']
         specialist = form.save(commit=False)
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
-        specialist.save()
+        specialist.save(crop_data=crop_data_json)
         resized = get_thumbnail(specialist.photo, "150x150")
         specialist.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
 
