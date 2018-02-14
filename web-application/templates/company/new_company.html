@@ -10,7 +10,7 @@
             {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" onsubmit="onSubmitForm()">
                 {% csrf_token %}
-                <input type="hidden" id="image-crop-data">
+                <input type="hidden" id="image-crop-data" name="image-crop-data">
                 <div class="control-group file-upload" id="file-upload">
                     <p class="text-danger">{{ form.logo.errors|striptags }}</p>
 {#                    <div class="image-box text-center">#}
@@ -39,7 +39,7 @@
                             {{ form.website }}
                             <p class="text-danger">{{ form.slug.errors|striptags }}</p>
                             <label>
-                                <span>Ваш аддрес в {{ request.META.HTTP_HOST }}/</span>
+                                <span>Ваш адрес в {{ request.META.HTTP_HOST }}/</span>
                                 <span>{{ request.META.HTTP_HOST }}/</span>
                                 {{ form.slug }}
                             </label>

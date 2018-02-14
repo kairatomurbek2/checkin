@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import uuid
 
+from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 from mptt.fields import TreeForeignKey
@@ -106,7 +107,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, crop_data=None, *args, **kwargs):
         if self.rating:
             self.rating = round(self.rating, 2)
 
@@ -138,6 +139,13 @@ class Company(models.Model):
             mail = EmailMessage('Успешная регистрация компании', message, to=[self.email])
             mail.content_subtype = 'html'
             mail.send()
+
+        if self.logo and crop_data:
+            img = Image.open(self.logo)
+
+            cropped = img.crop((crop_data['x'], crop_data['y'], crop_data['x'] + crop_data['width'],
+                                crop_data['y'] + crop_data['height']))
+            cropped.save(self.logo.path)
 
     def get_categories(self):
         try:
@@ -202,7 +210,7 @@ class Specialist(models.Model):
     def get_absolute_url(self):
         return reverse('master_detail', kwargs={'master_slug': self.slug})
 
-    def save(self, *args, **kwargs):
+    def save(self, crop_data=None, *args, **kwargs):
         if self.rating:
             self.rating = round(self.rating, 2)
         super(Specialist, self).save(*args, **kwargs)
@@ -236,6 +244,13 @@ class Specialist(models.Model):
             mail = EmailMessage('Успешная регистрация специалиста', message, to=[self.user.email])
             mail.content_subtype = 'html'
             mail.send()
+
+        if self.photo and crop_data:
+            img = Image.open(self.photo)
+
+            cropped = img.crop((crop_data['x'], crop_data['y'], crop_data['x'] + crop_data['width'],
+                                crop_data['y'] + crop_data['height']))
+            cropped.save(self.photo.path)
 
     class Meta:
         verbose_name = _('Специалист')
