@@ -30,18 +30,28 @@ from webapp import forms
 from webapp.forms import CertFormSet, PhoneFormSet
 from webapp.models import Company, Category, Specialist, Invite, Rating, Employees, Reservation
 from webapp.views.base_views import BaseFormView
-from webapp.views.filters import CompanyFilter, ReservationFilter, SpecialistFilter
+from webapp.views.filters import CompanyFilter, ReservationFilter, SpecialistFilter, CompanySpecialistFilter
 
 
 class CompanySpecialistList(ListView):
     template_name = 'category/company_specialist_list.html'
-    filterset_class = CompanyFilter
+    filterset_class = CompanySpecialistFilter
     model = Company
 
     def get_context_data(self, **kwargs):
         context = super(CompanySpecialistList, self).get_context_data(**kwargs)
         company_filter = self.filterset_class(self.request.GET, queryset=self._get_company())
         master_filter = self.filterset_class(self.request.GET, queryset=self._get_specialist())
+        if self.kwargs['slug']:
+            try:
+                category = Category.objects.get(slug=self.kwargs['slug'])
+                if category.is_root_node() or (category.is_child_node() and not category.is_leaf_node()):
+                    context['category_list'] = category.get_children()
+                elif category.is_leaf_node():
+                    context['category_list'] = category.get_siblings(include_self=True)
+                context['category'] = category
+            except:
+                raise Http404
         context['filter'] = company_filter.form
         context['companies'] = company_filter
         context['masters'] = master_filter
