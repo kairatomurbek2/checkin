@@ -88,7 +88,6 @@
                             <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
-
                 </div>
 
                 {% include 'company/specialist_of_company.html' %}
@@ -121,7 +120,7 @@
                 zoom: 15
             });
 
-            marker = DG.marker([42.8735868, 74.5768934]).addTo(map);
+            marker = DG.marker([lt, ln]).addTo(map);
 
         });
 

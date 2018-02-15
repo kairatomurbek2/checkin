@@ -158,6 +158,7 @@
 
 {% endblock %}
 {% block js %}
+
     <!--<script src="{% static 'js/main.js' %}"></script>-->
     <script src="{% static 'js/select2.js' %}"></script>
 {#    {% load_google_map_js %}#}
@@ -169,7 +170,7 @@
     // var certificate = $('.chosen_certificate a');
     //console.log("asdfasd");
     $('tbody .chosen_certificate').each(function (i, obj) {
-        if ($(obj).children('a').length == true) {
+        if ($(obj).children('a').length) {
             $(obj).prepend('<img src="" alt="">');
             var img_link = $(obj).children('a').attr('href');
             $(obj).children('img').attr('src', img_link );
@@ -199,43 +200,42 @@
             deleteText: ''
         });
 
-        var latitude = $('#id_latitude');
-        var longitude = $('#id_longitude');
+        var latitude = document.querySelector("#id_latitude");
+        var longitude = document.querySelector("#id_longitude");
         var findLocation = $('#find-location');
 
         DG.then(function () {
             var map,
                 marker;
 
+            var lat = parseFloat('{{form.latitude.value}}'.replace(",", "."));
+            var lng = parseFloat('{{form.longitude.value}}'.replace(",", "."));
+
             map = DG.map('map', {
-                center: [42.8735868, 74.5768934],
-                zoom: 10
+                center: [lat, lng],
+                zoom: 15
             });
 
-            marker = DG.marker([42.8735868, 74.5768934], {
+            marker = DG.marker([lat, lng], {
                 draggable: true
-            }).addTo(map).bindLabel('Перетащите маркер!');
+            }).addTo(map).bindLabel('Перетащите маркер чтобы изменить местоположение');
 
-            latitude.val(42.8735868);
-            longitude.val(74.5768934);
+            // latitude.val(42.8735868);
+            // longitude.val(74.5768934);
 
             marker.on('drag', function (e) {
-                var lat = e.target._latlng.lat.toFixed(3),
-                    lng = e.target._latlng.lng.toFixed(3);
-
-
-                latitude.val(lat);
-                longitude.val(lng);
+                latitude.setAttribute('value', +e.latlng.lat.toFixed(4));
+                longitude.setAttribute('value', +e.latlng.lng.toFixed(4));
             });
 
             findLocation.on('click', function (e) {
                 map.locate({setView: true})
                     .on('locationfound', function (e) {
-
+                        console.log(e);
                         marker.setLatLng([e.latitude, e.longitude]);
 
-                        latitude.val(e.latitude);
-                        longitude.val(e.longitude);
+                        latitude.setAttribute('value', +e.latitude.toFixed(4));
+                        longitude.setAttribute('value', +e.longitude.toFixed(4));
                     })
                     .on('locationerror', function (e) {
                         DG.popup()
