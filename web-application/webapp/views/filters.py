@@ -23,6 +23,29 @@ def assembly_status():
     return choices
 
 
+class CompanySpecialistFilter(django_filters.FilterSet):
+    categories = django_filters.ModelMultipleChoiceFilter(
+        queryset=categories,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'template': 'category_list'
+        }),
+        method='filter_categories',
+        label=_('Отрасль'), to_field_name='slug'
+    )
+
+    def filter_categories(self, queryset, name, value):
+        lookup = '__'.join([name, 'in'])
+        if value:
+            categories = Category.objects.filter(pk__in=value)
+            categories_ids = []
+            for category in categories:
+                for id in category.get_descendants(include_self=True):
+                    categories_ids.append(id)
+            return queryset.filter(**{lookup: categories_ids}).distinct()
+        else:
+            return queryset.filter(**{})
+
+
 class CompanyFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(label=_('Поиск'),
                                        widget=forms.TextInput(attrs={'placeholder': _('Найти учреждение...')}),
