@@ -1,4 +1,5 @@
 import datetime
+import json
 import threading
 from smtplib import SMTPException
 from django.db.models import Q
@@ -134,6 +135,9 @@ class CompanyCreateView(CreateView):
         return reverse('company_detail', args=(self.object.slug,))
 
     def form_valid(self, form):
+        image_crop_data = self.request.POST.get('image-crop-data')
+        crop_data_json = json.loads(image_crop_data) if image_crop_data else None
+
         context = self.get_context_data()
         formset = context['formset']
         company = form.save(commit=False)
@@ -141,7 +145,7 @@ class CompanyCreateView(CreateView):
         employee.save()
         company.edited_at = datetime.datetime.now()
         company.edited_by = self.request.user
-        company.save()
+        company.save(crop_data=crop_data_json)
         company.user.add(employee)
         company.save()
         resized = get_thumbnail(company.logo, "150x150")
@@ -216,13 +220,16 @@ class CompanyEditView(LoginRequiredMixin, UpdateView):
         return reverse('company_detail', args=(self.object.slug,))
 
     def form_valid(self, form):
+        image_crop_data = self.request.POST.get('image-crop-data')
+        crop_data_json = json.loads(image_crop_data) if image_crop_data else None
+
         context = self.get_context_data()
         phones = context['phones']
         formset = context['formset']
         company = form.save(commit=False)
         company.edited_at = datetime.datetime.now()
         company.edited_by = self.request.user
-        company.save()
+        company.save(crop_data=crop_data_json)
         resized = get_thumbnail(company.logo, "150x150")
         company.mobile_logo.save(resized.name, ContentFile(resized.read()), True)
         if phones.is_valid() and formset.is_valid():

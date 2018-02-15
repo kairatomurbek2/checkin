@@ -10,6 +10,8 @@
         {% include 'messages.html' %}
             <form action="" method="post" class="form_inf" enctype="multipart/form-data" onsubmit="onSubmitForm()">
                 {% csrf_token %}
+
+                <input type="hidden" id="image-crop-data" name="image-crop-data">
                 <input type="hidden" id="image-crop-data" >
                 <div class="control-group file-upload" id="file-upload">
 
