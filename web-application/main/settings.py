@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
+    'django.contrib.flatpages',
+    'ckeditor',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -60,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'dj_pagination.middleware.PaginationMiddleware',
 ]
 
@@ -156,7 +159,7 @@ THUMBNAIL_PRESERVE_FORMAT = True
 REDACTOR_UPLOAD = 'uploads/'
 REDACTOR_OPTIONS = {'lang': 'ru', 'plugins': ['table', 'video']}
 REDACTOR_UPLOAD_HANDLER = 'redactor.handlers.UUIDUploader'
-
+CKEDITOR_UPLOAD_PATH = "uploads/"
 # allauth
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

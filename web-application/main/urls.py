@@ -9,6 +9,7 @@ urlpatterns = [
                   url(r'^admin/', admin.site.urls),
                   url(r'^i18n/', include('django.conf.urls.i18n')),
                   url(r'^redactor/', include('redactor.urls')),
+                  url(r'^ckeditor/', include('ckeditor_uploader.urls')),
                   url(r'^accounts/', include('allauth.urls')),
                   url(r'^autocomplete/$', TagAutocomplete.as_view(), name='autocomplete'),
                   url(r'^', include('webapp.urls')),
