@@ -689,6 +689,10 @@ let app = new Vue({
                     }, 1500);
 
                 } else {
+                    var errorText = document.querySelector(".authorization-text a");
+                    if (errorText && errorText.innerText === 'Авторизация') {
+                        return;
+                    }
                     document.querySelector('.modal-calendar-admin .error').style.display = 'block';
                     document.querySelector('.modal-calendar-admin .error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
                     document.querySelector('.modal-calendar-admin .error').insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
