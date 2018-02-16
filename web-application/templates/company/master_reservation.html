@@ -38,10 +38,16 @@
 
             </div>
             <div class="time-table" v-if="scheduleState">
+                {% endverbatim %}
+                {% if master.status == 'AC' %}
+                {% verbatim %}
                 <a v-on:click="toggleContent(false, true)" class="edit-schedule">
                     Редактировать график
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
+                {% endverbatim %}
+                {% endif %}
+                {% verbatim %}
                 <div class="first-institution">
                     <ul v-for="weekDay of mainArray" v-bind:class="{holiday: (weekDay.times.length < 3)}">
                         <li

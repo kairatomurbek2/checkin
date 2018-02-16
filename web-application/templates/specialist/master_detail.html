@@ -100,7 +100,7 @@
                     <div class="weekdays-wrap" v-if="scheduleState">
                         <div class="edit-schedule-wrap">
                             {% endverbatim %}
-                            {% if request.user == master.user %}
+                            {% if master.status == 'AC' and request.user == master.user %}
                             {% verbatim %}
                             <a v-on:click="toggleContent(false, true)" class="edit-schedule">
                                 Редактировать график
