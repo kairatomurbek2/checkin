@@ -40,7 +40,9 @@
                                 </li>
                                 <li>
                                     {% for contact in object.contacts.all %}
-                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                        <a href="tel:  +996700139680">
+                                            <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                        </a>
                                     {% endfor %}
                                 </li>
                                 <li>

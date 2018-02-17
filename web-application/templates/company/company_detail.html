@@ -34,11 +34,15 @@
                             </li>
                             <li>
                                 {% for contact in company.contacts.all %}
-                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    <a href="tel:  +996700139680">
+                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    </a>
                                 {% endfor %}
                                 {% if company.short_phone %}
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
+                                    <a href="tel: 9797">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
                                     {{ company.short_phone|default_if_none:"" }}
+                                    </a>
                                 {% endif %}
                             </li>
                             <li>
