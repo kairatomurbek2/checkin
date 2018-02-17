@@ -35,7 +35,9 @@
                             </li>
                             <li>
                                 {% for contact in master.specialist_contacts.all %}
-                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    <a href="tel:  +996709988484">
+                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    </a>
                                 {% endfor %}
                             </li>
                             {% if master.sex %}
