@@ -1,5 +1,3 @@
-import datetime
-
 from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
@@ -7,6 +5,9 @@ from webapp.models import Category, Company, Certificate, CompanyContact, Specia
     ScheduleSetting, Reservation, WorkDay, Employees
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
+from django.contrib.flatpages.models import FlatPage
+from django.contrib.flatpages.forms import FlatpageForm
+from ckeditor.widgets import CKEditorWidget
 
 
 class CategoryAdmin(DraggableMPTTAdmin):
@@ -90,6 +91,18 @@ class ReservationAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
 
 
+class FlatpageAdminForm(FlatpageForm):
+    content = forms.CharField(widget=CKEditorWidget())
+
+    class Meta:
+        model = FlatPage
+        fields = '__all__'
+
+
+class FlatPageAdmin(admin.ModelAdmin):
+    form = FlatpageAdminForm
+
+
 admin.site.register(Rating, RatingAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Company, CompanyAdmin)
@@ -99,3 +112,5 @@ admin.site.register(ScheduleSetting)
 admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(WorkDay)
 admin.site.register(Employees)
+admin.site.unregister(FlatPage)
+admin.site.register(FlatPage, FlatPageAdmin)

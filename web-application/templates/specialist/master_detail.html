@@ -4,7 +4,8 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/calendar.css' %}" xmlns:v-on="http://www.w3.org/1999/xhtml"
       xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
-      xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+      xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
 {% endblock %}
 <main class="specialist" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="grid">
@@ -34,7 +35,9 @@
                             </li>
                             <li>
                                 {% for contact in master.specialist_contacts.all %}
-                                    <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    <a href="tel:  +996709988484">
+                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                    </a>
                                 {% endfor %}
                             </li>
                             {% if master.sex %}
@@ -99,7 +102,7 @@
                     <div class="weekdays-wrap" v-if="scheduleState">
                         <div class="edit-schedule-wrap">
                             {% endverbatim %}
-                            {% if request.user == master.user %}
+                            {% if master.status == 'AC' and request.user == master.user %}
                             {% verbatim %}
                             <a v-on:click="toggleContent(false, true)" class="edit-schedule">
                                 Редактировать график
@@ -187,53 +190,59 @@
                             <div class="local-loader" :hidden="!localLoaderState">
                                 <img src="{% endverbatim %} {% static 'img/loader.gif' %} {% verbatim %}" alt="">
                             </div>
-                            <form v-for="(schedule, index) of scheduleSettings">
+                            <form v-for="(scheduleItem, index) of scheduleSettings">
                                 <div id="true-inputs">
                                     <input type="hidden" class="true_input" id="id_day">
                                 </div>
                                 <div class="shedule_container">
-                                    <span>{{schedule.companyName}}</span>
+                                    <span>{{scheduleItem.companyName}}</span>
                                     <ul class="table_time">
-                                        <li class="get_time" data-key="day" data-first v-for="(day, dayIndex) of editorDays">
-                                            <input
+                                        <li class="" data-key="day" data-first v-for="(day, dayIndex) of editorDays">
+                                            <div class="get_time">
+                                                <input
                                                     type="checkbox"
                                                     class="day"
                                                     :id="'day_'+day+index"
-                                                    :checked="schedule[day].active"
-                                                    v-on:change="schedule[day].active = $event.target.checked"
-                                            >
-                                            <label class="control control--checkbox" :for="'day_'+day+index">{{editorLocaleDays[dayIndex]}}
-                                                <div class="control__indicator"></div>
-                                            </label>
-                                            <div class="time_limit">
-                                                <div class="fieldset__wrapper">
-                                                    <timepicker
-                                                        :value="this.value"
-                                                        :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
-                                                        v-model="schedule[day].time.start">
-                                                    </timepicker>
-                                                </div>
-                                            </div>
-                                            <div class="time_limit">
-                                                <div class="fieldset__wrapper">
-                                                    <timepicker
+                                                    :checked="scheduleItem[day].active"
+                                                    v-on:change="scheduleItem[day].active = $event.target.checked"
+                                                >
+                                                <label class="control control--checkbox" :for="'day_'+day+index">{{editorLocaleDays[dayIndex]}}
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                                <div class="time_limit">
+                                                    <div class="fieldset__wrapper">
+                                                        <timepicker
                                                             :value="this.value"
-                                                            :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
-                                                            v-model="schedule[day].time.end">
-                                                    </timepicker>
+                                                            :options="{daySchedule: scheduleItem[day], day: day, index: index, start: true}"
+                                                            v-model="scheduleItem[day].time.start">
+                                                        </timepicker>
+                                                    </div>
+                                                </div>
+                                                <div class="time_limit">
+                                                    <div class="fieldset__wrapper">
+                                                        <timepicker
+                                                                :value="this.value"
+                                                                :options="{daySchedule: scheduleItem[day], day: day, index: index, start: false}"
+                                                                v-model="scheduleItem[day].time.end">
+                                                        </timepicker>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="interval_block">
-                                    <span>Интервал приема:</span>
+                                    <div style="display: flex; width: 100%; padding-bottom: 30px;">
+                                        <span style="margin-right: 75px;">Интервал приема:</span>
+                                        <span style="margin-right: 115px;">Живая очередь:</span>
+                                        <span>Время обеда:</span>
+                                    </div>
                                     <div class="interval">
                                         <label v-for="day of editorDays">
-                                            <select name="interval" v-on:change="schedule[day].interval = $event.target.value;">
+                                            <select name="interval" v-on:change="scheduleItem[day].interval = $event.target.value;">
                                                 <option
                                                         v-for="interval of intervals"
-                                                        :selected="schedule[day].interval == interval"
+                                                        :selected="scheduleItem[day].interval == interval"
                                                         >{{interval}}</option>
                                             </select>
                                         </label>
@@ -241,38 +250,67 @@
                                     <div class="live_turn">
                                         <ul>
                                             <li v-for="day of editorDays">
-                                                <input type="checkbox" class="day" :id="'live_'+day+index"
-                                                       :checked="schedule[day].active && schedule[day].liveState"
-                                                       v-on:change="schedule[day].liveState = $event.target.checked"
-                                                >
-                                                <label class="control control--checkbox" :for="'live_'+day+index">Живая очередь
-                                                    <div class="control__indicator"></div>
-                                                </label>
-                                                <div class="turn_interval">
-                                                    <div class="fieldset__wrapper">
-                                                        <!--<input v-on:change="updateLiveQueue(schedule[day], $event, true)"-->
-                                                               <!--type="text"-->
-                                                               <!--class="timepicker live-input"-->
-                                                               <!--:value="(schedule[day].live_recording) ?-->
-                                                               <!--schedule[day].live_recording.start: 'c'">-->
-                                                        <live-timepicker
-                                                                :value="this.value"
-                                                                :options="{daySchedule: schedule[day], day: day, index: index, start: true}"
-                                                                v-model="schedule[day].live_recording.start">
-                                                        </live-timepicker>
+                                                <div style="display: flex; align-items: center;">
+                                                    <input type="checkbox" class="day" :id="'live_'+day+index"
+                                                           :checked="scheduleItem[day].active && scheduleItem[day].liveState"
+                                                           v-on:change="scheduleItem[day].liveState = $event.target.checked"
+                                                    >
+                                                    <label class="control control--checkbox" :for="'live_'+day+index">
+                                                        <div class="control__indicator"></div>
+                                                    </label>
+                                                    <div class="turn_interval">
+                                                        <div class="fieldset__wrapper">
+                                                            <!--<input v-on:change="updateLiveQueue(scheduleItem[day], $event, true)"-->
+                                                            <!--type="text"-->
+                                                            <!--class="timepicker live-input"-->
+                                                            <!--:value="(scheduleItem[day].live_recording) ?-->
+                                                            <!--scheduleItem[day].live_recording.start: 'c'">-->
+                                                            <live-timepicker
+                                                                    :value="this.value"
+                                                                    :options="{daySchedule: scheduleItem[day], day: day, index: index, start: true}"
+                                                                    v-model="scheduleItem[day].live_recording.start">
+                                                            </live-timepicker>
+                                                        </div>
+                                                        <div class="fieldset__wrapper">
+                                                            <!--<input v-on:change="updateLiveQueue(scheduleItem[day], $event, false)"-->
+                                                            <!--type="text"-->
+                                                            <!--class="timepicker live-input"-->
+                                                            <!--:value="(scheduleItem[day] && scheduleItem[day].live_recording) ?-->
+                                                            <!--scheduleItem[day].live_recording.end: 'до'">-->
+                                                            <live-timepicker
+                                                                    :value="this.value"
+                                                                    :options="{daySchedule: scheduleItem[day], day: day, index: index, start: false}"
+                                                                    v-model="scheduleItem[day].live_recording.end">
+                                                            </live-timepicker>
+                                                        </div>
                                                     </div>
-
-                                                    <div class="fieldset__wrapper">
-                                                        <!--<input v-on:change="updateLiveQueue(schedule[day], $event, false)"-->
-                                                               <!--type="text"-->
-                                                               <!--class="timepicker live-input"-->
-                                                               <!--:value="(schedule[day] && schedule[day].live_recording) ?-->
-                                                               <!--schedule[day].live_recording.end: 'до'">-->
-                                                        <live-timepicker
-                                                                :value="this.value"
-                                                                :options="{daySchedule: schedule[day], day: day, index: index, start: false}"
-                                                                v-model="schedule[day].live_recording.end">
-                                                        </live-timepicker>
+                                                </div>
+                                                <div style="display: flex; align-items: center;">
+                                                    <input
+                                                            type="checkbox"
+                                                            class="lunch-day"
+                                                            :id="'lunch-day_'+day+index"
+                                                            :checked="scheduleItem[day].lunchState"
+                                                            v-on:change="scheduleItem[day].lunchState = $event.target.checked"
+                                                    >
+                                                    <label class="control control--checkbox" style="margin-right: 7px;" :for="'lunch-day_'+day+index">
+                                                        <div class="control__indicator"></div>
+                                                    </label>
+                                                    <div class="lunch_interval">
+                                                        <div class="fieldset__wrapper">
+                                                            <lunch-timepicker
+                                                                    :options="{index: index, schedule: scheduleItem[day], start: true, day: day}"
+                                                                    v-model="scheduleItem[day].lunch_settings.start"
+                                                            >
+                                                            </lunch-timepicker>
+                                                        </div>
+                                                        <div class="fieldset__wrapper">
+                                                            <lunch-timepicker
+                                                                    :options="{index: index, schedule: scheduleItem[day], start: false, day: day}"
+                                                                    v-model="scheduleItem[day].lunch_settings.end"
+                                                            >
+                                                            </lunch-timepicker>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </li>
@@ -280,52 +318,11 @@
                                     </div>
                                 </div>
                                 <div class="break">
-                                    <div class="get_time" data-key="break">
-                                        <span>Перерыв на обед:</span>
-                                        <div class="time_limit">с
-                                            <div class="fieldset__wrapper">
-                                                <!--<input-->
-                                                        <!--type="text"-->
-                                                        <!--class="timepicker from-time lunch-time"-->
-                                                        <!--placeholder=""-->
-                                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.start) ? schedule.lunch_settings.start : ''"-->
-                                                        <!--v-on:change="updateLunchTime(index, $event.target.value, true)">-->
-                                                <lunch-timepicker
-                                                        :options="{index: index, schedule: schedule, start: true}"
-                                                        :value="this.value"
-                                                        v-model="schedule.lunch_settings.start"
-                                                >
-                                                </lunch-timepicker>
-                                            </div>
-                                        </div>
-                                        <div class="time_limit">до
-                                            <div class="fieldset__wrapper">
-                                                <!--<input-->
-                                                        <!--type="text"-->
-                                                        <!--class="timepicker to-time lunch-time"-->
-                                                        <!--placeholder=""-->
-                                                        <!--v-bind:value="(schedule.lunch_settings && schedule.lunch_settings.end) ? schedule.lunch_settings.end : ''"-->
-                                                        <!--v-on:change="updateLunchTime(index, $event.target.value, false)">-->
-                                                <lunch-timepicker
-                                                        :options="{index: index, schedule: schedule, start: false}"
-                                                        :value="this.value"
-                                                        v-model="schedule.lunch_settings.end"
-                                                >
-                                                </lunch-timepicker>
-                                            </div>
-                                        </div>
-                                        <div class="delete-lunch"
-                                             v-on:click="schedule.lunch_settings.start = ''; schedule.lunch_settings.end = '';">
-                                            <i class="fa fa-close"></i>
-                                            <span>Удалить время обеда</span>
-                                        </div>
-                                    </div>
-                                    <button v-on:click="submitSchedule($event, index, schedule.active)" class="button">Отправить</button>
+                                    <button v-on:click="submitSchedule($event, index, scheduleItem.active)" class="button">Отправить</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
             {% endverbatim %}

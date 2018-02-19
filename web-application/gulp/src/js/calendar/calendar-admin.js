@@ -223,8 +223,9 @@ Vue.component('live-timepicker', {
     }
 });
 Vue.component('lunch-timepicker', {
-    props: ['options', 'value'],
-    template: '<input class="timepicker" :value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
+    props: ['options', 'value', 'lunchState'],
+    template: '<input class="timepicker" :class="{\'disable-input\': !options.schedule.lunchState}" ' +
+    ':readonly="!options.schedule.lunchState" ' + ':value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
     '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
 
     data: function () {
@@ -248,24 +249,30 @@ Vue.component('lunch-timepicker', {
         this.picker = picker.pickatime('picker');
     },
     watch: {
-        value: function (value) {
-            if (this.options.start) {
-                this.options.schedule.lunch_settings.start = value;
-            } else {
-                this.options.schedule.lunch_settings.end = value;
-            }
-
-        },
         options: function (options) {
-            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start) || {hours: 11, minutes: 0};
-            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end) || {hours: 16, minutes: 0};
-            if (this.options.start) {
+            if (!options.schedule.lunchState) {
+                options.schedule.lunch_settings.start = '';
+                options.schedule.lunch_settings.end = '';
+                return;
+            }
+            let dayTime = options.schedule.time;
+            let lunchTime = options.schedule.lunch_settings;
+            let time = {
+                start: lunchTime.start || dayTime.start || '10:00',
+                end: lunchTime.end || dayTime.end || '16:00'
+            };
+            let startTime = {hours: +time.start.split(":")[0], minutes: +time.start.split(":")[1]};
+            let endTime = {hours: +time.end.split(":")[0], minutes: +time.end.split(":")[1]};
+            this.picker.set({ enable: true });
+            if (options.start) {
                 this.picker.set({
+                    min: [+dayTime.start.split(":")[0], +dayTime.start.split(":")[1]],
                     max: [endTime.hours, endTime.minutes]
                 })
             } else {
                 this.picker.set({
-                    min: [startTime.hours, startTime.minutes]
+                    min: [startTime.hours, startTime.minutes],
+                    max: [+dayTime.end.split(":")[0], +dayTime.end.split(":")[1]]
                 })
             }
         }
@@ -682,6 +689,10 @@ let app = new Vue({
                     }, 1500);
 
                 } else {
+                    var errorText = document.querySelector(".authorization-text a");
+                    if (errorText && errorText.innerText === 'Авторизация') {
+                        return;
+                    }
                     document.querySelector('.modal-calendar-admin .error').style.display = 'block';
                     document.querySelector('.modal-calendar-admin .error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
                     document.querySelector('.modal-calendar-admin .error').insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
@@ -809,20 +820,20 @@ let app = new Vue({
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
             this.editorState = editorState;
+            let prevLink = document.querySelector('#prev-week');
+            let nextLink = document.querySelector('#next-week');
             if (scheduleState) {
                 if (this.schedule.length > 0) {
-                    setTimeout(() => {
-                        document.querySelector(".specialist-shedule > h4").style.display = '';
-                        document.querySelector('#prev-week').style.display = 'block';
-                        document.querySelector('#next-week').style.display = 'block';
+                    setTimeout(()=>{
+                        prevLink.style.display = 'block';
+                        nextLink.style.display = 'block';
                     });
                 }
                 this.getMasterSchedule();
             } else {
-                setTimeout(() => {
-                    document.querySelector(".specialist-shedule > h4").style.display = 'none';
-                    document.querySelector('#prev-week').style.display = 'none';
-                    document.querySelector('#next-week').style.display = 'none';
+                setTimeout(()=>{
+                    prevLink.style.display = 'none';
+                    nextLink.style.display = 'none';
                 });
                 this.getScheduleSettings();
             }
@@ -861,6 +872,7 @@ let app = new Vue({
                                         schedule[day].active = true;
                                     } else {
                                         schedule[day].active = false;
+                                        schedule[day].lunchState = false;
                                         schedule[day].time = {
                                             start: '',
                                             end: ''
@@ -895,10 +907,21 @@ let app = new Vue({
                                                 end: ''
                                             }
                                         }
-                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
                                             schedule.lunch_settings.init = schedule[day].lunch_settings;
                                             schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
                                             schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                            schedule[day].lunch_settings = {
+                                                start: schedule[day].lunch_settings.split('-')[0],
+                                                end: schedule[day].lunch_settings.split('-')[1],
+                                            };
+                                            schedule[day].lunchState = true;
+                                        } else {
+                                            schedule[day].lunchState = false;
+                                            schedule[day].lunch_settings = {
+                                                start: '',
+                                                end: ''
+                                            };
                                         }
                                     }
                                 });
@@ -950,8 +973,10 @@ let app = new Vue({
                                         this.days.forEach(day => {
                                             if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
                                                 schedule[day].active = true;
+                                                schedule[day].lunchState = true;
                                             } else {
                                                 schedule[day].active = false;
+                                                schedule[day].lunchState = false;
                                                 schedule[day].time = {
                                                     start: '',
                                                     end: ''
@@ -986,9 +1011,20 @@ let app = new Vue({
                                                         end: ''
                                                     }
                                                 }
-                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
                                                     schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
                                                     schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                                    schedule[day].lunch_settings = {
+                                                        start: schedule[day].lunch_settings.split('-')[0],
+                                                        end: schedule[day].lunch_settings.split('-')[1],
+                                                    };
+                                                    schedule[day].lunchState = true;
+                                                } else {
+                                                    schedule[day].lunch_settings = {
+                                                        start: '',
+                                                        end: ''
+                                                    };
+                                                    schedule[day].lunchState = false;
                                                 }
                                             }
                                         });
@@ -1019,6 +1055,7 @@ let app = new Vue({
                                             end: ''
                                         },
                                         interval: this.intervals[0],
+                                        lunchState: false,
                                         active: (day !== 'sunday') ? true : false
                                     }
                                 });
@@ -1052,6 +1089,7 @@ let app = new Vue({
                                     start: '',
                                     end: ''
                                 },
+                                lunchState: false,
                                 interval: this.intervals[0],
                                 active: (day !== 'sunday') ? true : false
                             }
@@ -1081,6 +1119,7 @@ let app = new Vue({
                                 start: '',
                                 end: ''
                             },
+                            lunchState: false,
                             interval: this.intervals[0],
                             active: (day !== 'sunday') ? true : false
                         }
@@ -1237,7 +1276,7 @@ let app = new Vue({
                     } else {
                         schedule[day].live_recording = '';
                     }
-                    schedule[day].lunch_settings = schedule.lunch_settings.start + '-' + schedule.lunch_settings.end;
+                    schedule[day].lunch_settings = schedule[day].lunch_settings.start + '-' + schedule[day].lunch_settings.end;
                 } else {
                     schedule[day].time = '';
                     schedule[day].lunch_settings = '';

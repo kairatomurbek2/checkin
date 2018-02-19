@@ -7,6 +7,7 @@ from webapp.views import landing as landing_views
 from webapp.views import company as company_views
 from webapp.views import specialist as specialist_views
 from webapp.views import profile as profile_views
+from django.contrib.flatpages import views as fl_views
 
 urlpatterns = [
     url(r'^$', landing_views.HomeView.as_view(), name='home'),
@@ -29,7 +30,8 @@ urlpatterns = [
     url(r'^masters/(?P<master_slug>[-_\w]+)/$', specialist_views.MasterDetailView.as_view(), name='master_detail'),
     url(r'^masters/(?P<master_slug>[-_\w]+)/update/$', specialist_owner(specialist_views.MasterEditView.as_view()),
         name='master_edit'),
-    url(r'^masters/(?P<master_slug>[-_\w]+)/update/company/$', specialist_owner_company(specialist_views.MasterEditView.as_view()),
+    url(r'^masters/(?P<master_slug>[-_\w]+)/update/company/$',
+        specialist_owner_company(specialist_views.MasterEditView.as_view()),
         name='master_edit_company'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/$', company_views.CompanyDetail.as_view(), name='company_detail'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/update/$', company_owner(company_views.CompanyEditView.as_view()),
@@ -74,4 +76,5 @@ urlpatterns = [
     url(r'^favorite/add/', login_check_favorite(landing_views.FavoriteCreateView.as_view()), name='favorites'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/reservations/$',
         administrator(company_views.ReservationAdministratorListView.as_view()), name='administrator_reservation'),
+    url(r'^policies/terms/$', fl_views.flatpage, {'url': '/policies/terms/'}, name='terms'),
 ]

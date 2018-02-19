@@ -2,17 +2,19 @@
 {% load staticfiles extra_tags thumbnail widget_tweaks %}
 {% block head %}
     <link href="{% static 'redactor/redactor.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'bower_components/cropper/dist/cropper.min.css' %}">
 {% endblock %}
 {% block content %}
 
     <main class="company edit_company">
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="hidden" name="image-crop-data" id="image-crop-data">
             <div class="grid">
                 <div class="personal_block">
                     <div class="master">
                         <a class="master_img">
-					<span>
+					<span class="img-preview-cropper">
                         {% if object.logo %}
                             {% thumbnail object.logo "154x154" as im %}
                                 <img id="img" src="{{ im.url }}" alt={{ object.full_name }}>
@@ -38,7 +40,9 @@
                                 </li>
                                 <li>
                                     {% for contact in object.contacts.all %}
-                                        <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                        <a href="tel:  +996700139680">
+                                            <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
+                                        </a>
                                     {% endfor %}
                                 </li>
                                 <li>
@@ -156,20 +160,46 @@
         </form>
     </main>
 
+<!--avatar crop modal-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Измените изображение</h4>
+            </div>
+            <div class="modal-body">
+                <div class="img-wrapper">
+                    <img src="" alt="" class="imagePreview" style="max-width: 100%">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Применить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 {% block js %}
+
     <!--<script src="{% static 'js/main.js' %}"></script>-->
     <script src="{% static 'js/select2.js' %}"></script>
 {#    {% load_google_map_js %}#}
     <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
     <script src="{% static 'redactor/redactor.js' %}"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'bower_components/cropper/dist/cropper.min.js' %}"></script>
     <script>
+    // bug fix for bootstrap backdrop
+    document.querySelector(".modal.fade").onclick = function (e) {
+            e.preventDefault(); e.stopPropagation(); return false;
+        };
     function check_true_link() {
     // var certificate = $('.chosen_certificate a');
     //console.log("asdfasd");
     $('tbody .chosen_certificate').each(function (i, obj) {
-        if ($(obj).children('a').length == true) {
+        if ($(obj).children('a').length) {
             $(obj).prepend('<img src="" alt="">');
             var img_link = $(obj).children('a').attr('href');
             $(obj).children('img').attr('src', img_link );
@@ -199,43 +229,42 @@
             deleteText: ''
         });
 
-        var latitude = $('#id_latitude');
-        var longitude = $('#id_longitude');
+        var latitude = document.querySelector("#id_latitude");
+        var longitude = document.querySelector("#id_longitude");
         var findLocation = $('#find-location');
 
         DG.then(function () {
             var map,
                 marker;
 
+            var lat = parseFloat('{{form.latitude.value}}'.replace(",", "."));
+            var lng = parseFloat('{{form.longitude.value}}'.replace(",", "."));
+
             map = DG.map('map', {
-                center: [42.8735868, 74.5768934],
-                zoom: 10
+                center: [lat, lng],
+                zoom: 15
             });
 
-            marker = DG.marker([42.8735868, 74.5768934], {
+            marker = DG.marker([lat, lng], {
                 draggable: true
-            }).addTo(map).bindLabel('Перетащите маркер!');
+            }).addTo(map).bindLabel('Перетащите маркер чтобы изменить местоположение');
 
-            latitude.val(42.8735868);
-            longitude.val(74.5768934);
+            // latitude.val(42.8735868);
+            // longitude.val(74.5768934);
 
             marker.on('drag', function (e) {
-                var lat = e.target._latlng.lat.toFixed(3),
-                    lng = e.target._latlng.lng.toFixed(3);
-
-
-                latitude.val(lat);
-                longitude.val(lng);
+                latitude.setAttribute('value', +e.latlng.lat.toFixed(4));
+                longitude.setAttribute('value', +e.latlng.lng.toFixed(4));
             });
 
             findLocation.on('click', function (e) {
                 map.locate({setView: true})
                     .on('locationfound', function (e) {
-
+                        console.log(e);
                         marker.setLatLng([e.latitude, e.longitude]);
 
-                        latitude.val(e.latitude);
-                        longitude.val(e.longitude);
+                        latitude.setAttribute('value', +e.latitude.toFixed(4));
+                        longitude.setAttribute('value', +e.longitude.toFixed(4));
                     })
                     .on('locationerror', function (e) {
                         DG.popup()
@@ -304,5 +333,87 @@
 
 
     </script>
+    <script>
+    // cropper for image uploading
+    $("#upload").change(function () {
+        var myModal$ = $("#myModal");
+        var cropData = $("#image-crop-data");
+        var reader = new FileReader();
+        // show modal onload + add image + init cropper
+        reader.onload = function (event) {
+            $(".imagePreview").prop("src", event.target.result);
+            myModal$.on('shown.bs.modal', function () {
+                initCropper(cropData);
+            });
+            myModal$.on('hidden.bs.modal', function () {
+                $(".imagePreview").cropper('destroy');
+            });
+            myModal$.modal();
+        };
+        // read file value
+        reader.readAsDataURL($(this).prop('files')[0]);
+
+    });
+    function initCropper(cropData) {
+        var $preview = $(".img-preview-cropper");
+        $(".imagePreview").cropper({
+            viewMode: 3,
+            dragMode: "move",
+            aspectRatio: 1,
+            ready: function (e) {
+                $("#img").css({
+                    display: 'block',
+                    width: '100%',
+                    minWidth: 0,
+                    minHeight: 0,
+                    maxWidth: 'none',
+                    maxHeight: 'none'
+                });
+                $preview.css({
+                    width: '55%',
+                    overflow: 'hidden'
+                });
+            },
+            crop: function (e) {
+                cropData.val(JSON.stringify({
+                    x: Math.round(e.x),
+                    width: Math.round(e.width),
+                    y: Math.round(e.y),
+                    height: Math.round(e.height)
+                }));
+                var imageData = $(this).cropper('getImageData');
+                var previewWidth = $preview.width();
+                var previewHeight = 134;
+                var imageScaledRatio = e.width / previewWidth;
+
+                $preview.height(previewHeight).find('img').css({
+                    width: imageData.naturalWidth / imageScaledRatio,
+                    height: imageData.naturalHeight / imageScaledRatio,
+                    marginLeft: -e.x / imageScaledRatio,
+                    marginTop: -e.y / imageScaledRatio
+                });
+            }
+        });
+    }
+</script>
+    <style>
+    .btn {
+        background-color: initial;
+        width: auto;
+        padding: auto auto;
+        z-index: auto;
+        font-size: inherit;
+        margin: auto;
+        color: inherit;
+    }
+    .btn-success {
+        border: 1px solid #1eebe6;
+    }
+    .btn-success:hover {
+        background-color: #1eebe6;
+        color: #fff;
+        border-color: #1eebe6;
+    }
+</style>
 
 {% endblock %}

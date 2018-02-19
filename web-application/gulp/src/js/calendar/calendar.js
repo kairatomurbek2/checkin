@@ -5,9 +5,9 @@ if (typeof process !== 'undefined') {
 Vue.component('timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
-    ':class="{\'disable-input\': !options.daySchedule.active}"' +
-    'v-bind:value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
-    ':readonly="!options.daySchedule.active">',
+        ':class="{\'disable-input\': !options.daySchedule.active}"' +
+        'v-bind:value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
+        ':readonly="!options.daySchedule.active">',
 
     data: function () {
         return {
@@ -36,22 +36,22 @@ Vue.component('timepicker', {
         },
         options: function (options) {
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
-                this.interval = (60*parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
+                this.interval = (60 * parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
             } else {
                 this.interval = parseInt(this.options.daySchedule.interval);
             }
             let indexToWatch = (this.options.index === 0) ? 1 : 0;
 
             let siblingStart = (this.$root.scheduleSettings[indexToWatch] ?
-                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '' );
+                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.start) : '');
             let siblingEnd = (this.$root.scheduleSettings[indexToWatch] ?
-                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '' );
+                this.$root.parseTime(this.$root.scheduleSettings[indexToWatch][this.options.day].time.end) : '');
 
             if (options.daySchedule.active) {
                 if (!this.options.start) {
-                    let timeStart = this.$root.parseTime(this.options.daySchedule.time.start) || {hours: 7, minutes: 0}
+                    let timeStart = this.$root.parseTime(this.options.daySchedule.time.start) || { hours: 7, minutes: 0 }
                     if (siblingStart && siblingEnd) {
-                        this.picker.set({enable: true});
+                        this.picker.set({ enable: true });
                         this.picker.set({
                             min: [timeStart.hours, timeStart.minutes],
                             disable: [
@@ -69,9 +69,9 @@ Vue.component('timepicker', {
                         })
                     }
                 } else {
-                    let timeEnd = this.$root.parseTime(this.options.daySchedule.time.end) || {hours: 20, minutes: 0}
+                    let timeEnd = this.$root.parseTime(this.options.daySchedule.time.end) || { hours: 20, minutes: 0 }
                     if (siblingStart && siblingEnd) {
-                        this.picker.set({enable: true});
+                        this.picker.set({ enable: true });
                         this.picker.set({
                             max: [timeEnd.hours, timeEnd.minutes],
                             disable: [
@@ -124,9 +124,9 @@ Vue.component('timepicker', {
 Vue.component('live-timepicker', {
     props: ['options', 'value'],
     template: '<input class="timepicker" type="text" ' +
-    ':class="{\'disable-input\': (!options.daySchedule.active)}"' +
-    'v-bind:value="options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end" ' +
-    ':readonly="!options.daySchedule.active || !options.daySchedule.liveState">',
+        ':class="{\'disable-input\': (!options.daySchedule.active)}"' +
+        'v-bind:value="options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end" ' +
+        ':readonly="!options.daySchedule.active || !options.daySchedule.liveState">',
 
     data: function () {
         return {
@@ -217,9 +217,10 @@ Vue.component('live-timepicker', {
     }
 });
 Vue.component('lunch-timepicker', {
-    props: ['options', 'value'],
-    template: '<input class="timepicker" :value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
-    '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
+    props: ['options', 'value', 'lunchState'],
+    template: '<input class="timepicker" :class="{\'disable-input\': !options.schedule.lunchState}" ' +
+    ':readonly="!options.schedule.lunchState" ' + ':value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
+        '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
 
     data: function () {
         return {
@@ -242,24 +243,30 @@ Vue.component('lunch-timepicker', {
         this.picker = picker.pickatime('picker');
     },
     watch: {
-        value: function (value) {
-            if (this.options.start) {
-                this.options.schedule.lunch_settings.start = value;
-            } else {
-                this.options.schedule.lunch_settings.end = value;
-            }
-
-        },
         options: function (options) {
-            let startTime = this.$root.parseTime(this.options.schedule.lunch_settings.start) || {hours: 11, minutes: 0};
-            let endTime = this.$root.parseTime(this.options.schedule.lunch_settings.end) || {hours: 16, minutes: 0};
-            if (this.options.start) {
+            if (!options.schedule.lunchState) {
+                options.schedule.lunch_settings.start = '';
+                options.schedule.lunch_settings.end = '';
+                return;
+            }
+            let dayTime = options.schedule.time;
+            let lunchTime = options.schedule.lunch_settings;
+            let time = {
+                start: lunchTime.start || dayTime.start || '10:00',
+                end: lunchTime.end || dayTime.end || '16:00'
+            };
+            let startTime = {hours: +time.start.split(":")[0], minutes: +time.start.split(":")[1]};
+            let endTime = {hours: +time.end.split(":")[0], minutes: +time.end.split(":")[1]};
+            this.picker.set({ enable: true });
+            if (options.start) {
                 this.picker.set({
+                    min: [+dayTime.start.split(":")[0], +dayTime.start.split(":")[1]],
                     max: [endTime.hours, endTime.minutes]
                 })
             } else {
                 this.picker.set({
-                    min: [startTime.hours, startTime.minutes]
+                    min: [startTime.hours, startTime.minutes],
+                    max: [+dayTime.end.split(":")[0], +dayTime.end.split(":")[1]]
                 })
             }
         }
@@ -303,7 +310,7 @@ var app = new Vue({
         companiesForClass: []
     },
 
-    mounted() {},
+    mounted() { },
 
     methods: {
         // calendar methods
@@ -392,7 +399,7 @@ var app = new Vue({
             while (now <= end) {
                 this.schedule.forEach(schedule => {
                     if (schedule[this.days[now.getDay()]] && (typeof schedule[this.days[now.getDay()]].time === 'object'
-                            || schedule[this.days[now.getDay()]].time.length > 3)) {
+                        || schedule[this.days[now.getDay()]].time.length > 3)) {
                         let daySchedule = schedule[this.days[now.getDay()]];
                         if (typeof daySchedule.interval !== 'object') {
                             this.getWorkInterval(daySchedule, 'interval');
@@ -410,7 +417,7 @@ var app = new Vue({
                         if (result.status) {
                             // check if holiday already added to array (need to check if holiday is first in array)
                             if (this.mainArray[result.index].length > 1) {
-                                this.mainArray[result.index].times.push({time: new Date(now), status: 'holiday'});
+                                this.mainArray[result.index].times.push({ time: new Date(now), status: 'holiday' });
                             }
                         } else {
                             this.mainArray.push({
@@ -430,13 +437,13 @@ var app = new Vue({
             // when dates were added from different schedules, it's needed to sort it all
             this.sortTimesInMainArray();
         },
-        calculateLiveTimes(time, interval){
-            let timeInterval = (interval.hours > 0) ? ((60*interval.hours) + interval.minutes) : interval.minutes;
+        calculateLiveTimes(time, interval) {
+            let timeInterval = (interval.hours > 0) ? ((60 * interval.hours) + interval.minutes) : interval.minutes;
             let counter = 0;
             let start = new Date(time.start);
             let end = new Date(time.end);
             while (new Date(start) < new Date(end)) {
-                counter ++;
+                counter++;
                 start.setMinutes(start.getMinutes() + timeInterval);
             }
             return counter;
@@ -512,7 +519,7 @@ var app = new Vue({
                 oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
                 oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
             }
-            this.dayTime = {date: oneDay.date, times: times};
+            this.dayTime = { date: oneDay.date, times: times };
         },
         doCorrectDateInOrders(reservations) {
             reservations.map(order => {
@@ -680,9 +687,9 @@ var app = new Vue({
                 full_name: this.record.name,
                 phone: this.record.phone,
                 date_time_reservation: '' + this.record.time.getFullYear() + '-' + (this.record.time.getMonth() + 1) +
-                '-' + this.record.time.getDate() +
-                ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
-                ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
+                    '-' + this.record.time.getDate() +
+                    ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
+                    ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
                 status: 'armored'
             };
             if (this._masterUser) {
@@ -710,6 +717,10 @@ var app = new Vue({
                         this.cleanOrderPopup();
                     }, 1500);
                 } else {
+                    var errorText = document.querySelector(".authorization-text a");
+                    if (errorText && errorText.innerText === 'Авторизация') {
+                        return;
+                    }
                     document.querySelector('.error').style.display = 'block';
                     document.querySelector('.error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
                     document.querySelector('.error').insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
@@ -717,7 +728,7 @@ var app = new Vue({
             }, response => {
                 console.error(response);
                 if (response.body.phone) {
-                    document.querySelector('.error').innerHTML += '<div> '+ response.body.phone +'</div>';
+                    document.querySelector('.error').innerHTML += '<div> ' + response.body.phone + '</div>';
                     document.querySelector('.error').style.display = 'block';
                     input = document.querySelector('#phone');
                     input.classList.add('error');
@@ -781,7 +792,7 @@ var app = new Vue({
             this.mainArray = [];
 
             this.range.current = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - 1);
-            
+
             let start = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - (this.period * 2));
             let end = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - this.period);
             if (new Date(start).getTime() <= new Date(this.range.start).getTime()) {
@@ -799,9 +810,9 @@ var app = new Vue({
                 return new Date(x.date.setHours(0, 0, 0, 0)).getTime() === new Date(dateObject).getTime()
             });
             if (result !== -1) {
-                return {status: true, index: result}
+                return { status: true, index: result }
             } else {
-                return {status: false, index: -1};
+                return { status: false, index: -1 };
             }
         },
         sortTimesInMainArray() {
@@ -837,18 +848,22 @@ var app = new Vue({
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
             this.editorState = editorState;
+            let prevLink = document.querySelector('#prev-week');
+            let nextLink = document.querySelector('#next-week');
             if (scheduleState) {
                 if (this.schedule.length > 0) {
-                    setTimeout(() => {
-                        document.querySelector('#prev-week').style.display = 'block';
-                        document.querySelector('#next-week').style.display = 'block';
+                    setTimeout(()=>{
+                        document.querySelector(".specialist > .grid").classList.remove('editor-mode');
+                        prevLink.style.display = 'block';
+                        nextLink.style.display = 'block';
                     });
                 }
                 this.getMasterSchedule();
             } else {
-                setTimeout(() => {
-                    document.querySelector('#prev-week').style.display = 'none';
-                    document.querySelector('#next-week').style.display = 'none';
+                setTimeout(()=>{
+                    document.querySelector(".specialist > .grid").classList.add('editor-mode');
+                    prevLink.style.display = 'none';
+                    nextLink.style.display = 'none';
                 });
                 this.getScheduleSettings();
             }
@@ -887,6 +902,7 @@ var app = new Vue({
                                         schedule[day].active = true;
                                     } else {
                                         schedule[day].active = false;
+                                        schedule[day].lunchState = false;
                                         schedule[day].time = {
                                             start: '',
                                             end: ''
@@ -921,10 +937,21 @@ var app = new Vue({
                                                 end: ''
                                             }
                                         }
-                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
                                             schedule.lunch_settings.init = schedule[day].lunch_settings;
                                             schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
                                             schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                            schedule[day].lunch_settings = {
+                                                start: schedule[day].lunch_settings.split('-')[0],
+                                                end: schedule[day].lunch_settings.split('-')[1],
+                                            };
+                                            schedule[day].lunchState = true;
+                                        } else {
+                                            schedule[day].lunchState = false;
+                                            schedule[day].lunch_settings = {
+                                                start: '',
+                                                end: ''
+                                            };
                                         }
                                     }
                                 });
@@ -976,8 +1003,10 @@ var app = new Vue({
                                         this.days.forEach(day => {
                                             if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
                                                 schedule[day].active = true;
+                                                schedule[day].lunchState = true;
                                             } else {
                                                 schedule[day].active = false;
+                                                schedule[day].lunchState = false;
                                                 schedule[day].time = {
                                                     start: '',
                                                     end: ''
@@ -1012,9 +1041,20 @@ var app = new Vue({
                                                         end: ''
                                                     }
                                                 }
-                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1) {
+                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
                                                     schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
                                                     schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
+                                                    schedule[day].lunch_settings = {
+                                                        start: schedule[day].lunch_settings.split('-')[0],
+                                                        end: schedule[day].lunch_settings.split('-')[1],
+                                                    };
+                                                    schedule[day].lunchState = true;
+                                                } else {
+                                                    schedule[day].lunch_settings = {
+                                                        start: '',
+                                                        end: ''
+                                                    };
+                                                    schedule[day].lunchState = false;
                                                 }
                                             }
                                         });
@@ -1024,7 +1064,7 @@ var app = new Vue({
                                     },
                                     error => {
                                         console.log(error);
-                                        this.toggleLocalLoader(false);                                        
+                                        this.toggleLocalLoader(false);
                                     }
                                 )
                             }
@@ -1045,6 +1085,7 @@ var app = new Vue({
                                             end: ''
                                         },
                                         interval: this.intervals[0],
+                                        lunchState: false,
                                         active: (day !== 'sunday') ? true : false
                                     }
                                 });
@@ -1055,7 +1096,7 @@ var app = new Vue({
                                     end: ''
                                 };
                                 this.scheduleSettings.push(dayObj);
-                                this.toggleLocalLoader(false);                                
+                                this.toggleLocalLoader(false);
                             }
                         }
                     })
@@ -1078,6 +1119,7 @@ var app = new Vue({
                                     start: '',
                                     end: ''
                                 },
+                                lunchState: false,
                                 interval: this.intervals[0],
                                 active: (day !== 'sunday') ? true : false
                             }
@@ -1107,6 +1149,7 @@ var app = new Vue({
                                 start: '',
                                 end: ''
                             },
+                            lunchState: false,
                             interval: this.intervals[0],
                             active: (day !== 'sunday') ? true : false
                         }
@@ -1162,7 +1205,7 @@ var app = new Vue({
                     } else {
                         schedule[day].live_recording = '';
                     }
-                    schedule[day].lunch_settings = schedule.lunch_settings.start + '-' + schedule.lunch_settings.end;
+                    schedule[day].lunch_settings = schedule[day].lunch_settings.start + '-' + schedule[day].lunch_settings.end;
                 } else {
                     schedule[day].time = '';
                     schedule[day].lunch_settings = '';

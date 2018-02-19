@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block head %}
+    <title>Условия использования</title>
+{% endblock %}
+{% block content %}
+    <div class="conditions">
+        <h1>{{ flatpage.title }}</h1>
+        {{ flatpage.content }}
+    </div>
+{% endblock %}
