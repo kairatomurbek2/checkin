@@ -33,7 +33,7 @@
                             </li>
                             <li>
                                 {% for number in master.specialist_contacts.all %}
-                                    <a href="tel:  +996700139680">
+                                    <a href="tel: {{ number.phone }}">
                                         <i class="fa fa-phone" aria-hidden="true"></i> {{ number.phone }}
                                     </a>
                                 {% endfor %}
