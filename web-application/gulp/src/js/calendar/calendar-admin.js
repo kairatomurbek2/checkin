@@ -281,7 +281,7 @@ Vue.component('lunch-timepicker', {
         this.picker.stop();
     }
 });
-
+// Vue.use(VueSocketio, 'url here');
 let app = new Vue({
     el: '#app',
     data: {
