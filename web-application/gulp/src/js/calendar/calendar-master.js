@@ -323,22 +323,35 @@ let app = new Vue({
                 }
             }
         },
-        makeOrder(keypressState, event) {
-            if (keypressState) {
-                if (event.keyCode !== 13) return false;
+        renderPopupError(element, input, message, clearAfterInterval){
+            let errorContainer = document.querySelector(element);
+            errorContainer.innerHTML = message;
+            errorContainer.style.display = 'block';
+            let inputElement = null;
+            if (input) {
+                inputElement = document.querySelector(input);
+                inputElement.classList.add('error');
             }
-            if (!document.querySelector('#phone_admin').value) {
-                document.querySelector('.modal-calendar-admin .error').innerHTML += '<div> Поле телефон не введено </div>';
-                document.querySelector('.modal-calendar-admin .error').style.display = 'block';
-                input = document.querySelector('#phone_admin');
-                input.classList.add('error');
-                setTimeout(function () {
-                    input.classList.remove('error');
-                    document.querySelector('.modal-calendar-admin .error').innerHTML = '';
-                    document.querySelector('.modal-calendar-admin .error').style.display = '';
+            if (clearAfterInterval) {
+                setTimeout(() => {
+                    inputElement.classList.remove('error');
+                    errorContainer.innerHTML = '';
+                    errorContainer.style.display = '';
                 }, 3000);
-                return;
             }
+        },
+        renderPopupSuccess(element, message, clearAfterInterval){
+            let successContainer = document.querySelector(element);
+            successContainer.style.display = 'block';
+            successContainer.innerHTML = message;
+            if (clearAfterInterval) {
+                setTimeout(() => {
+                    successContainer.style.display = '';
+                    successContainer.innerHTML = ''
+                }, 3000);
+            }
+        },
+        prepareOrderParams(){
             this.record.name = document.querySelector('#full_name_admin').value;
             this.record.phone = document.querySelector('#phone_admin').value;
             let url = '/api/reservation/add/' + this._masterSlug + '/';
@@ -359,14 +372,29 @@ let app = new Vue({
                     'X-CSRFToken': this._csrfToken
                 }
             };
-            this.$http.post(url, body, options).then(response => {
+            return {
+                options: options,
+                body: body,
+                url: url
+            }
+        },
+        makeOrder(keypressState, event) {
+            if (keypressState) {
+                if (event.keyCode !== 13) return false;
+            }
+            if (!document.querySelector('#phone_admin').value) {
+                renderPopupError('.error', '#phone_admin', '<div>Поле телефон введено неправильно</div>', true);
+                return;
+            }
+
+            let params = this.prepareOrderParams();
+            this.$http.post(params.url, params.body, params.options).then(response => {
                 if (response.body.status !== 'error') {
-                    document.querySelector('.modal-calendar-admin .success').style.display = 'block';
-                    document.querySelector('.modal-calendar-admin .success').innerHTML = 'Заявка успешно оформлена, ожидайте подтверждение специалиста';
+                    this.renderPopupSuccess(".modal-calendar-admin .success", "Заявка успешно оформлена, ожидайте подтверждение специалиста", false);
                     this.record.status = 'armored';
                     if (this._masterUser) {
                         this.record.status = 'confirmed';
-                        document.querySelector('.modal-calendar-admin .success').innerHTML = 'Заявка успешно оформлена';
+                        this.renderPopupSuccess(".modal-calendar-admin .success", "Заявка успешно оформлена", false);
                     }
                     this.record.id = response.body.id;
                     this.setOrderStatusInArray(this.record);
@@ -382,22 +410,16 @@ let app = new Vue({
                     if (errorText && errorText.innerText === 'Авторизация') {
                         return;
                     }
-                    document.querySelector('.modal-calendar-admin .error').style.display = 'block';
-                    document.querySelector('.modal-calendar-admin .error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
-                    document.querySelector('.modal-calendar-admin .error').insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
+                    this.renderPopupError('.modal-calendar-admin .error', null, '<div class="authorization-text">' + response.body.message + '</div>', false);
+                    document.querySelector('.modal-calendar-admin .error').insertAdjacentHTML('afterend', '' +
+                        '<div class="authorization-text" style="text-align: center">' +
+                        '<a href="/accounts/login">Авторизация</a>' +
+                        '</div>');
                 }
             }, response => {
                 console.error(response);
                 if (response.body.phone) {
-                    document.querySelector('.modal-calendar-admin .error').innerHTML += '<div> '+ response.body.phone +'</div>';
-                    document.querySelector('.modal-calendar-admin .error').style.display = 'block';
-                    input = document.querySelector('#phone_admin');
-                    input.classList.add('error');
-                    setTimeout(function () {
-                        input.classList.remove('error');
-                        document.querySelector('.modal-calendar-admin .error').innerHTML = '';
-                        document.querySelector('.modal-calendar-admin .error').style.display = '';
-                    }, 3000);
+                    this.renderPopupError('.modal-calendar-admin .error', '#phone_admin', '<div>' + response.body.phone + '</div>', true);
                 }
             })
         },
