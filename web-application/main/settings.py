@@ -159,7 +159,32 @@ THUMBNAIL_PRESERVE_FORMAT = True
 REDACTOR_UPLOAD = 'uploads/'
 REDACTOR_OPTIONS = {'lang': 'ru', 'plugins': ['table', 'video']}
 REDACTOR_UPLOAD_HANDLER = 'redactor.handlers.UUIDUploader'
+
+# CKEDITOR
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+CKEDITOR_JQUERY_URL = 'http://libs.baidu.com/jquery/2.0.3/jquery.min.js'
+CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+# config ckeditor
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': (
+            ['div', 'Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+            ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+            ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'ShowBlocks', '-', 'About', 'pbckcode'],
+        ),
+    }
+}
 # allauth
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -233,6 +258,5 @@ SOCIALACCOUNT_PROVIDERS = \
 
 try:
     from settings_local import *
-    from settings_prod import *
 except ImportError:
     pass

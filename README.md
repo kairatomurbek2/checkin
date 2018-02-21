@@ -5,8 +5,9 @@
 Компания может owner может создавать специалиста создавать админа компании
 
 # Для разработчиков
-1. Поднятие окружение находится в https://gitlab.com/Alybek/checkin/wikis/ProjectEnvironment
-2. Доступы от prod, demo находится в https://gitlab.com/Alybek/checkin/wikis/access-from-checkin
+1. Поднятие окружение back end находится в https://gitlab.com/Alybek/checkin/wikis/ProjectEnvironment
+2. Настройка Front end части находиться в https://gitlab.com/Alybek/checkin/wikis/how-to-setup-frontend
+3. Доступы от prod, demo находится в https://gitlab.com/Alybek/checkin/wikis/access-from-checkin
 
 ## Обязательные правила
 

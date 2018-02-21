@@ -23,10 +23,10 @@
                 </li>
                 <li>
                     {% for contact in company.contacts.all %}
-                        <a href="tel:  +996709988484">
+                        <a href="tel:  {{ contact.phone }}">
                             <i class="fa fa-phone" aria-hidden="true"></i> {{ contact.phone }}
                         </a>
-                        <a href="tel:  9797">
+                        <a href="tel:  {{ company.short_phone|default_if_none:"" }}">
                             <i class="fa fa-phone" aria-hidden="true"></i> {{ company.short_phone|default_if_none:"" }}
                         </a>
                     {% endfor %}

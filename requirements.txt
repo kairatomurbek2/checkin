@@ -45,4 +45,5 @@ sorl-thumbnail==12.3
 uritemplate==3.0.0
 urllib3==1.22
 raven
+python-firebase
 django-ckeditor==5.4.0
