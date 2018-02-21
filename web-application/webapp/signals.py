@@ -48,7 +48,8 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
             'full_name': instance.full_name,
             'date_time': instance.date_time_reservation,
             'phone': str(instance.phone),
-            'message': msg
+            'message': msg,
+            'status': str(instance.status)
         }
 
         if created:
