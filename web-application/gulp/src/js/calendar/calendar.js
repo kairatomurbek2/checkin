@@ -434,7 +434,7 @@ var app = new Vue({
                 });
                 now.setDate(now.getDate() + 1);
             }
-            // when dates were added from different schedules, it's needed to sort it all
+            // when dates were added from different schedules, it's necessary to sort them all
             this.sortTimesInMainArray();
         },
         calculateLiveTimes(time, interval) {
@@ -457,6 +457,7 @@ var app = new Vue({
             daySchedule = this.getWorkInterval(daySchedule, 'time');
             oneDay.date.setHours(daySchedule.time.start.hours, daySchedule.time.start.minutes, 0, 0);
             while (oneDay.date < oneDay.initialDate.setHours(daySchedule.time.end.hours, daySchedule.time.end.minutes, 0, 0)) {
+                // check if lunch settings are presented
                 if (daySchedule.lunch_settings) {
                     daySchedule = this.getWorkInterval(daySchedule, 'lunch_settings');
                     let time = this.doSetIntervalLimit(daySchedule, oneDay, 'lunch_settings');
@@ -468,6 +469,7 @@ var app = new Vue({
                         continue;
                     }
                 }
+                // check if live recording is presented
                 if (daySchedule.live_recording) {
                     daySchedule = this.getWorkInterval(daySchedule, 'live_recording');
                     let time = this.doSetIntervalLimit(daySchedule, oneDay, 'live_recording');
@@ -664,22 +666,35 @@ var app = new Vue({
                 }
             }
         },
-        makeOrder(keypressState, event) {
-            if (keypressState) {
-                if (event.keyCode !== 13) return false;
+        renderPopupError(element, input, message, clearAfterInterval){
+            let errorContainer = document.querySelector(element);
+            errorContainer.innerHTML = message;
+            errorContainer.style.display = 'block';
+            let inputElement = null;
+            if (input) {
+                inputElement = document.querySelector(input);
+                inputElement.classList.add('error');
             }
-            if (!document.querySelector('#phone').value) {
-                document.querySelector('.error').innerHTML += '<div> Поле телефон не введено </div>';
-                document.querySelector('.error').style.display = 'block';
-                input = document.querySelector('#phone');
-                input.classList.add('error');
-                setTimeout(function () {
-                    input.classList.remove('error');
-                    document.querySelector('.error').innerHTML = '';
-                    document.querySelector('.error').style.display = '';
+            if (clearAfterInterval) {
+                setTimeout(() => {
+                    inputElement.classList.remove('error');
+                    errorContainer.innerHTML = '';
+                    errorContainer.style.display = '';
                 }, 3000);
-                return;
             }
+        },
+        renderPopupSuccess(element, message, clearAfterInterval){
+            let successContainer = document.querySelector(element);
+            successContainer.style.display = 'block';
+            successContainer.innerHTML = message;
+            if (clearAfterInterval) {
+                setTimeout(() => {
+                    successContainer.style.display = '';
+                    successContainer.innerHTML = ''
+                }, 3000);
+            }
+        },
+        prepareOrderParams(){
             this.record.name = document.querySelector('#full_name').value;
             this.record.phone = document.querySelector('#phone').value;
             let url = '/api/reservation/add/' + this._masterSlug + '/';
@@ -687,9 +702,9 @@ var app = new Vue({
                 full_name: this.record.name,
                 phone: this.record.phone,
                 date_time_reservation: '' + this.record.time.getFullYear() + '-' + (this.record.time.getMonth() + 1) +
-                    '-' + this.record.time.getDate() +
-                    ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
-                    ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
+                '-' + this.record.time.getDate() +
+                ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
+                ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
                 status: 'armored'
             };
             if (this._masterUser) {
@@ -700,14 +715,28 @@ var app = new Vue({
                     'X-CSRFToken': this._csrfToken
                 }
             };
-            this.$http.post(url, body, options).then(response => {
+            return {
+                options: options,
+                body: body,
+                url: url
+            }
+        },
+        makeOrder(keypressState, event) {
+            if (keypressState) {
+                if (event.keyCode !== 13) return false;
+            }
+            if (!document.querySelector('#phone').value) {
+                renderPopupError('.error', '#phone', '<div>Поле телефон введено неправильно</div>', true);
+                return;
+            }
+            let params = this.prepareOrderParams();
+            this.$http.post(params.url, params.body, params.options).then(response => {
                 if (response.body.status !== 'error') {
-                    document.querySelector('.success').style.display = 'block';
-                    document.querySelector('.success').innerHTML = 'Заявка успешно оформлена, ожидайте подтверждение специалиста';
+                    this.renderPopupSuccess(".success", "Заявка успешно оформлена, ожидайте подтверждение специалиста", false);
                     this.record.status = 'armored';
                     if (this._masterUser) {
                         this.record.status = 'confirmed';
-                        document.querySelector('.success').innerHTML = 'Заявка успешно оформлена';
+                        this.renderPopupSuccess(".success", "Заявка успешно оформлена", false);
                     }
                     this.record.id = response.body.id;
                     this.setOrderStatusInArray(this.record);
@@ -721,22 +750,16 @@ var app = new Vue({
                     if (errorText && errorText.innerText === 'Авторизация') {
                         return;
                     }
-                    document.querySelector('.error').style.display = 'block';
-                    document.querySelector('.error').innerHTML += '<div class="authorization-text">' + response.body.message + '</div>';
-                    document.querySelector('.error').insertAdjacentHTML('afterend', '<div class="authorization-text" style="text-align: center"><a href="/accounts/login">Авторизация</a></div>')
+                    this.renderPopupError('.error', null, '<div class="authorization-text">' + response.body.message + '</div>', false);
+                    document.querySelector('.error').insertAdjacentHTML('afterend', '' +
+                        '<div class="authorization-text" style="text-align: center">' +
+                            '<a href="/accounts/login">Авторизация</a>' +
+                        '</div>')
                 }
             }, response => {
                 console.error(response);
                 if (response.body.phone) {
-                    document.querySelector('.error').innerHTML += '<div> ' + response.body.phone + '</div>';
-                    document.querySelector('.error').style.display = 'block';
-                    input = document.querySelector('#phone');
-                    input.classList.add('error');
-                    setTimeout(function () {
-                        input.classList.remove('error');
-                        document.querySelector('.error').innerHTML = '';
-                        document.querySelector('.error').style.display = '';
-                    }, 3000);
+                    this.renderPopupError('.error', '#phone', '<div>' + response.body.phone + '</div>', true);
                 }
             })
         },
@@ -872,6 +895,78 @@ var app = new Vue({
             this.localLoaderState = status;
         },
         // editor methods
+        returnDisabledDay(scheduleDay){
+            if (!scheduleDay) {
+                scheduleDay = {
+                    time: {
+                        start: '',
+                        end: ''
+                    },
+                    live_recording: {
+                        start: '',
+                        end: ''
+                    },
+                    lunch_settings: {
+                        start: '',
+                        end: ''
+                    },
+                    interval: this.intervals[0],
+                    lunchState: false
+                };
+                return scheduleDay;
+            }
+            scheduleDay.active = false;
+            scheduleDay.lunchState = false;
+            scheduleDay.time = {
+                start: '',
+                end: ''
+            };
+            scheduleDay.live_recording = {
+                start: '',
+                end: ''
+            };
+            scheduleDay.lunch_settings = {
+                start: '',
+                end: ''
+            };
+            scheduleDay.interval = this.intervals[0];
+            return scheduleDay;
+        },
+        returnActiveDay(scheduleDay){
+            scheduleDay.time = {
+                start: scheduleDay.time.split('-')[0],
+                end: scheduleDay.time.split('-')[1],
+                init: scheduleDay.time,
+            };
+            if (scheduleDay.live_recording && scheduleDay.live_recording.indexOf('-') !== -1) {
+                scheduleDay.liveState = true;
+                scheduleDay.live_recording = {
+                    init: scheduleDay.live_recording,
+                    start: scheduleDay.live_recording.split('-')[0],
+                    end: scheduleDay.live_recording.split('-')[1],
+                }
+            } else {
+                scheduleDay.liveState = false;
+                scheduleDay.live_recording = {
+                    start: '',
+                    end: ''
+                }
+            }
+            if (scheduleDay.lunch_settings && scheduleDay.lunch_settings.indexOf('-') !== -1 && scheduleDay.lunch_settings.length > 3) {
+                scheduleDay.lunch_settings = {
+                    start: scheduleDay.lunch_settings.split('-')[0],
+                    end: scheduleDay.lunch_settings.split('-')[1],
+                };
+                scheduleDay.lunchState = true;
+            } else {
+                scheduleDay.lunchState = false;
+                scheduleDay.lunch_settings = {
+                    start: '',
+                    end: ''
+                };
+            }
+            return scheduleDay;
+        },
         getScheduleSettings() {
             this.toggleLocalLoader(true);
             this.scheduleSettings = [];
@@ -901,58 +996,10 @@ var app = new Vue({
                                     if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
                                         schedule[day].active = true;
                                     } else {
-                                        schedule[day].active = false;
-                                        schedule[day].lunchState = false;
-                                        schedule[day].time = {
-                                            start: '',
-                                            end: ''
-                                        };
-                                        schedule[day].live_recording = {
-                                            start: '',
-                                            end: ''
-                                        };
-                                        schedule[day].lunch_settings = {
-                                            start: '',
-                                            end: ''
-                                        };
-                                        schedule[day].interval = this.intervals[0];
+                                        schedule[day] = this.returnDisabledDay(schedule[day]);
                                     }
                                     if (schedule[day].active) {
-                                        schedule[day].time = {
-                                            start: schedule[day].time.split('-')[0],
-                                            end: schedule[day].time.split('-')[1],
-                                            init: schedule[day].time,
-                                        };
-                                        if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
-                                            schedule[day].liveState = true;
-                                            schedule[day].live_recording = {
-                                                init: schedule[day].live_recording,
-                                                start: schedule[day].live_recording.split('-')[0],
-                                                end: schedule[day].live_recording.split('-')[1],
-                                            }
-                                        } else {
-                                            schedule[day].liveState = false;
-                                            schedule[day].live_recording = {
-                                                start: '',
-                                                end: ''
-                                            }
-                                        }
-                                        if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
-                                            schedule.lunch_settings.init = schedule[day].lunch_settings;
-                                            schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
-                                            schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
-                                            schedule[day].lunch_settings = {
-                                                start: schedule[day].lunch_settings.split('-')[0],
-                                                end: schedule[day].lunch_settings.split('-')[1],
-                                            };
-                                            schedule[day].lunchState = true;
-                                        } else {
-                                            schedule[day].lunchState = false;
-                                            schedule[day].lunch_settings = {
-                                                start: '',
-                                                end: ''
-                                            };
-                                        }
+                                        schedule[day] = this.returnActiveDay(schedule[day]);
                                     }
                                 });
                                 schedule.active = true;
@@ -1005,57 +1052,10 @@ var app = new Vue({
                                                 schedule[day].active = true;
                                                 schedule[day].lunchState = true;
                                             } else {
-                                                schedule[day].active = false;
-                                                schedule[day].lunchState = false;
-                                                schedule[day].time = {
-                                                    start: '',
-                                                    end: ''
-                                                };
-                                                schedule[day].live_recording = {
-                                                    start: '',
-                                                    end: ''
-                                                };
-                                                schedule[day].lunch_settings = {
-                                                    start: '',
-                                                    end: ''
-                                                };
-                                                schedule[day].interval = this.intervals[0];
+                                                schedule[day] = this.returnDisabledDay(schedule[day]);
                                             }
                                             if (schedule[day].active) {
-                                                schedule[day].time = {
-                                                    start: schedule[day].time.split('-')[0],
-                                                    end: schedule[day].time.split('-')[1],
-                                                    init: schedule[day].time,
-                                                };
-                                                if (schedule[day].live_recording && schedule[day].live_recording.indexOf('-') !== -1) {
-                                                    schedule[day].liveState = true;
-                                                    schedule[day].live_recording = {
-                                                        init: schedule[day].live_recording,
-                                                        start: schedule[day].live_recording.split('-')[0],
-                                                        end: schedule[day].live_recording.split('-')[1],
-                                                    }
-                                                } else {
-                                                    schedule[day].liveState = false;
-                                                    schedule[day].live_recording = {
-                                                        start: '',
-                                                        end: ''
-                                                    }
-                                                }
-                                                if (schedule[day].lunch_settings && schedule[day].lunch_settings.indexOf('-') !== -1 && schedule[day].lunch_settings.length > 3) {
-                                                    schedule.lunch_settings.start = schedule[day].lunch_settings.split('-')[0];
-                                                    schedule.lunch_settings.end = schedule[day].lunch_settings.split('-')[1];
-                                                    schedule[day].lunch_settings = {
-                                                        start: schedule[day].lunch_settings.split('-')[0],
-                                                        end: schedule[day].lunch_settings.split('-')[1],
-                                                    };
-                                                    schedule[day].lunchState = true;
-                                                } else {
-                                                    schedule[day].lunch_settings = {
-                                                        start: '',
-                                                        end: ''
-                                                    };
-                                                    schedule[day].lunchState = false;
-                                                }
+                                                schedule[day] = this.returnActiveDay(schedule[day]);
                                             }
                                         });
                                         schedule.active = true;
@@ -1071,23 +1071,8 @@ var app = new Vue({
                             else {
                                 let dayObj = {};
                                 this.days.forEach(day => {
-                                    dayObj[day] = {
-                                        time: {
-                                            start: '',
-                                            end: ''
-                                        },
-                                        live_recording: {
-                                            start: '',
-                                            end: ''
-                                        },
-                                        lunch_settings: {
-                                            start: '',
-                                            end: ''
-                                        },
-                                        interval: this.intervals[0],
-                                        lunchState: false,
-                                        active: (day !== 'sunday') ? true : false
-                                    }
+                                    dayObj[day] = this.returnDisabledDay(dayObj[day]);
+                                    dayObj[day].active = (day !== 'sunday');
                                 });
                                 dayObj.company = company.id;
                                 dayObj.companyName = company.name;
@@ -1106,23 +1091,8 @@ var app = new Vue({
                     this.companies.forEach(company => {
                         let dayObj = {};
                         this.days.forEach(day => {
-                            dayObj[day] = {
-                                time: {
-                                    start: '',
-                                    end: ''
-                                },
-                                live_recording: {
-                                    start: '',
-                                    end: ''
-                                },
-                                lunch_settings: {
-                                    start: '',
-                                    end: ''
-                                },
-                                lunchState: false,
-                                interval: this.intervals[0],
-                                active: (day !== 'sunday') ? true : false
-                            }
+                            dayObj[day] = this.returnDisabledDay(dayObj[day]);
+                            dayObj[day].active = (day !== 'sunday');
                         });
                         dayObj.company = company.id;
                         dayObj.companyName = company.name;
@@ -1136,23 +1106,8 @@ var app = new Vue({
                 } else {
                     let dayObj = {};
                     this.days.forEach(day => {
-                        dayObj[day] = {
-                            time: {
-                                start: '',
-                                end: ''
-                            },
-                            live_recording: {
-                                start: '',
-                                end: ''
-                            },
-                            lunch_settings: {
-                                start: '',
-                                end: ''
-                            },
-                            lunchState: false,
-                            interval: this.intervals[0],
-                            active: (day !== 'sunday') ? true : false
-                        }
+                        dayObj[day] = this.returnDisabledDay(dayObj[day]);
+                        dayObj[day].active = (day !== 'sunday');
                     });
                     dayObj.lunch_settings = {
                         start: '',
@@ -1190,13 +1145,8 @@ var app = new Vue({
             }
 
         },
-        submitSchedule(event, index, active) {
-            event.preventDefault();
-            let schedule = JSON.parse(JSON.stringify(this.scheduleSettings[index]));
-            // if (!schedule.lunch_settings.start || !schedule.lunch_settings.end) {
-            //     alert("Вы не ввели время обеда");
-            //     return;
-            // }
+        prepareScheduleSettingsToSend(scheduleSettings, index) {
+            let schedule = JSON.parse(JSON.stringify(scheduleSettings[index]));
             this.days.forEach(day => {
                 if (schedule[day] && schedule[day].active) {
                     schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
@@ -1214,7 +1164,11 @@ var app = new Vue({
                     schedule[day].active = false;
                 }
             });
-
+            return schedule;
+        },
+        submitSchedule(event, index, active) {
+            event.preventDefault();
+            let schedule = this.prepareScheduleSettingsToSend(this.scheduleSettings, index);
             if (active) {
                 let url = `/api/work_day/${this._masterSlug}/${schedule.id}/update/`;
                 let body = schedule;
