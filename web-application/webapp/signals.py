@@ -21,35 +21,37 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
     firebase_helper = FirebaseHelper(firebase_url=FIREBASE_URL, firebase_secret=FIREBASE_SECRET,
                                      firebase_email=FIREBASE_USER_EMAIL)
 
-    if created:
-        specialist_user = instance.specialist.user
-        date_time = instance.date_time_reservation.strftime('%m %b,%H:%M').split(',')
-
-        msg = Messages.Firebase.new_reservation.format(**{
-            'user': instance.user.username,
-            'date': date_time[0],
-            'time': date_time[1]
-        })
-        data = {
-            'user_id': specialist_user.pk,
-            'message': msg
-        }
-
-        firebase_helper.reservation_new(data=data)
-    elif instance.status in [CONFIRMED, REFUSED]:
+    if created or instance.status in [CONFIRMED, REFUSED]:
+        specialist = instance.specialist
         user = instance.user
-        message_template = Messages.Firebase.reservation_accepted if instance.status == CONFIRMED else \
-                           Messages.Firebase.reservation_declined
         date_time = instance.date_time_reservation.strftime('%m %b,%H:%M').split(',')
 
-        msg = message_template.format(**{
-            'specialist': instance.specialist.user.username,
-            'date': date_time[0],
-            'time': date_time[1]
-        })
+        if created:
+            msg = Messages.Firebase.new_reservation.format(**{
+                'user': instance.user.username,
+                'date': date_time[0],
+                'time': date_time[1]
+            })
+        else:
+            message_template = Messages.Firebase.reservation_confirmed if instance.status == CONFIRMED else \
+                Messages.Firebase.reservation_refused
+
+            msg = message_template.format(**{
+                'specialist': instance.specialist.user.username,
+                'date': date_time[0],
+                'time': date_time[1]
+            })
+
         data = {
+            'specialist_slug': specialist.slug,
             'user_id': user.pk,
+            'full_name': instance.full_name,
+            'date_time': instance.date_time_reservation,
+            'phone': str(instance.phone),
             'message': msg
         }
 
-        firebase_helper.reservation_changed(data=data)
+        if created:
+            firebase_helper.reservation_new(data=data)
+        else:
+            firebase_helper.reservation_changed(data=data)
