@@ -21,7 +21,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
         specialist_user = instance.specialist.user
         data = {
             'user_id': specialist_user.pk,
-            'message': 'hahahah'
+            'message': ''
         }
 
         firebase_helper.reservation_new(data=data)
@@ -29,7 +29,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
         user = instance.user
         data = {
             'user_id': user.pk,
-            'message': 'blablablablab'
+            'message': ''
         }
         
         firebase_helper.reservation_changed(data=data)
