@@ -1,28 +1,28 @@
-Vue.component('timepicker', {
-    props: ['options', 'value'],
-    template: '<input class="timepicker" type="text" ' +
-    ':class="{\'disable-input\': !options.daySchedule.active}"' +
-    'v-bind:value="options.start? options.daySchedule.time.start : options.daySchedule.time.end" ' +
-    ':readonly="!options.daySchedule.active">',
+Vue.component("timepicker", {
+    props: ["options", "value"],
+    template: "<input class=\"timepicker\" type=\"text\" " +
+    ":class=\"{'disable-input': !options.daySchedule.active}\"" +
+    "v-bind:value=\"options.start? options.daySchedule.time.start : options.daySchedule.time.end\" " +
+    ":readonly=\"!options.daySchedule.active\">",
 
     data: function () {
         return {
-            picker: '',
+            picker: "",
             interval: 30
         };
     },
     mounted: function () {
         var vm = this;
         var picker = $(this.$el).pickatime({
-            format: 'HH:i',
+            format: "HH:i",
             min: [7, 0],
             max: [20, 0],
             interval: 30,
-            clear: ''
-        }).val(this.value).trigger('change').on('change', function () {
-            vm.$emit('input', this.value)
+            clear: ""
+        }).val(this.value).trigger("change").on("change", function () {
+            vm.$emit("input", this.value);
         });
-        this.picker = picker.pickatime('picker');
+        this.picker = picker.pickatime("picker");
     },
     watch: {
         value: function (value) {
@@ -35,14 +35,14 @@ Vue.component('timepicker', {
         },
         options: function (options) {
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
-                this.interval = (60*parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
+                this.interval = (60 * parseInt(this.options.daySchedule.interval.split(":")[0])) + parseInt(this.options.daySchedule.interval.split(":")[1]);
             } else {
                 this.interval = parseInt(this.options.daySchedule.interval);
             }
-            
+
             let indexToWatch = (this.options.index === 0) ? 1 : 0;
-            let siblingStart = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.start : '' );
-            let siblingEnd = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.end : '' );
+            let siblingStart = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.start : "");
+            let siblingEnd = (this.$root.siblingCompany ? this.$root.siblingCompany[this.options.day].time.end : "");
             if (options.daySchedule.active) {
                 if (!this.options.start) {
                     let timeStart = this.$root.parseTime(this.options.daySchedule.time.start);
@@ -50,7 +50,7 @@ Vue.component('timepicker', {
                         timeStart = {
                             hours: 7,
                             minutes: 0
-                        }
+                        };
                     }
                     if (siblingStart && siblingEnd) {
                         this.picker.set({
@@ -62,12 +62,12 @@ Vue.component('timepicker', {
                                 }
                             ],
                             interval: this.interval
-                        })
+                        });
                     } else {
                         this.picker.set({
                             min: [timeStart.hours, timeStart.minutes],
                             interval: this.interval
-                        })
+                        });
                     }
                 } else {
                     let timeEnd = this.$root.parseTime(this.options.daySchedule.time.end);
@@ -75,7 +75,7 @@ Vue.component('timepicker', {
                         timeEnd = {
                             hours: 20,
                             minutes: 0
-                        }
+                        };
                     }
                     if (siblingStart && siblingEnd) {
                         this.picker.set({
@@ -97,9 +97,9 @@ Vue.component('timepicker', {
                 }
             } else {
                 if (this.options.start) {
-                    this.options.daySchedule.time.start = ''
+                    this.options.daySchedule.time.start = "";
                 } else {
-                    this.options.daySchedule.time.end = ''
+                    this.options.daySchedule.time.end = "";
                 }
             }
         }
@@ -107,7 +107,7 @@ Vue.component('timepicker', {
 
     methods: {
         applyTimesAsMonday(value) {
-            if (this.options.day === 'monday') {
+            if (this.options.day === "monday") {
                 this.$root.days.forEach(day => {
                     if (this.$root.scheduleSettings[this.options.index][day].active &&
                         !this.$root.scheduleSettings[this.options.index][day].time.start &&
@@ -119,7 +119,7 @@ Vue.component('timepicker', {
                         !this.options.start) {
                         this.$root.scheduleSettings[this.options.index][day].time.end = value;
                     }
-                })
+                });
             }
         }
     },
@@ -127,20 +127,20 @@ Vue.component('timepicker', {
         $(this.$el).stop();
     }
 });
-Vue.component('live-timepicker', {
-    props: ['options', 'value'],
-    template: '<input class="timepicker" type="text" ' +
-    ':class="{\'disable-input\': (!options.daySchedule.active)}"' +
-    'v-bind:value="options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end" ' +
-    ':readonly="!options.daySchedule.active || !options.daySchedule.liveState">',
+Vue.component("live-timepicker", {
+    props: ["options", "value"],
+    template: "<input class=\"timepicker\" type=\"text\" " +
+    ":class=\"{'disable-input': (!options.daySchedule.active)}\"" +
+    "v-bind:value=\"options.start? options.daySchedule.live_recording.start : options.daySchedule.live_recording.end\" " +
+    ":readonly=\"!options.daySchedule.active || !options.daySchedule.liveState\">",
 
     data: function () {
         return {
-            picker: '',
-            minTime: '',
-            maxTime: '',
+            picker: "",
+            minTime: "",
+            maxTime: "",
             interval: 30
-        }
+        };
     },
 
     mounted: function () {
@@ -153,26 +153,26 @@ Vue.component('live-timepicker', {
             this.minTime = {
                 hours: 7,
                 minutes: 0
-            }
+            };
         }
 
         if (!this.maxTime) {
             this.maxTime = {
                 hours: 20,
                 minutes: 0
-            }
+            };
         }
 
         let picker = $(this.$el).pickatime({
-            format: 'HH:i',
+            format: "HH:i",
             min: [this.minTime.hours, this.minTime.minutes],
             max: [this.maxTime.hours, this.maxTime.minutes],
             interval: 30,
-            clear: ''
-        }).val(this.value).trigger('change').on('change', function () {
-            vm.$emit('input', this.value)
+            clear: ""
+        }).val(this.value).trigger("change").on("change", function () {
+            vm.$emit("input", this.value);
         });
-        this.picker = picker.pickatime('picker');
+        this.picker = picker.pickatime("picker");
     },
     watch: {
         value: function (value) {
@@ -187,22 +187,22 @@ Vue.component('live-timepicker', {
             this.maxTime = this.$root.parseTime(options.daySchedule.time.end);
             let nowVal = this.$root.parseTime(this.value);
             if (this.$root.compareScheduleTimes(this.minTime, nowVal)) {
-                this.value = options.daySchedule.time.start
+                this.value = options.daySchedule.time.start;
             }
             if (this.$root.compareScheduleTimes(nowVal, this.maxTime)) {
-                this.value = options.daySchedule.time.end
+                this.value = options.daySchedule.time.end;
             }
             if (!this.minTime) {
                 this.minTime = {
                     hours: 7,
                     minutes: 0
-                }
+                };
             }
             if (!this.maxTime) {
                 this.maxTime = {
                     hours: 20,
                     minutes: 0
-                }
+                };
             }
 
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
@@ -215,65 +215,65 @@ Vue.component('live-timepicker', {
                 min: [this.minTime.hours, this.minTime.minutes],
                 max: [this.maxTime.hours, this.maxTime.minutes],
                 interval: this.interval
-            })
+            });
         }
     },
     destroyed: function () {
         this.picker.stop();
     }
 });
-Vue.component('lunch-timepicker', {
-    props: ['options', 'value', 'lunchState'],
-    template: '<input class="timepicker" :class="{\'disable-input\': !options.schedule.lunchState}" ' +
-    ':readonly="!options.schedule.lunchState" ' + ':value="(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? ' +
-    '(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : \'\'">',
+Vue.component("lunch-timepicker", {
+    props: ["options", "value", "lunchState"],
+    template: "<input class=\"timepicker\" :class=\"{'disable-input': !options.schedule.lunchState}\" " +
+    ":readonly=\"!options.schedule.lunchState\" " + ":value=\"(options.schedule.lunch_settings && options.schedule.lunch_settings.start) ? " +
+    "(options.start ? options.schedule.lunch_settings.start : options.schedule.lunch_settings.end) : ''\">",
 
     data: function () {
         return {
             interval: 10,
-            picker: ''
-        }
+            picker: ""
+        };
     },
 
     mounted: function () {
         let vm = this;
         let picker = $(this.$el).pickatime({
-            format: 'HH:i',
+            format: "HH:i",
             min: [10, 0],
             max: [16, 0],
             interval: vm.interval,
-            clear: ''
-        }).val(this.value).trigger('change').on('change', function () {
-            vm.$emit('input', this.value)
+            clear: ""
+        }).val(this.value).trigger("change").on("change", function () {
+            vm.$emit("input", this.value);
         });
-        this.picker = picker.pickatime('picker');
+        this.picker = picker.pickatime("picker");
     },
     watch: {
         options: function (options) {
             if (!options.schedule.lunchState) {
-                options.schedule.lunch_settings.start = '';
-                options.schedule.lunch_settings.end = '';
+                options.schedule.lunch_settings.start = "";
+                options.schedule.lunch_settings.end = "";
                 return;
             }
             let dayTime = options.schedule.time;
             let lunchTime = options.schedule.lunch_settings;
             let time = {
-                start: lunchTime.start || dayTime.start || '10:00',
-                end: lunchTime.end || dayTime.end || '16:00'
+                start: lunchTime.start || dayTime.start || "10:00",
+                end: lunchTime.end || dayTime.end || "16:00"
             };
             let startTime = {hours: +time.start.split(":")[0], minutes: +time.start.split(":")[1]};
             let endTime = {hours: +time.end.split(":")[0], minutes: +time.end.split(":")[1]};
-            this.picker.set({ enable: true });
+            this.picker.set({enable: true});
             if (options.start) {
                 this.picker.set({
                     min: [+dayTime.start.split(":")[0], +dayTime.start.split(":")[1]],
                     max: [endTime.hours, endTime.minutes]
-                })
+                });
             } else {
                 this.picker.set({
                     min: [startTime.hours, startTime.minutes],
                     max: [+dayTime.end.split(":")[0], +dayTime.end.split(":")[1]]
-                })
+                });
             }
         }
     },
@@ -283,13 +283,13 @@ Vue.component('lunch-timepicker', {
 });
 // Vue.use(VueSocketio, 'url here');
 let app = new Vue({
-    el: '#app',
+    el: "#app",
     data: {
-        days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-        localeDays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-        editorDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-        editorLocaleDays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-        intervals: ['30', '10', '15', '20', '40', '1:00', '1:20'],
+        days: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+        localeDays: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        editorDays: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        editorLocaleDays: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
+        intervals: ["30", "10", "15", "20", "40", "1:00", "1:20"],
         dayTime: {},
         schedule: {},
         scheduleSettings: [],
@@ -300,23 +300,28 @@ let app = new Vue({
         record: {},
         reservations: null,
         siblingCompany: null,
-        testTime: '',
+        testTime: "",
         mainArray: [],
-        _masterSlug: '',
-        _masterUser: '',
-        _csrfToken: '',
-        _authToken: '',
+        _masterSlug: "",
+        _masterUser: "",
+        _csrfToken: "",
+        _authToken: "",
         range: {
             start: new Date().setHours(0, 0, 0, 0),
             end: new Date(new Date().setDate(new Date().getDate() + 30)).setHours(0, 0, 0, 0),
-            current: ''
+            current: ""
         },
         lunchTime: [],
         companies: [],
-        companiesForClass: []
+        companiesForClass: [],
+        notificationPermissions: false,
+        initialSocketDataLoaded: false
     },
 
-    mounted() {},
+    mounted() {
+        this.checkNotificationPermissions();
+        this.subscribeToNewOrders();
+    },
 
     methods: {
         // calendar methods
@@ -326,15 +331,15 @@ let app = new Vue({
             this._masterUser = val;
             this._csrfToken = csrfToken;
             this._authToken = authToken;
-            Vue.http.headers.common['Authorization'] = 'Token ' + this._authToken;
+            Vue.http.headers.common["Authorization"] = "Token " + this._authToken;
             companies = companies.filter(company => {
-                return typeof company === 'object';
+                return typeof company === "object";
             });
             this.companies = companies;
             this.getMasterSchedule();
         },
         getMasterSchedule() {
-            this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
+            this.$http.get("/api/schedule-setting/" + this._masterSlug).then(response => {
                 // filter only for one company added to this.companies from response, another goes to sibling company
                 // next we have to make object from time string (8:00-10:00)
                 this.siblingCompany = response.body.find(x => {
@@ -342,15 +347,15 @@ let app = new Vue({
                 });
                 if (this.siblingCompany) {
                     this.days.forEach(day => {
-                        this.getWorkInterval(this.siblingCompany[day], 'time');
+                        this.getWorkInterval(this.siblingCompany[day], "time");
                     });
                 }
                 this.schedule = response.body.filter(x => {
                     return x.company === companies[0].id;
                 });
                 if (this.schedule.length > 0) {
-                    document.querySelector('#prev-week').style.display = 'block';
-                    document.querySelector('#next-week').style.display = 'block';
+                    document.querySelector("#prev-week").style.display = "block";
+                    document.querySelector("#next-week").style.display = "block";
                 }
                 this.schedule.forEach(schedule => {
                     this.companies.forEach(company => {
@@ -364,31 +369,31 @@ let app = new Vue({
                     });
                     if (companies.length === 0) {
                         this.schedule.forEach(schedule => {
-                            schedule.major = true
+                            schedule.major = true;
                         });
                     }
                 });
                 this.getMasterOrders();
             }, error => {
                 console.error(error);
-            })
+            });
         },
         getMasterOrders() {
-            this.$http.get('/api/reservation/' + this._masterSlug).then(response => {
+            this.$http.get("/api/reservation/" + this._masterSlug).then(response => {
                 this.reservations = response.body;
                 this.doCorrectDateInOrders();
                 this.fillRange(this.range.start, new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period));
                 this.toggleLocalLoader(false);
             }, error => {
                 console.error(error);
-            })
+            });
         },
         getUserOrders() {
-            this.$http.get('/api/user/reservations').then(response => {
+            this.$http.get("/api/user/reservations").then(response => {
                 console.log(response);
             }, error => {
                 console.log(error);
-            })
+            });
         },
         fillRange(start, end) {
             this.mainArray = [];
@@ -396,11 +401,11 @@ let app = new Vue({
             let now = new Date(start);
             while (now <= end) {
                 this.schedule.forEach(schedule => {
-                    if (schedule[this.days[now.getDay()]] && (typeof schedule[this.days[now.getDay()]].time === 'object'
+                    if (schedule[this.days[now.getDay()]] && (typeof schedule[this.days[now.getDay()]].time === "object"
                             || schedule[this.days[now.getDay()]].time.length > 3)) {
                         let daySchedule = schedule[this.days[now.getDay()]];
-                        if (typeof daySchedule.interval !== 'object') {
-                            this.getWorkInterval(daySchedule, 'interval');
+                        if (typeof daySchedule.interval !== "object") {
+                            this.getWorkInterval(daySchedule, "interval");
                         }
                         this.addDatesToArray(new Date(now), daySchedule, schedule.company);
                         let result = this.checkIfInMainArrayDateExists(now);
@@ -415,7 +420,7 @@ let app = new Vue({
                         if (result.status) {
                             // check if holiday already added to array (need to check if holiday is first in array)
                             if (this.mainArray[result.index].length > 1) {
-                                this.mainArray[result.index].times.push({time: new Date(now), status: 'holiday'});
+                                this.mainArray[result.index].times.push({time: new Date(now), status: "holiday"});
                             }
                         } else {
                             this.mainArray.push({
@@ -423,10 +428,10 @@ let app = new Vue({
                                 times: [
                                     {
                                         time: new Date(now),
-                                        status: 'holiday'
+                                        status: "holiday"
                                     }
                                 ]
-                            })
+                            });
                         }
                     }
                 });
@@ -435,13 +440,13 @@ let app = new Vue({
             // when dates were added from different schedules, it's needed to sort it all
             this.sortTimesInMainArray();
         },
-        calculateLiveTimes(time, interval){
-            let timeInterval = (interval.hours > 0) ? ((60*interval.hours) + interval.minutes) : interval.minutes;
+        calculateLiveTimes(time, interval) {
+            let timeInterval = (interval.hours > 0) ? ((60 * interval.hours) + interval.minutes) : interval.minutes;
             let counter = 0;
             let start = new Date(time.start);
             let end = new Date(time.end);
             while (new Date(start) < new Date(end)) {
-                counter ++;
+                counter++;
                 start.setMinutes(start.getMinutes() + timeInterval);
             }
             return counter;
@@ -452,26 +457,26 @@ let app = new Vue({
                 date: new Date(now)
             };
             let times = [];
-            daySchedule = this.getWorkInterval(daySchedule, 'time');
+            daySchedule = this.getWorkInterval(daySchedule, "time");
             oneDay.date.setHours(daySchedule.time.start.hours, daySchedule.time.start.minutes, 0, 0);
             while (oneDay.date < oneDay.initialDate.setHours(daySchedule.time.end.hours, daySchedule.time.end.minutes, 0, 0)) {
                 if (daySchedule.lunch_settings) {
-                    daySchedule = this.getWorkInterval(daySchedule, 'lunch_settings');
-                    let time = this.doSetIntervalLimit(daySchedule, oneDay, 'lunch_settings');
+                    daySchedule = this.getWorkInterval(daySchedule, "lunch_settings");
+                    let time = this.doSetIntervalLimit(daySchedule, oneDay, "lunch_settings");
                     if (time) {
                         time.company = companyId;
-                        time.status = 'lunch';
+                        time.status = "lunch";
                         times.push(time);
                         oneDay.date.setHours(daySchedule.lunch_settings.end.hours, daySchedule.lunch_settings.end.minutes, 0, 0);
                         continue;
                     }
                 }
                 if (daySchedule.live_recording) {
-                    daySchedule = this.getWorkInterval(daySchedule, 'live_recording');
-                    let time = this.doSetIntervalLimit(daySchedule, oneDay, 'live_recording');
+                    daySchedule = this.getWorkInterval(daySchedule, "live_recording");
+                    let time = this.doSetIntervalLimit(daySchedule, oneDay, "live_recording");
                     if (time) {
                         time.company = companyId;
-                        time.status = 'live';
+                        time.status = "live";
                         time.liveCounter = this.calculateLiveTimes(time.time, daySchedule.interval);
                         times.push(time);
                         oneDay.date.setHours(daySchedule.live_recording.end.hours, daySchedule.live_recording.end.minutes, 0, 0);
@@ -483,12 +488,12 @@ let app = new Vue({
                     let record = this.orderFreeRecords(oneDay.date);
                     if (record) {
                         record.company = companyId;
-                        record.status = 'history';
+                        record.status = "history";
                         times.push(record);
                     } else {
                         times.push({
                             time: new Date(oneDay.date),
-                            status: 'history'
+                            status: "history"
                         });
                     }
                     oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
@@ -506,7 +511,7 @@ let app = new Vue({
                 times.push({
                     company: companyId,
                     time: new Date(oneDay.date),
-                    status: 'free'
+                    status: "free"
                 });
                 oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
                 oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
@@ -516,40 +521,40 @@ let app = new Vue({
         doCorrectDateInOrders() {
             this.reservations.map(order => {
                 let date = {
-                    date: order.date_time_reservation.split(' ')[0].split('.'),
-                    time: order.date_time_reservation.split(' ')[1].split(':'),
-                    jsDate: ''
+                    date: order.date_time_reservation.split(" ")[0].split("."),
+                    time: order.date_time_reservation.split(" ")[1].split(":"),
+                    jsDate: ""
                 };
-                date.jsDate = new Date('' + date.date[1] + '/' + date.date[0] + '/' + date.date[2]).setHours(parseInt(date.time[0]), parseInt(date.time[1]), 0, 0);
+                date.jsDate = new Date("" + date.date[1] + "/" + date.date[0] + "/" + date.date[2]).setHours(parseInt(date.time[0]), parseInt(date.time[1]), 0, 0);
                 order.date_time_reservation = new Date(date.jsDate);
-            })
+            });
         },
         getWorkInterval(item, key) {
-            if (typeof item[key] !== 'object') {
-                if (item[key].indexOf('-') !== -1) {
-                    let timeArr = item[key].split('-');
+            if (typeof item[key] !== "object") {
+                if (item[key].indexOf("-") !== -1) {
+                    let timeArr = item[key].split("-");
                     item[key] = {
                         start: {
-                            hours: parseInt(timeArr[0].split(':')[0]),
-                            minutes: parseInt(timeArr[0].split(':')[1])
+                            hours: parseInt(timeArr[0].split(":")[0]),
+                            minutes: parseInt(timeArr[0].split(":")[1])
                         },
                         end: {
-                            hours: parseInt(timeArr[1].split(':')[0]),
-                            minutes: parseInt(timeArr[1].split(':')[1])
+                            hours: parseInt(timeArr[1].split(":")[0]),
+                            minutes: parseInt(timeArr[1].split(":")[1])
                         }
-                    }
+                    };
                 } else {
-                    if (item[key].indexOf(':') !== -1) {
-                        let time = item.interval.split(':');
+                    if (item[key].indexOf(":") !== -1) {
+                        let time = item.interval.split(":");
                         item[key] = {
                             hours: parseInt(time[0]),
                             minutes: parseInt(time[1])
-                        }
+                        };
                     } else {
                         item[key] = {
                             hours: 0,
                             minutes: parseInt(item[key])
-                        }
+                        };
                     }
                 }
             }
@@ -572,7 +577,7 @@ let app = new Vue({
         orderFreeRecords(dateToCheck) {
             let record = null;
             this.reservations.forEach(reservation => {
-                if (reservation.date_time_reservation.getTime() === dateToCheck.getTime() && reservation.status !== 'refused') {
+                if (reservation.date_time_reservation.getTime() === dateToCheck.getTime() && reservation.status !== "refused") {
                     record = {
                         time: reservation.date_time_reservation,
                         status: reservation.status,
@@ -586,22 +591,22 @@ let app = new Vue({
             return record;
         },
         prettyDate(date, param) {
-            let res = '';
+            let res = "";
             date = new Date(date);
-            if (param === 'date') {
-                res += date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+            if (param === "date") {
+                res += date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                 return res;
             }
-            if (param === 'time') {
-                res += (date.getHours() > 9 ? date.getHours() : '0' + date.getHours()) + ':' +
-                    (date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes());
+            if (param === "time") {
+                res += (date.getHours() > 9 ? date.getHours() : "0" + date.getHours()) + ":" +
+                    (date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes());
                 return res;
             }
         },
         prettyDateRange(dates, param) {
             let res1 = this.prettyDate(dates.start, param);
             let res2 = this.prettyDate(dates.end, param);
-            return '' + res1 + ' - ' + res2;
+            return "" + res1 + " - " + res2;
         },
         setOrderStatusInArray(time) {
             this.mainArray.forEach(day => {
@@ -610,7 +615,7 @@ let app = new Vue({
                         if (timeEl.time instanceof Date && timeEl.time.getTime() === time.time.getTime()) {
                             timeEl = time;
                         }
-                    })
+                    });
                 }
             });
             this.reservations.forEach(reservation => {
@@ -618,93 +623,93 @@ let app = new Vue({
                     time.date_time_reservation = time.time;
                     this.reservations.splice(this.reservations.indexOf(reservation), 1, time);
                 }
-            })
+            });
         },
         toggleOrderPopup(time) {
-            if (time.status === 'free' || time.status === 'refused') {
+            if (time.status === "free" || time.status === "refused") {
                 this.record = time;
-                document.querySelector('.blur').style.filter = 'blur(5px)';
-                document.querySelector('.modal-calendar-admin').style.display = 'block';
-                document.querySelector('.modal-calendar-admin .title-time').innerHTML = 'Запись на ' + this.prettyDate(time.time, 'date') + ' ' + this.prettyDate(time.time, 'time');
-                document.querySelector('#full_name_admin').focus();
+                document.querySelector(".blur").style.filter = "blur(5px)";
+                document.querySelector(".modal-calendar-admin").style.display = "block";
+                document.querySelector(".modal-calendar-admin .title-time").innerHTML = "Запись на " + this.prettyDate(time.time, "date") + " " + this.prettyDate(time.time, "time");
+                document.querySelector("#full_name_admin").focus();
             }
             if (!this._masterUser) {
-                if (time.status === 'armored') {
-                    $('#armored-modal').modal();
+                if (time.status === "armored") {
+                    $("#armored-modal").modal();
                 }
             }
         },
-        renderPopupError(element, input, message, clearAfterInterval){
+        renderPopupError(element, input, message, clearAfterInterval) {
             let errorContainer = document.querySelector(element);
             errorContainer.innerHTML = message;
-            errorContainer.style.display = 'block';
+            errorContainer.style.display = "block";
             let inputElement = null;
             if (input) {
                 inputElement = document.querySelector(input);
-                inputElement.classList.add('error');
+                inputElement.classList.add("error");
             }
             if (clearAfterInterval) {
                 setTimeout(() => {
-                    inputElement.classList.remove('error');
-                    errorContainer.innerHTML = '';
-                    errorContainer.style.display = '';
+                    inputElement.classList.remove("error");
+                    errorContainer.innerHTML = "";
+                    errorContainer.style.display = "";
                 }, 3000);
             }
         },
-        renderPopupSuccess(element, message, clearAfterInterval){
+        renderPopupSuccess(element, message, clearAfterInterval) {
             let successContainer = document.querySelector(element);
-            successContainer.style.display = 'block';
+            successContainer.style.display = "block";
             successContainer.innerHTML = message;
             if (clearAfterInterval) {
                 setTimeout(() => {
-                    successContainer.style.display = '';
-                    successContainer.innerHTML = ''
+                    successContainer.style.display = "";
+                    successContainer.innerHTML = "";
                 }, 3000);
             }
         },
-        prepareOrderParams(){
-            this.record.name = document.querySelector('#full_name_admin').value;
-            this.record.phone = document.querySelector('#phone_admin').value;
-            let url = '/api/reservation/add/' + this._masterSlug + '/';
+        prepareOrderParams() {
+            this.record.name = document.querySelector("#full_name_admin").value;
+            this.record.phone = document.querySelector("#phone_admin").value;
+            let url = "/api/reservation/add/" + this._masterSlug + "/";
             let body = {
                 full_name: this.record.name,
                 phone: this.record.phone,
-                date_time_reservation: '' + this.record.time.getFullYear() + '-' + (this.record.time.getMonth() + 1) +
-                '-' + this.record.time.getDate() +
-                ' ' + (this.record.time.getHours() > 9 ? this.record.time.getHours() : '0' + this.record.time.getHours()) +
-                ':' + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : '0' + this.record.time.getMinutes()),
-                status: 'armored'
+                date_time_reservation: "" + this.record.time.getFullYear() + "-" + (this.record.time.getMonth() + 1) +
+                "-" + this.record.time.getDate() +
+                " " + (this.record.time.getHours() > 9 ? this.record.time.getHours() : "0" + this.record.time.getHours()) +
+                ":" + (this.record.time.getMinutes() > 9 ? this.record.time.getMinutes() : "0" + this.record.time.getMinutes()),
+                status: "armored"
             };
             if (this._masterUser) {
-                body.status = 'confirmed';
+                body.status = "confirmed";
             }
             let options = {
                 headers: {
-                    'X-CSRFToken': this._csrfToken
+                    "X-CSRFToken": this._csrfToken
                 }
             };
             return {
                 options: options,
                 body: body,
                 url: url
-            }
+            };
         },
         makeOrder(keypressState, event) {
             if (keypressState) {
                 if (event.keyCode !== 13) return false;
             }
-            if (!document.querySelector('#phone_admin').value) {
-                renderPopupError('.error', '#phone_admin', '<div>Поле телефон введено неправильно</div>', true);
+            if (!document.querySelector("#phone_admin").value) {
+                renderPopupError(".error", "#phone_admin", "<div>Поле телефон введено неправильно</div>", true);
                 return;
             }
 
             let params = this.prepareOrderParams();
             this.$http.post(params.url, params.body, params.options).then(response => {
-                if (response.body.status !== 'error') {
+                if (response.body.status !== "error") {
                     this.renderPopupSuccess(".modal-calendar-admin .success", "Заявка успешно оформлена, ожидайте подтверждение специалиста", false);
-                    this.record.status = 'armored';
+                    this.record.status = "armored";
                     if (this._masterUser) {
-                        this.record.status = 'confirmed';
+                        this.record.status = "confirmed";
                         this.renderPopupSuccess(".modal-calendar-admin .success", "Заявка успешно оформлена", false);
                     }
                     this.record.id = response.body.id;
@@ -713,61 +718,61 @@ let app = new Vue({
                     this.reservations.push(this.record);
 
                     setTimeout(() => {
-                        this.cleanOrderPopup()
+                        this.cleanOrderPopup();
                     }, 1500);
 
                 } else {
                     var errorText = document.querySelector(".authorization-text a");
-                    if (errorText && errorText.innerText === 'Авторизация') {
+                    if (errorText && errorText.innerText === "Авторизация") {
                         return;
                     }
-                    this.renderPopupError('.modal-calendar-admin .error', null, '<div class="authorization-text">' + response.body.message + '</div>', false);
-                    document.querySelector('.modal-calendar-admin .error').insertAdjacentHTML('afterend', '' +
-                        '<div class="authorization-text" style="text-align: center">' +
-                        '<a href="/accounts/login">Авторизация</a>' +
-                        '</div>');
+                    this.renderPopupError(".modal-calendar-admin .error", null, "<div class=\"authorization-text\">" + response.body.message + "</div>", false);
+                    document.querySelector(".modal-calendar-admin .error").insertAdjacentHTML("afterend", "" +
+                        "<div class=\"authorization-text\" style=\"text-align: center\">" +
+                        "<a href=\"/accounts/login\">Авторизация</a>" +
+                        "</div>");
                 }
             }, response => {
                 console.error(response);
                 if (response.body.phone) {
-                    this.renderPopupError('.modal-calendar-admin .error', '#phone_admin', '<div>' + response.body.phone + '</div>', true);
+                    this.renderPopupError(".modal-calendar-admin .error", "#phone_admin", "<div>" + response.body.phone + "</div>", true);
                 }
-            })
+            });
         },
         cleanOrderPopup() {
-            document.querySelector('#phone_admin').value = '';
-            document.querySelector('#full_name_admin').value = '';
-            document.querySelector('.modal-calendar-admin').style.display = 'none';
-            document.querySelector('.blur').style.filter = 'none';
-            document.querySelector('.modal-calendar-admin .success').innerHTML = '';
-            document.querySelector('.modal-calendar-admin .success').style.display = '';
-            document.querySelector('.modal-calendar-admin .error').innerHTML = '';
+            document.querySelector("#phone_admin").value = "";
+            document.querySelector("#full_name_admin").value = "";
+            document.querySelector(".modal-calendar-admin").style.display = "none";
+            document.querySelector(".blur").style.filter = "none";
+            document.querySelector(".modal-calendar-admin .success").innerHTML = "";
+            document.querySelector(".modal-calendar-admin .success").style.display = "";
+            document.querySelector(".modal-calendar-admin .error").innerHTML = "";
         },
         setRecordStatus(time, status) {
             if (this._masterUser) {
-                let url = '/api/reservation/status/' + this._masterSlug + '/' + time.id + '/';
+                let url = "/api/reservation/status/" + this._masterSlug + "/" + time.id + "/";
                 let body = {
                     status: status
                 };
                 let options = {
                     headers: {
-                        'X-CSRFToken': this._csrfToken
+                        "X-CSRFToken": this._csrfToken
                     }
                 };
                 this.$http.put(url, body, options).then(response => {
-                    if (response.body.status === 'refused') {
-                        time.status = 'free';
-                        $('#confirm-modal .modal-body').html('Завяка успешно отклонена');
-                        $('#confirm-modal').modal();
+                    if (response.body.status === "refused") {
+                        time.status = "free";
+                        $("#confirm-modal .modal-body").html("Завяка успешно отклонена");
+                        $("#confirm-modal").modal();
                     } else {
-                        time.status = 'confirmed';
-                        $('#confirm-modal .modal-body').html('Завяка успешно одобрена');
-                        $('#confirm-modal').modal();
+                        time.status = "confirmed";
+                        $("#confirm-modal .modal-body").html("Завяка успешно одобрена");
+                        $("#confirm-modal").modal();
                     }
                     this.setOrderStatusInArray(time);
                 }, error => {
                     console.error(error);
-                })
+                });
             }
         },
         moveToNextWeek() {
@@ -801,10 +806,10 @@ let app = new Vue({
                 dateObject = dateObject.date;
             }
             let result = this.mainArray.findIndex(x => {
-                return new Date(x.date.setHours(0, 0, 0, 0)).getTime() === new Date(dateObject).getTime()
+                return new Date(x.date.setHours(0, 0, 0, 0)).getTime() === new Date(dateObject).getTime();
             });
             if (result !== -1) {
-                return {status: true, index: result}
+                return {status: true, index: result};
             } else {
                 return {status: false, index: -1};
             }
@@ -812,7 +817,7 @@ let app = new Vue({
         sortTimesInMainArray() {
             this.mainArray.forEach(item => {
 
-                if (item.times.length > 1 && item.times[0].status === 'holiday') {
+                if (item.times.length > 1 && item.times[0].status === "holiday") {
                     item.times.splice(0, 1);
                 }
 
@@ -828,13 +833,13 @@ let app = new Vue({
                     }
                     return new Date(a.time) - new Date(b.time);
                 });
-            })
+            });
         },
         makeClassFromCompany(time) {
-            let result = '';
+            let result = "";
             this.schedule.forEach((schedule => {
                 if (schedule.company === time.company) {
-                    schedule.major ? result = 'company-1' : result = 'company-0';
+                    schedule.major ? result = "company-1" : result = "company-0";
                 }
             }));
             return result;
@@ -842,20 +847,20 @@ let app = new Vue({
         toggleContent(scheduleState, editorState) {
             this.scheduleState = scheduleState;
             this.editorState = editorState;
-            let prevLink = document.querySelector('#prev-week');
-            let nextLink = document.querySelector('#next-week');
+            let prevLink = document.querySelector("#prev-week");
+            let nextLink = document.querySelector("#next-week");
             if (scheduleState) {
                 if (this.schedule.length > 0) {
-                    setTimeout(()=>{
-                        prevLink.style.display = 'block';
-                        nextLink.style.display = 'block';
+                    setTimeout(() => {
+                        prevLink.style.display = "block";
+                        nextLink.style.display = "block";
                     });
                 }
                 this.getMasterSchedule();
             } else {
-                setTimeout(()=>{
-                    prevLink.style.display = 'none';
-                    nextLink.style.display = 'none';
+                setTimeout(() => {
+                    prevLink.style.display = "none";
+                    nextLink.style.display = "none";
                 });
                 this.getScheduleSettings();
             }
@@ -864,20 +869,20 @@ let app = new Vue({
             this.localLoaderState = status;
         },
         // editor methods
-        returnDisabledDay(scheduleDay){
+        returnDisabledDay(scheduleDay) {
             if (!scheduleDay) {
                 scheduleDay = {
                     time: {
-                        start: '',
-                        end: ''
+                        start: "",
+                        end: ""
                     },
                     live_recording: {
-                        start: '',
-                        end: ''
+                        start: "",
+                        end: ""
                     },
                     lunch_settings: {
-                        start: '',
-                        end: ''
+                        start: "",
+                        end: ""
                     },
                     interval: this.intervals[0],
                     lunchState: false
@@ -887,51 +892,51 @@ let app = new Vue({
             scheduleDay.active = false;
             scheduleDay.lunchState = false;
             scheduleDay.time = {
-                start: '',
-                end: ''
+                start: "",
+                end: ""
             };
             scheduleDay.live_recording = {
-                start: '',
-                end: ''
+                start: "",
+                end: ""
             };
             scheduleDay.lunch_settings = {
-                start: '',
-                end: ''
+                start: "",
+                end: ""
             };
             scheduleDay.interval = this.intervals[0];
             return scheduleDay;
         },
-        returnActiveDay(scheduleDay){
+        returnActiveDay(scheduleDay) {
             scheduleDay.time = {
-                start: scheduleDay.time.split('-')[0],
-                end: scheduleDay.time.split('-')[1],
+                start: scheduleDay.time.split("-")[0],
+                end: scheduleDay.time.split("-")[1],
                 init: scheduleDay.time,
             };
-            if (scheduleDay.live_recording && scheduleDay.live_recording.indexOf('-') !== -1) {
+            if (scheduleDay.live_recording && scheduleDay.live_recording.indexOf("-") !== -1) {
                 scheduleDay.liveState = true;
                 scheduleDay.live_recording = {
                     init: scheduleDay.live_recording,
-                    start: scheduleDay.live_recording.split('-')[0],
-                    end: scheduleDay.live_recording.split('-')[1],
-                }
+                    start: scheduleDay.live_recording.split("-")[0],
+                    end: scheduleDay.live_recording.split("-")[1],
+                };
             } else {
                 scheduleDay.liveState = false;
                 scheduleDay.live_recording = {
-                    start: '',
-                    end: ''
-                }
+                    start: "",
+                    end: ""
+                };
             }
-            if (scheduleDay.lunch_settings && scheduleDay.lunch_settings.indexOf('-') !== -1 && scheduleDay.lunch_settings.length > 3) {
+            if (scheduleDay.lunch_settings && scheduleDay.lunch_settings.indexOf("-") !== -1 && scheduleDay.lunch_settings.length > 3) {
                 scheduleDay.lunch_settings = {
-                    start: scheduleDay.lunch_settings.split('-')[0],
-                    end: scheduleDay.lunch_settings.split('-')[1],
+                    start: scheduleDay.lunch_settings.split("-")[0],
+                    end: scheduleDay.lunch_settings.split("-")[1],
                 };
                 scheduleDay.lunchState = true;
             } else {
                 scheduleDay.lunchState = false;
                 scheduleDay.lunch_settings = {
-                    start: '',
-                    end: ''
+                    start: "",
+                    end: ""
                 };
             }
             return scheduleDay;
@@ -942,27 +947,27 @@ let app = new Vue({
             if (this.schedule.length > 0) {
                 if (this.schedule.length >= this.companies.length) {
                     this.schedule.forEach((schedule, index) => {
-                        let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                        let url = "/api/work_day/" + this._masterSlug + "/" + schedule.id + "/update/";
                         let options = {
                             headers: {
-                                'X-CSRFToken': this._csrfToken
+                                "X-CSRFToken": this._csrfToken
                             }
                         };
                         this.$http.get(url, options).then(
                             response => {
                                 let schedule = response.body;
                                 this.companies.forEach(company => {
-                                    if (typeof company === 'object' && company.id === schedule.company) {
+                                    if (typeof company === "object" && company.id === schedule.company) {
                                         schedule.companyName = company.name;
                                     }
                                 });
                                 schedule.lunch_settings = {
-                                    init: '',
-                                    start: '',
-                                    end: ''
+                                    init: "",
+                                    start: "",
+                                    end: ""
                                 };
                                 this.days.forEach(day => {
-                                    if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                    if (schedule[day] && schedule[day].time && schedule[day].time.indexOf("-") !== -1) {
                                         schedule[day].active = true;
                                     } else {
                                         schedule[day] = this.returnDisabledDay(schedule[day]);
@@ -979,12 +984,12 @@ let app = new Vue({
                                 console.log(error);
                                 this.toggleLocalLoader(false);
                             }
-                        )
+                        );
                     });
                 }
                 else {
                     this.companies.forEach(company => {
-                        if (typeof company === 'object') {
+                        if (typeof company === "object") {
                             let lunchIndex = 0;
                             let schedule = this.schedule.filter((x, index) => {
                                 if (x.company === company.id) {
@@ -993,31 +998,31 @@ let app = new Vue({
                                 }
                             });
                             schedule.lunch_settings = {
-                                start: '',
-                                end: ''
+                                start: "",
+                                end: ""
                             };
                             if (schedule.length > 0) {
                                 schedule = schedule[0];
-                                let url = '/api/work_day/' + this._masterSlug + '/' + schedule.id + '/update/';
+                                let url = "/api/work_day/" + this._masterSlug + "/" + schedule.id + "/update/";
                                 let options = {
                                     headers: {
-                                        'X-CSRFToken': this._csrfToken
+                                        "X-CSRFToken": this._csrfToken
                                     }
                                 };
                                 this.$http.get(url, options).then(
                                     response => {
                                         let schedule = response.body;
                                         this.companies.forEach(company => {
-                                            if (typeof company === 'object' && company.id === schedule.company) {
+                                            if (typeof company === "object" && company.id === schedule.company) {
                                                 schedule.companyName = company.name;
                                             }
                                         });
                                         schedule.lunch_settings = {
-                                            start: '',
-                                            end: ''
+                                            start: "",
+                                            end: ""
                                         };
                                         this.days.forEach(day => {
-                                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf('-') !== -1) {
+                                            if (schedule[day] && schedule[day].time && schedule[day].time.indexOf("-") !== -1) {
                                                 schedule[day].active = true;
                                                 schedule[day].lunchState = true;
                                             } else {
@@ -1035,52 +1040,52 @@ let app = new Vue({
                                         console.log(error);
                                         this.toggleLocalLoader(false);
                                     }
-                                )
+                                );
                             }
                             else {
                                 let dayObj = {};
                                 this.days.forEach(day => {
                                     dayObj[day] = this.returnDisabledDay(dayObj[day]);
-                                    dayObj[day].active = (day !== 'sunday');
+                                    dayObj[day].active = (day !== "sunday");
                                 });
                                 dayObj.company = company.id;
                                 dayObj.companyName = company.name;
                                 dayObj.lunch_settings = {
-                                    start: '',
-                                    end: ''
+                                    start: "",
+                                    end: ""
                                 };
                                 this.scheduleSettings.push(dayObj);
                                 this.toggleLocalLoader(false);
                             }
                         }
-                    })
+                    });
                 }
             } else {
-                if (this.companies.length > 0 && this.companies.some(comp => typeof comp === 'object')) {
+                if (this.companies.length > 0 && this.companies.some(comp => typeof comp === "object")) {
                     this.companies.forEach(company => {
                         let dayObj = {};
                         this.days.forEach(day => {
                             dayObj[day] = this.returnDisabledDay(dayObj[day]);
-                            dayObj[day].active = (day !== 'sunday');
+                            dayObj[day].active = (day !== "sunday");
                         });
                         dayObj.company = company.id;
                         dayObj.companyName = company.name;
                         dayObj.lunch_settings = {
-                            start: '',
-                            end: ''
+                            start: "",
+                            end: ""
                         };
                         this.scheduleSettings.push(dayObj);
                         this.toggleLocalLoader(false);
-                    })
+                    });
                 } else {
                     let dayObj = {};
                     this.days.forEach(day => {
                         dayObj[day] = this.returnDisabledDay(dayObj[day]);
-                        dayObj[day].active = (day !== 'sunday');
+                        dayObj[day].active = (day !== "sunday");
                     });
                     dayObj.lunch_settings = {
-                        start: '',
-                        end: ''
+                        start: "",
+                        end: ""
                     };
                     dayObj.company = null;
                     this.scheduleSettings.push(dayObj);
@@ -1089,12 +1094,12 @@ let app = new Vue({
             }
         },
         parseTime(val) {
-            if (val && val.indexOf(':') !== -1) {
+            if (val && val.indexOf(":") !== -1) {
                 return {
                     init: val,
-                    hours: parseInt(val.split(':')[0]),
-                    minutes: parseInt(val.split(':')[1])
-                }
+                    hours: parseInt(val.split(":")[0]),
+                    minutes: parseInt(val.split(":")[1])
+                };
             }
         },
         compareScheduleTimes(time1, time2) {
@@ -1115,18 +1120,18 @@ let app = new Vue({
             let schedule = JSON.parse(JSON.stringify(scheduleSettings[index]));
             this.days.forEach(day => {
                 if (schedule[day] && schedule[day].active) {
-                    schedule[day].time = schedule[day].time.start + '-' + schedule[day].time.end;
+                    schedule[day].time = schedule[day].time.start + "-" + schedule[day].time.end;
                     if (schedule[day].liveState) {
-                        schedule[day].live_recording = schedule[day].live_recording.start + '-' + schedule[day].live_recording.end;
+                        schedule[day].live_recording = schedule[day].live_recording.start + "-" + schedule[day].live_recording.end;
                     } else {
-                        schedule[day].live_recording = '';
+                        schedule[day].live_recording = "";
                     }
-                    schedule[day].lunch_settings = schedule[day].lunch_settings.start + '-' + schedule[day].lunch_settings.end;
+                    schedule[day].lunch_settings = schedule[day].lunch_settings.start + "-" + schedule[day].lunch_settings.end;
                 } else {
-                    schedule[day].time = '';
-                    schedule[day].lunch_settings = '';
-                    schedule[day].interval = '';
-                    schedule[day].live_recording = '';
+                    schedule[day].time = "";
+                    schedule[day].lunch_settings = "";
+                    schedule[day].interval = "";
+                    schedule[day].live_recording = "";
                     schedule[day].active = false;
                 }
             });
@@ -1140,36 +1145,36 @@ let app = new Vue({
                 let body = schedule;
                 let options = {
                     headers: {
-                        'X-CSRFToken': this._csrfToken
+                        "X-CSRFToken": this._csrfToken
                     }
                 };
                 this.$http.put(url, body, options).then(response => {
-                    alert('Вы успешно обновили расписание');
+                    alert("Вы успешно обновили расписание");
                 }, error => {
                     console.error(error);
-                })
+                });
             } else {
                 let url = `/api/work_day/${this._masterSlug}/add/`;
                 let body = schedule;
                 let options = {
                     headers: {
-                        'X-CSRFToken': this._csrfToken
+                        "X-CSRFToken": this._csrfToken
                     }
                 };
                 this.$http.post(url, body, options).then(response => {
-                    alert('Вы успешно создали расписание');
+                    alert("Вы успешно создали расписание");
                     this.updateSchduleAfterEditing();
                 }, error => {
                     console.error(error);
-                })
+                });
             }
         },
         updateLunchTime(index, val, state) {
             if (!this.scheduleSettings[index].lunch_settings.start) {
                 this.scheduleSettings[index].lunch_settings = {
-                    start: '',
-                    end: ''
-                }
+                    start: "",
+                    end: ""
+                };
             }
             if (state) {
                 this.scheduleSettings[index].lunch_settings.start = val;
@@ -1178,12 +1183,87 @@ let app = new Vue({
             }
         },
         updateSchduleAfterEditing() {
-            this.$http.get('/api/schedule-setting/' + this._masterSlug).then(response => {
+            this.$http.get("/api/schedule-setting/" + this._masterSlug).then(response => {
                 this.schedule = response.body;
                 this.getScheduleSettings();
             }, error => {
                 console.error(error);
-            })
+            });
+        },
+        // firebase methods
+        subscribeToNewOrders() {
+            var newOrders = firebase.database().ref("reservation/new");
+            newOrders.on("child_added", (response) => {
+                if (this.initialSocketDataLoaded) {
+                    var order = response.val();
+                    if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
+                        this.addSocketOrderToArray(order);
+                        this.showNotification("Новая заявка", order.message);
+                    }
+                }
+            });
+            // trigger changes only for incremental children, not for initial data
+            newOrders.once("value", () => {
+                this.initialSocketDataLoaded = true;
+            });
+        },
+        checkNotificationPermissions() {
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+                return;
+            }
+            if (Notification.permission !== "denied") {
+                Notification.requestPermission((permission) => {
+                    if (permission === "granted") {
+                        this.notificationPermissions = true;
+                    } else {
+                        this.notificationPermissions = false;
+                    }
+                });
+            }
+        },
+        showNotification(title, body) {
+            var notification = new Notification(title, {
+                icon: window.location.origin + "/static/img/logo.png",
+                body: body,
+            });
+        },
+        rebuidSocketOrder(order){
+            return {
+                name: order.full_name,
+                status: order.status,
+                time: new Date(order.date_time),
+                phone: order.phone,
+                id: order.id,
+                date_time_reservation: new Date(order.date_time)
+            }
+        },
+        addSocketOrderToArray(order) {
+            order = this.rebuidSocketOrder(order);
+            // add order to reservations array
+            this.reservations.push(order);
+            // add order immediately if user now see proper time
+            // search for week day
+            for (var i = 0; i < this.mainArray.length; i++) {
+                if (order.time.getDay() === this.mainArray[i].date.getDay()) {
+                    // search for proper time in week day
+                    for (var j = 0; j < this.mainArray[i].times.length; j++) {
+                        var cell = this.mainArray[i].times[j];
+                        if (order.time.getTime() === cell.time.getTime()) {
+                            console.log("found right time");
+                            // check if status is suitable for changes
+                            if (order.status !== cell.status && !cell.status.match(/history/)) {
+                                cell.status = order.status;
+                                cell.name = order.name;
+                                cell.id = order.id;
+                                cell.phone = order.phone;
+                                cell.time = order.time;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 });
