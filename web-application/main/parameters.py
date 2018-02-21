@@ -53,3 +53,8 @@ class Messages:
         employe_warning_message = _('Администратор не существует')
         delete_employe_specialist_success = _('Специалист успешно уволен!')
         employe_specialist_warning_message = _('Специалист не существует')
+
+    class Firebase:
+        new_reservation = _('Пользователь {user} записался на прием. Дата/время: {date}/{time}')
+        reservation_confirmed = _('Запрос на прием у специалиста {specialist} {date} в {time} был принят.')
+        reservation_refused = _('Запрос на прием у специалиста {specialist} {date} в {time} был отклонен.')
