@@ -197,3 +197,16 @@ class CertificatesSerializer(serializers.ModelSerializer):
             return obj.certificate.url
         else:
             pass
+
+
+class CreateMasterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Specialist
+        fields = ()
+
+
+class EditMasterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Specialist

@@ -43,6 +43,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
             })
 
         data = {
+            'id': instance.pk,
             'specialist_slug': specialist.slug,
             'user_id': user.pk,
             'full_name': instance.full_name,

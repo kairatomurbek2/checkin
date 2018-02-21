@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer, CertificatesSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, EditMasterSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
@@ -241,3 +241,13 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
     def get_queryset(self):
         return Certificate.objects.filter(company__slug=self.kwargs['company__slug'])
+
+
+class CreateMasterViewApi(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = CreateMasterSerializer
+
+
+class EditMasterViewApi(generics.UpdateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = EditMasterSerializer
