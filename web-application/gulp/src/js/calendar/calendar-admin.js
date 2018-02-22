@@ -314,13 +314,16 @@ let app = new Vue({
         lunchTime: [],
         companies: [],
         companiesForClass: [],
+        // firebase variables
         notificationPermissions: false,
-        initialSocketDataLoaded: false
+        initialSocketDataLoaded: false,
+        initialSocketDataChangeLoaded: false
     },
 
     mounted() {
         this.checkNotificationPermissions();
         this.subscribeToNewOrders();
+        this.subscribeToChangedOrders();
     },
 
     methods: {
@@ -1207,6 +1210,21 @@ let app = new Vue({
                 this.initialSocketDataLoaded = true;
             });
         },
+        subscribeToChangedOrders() {
+            var changedOrders = firebase.database().ref("reservation/changed");
+            changedOrders.on("child_added", (response) => {
+                if (this.initialSocketDataChangeLoaded) {
+                    var order = response.val();
+                    if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
+                        this.updateSocketOrderInArray(order);
+                        this.showNotification("Измененная заявка", order.message);
+                    }
+                }
+            });
+            changedOrders.once("value", () => {
+                this.initialSocketDataChangeLoaded = true;
+            });
+        },
         checkNotificationPermissions() {
             if (!("Notification" in window)) {
                 alert("This browser does not support desktop notification");
@@ -1228,7 +1246,7 @@ let app = new Vue({
                 body: body,
             });
         },
-        rebuidSocketOrder(order){
+        rebuidSocketOrder(order) {
             return {
                 name: order.full_name,
                 status: order.status,
@@ -1236,7 +1254,7 @@ let app = new Vue({
                 phone: order.phone,
                 id: order.id,
                 date_time_reservation: new Date(order.date_time)
-            }
+            };
         },
         addSocketOrderToArray(order) {
             order = this.rebuidSocketOrder(order);
@@ -1250,7 +1268,6 @@ let app = new Vue({
                     for (var j = 0; j < this.mainArray[i].times.length; j++) {
                         var cell = this.mainArray[i].times[j];
                         if (order.time.getTime() === cell.time.getTime()) {
-                            console.log("found right time");
                             // check if status is suitable for changes
                             if (order.status !== cell.status && !cell.status.match(/history/)) {
                                 cell.status = order.status;
@@ -1264,7 +1281,45 @@ let app = new Vue({
                     }
                 }
             }
+        },
+        updateSocketOrderInArray(order) {
+            order = this.rebuidSocketOrder(order);
+            // update reservation list
+            this.reservations.map(reservation => {
+                if (reservation.id === order.id) {
+                    return reservation = JSON.parse(JSON.stringify(order));
+                }
+            });
+            // add order immediately if user now see proper time
+            // search for week day
+            for (var i = 0; i < this.mainArray.length; i++) {
+                if (order.time.getDay() === this.mainArray[i].date.getDay()) {
+                    // search for proper time in week day
+                    for (var j = 0; j < this.mainArray[i].times.length; j++) {
+                        var cell = this.mainArray[i].times[j];
+                        if (order.time.getTime() === cell.time.getTime()) {
+                            // check if status is suitable for changes
+                            if (order.status === "refused") {
+                                cell.status = "free";
+                                cell.name = undefined;
+                                cell.id = undefined;
+                                cell.phone = undefined;
+                                return;
+                            }
+                            if (order.status !== cell.status && !cell.status.match(/history/)) {
+                                cell.status = order.status;
+                                cell.name = order.name;
+                                cell.id = order.id;
+                                cell.phone = order.phone;
+                                cell.time = order.time;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     }
 });
 

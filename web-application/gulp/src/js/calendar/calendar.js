@@ -310,8 +310,6 @@ var app = new Vue({
         companiesForClass: []
     },
 
-    mounted() { },
-
     methods: {
         // calendar methods
         getDataFromDjango(val, slug, csrfToken, companies, authToken) {
@@ -325,6 +323,12 @@ var app = new Vue({
                 return typeof company === 'object';
             });
             this.companies = companies;
+            // connect to sockets
+            if (this._masterUser) {
+                this.checkNotificationPermissions();
+                this.subscribeToNewOrders();
+                this.subscribeToChangedOrders();
+            }
             this.getMasterSchedule();
         },
         getMasterSchedule() {
@@ -494,14 +498,16 @@ var app = new Vue({
                 }
                 // check if user already made a record to the specialist
                 if (!this._masterUser && this._authToken) {
-                    let userRecord = this.orderUserRecords(this.userReservations, oneDay.date);
-                    if (userRecord) {
-                        userRecord.company = companyId;
-                        times.push(userRecord);
+                    if (this.userReservations) {
+                        let userRecord = this.orderUserRecords(this.userReservations, oneDay.date);
+                        if (userRecord) {
+                            userRecord.company = companyId;
+                            times.push(userRecord);
 
-                        oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
-                        oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
-                        continue;
+                            oneDay.date.setHours(oneDay.date.getHours() + daySchedule.interval.hours);
+                            oneDay.date.setMinutes(oneDay.date.getMinutes() + daySchedule.interval.minutes);
+                            continue;
+                        }
                     }
                 }
                 let record = this.orderFreeRecords(this.reservations, oneDay.date);
@@ -1218,6 +1224,136 @@ var app = new Vue({
             }, error => {
                 console.error(error);
             })
+        },
+        // firebase methods
+        subscribeToNewOrders() {
+            if (this._masterUser) {
+                var newOrders = firebase.database().ref("reservation/new");
+                newOrders.on("child_added", (response) => {
+                    if (this.initialSocketDataLoaded) {
+                        var order = response.val();
+                        if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
+                            this.addSocketOrderToArray(order);
+                            this.showNotification("Новая заявка", order.message);
+                        }
+                    }
+                });
+                // trigger changes only for incremental children, not for initial data
+                newOrders.once("value", () => {
+                    this.initialSocketDataLoaded = true;
+                });
+            }
+        },
+        subscribeToChangedOrders() {
+            if (this._masterUser) {
+                var changedOrders = firebase.database().ref("reservation/changed");
+                changedOrders.on("child_added", (response) => {
+                    if (this.initialSocketDataChangeLoaded) {
+                        var order = response.val();
+                        if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
+                            this.updateSocketOrderInArray(order);
+                            this.showNotification("Измененная заявка", order.message);
+                        }
+                    }
+                });
+                changedOrders.once("value", () => {
+                    this.initialSocketDataChangeLoaded = true;
+                });
+            }
+        },
+        checkNotificationPermissions() {
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+                return;
+            }
+            if (Notification.permission !== "denied") {
+                Notification.requestPermission((permission) => {
+                    if (permission === "granted") {
+                        this.notificationPermissions = true;
+                    } else {
+                        this.notificationPermissions = false;
+                    }
+                });
+            }
+        },
+        showNotification(title, body) {
+            var notification = new Notification(title, {
+                icon: window.location.origin + "/static/img/logo.png",
+                body: body,
+            });
+        },
+        rebuidSocketOrder(order) {
+            return {
+                name: order.full_name,
+                status: order.status,
+                time: new Date(order.date_time),
+                phone: order.phone,
+                id: order.id,
+                date_time_reservation: new Date(order.date_time)
+            };
+        },
+        addSocketOrderToArray(order) {
+            order = this.rebuidSocketOrder(order);
+            // add order to reservations array
+            this.reservations.push(order);
+            // add order immediately if user now see proper time
+            // search for week day
+            for (var i = 0; i < this.mainArray.length; i++) {
+                if (order.time.getDay() === this.mainArray[i].date.getDay()) {
+                    // search for proper time in week day
+                    for (var j = 0; j < this.mainArray[i].times.length; j++) {
+                        var cell = this.mainArray[i].times[j];
+                        if (order.time.getTime() === cell.time.getTime()) {
+                            // check if status is suitable for changes
+                            if (order.status !== cell.status && !cell.status.match(/history/)) {
+                                cell.status = order.status;
+                                cell.name = order.name;
+                                cell.id = order.id;
+                                cell.phone = order.phone;
+                                cell.time = order.time;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        updateSocketOrderInArray(order) {
+            order = this.rebuidSocketOrder(order);
+            // update reservation list
+            this.reservations.map(reservation => {
+                if (reservation.id === order.id) {
+                    return reservation = JSON.parse(JSON.stringify(order));
+                }
+            });
+            // add order immediately if user now see proper time
+            // search for week day
+            for (var i = 0; i < this.mainArray.length; i++) {
+                if (order.time.getDay() === this.mainArray[i].date.getDay()) {
+                    // search for proper time in week day
+                    for (var j = 0; j < this.mainArray[i].times.length; j++) {
+                        var cell = this.mainArray[i].times[j];
+                        if (order.time.getTime() === cell.time.getTime()) {
+                            // check if status is suitable for changes
+                            if (order.status === "refused") {
+                                cell.status = "free";
+                                cell.name = undefined;
+                                cell.id = undefined;
+                                cell.phone = undefined;
+                                return;
+                            }
+                            if (order.status !== cell.status && !cell.status.match(/history/)) {
+                                cell.status = order.status;
+                                cell.name = order.name;
+                                cell.id = order.id;
+                                cell.phone = order.phone;
+                                cell.time = order.time;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 });

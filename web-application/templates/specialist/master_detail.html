@@ -391,6 +391,21 @@
 {% block js %}
 <script src="{% static 'js/vue.min.js' %}"></script>
 <script src="{% static 'js/vue-resource.min.js' %}"></script>
+{% if request.user == master.user or user.id in owners or user.id in administrator %}
+<script src="https://www.gstatic.com/firebasejs/4.10.0/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAUBBrnYNJUE65e0I46cG1TN1wlFnOCZ34",
+        authDomain: "checkin-local.firebaseapp.com",
+        databaseURL: "https://checkin-local.firebaseio.com",
+        projectId: "checkin-local",
+        storageBucket: "checkin-local.appspot.com",
+        messagingSenderId: "269680824402"
+    };
+    firebase.initializeApp(config);
+</script>
+{% endif %}
 <script src="{% static 'js/calendar.js' %}"></script>
 <script>
     let masterUser = false;
