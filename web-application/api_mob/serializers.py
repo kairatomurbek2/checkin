@@ -199,14 +199,9 @@ class CertificatesSerializer(serializers.ModelSerializer):
             pass
 
 
-class CreateMasterSerializer(serializers.ModelSerializer):
+class CreateEditMasterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Specialist
-        fields = ()
-
-
-class EditMasterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Specialist
+        fields = ('full_name', 'sex', 'street_address', 'short_info', 'info',
+                  'message_decline', 'rating')

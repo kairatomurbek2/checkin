@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
@@ -16,7 +18,7 @@ from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, EditMasterSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer, CreateEditMasterSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
@@ -245,9 +247,34 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = CreateMasterSerializer
+    serializer_class = CreateEditMasterSerializer
+
+    def create(self, request, *args, **kwargs):
+        extra_params = dict(user=self.request.user, edited_by=self.request.user)
+        companies_slugs = request.POST.get('companies_slugs', None)
+        categories_slugs = request.POST.get('categories_slugs', None)
+        photo = request.FILES.get('photo', None)
+
+        if companies_slugs:
+            companies = Company.objects.filter(slug__in=json.loads(companies_slugs))
+            extra_params['company'] = [c for c in companies]
+        if categories_slugs:
+            categories = Category.objects.filter(slug__in=json.loads(categories_slugs))
+            extra_params['categories'] = [c for c in categories]
+        if photo:
+            extra_params['photo'] = photo
+            extra_params['mobile_photo'] = photo
+
+        serializer = self.get_serializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save(**extra_params)
+
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class EditMasterViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = EditMasterSerializer
+    serializer_class = CreateEditMasterSerializer
