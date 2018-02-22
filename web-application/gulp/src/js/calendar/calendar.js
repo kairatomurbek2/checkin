@@ -325,7 +325,7 @@ var app = new Vue({
             this.companies = companies;
             // connect to sockets
             if (this._masterUser) {
-                this.checkNotificationPermissions();
+                // this.checkNotificationPermissions();
                 this.subscribeToNewOrders();
                 this.subscribeToChangedOrders();
             }
@@ -1234,7 +1234,7 @@ var app = new Vue({
                         var order = response.val();
                         if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
                             this.addSocketOrderToArray(order);
-                            this.showNotification("Новая заявка", order.message);
+                            // this.showNotification("Новая заявка", order.message);
                         }
                     }
                 });
@@ -1252,7 +1252,7 @@ var app = new Vue({
                         var order = response.val();
                         if (order.specialist_slug && order.specialist_slug === this._masterSlug) {
                             this.updateSocketOrderInArray(order);
-                            this.showNotification("Измененная заявка", order.message);
+                            // this.showNotification("Измененная заявка", order.message);
                         }
                     }
                 });
@@ -1261,27 +1261,27 @@ var app = new Vue({
                 });
             }
         },
-        checkNotificationPermissions() {
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notification");
-                return;
-            }
-            if (Notification.permission !== "denied") {
-                Notification.requestPermission((permission) => {
-                    if (permission === "granted") {
-                        this.notificationPermissions = true;
-                    } else {
-                        this.notificationPermissions = false;
-                    }
-                });
-            }
-        },
-        showNotification(title, body) {
-            var notification = new Notification(title, {
-                icon: window.location.origin + "/static/img/logo.png",
-                body: body,
-            });
-        },
+        // checkNotificationPermissions() {
+        //     if (!("Notification" in window)) {
+        //         alert("This browser does not support desktop notification");
+        //         return;
+        //     }
+        //     if (Notification.permission !== "denied") {
+        //         Notification.requestPermission((permission) => {
+        //             if (permission === "granted") {
+        //                 this.notificationPermissions = true;
+        //             } else {
+        //                 this.notificationPermissions = false;
+        //             }
+        //         });
+        //     }
+        // },
+        // showNotification(title, body) {
+        //     var notification = new Notification(title, {
+        //         icon: window.location.origin + "/static/img/logo.png",
+        //         body: body,
+        //     });
+        // },
         rebuidSocketOrder(order) {
             return {
                 name: order.full_name,
