@@ -204,4 +204,7 @@ class CreateEditMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialist
         fields = ('full_name', 'sex', 'street_address', 'short_info', 'info',
-                  'message_decline', 'rating')
+                  'message_decline', 'rating', 'company', 'categories', 'photo')
+
+    # TODO: crop image and set mobile_photo field value
+    # TODO: override update method

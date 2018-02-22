@@ -47,3 +47,6 @@ urllib3==1.22
 raven
 python-firebase
 django-ckeditor==5.4.0
+behave-django
+faker
+django-cleanup

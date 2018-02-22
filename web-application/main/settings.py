@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'django_filters',
     'dj_pagination',
     'webapp',
-    'behave_django'
+    'behave_django',
+    'django_cleanup'
 ]
 
 MIDDLEWARE = [

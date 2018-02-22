@@ -249,32 +249,14 @@ class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication, )
     serializer_class = CreateEditMasterSerializer
 
-    def create(self, request, *args, **kwargs):
-        extra_params = dict(user=self.request.user, edited_by=self.request.user)
-        companies_slugs = request.POST.get('companies_slugs', None)
-        categories_slugs = request.POST.get('categories_slugs', None)
-        photo = request.FILES.get('photo', None)
-
-        if companies_slugs:
-            companies = Company.objects.filter(slug__in=json.loads(companies_slugs))
-            extra_params['company'] = [c for c in companies]
-        if categories_slugs:
-            categories = Category.objects.filter(slug__in=json.loads(categories_slugs))
-            extra_params['categories'] = [c for c in categories]
-        if photo:
-            extra_params['photo'] = photo
-            extra_params['mobile_photo'] = photo
-
-        serializer = self.get_serializer(data=request.data)
-
-        serializer.is_valid(raise_exception=True)
-        serializer.save(**extra_params)
-
-        headers = self.get_success_headers(serializer.data)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class EditMasterViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication, )
     serializer_class = CreateEditMasterSerializer
+
+
+
+

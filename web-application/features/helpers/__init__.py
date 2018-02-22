@@ -13,6 +13,10 @@ ASSET_IMAGE = {
     'content_type': 'image/png'
 }
 
+SEX = [
+    'Мужской', 'Женский'
+]
+
 LOGIN_URL = '/api/v1/rest-auth/login/'
 
 
@@ -66,25 +70,48 @@ def create_user(faker, username_prefix='', default_email=''):
     return dict(user=user, username=username, email=email, password=password)
 
 
-def create_company(faker):
+def create_company(faker, prefix='', slug=''):
     fake_word = faker.words()[0]
 
     company = Company.objects.create(
-        name=fake_word, street_address=fake_word, short_info=fake_word,
+        name='%s_%s' % (prefix, fake_word), street_address=fake_word, short_info=fake_word,
         info=fake_word, phone='+996771177643', short_phone='0707',
         email='test@localhost', legal_data=fake_word, website='http://google.com',
-        message_decline=fake_word, rating=2.5, latitude=25.6, longitude=38.9
+        message_decline=fake_word, rating=2.5, latitude=25.6, longitude=38.9,
+        slug=slug
     )
 
     return dict(company=company)
 
 
-def create_category(faker, img):
+def create_category(faker, img, slug=''):
     fake_word = faker.words()[0]
 
     category = Category.objects.create(
         name=fake_word, image=img, icon=img,
-        parent=None
+        parent=None, slug=slug
     )
 
     return dict(category=category)
+
+
+def create_master(faker, user, img, categories, companies, prefix=''):
+    fake_word = faker.words()[0]
+
+    master = Specialist.objects.create(
+        user=user, photo=img, mobile_photo=img,
+        full_name='%s_%s' % (prefix, fake_word), sex=fake_word,
+        street_address=fake_word, short_info=fake_word,
+        info=fake_word, message_decline=fake_word,
+        rating=2.5, edited_by=user
+    )
+
+    for c in categories:
+        master.categories.add(c)
+
+    for c in companies:
+        master.company.add(c)
+
+    master.save()
+
+    return dict(master=master)
