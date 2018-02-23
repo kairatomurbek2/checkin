@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.utils import timezone
 from rest_framework import serializers
+from sorl.thumbnail import get_thumbnail
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist, \
@@ -206,5 +208,15 @@ class CreateEditMasterSerializer(serializers.ModelSerializer):
         fields = ('full_name', 'sex', 'street_address', 'short_info', 'info',
                   'message_decline', 'rating', 'company', 'categories', 'photo')
 
-    # TODO: crop image and set mobile_photo field value
-    # TODO: override update method
+    def crop_mobile_photo(self, instance):
+        resized = get_thumbnail(instance.photo, "150x150")
+        instance.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
+
+        return instance
+
+    def create(self, validated_data):
+        instance = super(CreateEditMasterSerializer, self).create(validated_data=validated_data)
+        return self.crop_mobile_photo(instance)
+
+    def update(self, instance, validated_data):
+        return self.crop_mobile_photo(instance)

@@ -1,11 +1,17 @@
 import random
+from glob import glob
 
 from allauth.account.models import EmailAddress
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from faker import Faker
+from os.path import isdir
+
+from os import unlink
+
+from shutil import rmtree
 
 from main.settings import BASE_DIR
 from webapp.models import Company, Category, Specialist
@@ -24,6 +30,7 @@ LOGIN_URL = '/api/v1/rest-auth/login/'
 
 
 class Helper(object):
+
     @staticmethod
     def assert_status_code(test_obj, response, status_code):
         test_obj.assertEqual(response['Content-Type'], 'application/json')
@@ -61,12 +68,12 @@ class Helper(object):
         return json_content['key']
 
     @staticmethod
-    def create_user(faker, username_prefix='', default_email=''):
+    def create_user(user_class, faker, username_prefix='', default_email=''):
         username = '%s_%s' % (faker.words()[0].replace(' ', '_'), username_prefix)
         email = '%s@somemail.com' % username if default_email == '' else default_email
         password = '%s_password' % username
 
-        user = get_user_model().objects.create(username=username, email=email)
+        user = user_class.objects.create(username=username, email=email)
         user.set_password(password)
         user.save()
 
@@ -103,7 +110,7 @@ class Helper(object):
     def create_master(faker, user, img, categories, companies, prefix=''):
         fake_word = faker.words()[0]
 
-        master = Specialist.objects.create(
+        master = Specialist.all_objects.create(
             user=user, photo=img, mobile_photo=img,
             full_name='%s_%s' % (prefix, fake_word), sex=fake_word,
             street_address=fake_word, short_info=fake_word,
@@ -123,11 +130,19 @@ class Helper(object):
 
 
 class CreateEditMasterTest(TestCase):
+
+    def tearDown(self):
+        for i in glob('%s/media/*' % BASE_DIR):
+            if isdir(i):
+                rmtree(i)
+            else:
+                unlink(i)
+
     def test_create_master(self):
         faker = Faker()
         fake_word = faker.words()[0]
 
-        user_data = Helper.create_user(faker=faker)
+        user_data = Helper.create_user(User, faker=faker)
         company_data = Helper.create_company(faker=faker, prefix='create_master_')
 
         with open(ASSET_IMAGE['path'], 'rb') as category_icon:
@@ -161,7 +176,7 @@ class CreateEditMasterTest(TestCase):
         faker = Faker()
         fake_word = faker.words()[0]
 
-        user_data = Helper.create_user(faker=faker)
+        user_data = Helper.create_user(User, faker=faker)
         current_company_data = Helper.create_company(faker=faker, prefix='first_', slug='slug_1')
         new_company_data = Helper.create_company(faker=faker, prefix='second_', slug='slug_2')
 
@@ -192,7 +207,8 @@ class CreateEditMasterTest(TestCase):
 
         with open(ASSET_IMAGE['path'], 'rb') as photo:
             master_update_data['photo'] = photo
-            response = self.client.put(reverse('master_edit_api'), master_update_data,
-                                       **dict(HTTP_AUTHORIZATION='Token %s' % auth_token))
+            response = self.client.patch(reverse('master_edit_api'), master_update_data,
+                                         'application/x-www-form-urlencoded',
+                                         **dict(HTTP_AUTHORIZATION='Token %s' % auth_token))
 
         Helper.assert_status_code(self, response, 200)
