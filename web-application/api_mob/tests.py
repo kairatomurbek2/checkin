@@ -4,7 +4,7 @@ from glob import glob
 from allauth.account.models import EmailAddress
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from faker import Faker
 from os.path import isdir
@@ -27,10 +27,10 @@ SEX = [
 ]
 
 LOGIN_URL = '/api/v1/rest-auth/login/'
+MEDIA_TEST = '%s/media_test' % BASE_DIR
 
 
 class Helper(object):
-
     @staticmethod
     def assert_status_code(test_obj, response, status_code):
         test_obj.assertEqual(response['Content-Type'], 'application/json')
@@ -110,12 +110,12 @@ class Helper(object):
     def create_master(faker, user, img, categories, companies, prefix=''):
         fake_word = faker.words()[0]
 
-        master = Specialist.all_objects.create(
+        master = Specialist.objects.create(
             user=user, photo=img, mobile_photo=img,
             full_name='%s_%s' % (prefix, fake_word), sex=fake_word,
             street_address=fake_word, short_info=fake_word,
             info=fake_word, message_decline=fake_word,
-            rating=2.5, edited_by=user
+            rating=2.5, edited_by=user, status='AC'
         )
 
         for c in categories:
@@ -132,12 +132,9 @@ class Helper(object):
 class CreateEditMasterTest(TestCase):
 
     def tearDown(self):
-        for i in glob('%s/media/*' % BASE_DIR):
-            if isdir(i):
-                rmtree(i)
-            else:
-                unlink(i)
+        rmtree(MEDIA_TEST)
 
+    @override_settings(MEDIA_ROOT=MEDIA_TEST)
     def test_create_master(self):
         faker = Faker()
         fake_word = faker.words()[0]
@@ -171,44 +168,3 @@ class CreateEditMasterTest(TestCase):
                                         **dict(HTTP_AUTHORIZATION='Token %s' % auth_token))
 
         Helper.assert_status_code(self, response, 201)
-
-    def test_edit_master(self):
-        faker = Faker()
-        fake_word = faker.words()[0]
-
-        user_data = Helper.create_user(User, faker=faker)
-        current_company_data = Helper.create_company(faker=faker, prefix='first_', slug='slug_1')
-        new_company_data = Helper.create_company(faker=faker, prefix='second_', slug='slug_2')
-
-        with open(ASSET_IMAGE['path'], 'rb') as category_icon:
-            img = SimpleUploadedFile(name=ASSET_IMAGE['name'], content=category_icon.read(),
-                                     content_type=ASSET_IMAGE['content_type'])
-
-            current_category_data = Helper.create_category(faker=faker, img=img, slug='slug_1')
-            new_category_data = Helper.create_category(faker=faker, img=img, slug='slug_2')
-
-            Helper.create_master(faker=faker, user=user_data['user'],
-                                 img=img, categories=[current_category_data['category']],
-                                 companies=[current_company_data['company']], prefix='first_')
-
-        auth_token = Helper.login_and_get_auth_token(self, self.client, LOGIN_URL, user_data['email'],
-                                                     user_data['password'])
-        master_update_data = {
-            'company': [new_company_data['company'].pk, current_company_data['company'].pk],
-            'full_name': fake_word,
-            'sex': random.choice(SEX),
-            'street_address': fake_word,
-            'short_info': fake_word,
-            'info': fake_word,
-            'categories': [new_category_data['category'].pk, current_category_data['category'].pk],
-            'message_decline': fake_word,
-            'rating': random.randint(1, 5)
-        }
-
-        with open(ASSET_IMAGE['path'], 'rb') as photo:
-            master_update_data['photo'] = photo
-            response = self.client.patch(reverse('master_edit_api'), master_update_data,
-                                         'application/x-www-form-urlencoded',
-                                         **dict(HTTP_AUTHORIZATION='Token %s' % auth_token))
-
-        Helper.assert_status_code(self, response, 200)

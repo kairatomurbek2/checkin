@@ -1,24 +1,18 @@
-import json
-
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
-from django.views import View
-from rest_auth.serializers import UserDetailsSerializer
-from rest_auth.views import UserDetailsView
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import ParseError, AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer, CertificatesSerializer, CreateEditMasterSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
+    EditMasterSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
@@ -247,18 +241,19 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = CreateEditMasterSerializer
+    serializer_class = CreateMasterSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class EditMasterViewApi(generics.UpdateAPIView):
+class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = CreateEditMasterSerializer
+    serializer_class = EditMasterSerializer
+    lookup_field = 'slug'
 
     def get_object(self):
-        return Specialist.all_objects.get(user=self.request.user)
+        return Specialist.objects.get(slug=self.kwargs['slug'])
 
 
 

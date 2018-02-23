@@ -201,22 +201,39 @@ class CertificatesSerializer(serializers.ModelSerializer):
             pass
 
 
-class CreateEditMasterSerializer(serializers.ModelSerializer):
+class CustomStringRelatedField(serializers.StringRelatedField):
+
+    def to_internal_value(self, data):
+        return data
+
+
+class MobileMasterSerializer(serializers.ModelSerializer):
+
+    categories = CustomStringRelatedField(many=True)
 
     class Meta:
         model = Specialist
-        fields = ('full_name', 'sex', 'street_address', 'short_info', 'info',
-                  'message_decline', 'rating', 'company', 'categories', 'photo')
+        fields = ('full_name', 'sex', 'street_address', 'short_info', 'info', 'company', 'categories', 'photo')
 
     def crop_mobile_photo(self, instance):
-        resized = get_thumbnail(instance.photo, "150x150")
-        instance.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
+        if instance.photo:
+            resized = get_thumbnail(instance.photo, "150x150")
+            instance.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
 
         return instance
 
+
+class CreateMasterSerializer(MobileMasterSerializer):
+
     def create(self, validated_data):
-        instance = super(CreateEditMasterSerializer, self).create(validated_data=validated_data)
+        instance = super(CreateMasterSerializer, self).create(validated_data=validated_data)
         return self.crop_mobile_photo(instance)
 
+
+class EditMasterSerializer(MobileMasterSerializer):
+
+    photo = serializers.ImageField(required=False)
+
     def update(self, instance, validated_data):
+        instance = super(EditMasterSerializer, self).update(instance, validated_data)
         return self.crop_mobile_photo(instance)
