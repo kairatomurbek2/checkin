@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
@@ -16,7 +18,7 @@ from rest_framework.response import Response
 from api.permissions import MasterOwnerOrReadOnly
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, EditMasterSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer, CreateEditMasterSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
@@ -245,9 +247,19 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = CreateMasterSerializer
+    serializer_class = CreateEditMasterSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class EditMasterViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication, )
-    serializer_class = EditMasterSerializer
+    serializer_class = CreateEditMasterSerializer
+
+    def get_object(self):
+        return Specialist.all_objects.get(user=self.request.user)
+
+
+
+
