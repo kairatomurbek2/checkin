@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django_filters',
     'dj_pagination',
     'webapp',
-    'behave_django',
     'django_cleanup'
 ]
 

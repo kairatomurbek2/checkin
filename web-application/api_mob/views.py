@@ -257,6 +257,9 @@ class EditMasterViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication, )
     serializer_class = CreateEditMasterSerializer
 
+    def get_queryset(self):
+        return Specialist.objects.get(user=self.request.user)
+
 
 
 
