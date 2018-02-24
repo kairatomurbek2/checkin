@@ -281,6 +281,8 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
         today = datetime.datetime.today()
         matching_day = None
 
+        today = today.replace(hour=0, minute=0)
+
         for i in range(0, 7):
             day_with_delta = today + datetime.timedelta(days=i)
 
