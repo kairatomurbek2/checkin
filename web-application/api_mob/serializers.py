@@ -316,3 +316,10 @@ class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleSetting
         fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company')
+
+
+class ReservationEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reservation
+        fields = ('status', )

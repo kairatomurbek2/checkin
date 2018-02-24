@@ -11,10 +11,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from api.views import ReservationListView
+from api_mob.permissions import IsReservationBelongsToSpecialist
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
-    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer
+    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer, ReservationEditSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
@@ -300,3 +301,11 @@ class ReservationCreateViewApi(generics.CreateAPIView):
 
 class MasterReservationsListViewApi(ReservationListView):
     authentication_classes = (TokenAuthentication, )
+
+
+class MasterReservationEditViewApi(generics.UpdateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = ReservationEditSerializer
+    permission_classes = (IsReservationBelongsToSpecialist, )
+    lookup_field = 'pk'
+    queryset = Reservation.objects.all()
