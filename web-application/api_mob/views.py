@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from rest_framework import filters
 from rest_framework import generics
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -12,10 +12,11 @@ from rest_framework.response import Response
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
-    EditMasterSerializer
+    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
-from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
+from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
+    ScheduleSetting
 from rest_framework import status
 
 
@@ -256,5 +257,40 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
         return Specialist.objects.get(slug=self.kwargs['slug'])
 
 
+class MasterScheduleViewApi(generics.ListAPIView):
+    authentication_classes = (SessionAuthentication, )
+    serializer_class = MobileScheduleSettingFullSerializer
+    lookup_field = 'specialist__slug'
+    pagination_class = None
+
+    def get_queryset(self):
+        return ScheduleSetting.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+
+    def get_serializer_context(self):
+        context = super(MasterScheduleViewApi, self).get_serializer_context()
+        context['specialist'] = Specialist.objects.get(slug=self.kwargs['specialist__slug'])
+
+        return context
 
 
+class ReservationCreateViewApi(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = ReservationCreateSerializer
+    lookup_field = 'specialist__slug'
+    queryset = Reservation.objects.all()
+
+    def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+
+        check_reservation = Reservation.objects.filter(date_time_reservation=validated_data['date_time_reservation']).first()
+
+        if check_reservation:
+            msg = Messages.AddReservation.you_already_reserved if check_reservation.user == self.request.user \
+                    else Messages.AddReservation.another_already_reserved
+
+            raise ValidationError({
+                'message': msg
+            })
+
+        serializer.save(specialist=specialist, user=self.request.user)

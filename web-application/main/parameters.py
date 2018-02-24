@@ -58,3 +58,7 @@ class Messages:
         new_reservation = _('Пользователь {user} записался на прием. Дата/время: {date}/{time}')
         reservation_confirmed = _('Запрос на прием у специалиста {specialist} {date} в {time} был принят.')
         reservation_refused = _('Запрос на прием у специалиста {specialist} {date} в {time} был отклонен.')
+
+    class AddReservation:
+        you_already_reserved = _('Вы уже бронировали место на указанное время.')
+        another_already_reserved = _('Другой пользователь забронировал место на указанное время до Вас.')

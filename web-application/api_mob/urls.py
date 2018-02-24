@@ -5,7 +5,8 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     CompaniesListView, MasterDetailViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi, \
-    CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi
+    CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi, \
+    MasterScheduleViewApi, ReservationCreateViewApi
 
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -22,6 +23,10 @@ urlpatterns = [
         name='masters__reviews_api_v1'),
     url(r'masters/(?P<specialist__slug>[-_\w]+)/certificates/$', CertificatesSpecialistListViewApi.as_view(),
         name='masters_certificates_api_v1'),
+    url(r'masters/(?P<specialist__slug>[-_\w]+)/schedule/$', MasterScheduleViewApi.as_view(),
+        name='masters_schedule_api_v1'),
+    url(r'masters/(?P<specialist__slug>[-_\w]+)/reservation/create$', ReservationCreateViewApi.as_view(),
+        name='masters_reservation_create_api_v1'),
     url(r'masters/$', MastersListView.as_view(), name='masters_api_v1'),
     url(r'master/create$', CreateMasterViewApi.as_view(), name='master_create_api'),
     url(r'master/(?P<slug>[-_\w]+)/edit/$', EditMasterViewApi.as_view(), name='master_edit_api'),
