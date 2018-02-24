@@ -292,7 +292,7 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
             dict(
                 specialist=r.specialist.full_name,
                 full_name=r.full_name,
-                date_time_reservation=r.date_time_reservation,
+                date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
                 status=r.status,
                 phone=str(r.phone),
                 my_reservation=r.user == user,

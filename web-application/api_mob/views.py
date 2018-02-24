@@ -9,6 +9,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from api.views import ReservationListView
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
@@ -294,3 +296,7 @@ class ReservationCreateViewApi(generics.CreateAPIView):
             })
 
         serializer.save(specialist=specialist, user=self.request.user)
+
+
+class MasterReservationsListViewApi(ReservationListView):
+    authentication_classes = (TokenAuthentication, )
