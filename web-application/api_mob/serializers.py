@@ -280,7 +280,7 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
             dict(
                 specialist=r.specialist.full_name,
                 full_name=r.full_name,
-                time=timezone.localtime(r.date_time_reservation).strftime('%H:%M'),
+                date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
                 status=r.status,
                 phone=str(r.phone),
                 my_reservation=r.user == user,
@@ -300,10 +300,23 @@ class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
     friday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.FRIDAY)
     saturday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.SATURDAY)
     sunday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.SUNDAY)
+    name = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
 
     class Meta:
         model = ScheduleSetting
-        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company')
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company',
+                  'name', 'address')
+
+    def get_name(self, instance):
+        company = instance.company
+
+        return company.name if company else None
+
+    def get_address(self, instance):
+        company = instance.company
+
+        return company.street_address if company else None
 
 
 class ReservationEditSerializer(serializers.ModelSerializer):
