@@ -233,7 +233,7 @@ class ReservationCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('id', 'full_name', 'date_time_reservation', 'phone', 'status')
+        fields = ('id', 'full_name', 'date_time_reservation', 'phone')
 
 
 class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
