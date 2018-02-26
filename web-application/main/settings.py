@@ -257,6 +257,10 @@ SOCIALACCOUNT_PROVIDERS = \
 
      }
 
+FIREBASE_URL = 'https://checkin-kg.firebaseio.com'
+FIREBASE_SECRET = 'w6wF4M8FEE385fmGJYOzhhTIXisKFDjGM2drdSbs'
+FIREBASE_USER_EMAIL = 'chekin.kg@gmail.com'
+
 try:
     from settings_local import *
 except ImportError:
