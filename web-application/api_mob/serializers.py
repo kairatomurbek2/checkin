@@ -310,13 +310,25 @@ class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
 
     def get_name(self, instance):
         company = instance.company
+        specialist = instance.specialist
 
-        return company.name if company else None
+        if company:
+            return company.name
+        elif specialist:
+            return specialist.full_name
+
+        return None
 
     def get_address(self, instance):
         company = instance.company
+        specialist = instance.specialist
 
-        return company.street_address if company else None
+        if company:
+            return company.street_address
+        elif specialist:
+            return specialist.street_address
+
+        return None
 
 
 class ReservationEditSerializer(serializers.ModelSerializer):
