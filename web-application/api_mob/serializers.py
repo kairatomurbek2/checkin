@@ -219,28 +219,14 @@ class MobileMasterSerializer(serializers.ModelSerializer):
         model = Specialist
         fields = ('full_name', 'sex', 'street_address', 'short_info', 'info', 'company', 'categories', 'photo')
 
-    def crop_mobile_photo(self, instance): # TODO: move method to Specialist.save() method
-        if instance.photo:
-            resized = get_thumbnail(instance.photo, "150x150")
-            instance.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
-
-        return instance
-
 
 class CreateMasterSerializer(MobileMasterSerializer):
-
-    def create(self, validated_data):
-        instance = super(CreateMasterSerializer, self).create(validated_data=validated_data)
-        return self.crop_mobile_photo(instance)
+    pass
 
 
 class EditMasterSerializer(MobileMasterSerializer):
 
     photo = serializers.ImageField(required=False)
-
-    def update(self, instance, validated_data):
-        instance = super(EditMasterSerializer, self).update(instance, validated_data)
-        return self.crop_mobile_photo(instance)
 
 
 class ReservationCreateSerializer(serializers.ModelSerializer):
