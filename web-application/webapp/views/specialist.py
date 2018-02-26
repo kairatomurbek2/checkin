@@ -90,8 +90,7 @@ class MasterCreateView(CreateView):
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save(crop_data=crop_data_json)
-        resized = get_thumbnail(specialist.photo, "150x150")
-        specialist.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
+
         if formset.is_valid():
             formset.instance = specialist
             formset.save()
@@ -166,8 +165,6 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
         specialist.edited_at = datetime.datetime.now()
         specialist.edited_by = self.request.user
         specialist.save(crop_data=crop_data_json)
-        resized = get_thumbnail(specialist.photo, "150x150")
-        specialist.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
 
         if formset.is_valid() and certificates.is_valid():
             formset.save()
