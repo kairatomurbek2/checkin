@@ -12,6 +12,9 @@ class MasterOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
+            if 'specialist__slug' not in view.kwargs:
+                return False
+
             try:
                 specialist = Specialist.all_objects.get(Q(slug=view.kwargs['specialist__slug'], user=request.user) or
                                                         Q(slug=view.kwargs['specialist__slug'],
