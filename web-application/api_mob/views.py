@@ -309,3 +309,6 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
     permission_classes = (IsReservationBelongsToSpecialist, )
     lookup_field = 'pk'
     queryset = Reservation.objects.all()
+
+    def perform_update(self, serializer):
+        serializer.save(edited_by=self.request.user)
