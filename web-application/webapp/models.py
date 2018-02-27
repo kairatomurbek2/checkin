@@ -152,7 +152,7 @@ class Company(models.Model):
 
         if self.logo:
             resized = get_thumbnail(self.logo, MOBILE_IMAGE_CROP_SIZE)
-            self.mobile_logo.save(resized.name, ContentFile(resized.read()), True)
+            self.mobile_logo.save(resized.name, ContentFile(resized.read()), False)
 
     def get_categories(self):
         try:
@@ -261,7 +261,7 @@ class Specialist(models.Model):
 
         if self.photo:
             resized = get_thumbnail(self.photo, MOBILE_IMAGE_CROP_SIZE)
-            self.mobile_photo.save(resized.name, ContentFile(resized.read()), True)
+            self.mobile_photo.save(resized.name, ContentFile(resized.read()), False)
 
     class Meta:
         verbose_name = _('Специалист')

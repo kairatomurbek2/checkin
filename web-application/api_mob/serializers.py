@@ -1,12 +1,10 @@
 from datetime import date
 import datetime
 from django.contrib.auth.models import User
-from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.fields import empty
-from sorl.thumbnail import get_thumbnail
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist, \
