@@ -266,29 +266,37 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
         specialist = self.context['specialist']
         today = datetime.datetime.today()
         matching_day = None
+        reservations = []
 
-        today = today.replace(hour=0, minute=0)
+        time_parts = instance.time.split('-')
 
-        for i in range(0, 7):
-            day_with_delta = today + datetime.timedelta(days=i)
+        if len(time_parts) == 2:
 
-            if day_with_delta.weekday() == self.day:
-                matching_day = day_with_delta
-                break
+            start_time_parts = time_parts[0].split(':')
+            end_time_parts = time_parts[1].split(':')
 
-        reservations = [
-            dict(
-                specialist=r.specialist.full_name,
-                full_name=r.full_name,
-                date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
-                time=timezone.localtime(r.date_time_reservation).strftime('%H:%M'),
-                status=r.status,
-                phone=str(r.phone),
-                my_reservation=r.user == user,
-                current_specialist=r.specialist == specialist
-            ) for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
-                                                                            Q(date_time_reservation__lte=matching_day + datetime.timedelta(hours=23)))
-        ]
+            today = today.replace(hour=int(start_time_parts[0]), minute=int(start_time_parts[1]))
+
+            for i in range(0, 7):
+                day_with_delta = today + datetime.timedelta(days=i)
+
+                if day_with_delta.weekday() == self.day:
+                    matching_day = day_with_delta
+                    break
+
+            reservations = [
+                dict(
+                    specialist=r.specialist.full_name,
+                    full_name=r.full_name,
+                    date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
+                    time=timezone.localtime(r.date_time_reservation).strftime('%H:%M'),
+                    status=r.status,
+                    phone=str(r.phone),
+                    my_reservation=r.user == user,
+                    current_specialist=r.specialist == specialist
+                ) for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
+                                                      Q(date_time_reservation__lte=matching_day.replace(hour=int(end_time_parts[0]), minute=int(end_time_parts[1]))))
+            ]
 
         return reservations
 
