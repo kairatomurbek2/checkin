@@ -33,7 +33,7 @@ class SpecialistFilter1(django_filters.FilterSet):
     def filter_categories(self, queryset, name, value):
         lookup = '__'.join([name, 'in'])
         if value:
-            categories = Category.objects.filter(name__in=value)
+            categories = Category.objects.filter(pk__in=value)
             categories_ids = []
             for category in categories:
                 for id in category.get_descendants(include_self=True):

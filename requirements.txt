@@ -10,7 +10,7 @@ Django==1.11.4
 django-allauth==0.33.0
 django-appconf==1.0.2
 django-autocomplete-light==3.2.10
-django-filter>=1.1.0,<1.2
+django-filter==1.0.4
 django-modeltranslation==0.12.1
 django-mptt==0.8.7
 django-multiselectfield==0.1.8
