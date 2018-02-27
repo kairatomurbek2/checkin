@@ -9,8 +9,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from api.views import ReservationListView
+from api_mob.filters import SpecialistFilter1
 from api_mob.permissions import IsReservationBelongsToSpecialist
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
@@ -82,13 +84,9 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
 
 class MastersListView(generics.ListAPIView):
     authentication_classes = (CustomTokenAuthentication,)
-
     serializer_class = MasterSerializer
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('full_name', 'tags__name')
-    filter_fields = ('categories',)
-    ordering_fields = ('created_at',)
     queryset = Specialist.objects.all()
+    filter_class = SpecialistFilter1
 
 
 class MasterDetailViewApi(generics.RetrieveAPIView):
