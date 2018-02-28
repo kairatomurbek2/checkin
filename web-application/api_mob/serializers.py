@@ -1,10 +1,14 @@
+from datetime import date
+import datetime
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.fields import empty
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 from webapp.models import Category, Specialist, SpecialistContact, Company, CompanyContact, Rating, FavoriteSpecialist, \
-    Certificate
+    Certificate, Reservation, ScheduleSetting, WorkDay
 
 
 class DateTimeFieldWihTZ(serializers.DateTimeField):
@@ -199,14 +203,143 @@ class CertificatesSerializer(serializers.ModelSerializer):
             pass
 
 
-class CreateMasterSerializer(serializers.ModelSerializer):
+class CustomStringRelatedField(serializers.StringRelatedField):
+
+    def to_internal_value(self, data):
+        return data
+
+
+class MobileMasterSerializer(serializers.ModelSerializer):
+
+    categories = CustomStringRelatedField(many=True)
 
     class Meta:
         model = Specialist
-        fields = ()
+        fields = ('full_name', 'sex', 'street_address', 'short_info', 'info', 'company', 'categories', 'photo')
 
 
-class EditMasterSerializer(serializers.ModelSerializer):
+class CreateMasterSerializer(MobileMasterSerializer):
+    pass
+
+
+class EditMasterSerializer(MobileMasterSerializer):
+
+    photo = serializers.ImageField(required=False)
+
+
+class ReservationCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Specialist
+        model = Reservation
+        fields = ('id', 'full_name', 'date_time_reservation', 'phone')
+
+
+class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
+
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 4
+    SATURDAY = 5
+    SUNDAY = 6
+
+    DAYS = [
+        'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+        'saturday', 'sunday'
+    ]
+
+    def __init__(self, instance=None, data=empty, day=None, **kwargs):
+        super().__init__(instance, data, **kwargs)
+        self.day = day
+
+    reservations = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WorkDay
+        fields = ('time', 'interval', 'live_recording', 'lunch_settings', 'reservations')
+
+    def get_reservations(self, instance):
+        user = self.context['request'].user
+        specialist = self.context['specialist']
+        today = datetime.datetime.today()
+        matching_day = None
+        reservations = []
+
+        time_parts = instance.time.split('-')
+
+        if len(time_parts) == 2:
+
+            start_time_parts = time_parts[0].split(':')
+            end_time_parts = time_parts[1].split(':')
+
+            today = today.replace(hour=int(start_time_parts[0]), minute=int(start_time_parts[1]))
+
+            for i in range(0, 7):
+                day_with_delta = today + datetime.timedelta(days=i)
+
+                if day_with_delta.weekday() == self.day:
+                    matching_day = day_with_delta
+                    break
+
+            reservations = [
+                dict(
+                    specialist=r.specialist.full_name,
+                    full_name=r.full_name,
+                    date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
+                    time=timezone.localtime(r.date_time_reservation).strftime('%H:%M'),
+                    status=r.status,
+                    phone=str(r.phone),
+                    my_reservation=r.user == user,
+                    current_specialist=r.specialist == specialist
+                ) for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
+                                                      Q(date_time_reservation__lte=matching_day.replace(hour=int(end_time_parts[0]), minute=int(end_time_parts[1]))))
+            ]
+
+        return reservations
+
+
+class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
+    monday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.MONDAY)
+    tuesday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.TUESDAY)
+    wednesday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.WEDNESDAY)
+    thursday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.THURSDAY)
+    friday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.FRIDAY)
+    saturday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.SATURDAY)
+    sunday = WorkDayWithReservationsSerializer(many=False, day=WorkDayWithReservationsSerializer.SUNDAY)
+    name = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ScheduleSetting
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company',
+                  'name', 'address')
+
+    def get_name(self, instance):
+        company = instance.company
+        specialist = instance.specialist
+
+        if company:
+            return company.name
+        elif specialist:
+            return specialist.full_name
+
+        return None
+
+    def get_address(self, instance):
+        company = instance.company
+        specialist = instance.specialist
+
+        if company:
+            return company.street_address
+        elif specialist:
+            return specialist.street_address
+
+        return None
+
+
+class ReservationEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reservation
+        fields = ('status', )

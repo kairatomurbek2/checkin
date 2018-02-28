@@ -1,25 +1,25 @@
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
-from django.views import View
-from rest_auth.serializers import UserDetailsSerializer
-from rest_auth.views import UserDetailsView
 from rest_framework import filters
 from rest_framework import generics
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import ParseError, AuthenticationFailed
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from api.permissions import MasterOwnerOrReadOnly
+from api.views import ReservationListView
+from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI
+from api_mob.permissions import IsReservationBelongsToSpecialist
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
-    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, EditMasterSerializer
+    CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
+    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer, ReservationEditSerializer
 from api_mob.social_auth import SocialAuth
 from main.parameters import Messages
-from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate
+from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
+    ScheduleSetting
 from rest_framework import status
 
 
@@ -82,13 +82,9 @@ class CategoryRetrieveView(generics.RetrieveAPIView):
 
 class MastersListView(generics.ListAPIView):
     authentication_classes = (CustomTokenAuthentication,)
-
     serializer_class = MasterSerializer
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('full_name', 'tags__name')
-    filter_fields = ('categories',)
-    ordering_fields = ('created_at',)
     queryset = Specialist.objects.all()
+    filter_class = MastersListFilterAPI
 
 
 class MasterDetailViewApi(generics.RetrieveAPIView):
@@ -109,10 +105,7 @@ class MasterReviewsListViewApi(generics.ListAPIView):
 
 class CompaniesListView(generics.ListAPIView):
     serializer_class = CompaniesSerializer
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('name', 'company_tags__name')
-    filter_fields = ('categories',)
-    ordering_fields = ('created_at',)
+    filter_class = CompaniesListFilterAPI
     queryset = Company.objects.all()
 
 
@@ -247,7 +240,77 @@ class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication, )
     serializer_class = CreateMasterSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-class EditMasterViewApi(generics.UpdateAPIView):
+
+class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication, )
     serializer_class = EditMasterSerializer
+    lookup_field = 'slug'
+
+    def get_object(self):
+        return Specialist.objects.get(slug=self.kwargs['slug'])
+
+
+class MasterScheduleViewApi(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = MobileScheduleSettingFullSerializer
+    lookup_field = 'specialist__slug'
+    pagination_class = None
+
+    def get_queryset(self):
+        return ScheduleSetting.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+
+    def get_serializer_context(self):
+        context = super(MasterScheduleViewApi, self).get_serializer_context()
+        context['specialist'] = Specialist.objects.get(slug=self.kwargs['specialist__slug'])
+
+        return context
+
+
+class ReservationCreateViewApi(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = ReservationCreateSerializer
+    lookup_field = 'specialist__slug'
+    queryset = Reservation.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        super(ReservationCreateViewApi, self).create(request, *args, **kwargs)
+
+        return JsonResponse({
+            'success': True,
+            'message': Messages.AddReservation.success
+        }, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
+
+        check_reservation = Reservation.objects.filter(date_time_reservation=validated_data['date_time_reservation']).first()
+
+        if check_reservation:
+            msg = Messages.AddReservation.you_already_reserved if check_reservation.user == self.request.user \
+                    else Messages.AddReservation.another_already_reserved
+
+            raise ValidationError({
+                'success': False,
+                'message': msg
+            })
+
+        serializer.save(specialist=specialist, user=self.request.user)
+
+
+class MasterReservationsListViewApi(ReservationListView):
+    authentication_classes = (TokenAuthentication, )
+
+
+class MasterReservationEditViewApi(generics.UpdateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = ReservationEditSerializer
+    permission_classes = (IsReservationBelongsToSpecialist, )
+    lookup_field = 'pk'
+    queryset = Reservation.objects.all()
+
+    def perform_update(self, serializer):
+        serializer.save(edited_by=self.request.user)

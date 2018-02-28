@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_filters',
     'dj_pagination',
-    'webapp'
+    'webapp',
+    'django_cleanup'
 ]
 
 MIDDLEWARE = [
@@ -222,9 +223,16 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
     )
 }
-
 
 DOMAIN_URL = 'http://51.254.188.57'
 
@@ -255,6 +263,10 @@ SOCIALACCOUNT_PROVIDERS = \
           }
 
      }
+
+FIREBASE_URL = 'https://checkin-kg.firebaseio.com'
+FIREBASE_SECRET = 'w6wF4M8FEE385fmGJYOzhhTIXisKFDjGM2drdSbs'
+FIREBASE_USER_EMAIL = 'chekin.kg@gmail.com'
 
 try:
     from settings_local import *

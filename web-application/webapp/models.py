@@ -3,14 +3,14 @@ from __future__ import unicode_literals
 import uuid
 
 from PIL import Image
-from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
 from pytils.translit import slugify
 from redactor.fields import RedactorField
-from sorl.thumbnail import ImageField
+from sorl.thumbnail import ImageField, get_thumbnail
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION
@@ -20,6 +20,9 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.urls import reverse
+
+
+MOBILE_IMAGE_CROP_SIZE = "150x150"
 
 
 class CategoryManager(models.Manager):
@@ -147,6 +150,10 @@ class Company(models.Model):
                                 crop_data['y'] + crop_data['height']))
             cropped.save(self.logo.path)
 
+        if self.logo:
+            resized = get_thumbnail(self.logo, MOBILE_IMAGE_CROP_SIZE)
+            self.mobile_logo.save(resized.name, ContentFile(resized.read()), False)
+
     def get_categories(self):
         try:
             return ', '.join(
@@ -251,6 +258,10 @@ class Specialist(models.Model):
             cropped = img.crop((crop_data['x'], crop_data['y'], crop_data['x'] + crop_data['width'],
                                 crop_data['y'] + crop_data['height']))
             cropped.save(self.photo.path)
+
+        if self.photo:
+            resized = get_thumbnail(self.photo, MOBILE_IMAGE_CROP_SIZE)
+            self.mobile_photo.save(resized.name, ContentFile(resized.read()), False)
 
     class Meta:
         verbose_name = _('Специалист')

@@ -100,10 +100,13 @@
                                 {% for specialist in request.user.user_specialists.all %}
                                     <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>
                                     </li>
-                                    <li><a href="{% url 'master_reservation' specialist.slug %}">Мои записи</a>
+                                    <li><a href="{% url 'master_reservation' specialist.slug %}">Список записей</a>
                                     </li>
                                 {% endfor %}
                             {% endif %}
+                            <li>
+                                <a href="{% url 'reservation_list' request.user.username %}">Мои записи</a>
+                            </li>
                             <li class="log-out"><a href="#">Выход</a></li>
                         </ul>
                     </li>
