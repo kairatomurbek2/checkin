@@ -62,3 +62,4 @@ class Messages:
     class AddReservation:
         you_already_reserved = _('Вы уже бронировали место на указанное время.')
         another_already_reserved = _('Другой пользователь забронировал место на указанное время до Вас.')
+        success = _('Место успешно забронировано.')

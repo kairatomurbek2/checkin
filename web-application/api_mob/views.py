@@ -282,6 +282,14 @@ class ReservationCreateViewApi(generics.CreateAPIView):
     lookup_field = 'specialist__slug'
     queryset = Reservation.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        super(ReservationCreateViewApi, self).create(request, *args, **kwargs)
+
+        return JsonResponse({
+            'success': True,
+            'message': Messages.AddReservation.success
+        }, status=status.HTTP_201_CREATED)
+
     def perform_create(self, serializer):
         validated_data = serializer.validated_data
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
@@ -293,6 +301,7 @@ class ReservationCreateViewApi(generics.CreateAPIView):
                     else Messages.AddReservation.another_already_reserved
 
             raise ValidationError({
+                'success': False,
                 'message': msg
             })
 
