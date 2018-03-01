@@ -1239,7 +1239,7 @@ var app = new Vue({
                     }
                 });
                 // trigger changes only for incremental children, not for initial data
-                newOrders.once("value", () => {
+                newOrders.once("value", (val) => {
                     this.initialSocketDataLoaded = true;
                 });
             }
