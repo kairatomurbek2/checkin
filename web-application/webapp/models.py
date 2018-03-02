@@ -187,7 +187,7 @@ class Specialist(models.Model):
     slug = models.SlugField(verbose_name=_('Ярлык'), unique=True, max_length=250)
     street_address = models.CharField(verbose_name=_('Адрес'), max_length=250, blank=True, null=True)
     short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
-    info = RedactorField(verbose_name=_('Подробная информация'))
+    info = RedactorField(verbose_name=_('Подробная информация'), null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='specialist_categories', verbose_name=_('Категории'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='MD', verbose_name=_('Статус'))
     message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
