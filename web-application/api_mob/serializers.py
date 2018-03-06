@@ -291,12 +291,26 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
                     status=r.status,
                     phone=str(r.phone),
                     my_reservation=r.user == user,
-                    current_specialist=r.specialist == specialist
+                    current_specialist=r.specialist == specialist,
+                    interval=self.get_interval_for_specialist_work_day(specialist=r.specialist, day=self.day)
                 ) for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
                                                       Q(date_time_reservation__lte=matching_day.replace(hour=int(end_time_parts[0]), minute=int(end_time_parts[1]))))
             ]
 
         return reservations
+
+    def get_interval_for_specialist_work_day(self, specialist, day):
+        schedule_setting = specialist.schedule_setting_specialist.first()
+        work_day_str = self.DAYS[day]
+        work_day = getattr(schedule_setting, work_day_str)
+        interval = work_day.interval
+
+        interval_parts = interval.split(':')
+
+        if len(interval_parts) == 0:
+            return interval
+
+        return int(interval_parts[0]) * 60 + int(interval_parts[1])
 
 
 class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):

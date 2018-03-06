@@ -254,7 +254,7 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
 
 
 class MasterScheduleViewApi(generics.ListAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (SessionAuthentication, )
     serializer_class = MobileScheduleSettingFullSerializer
     lookup_field = 'specialist__slug'
     pagination_class = None
