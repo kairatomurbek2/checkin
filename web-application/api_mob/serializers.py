@@ -307,7 +307,7 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
 
         interval_parts = interval.split(':')
 
-        if len(interval_parts) == 0:
+        if len(interval_parts) == 1:
             return interval
 
         return int(interval_parts[0]) * 60 + int(interval_parts[1])
