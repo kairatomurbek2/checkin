@@ -244,6 +244,8 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
     SATURDAY = 5
     SUNDAY = 6
 
+    interval = serializers.SerializerMethodField()
+
     DAYS = [
         'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
         'saturday', 'sunday'
@@ -258,6 +260,15 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkDay
         fields = ('time', 'interval', 'live_recording', 'lunch_settings', 'reservations')
+
+    def get_interval(self, obj):
+        interval = obj.interval
+        interval_parts = interval.split(':')
+
+        if len(interval_parts) == 1:
+            return interval
+
+        return str(int(interval_parts[0]) * 60 + int(interval_parts[1]))
 
     def get_reservations(self, instance):
         user = self.context['request'].user
@@ -303,14 +314,8 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
         schedule_setting = specialist.schedule_setting_specialist.first()
         work_day_str = self.DAYS[day]
         work_day = getattr(schedule_setting, work_day_str)
-        interval = work_day.interval
 
-        interval_parts = interval.split(':')
-
-        if len(interval_parts) == 1:
-            return interval
-
-        return int(interval_parts[0]) * 60 + int(interval_parts[1])
+        return self.get_interval(work_day)
 
 
 class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
