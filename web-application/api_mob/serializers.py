@@ -293,29 +293,46 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
                     matching_day = day_with_delta
                     break
 
-            reservations = [
-                dict(
-                    specialist=r.specialist.full_name,
-                    full_name=r.full_name,
-                    date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
-                    time=timezone.localtime(r.date_time_reservation).strftime('%H:%M'),
-                    status=r.status,
-                    phone=str(r.phone),
-                    my_reservation=r.user == user,
-                    current_specialist=r.specialist == specialist,
-                    interval=self.get_interval_for_specialist_work_day(specialist=r.specialist, day=self.day)
-                ) for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
-                                                      Q(date_time_reservation__lte=matching_day.replace(hour=int(end_time_parts[0]), minute=int(end_time_parts[1]))))
-            ]
+            for r in Reservation.objects.filter(Q(specialist=specialist) | Q(user=user), Q(date_time_reservation__gte=matching_day) &
+                                                      Q(date_time_reservation__lte=matching_day.replace(hour=int(end_time_parts[0]), minute=int(end_time_parts[1])))):
+
+                time = timezone.localtime(r.date_time_reservation).strftime('%H:%M')
+
+                reservations.append(
+                    dict(
+                        specialist=r.specialist.full_name,
+                        full_name=r.full_name,
+                        date_time_reservation=timezone.localtime(r.date_time_reservation).strftime('%d.%m.%Y %H:%M'),
+                        time=time,
+                        status=r.status,
+                        phone=str(r.phone),
+                        my_reservation=r.user == user,
+                        current_specialist=r.specialist == specialist,
+                        interval=self.get_interval_for_specialist_work_day(specialist=r.specialist, day=self.day,
+                                                                           reservation_time=time)
+                    )
+                )
 
         return reservations
 
-    def get_interval_for_specialist_work_day(self, specialist, day):
-        schedule_setting = specialist.schedule_setting_specialist.first()
+    def get_interval_for_specialist_work_day(self, specialist, day, reservation_time):
         work_day_str = self.DAYS[day]
-        work_day = getattr(schedule_setting, work_day_str)
 
-        return self.get_interval(work_day)
+        work_day = None
+        found_matching = False
+
+        for schedule_setting in specialist.schedule_setting_specialist.all():
+            work_day = getattr(schedule_setting, work_day_str)
+            time_range_parts = work_day.time.split('-')
+            start_time_parts = time_range_parts[0].split(':')
+            end_time_parts = time_range_parts[1].split(':')
+            reservation_time_parts = reservation_time.split(':')
+
+            if int(start_time_parts[0]) <= int(reservation_time_parts[0]) <= int(end_time_parts[0]):
+                found_matching = True
+                break
+
+        return self.get_interval(work_day) if found_matching else "0"
 
 
 class MobileScheduleSettingFullSerializer(serializers.ModelSerializer):
