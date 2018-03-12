@@ -212,10 +212,19 @@ class CustomStringRelatedField(serializers.StringRelatedField):
 class MobileMasterSerializer(serializers.ModelSerializer):
 
     categories = CustomStringRelatedField(many=True)
+    phone1 = serializers.SerializerMethodField()
+    phone2 = serializers.SerializerMethodField()
 
     class Meta:
         model = Specialist
-        fields = ('full_name', 'sex', 'street_address', 'short_info', 'info', 'company', 'categories', 'photo')
+        fields = ('full_name', 'street_address', 'short_info', 'info', 'company', 'categories', 'tags', 'photo',
+                  'phone1', 'phone2')
+
+    def get_phone1(self, obj):
+        pass
+
+    def get_phone2(self, obj):
+        pass
 
 
 class CreateMasterSerializer(MobileMasterSerializer):

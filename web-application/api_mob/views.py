@@ -68,7 +68,13 @@ class CategoryListView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
+        level = self.request.GET.get('level', None)
         queryset = Category.objects.all()
+
+        if level == '2':
+            high_level_categories_ids = [i.pk for i in Category.objects.filter(parent=None)]
+            queryset = queryset.filter(parent_id__in=high_level_categories_ids)
+
         return queryset
 
 
@@ -237,7 +243,7 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 
 class CreateMasterViewApi(generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = CreateMasterSerializer
 
     def perform_create(self, serializer):
@@ -245,7 +251,7 @@ class CreateMasterViewApi(generics.CreateAPIView):
 
 
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
     lookup_field = 'slug'
 
@@ -254,7 +260,7 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
 
 
 class MasterScheduleViewApi(generics.ListAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = MobileScheduleSettingFullSerializer
     lookup_field = 'specialist__slug'
     pagination_class = None
@@ -270,7 +276,7 @@ class MasterScheduleViewApi(generics.ListAPIView):
 
 
 class ReservationCreateViewApi(generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationCreateSerializer
     lookup_field = 'specialist__slug'
     queryset = Reservation.objects.all()
@@ -287,11 +293,12 @@ class ReservationCreateViewApi(generics.CreateAPIView):
         validated_data = serializer.validated_data
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
 
-        check_reservation = Reservation.objects.filter(date_time_reservation=validated_data['date_time_reservation']).first()
+        check_reservation = Reservation.objects.filter(
+            date_time_reservation=validated_data['date_time_reservation']).first()
 
         if check_reservation:
             msg = Messages.AddReservation.you_already_reserved if check_reservation.user == self.request.user \
-                    else Messages.AddReservation.another_already_reserved
+                else Messages.AddReservation.another_already_reserved
 
             raise ValidationError({
                 'success': False,
@@ -302,13 +309,13 @@ class ReservationCreateViewApi(generics.CreateAPIView):
 
 
 class MasterReservationsListViewApi(ReservationListView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
 
 
 class MasterReservationEditViewApi(generics.UpdateAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationEditSerializer
-    permission_classes = (IsReservationBelongsToSpecialist, )
+    permission_classes = (IsReservationBelongsToSpecialist,)
     lookup_field = 'pk'
     queryset = Reservation.objects.all()
 
