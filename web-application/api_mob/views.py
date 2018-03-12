@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.http import JsonResponse
 from rest_framework import filters
 from rest_framework import generics
@@ -246,14 +247,30 @@ class CreateMasterViewApi(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = CreateMasterSerializer
 
+    def __init__(self):
+        super(CreateMasterViewApi, self).__init__()
+        self.instance = None
+
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        with transaction.atomic():
+            self.instance = serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        super(CreateMasterViewApi, self).create(request, *args, **kwargs)
+
+        return JsonResponse(dict(
+            success=True, specialist_status=self.instance.status
+        ), status=status.HTTP_201_CREATED)
 
 
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
     lookup_field = 'slug'
+
+    def perform_update(self, serializer):
+        with transaction.atomic():
+            super(EditMasterViewApi, self).perform_update(serializer)
 
     def get_object(self):
         return Specialist.objects.get(slug=self.kwargs['slug'])

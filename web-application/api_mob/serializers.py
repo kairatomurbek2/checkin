@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils import timezone
+from phonenumbers import PhoneNumber
 from rest_framework import serializers
 from rest_framework.fields import empty
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
@@ -209,31 +210,64 @@ class CustomStringRelatedField(serializers.StringRelatedField):
         return data
 
 
-class MobileMasterSerializer(serializers.ModelSerializer):
+class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
 
     categories = CustomStringRelatedField(many=True)
-    phone1 = serializers.SerializerMethodField()
-    phone2 = serializers.SerializerMethodField()
+    photo = serializers.ImageField(required=False)
+    specialist_contacts = SpecialistContactSerializer(many=True)
+    tags = TagListSerializerField(required=False)
 
     class Meta:
         model = Specialist
-        fields = ('full_name', 'street_address', 'short_info', 'info', 'company', 'categories', 'tags', 'photo',
-                  'phone1', 'phone2')
+        fields = ('full_name', 'street_address', 'short_info', 'info', 'categories', 'tags', 'photo',
+                  'specialist_contacts')
 
-    def get_phone1(self, obj):
-        pass
+    def create(self, validated_data):
+        specialist_contacts = validated_data.pop('specialist_contacts')
+        categories = validated_data.pop('categories')
 
-    def get_phone2(self, obj):
-        pass
+        specialist = Specialist.all_objects.create(**validated_data)
+
+        for sc in specialist_contacts:
+            SpecialistContact.objects.create(specialist=specialist, **sc)
+
+        for c in categories:
+            specialist.categories.add(Category.objects.get(pk=c))
+
+        specialist.save()
+
+        return specialist
 
 
-class CreateMasterSerializer(MobileMasterSerializer):
-    pass
+class EditMasterSerializer(CreateMasterSerializer):
 
+    def update(self, instance, validated_data):
+        validated_data.pop('specialist_contacts')
+        request_data = self.context['view'].request.data
+        categories = validated_data.pop('categories')
 
-class EditMasterSerializer(MobileMasterSerializer):
+        if 'specialist_contacts' in request_data:
+            for sc in request_data['specialist_contacts']:
+                if 'id' in sc:
+                    specialist_contact = SpecialistContact.objects.get(pk=sc['id'])
+                    specialist_contact.phone = sc['phone']
 
-    photo = serializers.ImageField(required=False)
+                    specialist_contact.save()
+                else:
+                    SpecialistContact.objects.create(specialist=instance, **sc)
+
+        for c in categories:
+            c = Category.objects.get(pk=c)
+
+            if c in instance.categories.all():
+                instance.categories.remove(c)
+            else:
+                instance.categories.add(c)
+
+        instance.save()
+        super(EditMasterSerializer, self).update(instance, validated_data)
+
+        return instance
 
 
 class ReservationCreateSerializer(serializers.ModelSerializer):
