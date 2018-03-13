@@ -244,7 +244,7 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 
 class CreateMasterViewApi(generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (SessionAuthentication,)
     serializer_class = CreateMasterSerializer
 
     def __init__(self):
@@ -252,6 +252,12 @@ class CreateMasterViewApi(generics.CreateAPIView):
         self.instance = None
 
     def perform_create(self, serializer):
+        if Specialist.all_objects.filter(user=self.request.user).exists():
+            raise ValidationError(dict(
+                success=False,
+                message=Messages.AddMaster.already_created
+            ))
+
         with transaction.atomic():
             self.instance = serializer.save(user=self.request.user)
 
