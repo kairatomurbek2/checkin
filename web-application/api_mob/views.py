@@ -283,7 +283,7 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
             super(EditMasterViewApi, self).perform_update(serializer)
 
     def get_object(self):
-        return Specialist.objects.get(user=self.request.user)
+        return Specialist.objects.filter(user=self.request.user).first()
 
 
 class MasterScheduleViewApi(generics.ListAPIView):
