@@ -338,3 +338,23 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(edited_by=self.request.user)
+
+
+class UserInfoViewApi(APIView):
+    authentication_classes = (TokenAuthentication, )
+
+    def get(self, request):
+        user = request.user
+        specialist = Specialist.objects.filter(user=user).first()
+        data = {
+            'success': True,
+            'is_specialist': specialist is not None,
+            'name': specialist.full_name if specialist else '%s %s' % (user.first_name, user.last_name),
+            'phone': [p.phone for p in specialist.specialist_contacts.all()] if specialist else None,
+            'avatar': specialist.mobile_photo.url if specialist and specialist.mobile_photo else None,
+            'tags': [str(t) for t in specialist.tags.all()] if specialist else None
+        }
+
+        return JsonResponse(data)
+
+

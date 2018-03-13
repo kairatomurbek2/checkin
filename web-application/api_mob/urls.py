@@ -8,7 +8,8 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi, \
     CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi, \
-    MasterScheduleViewApi, ReservationCreateViewApi, MasterReservationsListViewApi, MasterReservationEditViewApi
+    MasterScheduleViewApi, ReservationCreateViewApi, MasterReservationsListViewApi, MasterReservationEditViewApi, \
+    UserInfoViewApi
 
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -59,4 +60,5 @@ urlpatterns = [
         name='schedule_setting_add'),
     url(r'^work_day/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/update/$', ScheduleSettingUpdateView.as_view(),
         name='schedule_setting_edit'),
+    url(r'^user/info$', UserInfoViewApi.as_view(), name='user_info')
 ]
