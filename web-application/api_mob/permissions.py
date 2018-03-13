@@ -4,7 +4,6 @@ from webapp.models import Reservation, Specialist
 
 
 class IsReservationBelongsToSpecialist(BasePermission):
-
     def has_permission(self, request, view):
         if 'pk' not in view.kwargs:
             return False
@@ -17,6 +16,5 @@ class IsReservationBelongsToSpecialist(BasePermission):
 
 
 class IsSpecialist(BasePermission):
-
     def has_permission(self, request, view):
-        return Specialist.objects.filter(user=request.user).exists()
+        return Specialist.objects.filter(user=request.user).exists() if request.user.is_authenticated else False
