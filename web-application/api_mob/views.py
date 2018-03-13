@@ -244,7 +244,7 @@ class CertificatesCompanyListViewApi(generics.ListAPIView):
 
 
 class CreateMasterViewApi(generics.CreateAPIView):
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = CreateMasterSerializer
 
     def __init__(self):
@@ -270,7 +270,7 @@ class CreateMasterViewApi(generics.CreateAPIView):
 
 
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
     permission_classes = (IsSpecialist, )
 
