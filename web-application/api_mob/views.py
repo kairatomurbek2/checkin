@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.views import ReservationListView
 from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI
-from api_mob.permissions import IsReservationBelongsToSpecialist
+from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
@@ -266,14 +266,14 @@ class CreateMasterViewApi(generics.CreateAPIView):
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
-    lookup_field = 'slug'
+    permission_classes = (IsSpecialist, )
 
     def perform_update(self, serializer):
         with transaction.atomic():
             super(EditMasterViewApi, self).perform_update(serializer)
 
     def get_object(self):
-        return Specialist.objects.get(slug=self.kwargs['slug'])
+        return Specialist.objects.get(user=self.request.user)
 
 
 class MasterScheduleViewApi(generics.ListAPIView):

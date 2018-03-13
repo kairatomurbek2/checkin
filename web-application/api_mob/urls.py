@@ -36,7 +36,7 @@ urlpatterns = [
         name='masters_reservation_edit_api_v1'),
     url(r'^masters/$', MastersListView.as_view(), name='masters_api_v1'),
     url(r'^master/create$', CreateMasterViewApi.as_view(), name='master_create_api'),
-    url(r'^master/(?P<slug>[-_\w]+)/edit/$', EditMasterViewApi.as_view(), name='master_edit_api'),
+    url(r'^master/edit/$', EditMasterViewApi.as_view(), name='master_edit_api'),
     url(r'^companies/$', CompaniesListView.as_view(), name='companies_api_v1'),
     url(r'^companies/(?P<slug>[-_\w]+)/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
     url(r'^companies/(?P<company__slug>[-_\w]+)/specialists/$', MasterCompanyListViewApi.as_view(),
