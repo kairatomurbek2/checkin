@@ -1,8 +1,36 @@
 {% extends 'base.html' %}
-{% load staticfiles thumbnail %}
+{% load staticfiles thumbnail widget_tweaks pagination_tags %}
 {% block content %}
     <main class="result_page">
         <div class="grid">
+            <form action="" name="reservation_filter" method="get" class="sort">
+                <div class="sort_forms">
+                    <span>Время записи</span>
+                    <div class="date_limit">
+                        <span>c</span>
+                        <div class="fieldset__wrapper">
+                            {{ reservation_filter.form.created_at_from|add_class:"datepicker" }}
+                        </div>
+                    </div>
+
+                    <div class="date_limit">
+                        <span>до</span>
+                        <div class="fieldset__wrapper">
+                            {{ reservation_filter.form.created_at_to|add_class:"datepicker" }}
+                        </div>
+                    </div>
+
+                    <label><span>Статус</span>
+                        {{ reservation_filter.form.status }}
+                    </label>
+
+                    <button type="submit" class="button">Применить фильтр</button>
+                </div>
+
+                <div class="sort_search">
+                    {{ reservation_filter.form.search_specialist_profile }}
+                </div>
+            </form>
             <ul class="applicants_list">
                 <li class="list_header">
                     <div>
@@ -12,7 +40,8 @@
                         <span>Статус</span>
                     </div>
                 </li>
-                {% for reservation in reservation_list %}
+                {% autopaginate reservation_filter.qs 50 as reservations %}
+                {% for reservation in reservations %}
                     <li>
                         <div>
                             <p>{{ reservation.specialist }}</p>
@@ -36,13 +65,16 @@
                             {% if reservation.status == 'armored' %}
                                 <span class="expect">Ожидает подтверждения</span>
                             {% endif %}
-                        {% if  reservation.status == 'refused' %}
-                            <span class="non_confirmed">Отказано</span>
-                        {% endif %}
+                            {% if  reservation.status == 'refused' %}
+                                <span class="non_confirmed">Отказано</span>
+                            {% endif %}
                         </div>
                     </li>
+                {% empty %}
+                    <p class="no_result">Нет записей</p>
                 {% endfor %}
             </ul>
+            {% paginate %}
         </div>
     </main>
 {% endblock %}

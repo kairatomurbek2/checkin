@@ -5,6 +5,7 @@ from django.views.generic import UpdateView
 
 from webapp import forms
 from webapp.models import FavoriteSpecialist, Reservation
+from webapp.views.filters import ReservationFilter, ProfileReservationFilter
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
@@ -37,7 +38,14 @@ class HistoryReservationUser(LoginRequiredMixin, ListView):
     template_name = 'profile/reservation_list.html'
     slug_field = 'username'
     context_object_name = 'reservation_list'
+    filterset_class = ProfileReservationFilter
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reservation_filter = self.filterset_class(self.request.GET, queryset=self._get_reservation_list())
+        context['reservation_filter'] = reservation_filter
+        return context
+
+    def _get_reservation_list(self):
         if self.request.user.is_authenticated:
-            return self.model.objects.filter(user=self.request.user)
+            return self.model.objects.filter(user=self.request.user).order_by('-pk')

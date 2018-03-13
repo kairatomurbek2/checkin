@@ -120,3 +120,17 @@ class ReservationFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(label=_('Поиск'),
                                        widget=forms.TextInput(attrs={'placeholder': _('Найти')}),
                                        method=search)
+
+
+def search_specialist_profile(queryset, name, value):
+    return queryset.filter(specialist__full_name__icontains=value)
+
+
+class ProfileReservationFilter(django_filters.FilterSet):
+    created_at_from = django_filters.DateFilter(label=_('C'), name='created_at', lookup_expr='gte')
+    created_at_to = django_filters.DateFilter(label=_('До'), name='created_at', lookup_expr='lte')
+    status = django_filters.ChoiceFilter(label=_('Статус'), choices=assembly_status)
+    search_specialist_profile = django_filters.CharFilter(label=_('Поиск'),
+                                                          widget=forms.TextInput(
+                                                              attrs={'placeholder': _('Найти специалиста')}),
+                                                          method=search_specialist_profile)
