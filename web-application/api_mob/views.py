@@ -264,9 +264,13 @@ class CreateMasterViewApi(generics.CreateAPIView):
 
 
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (SessionAuthentication,)
     serializer_class = EditMasterSerializer
     permission_classes = (IsSpecialist, )
+
+    def get(self, request, *args, **kwargs):
+        serializer_obj = EditMasterSerializer(instance=self.get_object())
+        return JsonResponse(serializer_obj.data)
 
     def perform_update(self, serializer):
         with transaction.atomic():
