@@ -231,8 +231,8 @@ class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
         for sc in specialist_contacts:
             SpecialistContact.objects.create(specialist=specialist, **sc)
 
-        for c in categories:
-            specialist.categories.add(Category.objects.get(pk=c))
+        for c_slug in categories:
+            specialist.categories.add(Category.objects.get(slug=c_slug))
 
         specialist.save()
 
@@ -256,13 +256,13 @@ class EditMasterSerializer(CreateMasterSerializer):
                 else:
                     SpecialistContact.objects.create(specialist=instance, **sc)
 
-        for c in categories:
-            c = Category.objects.get(pk=c)
+        for c_slug in categories:
+            category = Category.objects.get(slug=c_slug)
 
-            if c in instance.categories.all():
-                instance.categories.remove(c)
+            if category in instance.categories.all():
+                instance.categories.remove(category)
             else:
-                instance.categories.add(c)
+                instance.categories.add(category)
 
         instance.save()
         super(EditMasterSerializer, self).update(instance, validated_data)
