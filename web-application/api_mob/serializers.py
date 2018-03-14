@@ -238,7 +238,7 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
                 specialist.categories.add(category)
             except Category.DoesNotExist:
                 raise ValidationError(dict(
-                    success='False',
+                    success=False,
                     message='Категория с slug %s не найдена' % c_slug
                 ))
 
