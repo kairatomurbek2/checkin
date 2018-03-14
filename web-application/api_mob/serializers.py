@@ -234,7 +234,7 @@ class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
 
         for c_slug in categories:
             try:
-                category = Category.objects.get(slug=c_slug)
+                category = Category.objects.get(slug=c_slug.replace('"', ''))
                 specialist.categories.add(category)
             except Category.DoesNotExist:
                 raise ValidationError(dict(
