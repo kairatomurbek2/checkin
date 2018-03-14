@@ -211,7 +211,7 @@ class CustomStringRelatedField(serializers.StringRelatedField):
         return data
 
 
-class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
+class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     categories = CustomStringRelatedField(many=True)
     photo = serializers.ImageField(required=False)
@@ -227,7 +227,7 @@ class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
         specialist_contacts = validated_data.pop('specialist_contacts')
         categories = validated_data.pop('categories')
 
-        specialist = Specialist.all_objects.create(**validated_data)
+        specialist = super(CreateMasterSerializer, self).create(validated_data)
 
         for sc in specialist_contacts:
             SpecialistContact.objects.create(specialist=specialist, **sc)
