@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from phonenumbers import PhoneNumber
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
@@ -232,7 +233,14 @@ class CreateMasterSerializer(serializers.ModelSerializer, TaggitSerializer):
             SpecialistContact.objects.create(specialist=specialist, **sc)
 
         for c_slug in categories:
-            specialist.categories.add(Category.objects.get(slug=c_slug))
+            try:
+                category = Category.objects.get(slug=c_slug)
+                specialist.categories.add(category)
+            except Category.DoesNotExist:
+                raise ValidationError(dict(
+                    success='False',
+                    message='Категория с slug %s не найдена' % c_slug
+                ))
 
         specialist.save()
 
@@ -257,12 +265,18 @@ class EditMasterSerializer(CreateMasterSerializer):
                     SpecialistContact.objects.create(specialist=instance, **sc)
 
         for c_slug in categories:
-            category = Category.objects.get(slug=c_slug)
+            try:
+                category = Category.objects.get(slug=c_slug)
 
-            if category in instance.categories.all():
-                instance.categories.remove(category)
-            else:
-                instance.categories.add(category)
+                if category in instance.categories.all():
+                    instance.categories.remove(category)
+                else:
+                    instance.categories.add(category)
+            except Category.DoesNotExist:
+                raise ValidationError(dict(
+                    success='False',
+                    message='Категория с slug %s не найдена' % c_slug
+                ))
 
         instance.save()
         super(EditMasterSerializer, self).update(instance, validated_data)
