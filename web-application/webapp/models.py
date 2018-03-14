@@ -3,8 +3,12 @@ from __future__ import unicode_literals
 import uuid
 
 from PIL import Image
+from datetime import timedelta
+
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
+from django.utils import timezone
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.utils.translation import ugettext_lazy as _
@@ -20,7 +24,6 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.urls import reverse
-
 
 MOBILE_IMAGE_CROP_SIZE = "150x150"
 
@@ -309,12 +312,16 @@ class Invite(models.Model):
     accepted = models.BooleanField(default=False)
     code = models.CharField(max_length=64, default=uuid.uuid4, editable=False)
 
-    def get_company_list(self):
-        return self.invite_company.all()
-
     class Meta:
         verbose_name = _('Приглашение')
         verbose_name_plural = _('Приглашения')
+
+    @classmethod
+    def clean_invite(cls):
+        """
+        Удаление инвайтов, после N дней
+        """
+        cls.objects.filter(invite_date__lte=timezone.now() - timedelta(days=settings.INVITE_DAYS_LIMIT)).delete()
 
 
 class WorkDay(models.Model):
