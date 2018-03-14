@@ -223,6 +223,11 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ('full_name', 'street_address', 'short_info', 'info', 'categories', 'tags', 'photo',
                   'specialist_contacts')
 
+    def run_validation(self, data=empty):
+        qd = data.copy()
+        qd['tags'] = qd['tags'].strip('"')
+        return super().run_validation(qd)
+
     def create(self, validated_data):
         specialist_contacts = validated_data.pop('specialist_contacts')
         categories = validated_data.pop('categories')
