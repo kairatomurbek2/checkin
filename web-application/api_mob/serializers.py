@@ -224,24 +224,30 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ('full_name', 'street_address', 'short_info', 'info', 'categories', 'tags', 'photo',
                   'specialist_contacts')
 
-    def get_sc_and_categories(self, validated_data):
+    def _get_sc_and_categories(self, validated_data):
         sc = validated_data.pop('specialist_contacts')
         categories = validated_data.pop('categories')
 
         return validated_data, json.loads(sc) if sc else None, json.loads(categories) if categories else None
 
-    def create(self, validated_data):
-        validated_data, specialist_contacts, categories = self.get_sc_and_categories(validated_data)
-        specialist = super(CreateMasterSerializer, self).create(validated_data)
-
+    def _create_sc_and_categories(self, specialist, specialist_contacts, categories, is_edit=False):
         if specialist_contacts:
+            if is_edit:
+                specialist.specialist_contacts.all().delete()
+
             for sc in specialist_contacts:
+                if 'id' in sc:
+                    del sc['id']
+
                 SpecialistContact.objects.create(specialist=specialist, **sc)
 
         if categories:
+            if is_edit:
+                specialist.categories.all().delete()
+
             for c_slug in categories:
                 try:
-                    category = Category.objects.get(slug=c_slug.replace('"', ''))
+                    category = Category.objects.get(slug=c_slug)
                     specialist.categories.add(category)
                 except Category.DoesNotExist:
                     raise ValidationError(dict(
@@ -249,6 +255,11 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
                         message='Категория с slug %s не найдена' % c_slug
                     ))
 
+    def create(self, validated_data):
+        validated_data, specialist_contacts, categories = self._get_sc_and_categories(validated_data)
+        specialist = super(CreateMasterSerializer, self).create(validated_data)
+
+        self._create_sc_and_categories(specialist, specialist_contacts, categories)
         specialist.save()
 
         return specialist
@@ -257,37 +268,22 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 class EditMasterSerializer(CreateMasterSerializer):
 
     def update(self, instance, validated_data):
-        validated_data, specialist_contacts, categories = self.get_sc_and_categories(validated_data)
+        validated_data, specialist_contacts, categories = self._get_sc_and_categories(validated_data)
 
-        if specialist_contacts:
-            for sc in specialist_contacts:
-                if 'id' in sc and sc['id'] is not None:
-                    specialist_contact = SpecialistContact.objects.get(pk=sc['id'])
-                    specialist_contact.phone = sc['phone']
-
-                    specialist_contact.save()
-                else:
-                    SpecialistContact.objects.create(specialist=instance, **sc)
-
-        if categories:
-            for c_slug in categories:
-                try:
-                    category = Category.objects.get(slug=c_slug)
-
-                    if category in instance.categories.all():
-                        instance.categories.remove(category)
-                    else:
-                        instance.categories.add(category)
-                except Category.DoesNotExist:
-                    raise ValidationError(dict(
-                        success='False',
-                        message='Категория с slug %s не найдена' % c_slug
-                    ))
+        self._create_sc_and_categories(instance, specialist_contacts, categories, is_edit=True)
 
         instance.save()
         super(EditMasterSerializer, self).update(instance, validated_data)
 
         return instance
+
+    def representation(self):
+        new_data = self.data.copy()
+
+        new_data['categories'] = [c.slug for c in self.instance.categories.all()]
+        new_data['specialist_contacts'] = [dict(id=sc.pk, phone=str(sc.phone)) for sc in self.instance.specialist_contacts.all()]
+
+        return new_data
 
 
 class ReservationCreateSerializer(serializers.ModelSerializer):

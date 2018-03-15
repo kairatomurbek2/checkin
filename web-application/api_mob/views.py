@@ -276,7 +276,7 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
 
     def get(self, request, *args, **kwargs):
         serializer_obj = EditMasterSerializer(instance=self.get_object())
-        return JsonResponse(serializer_obj.data)
+        return JsonResponse(serializer_obj.representation())
 
     def perform_update(self, serializer):
         with transaction.atomic():
