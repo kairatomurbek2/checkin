@@ -1,3 +1,4 @@
+import json
 from datetime import date
 import datetime
 from django.contrib.auth.models import User
@@ -213,9 +214,9 @@ class CustomStringRelatedField(serializers.StringRelatedField):
 
 class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
-    categories = CustomStringRelatedField(many=True)
+    categories = serializers.CharField(required=False)
     photo = serializers.ImageField(required=False)
-    specialist_contacts = SpecialistContactSerializer(many=True)
+    specialist_contacts = serializers.CharField(required=False)
     tags = TagListSerializerField(required=False)
 
     class Meta:
@@ -223,32 +224,30 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ('full_name', 'street_address', 'short_info', 'info', 'categories', 'tags', 'photo',
                   'specialist_contacts')
 
-    def run_validation(self, data=empty):
-        qd = data.copy()
-
-        if 'tags' in qd:
-            qd['tags'] = qd['tags'].strip('"')
-
-        return super().run_validation(qd)
-
-    def create(self, validated_data):
-        specialist_contacts = validated_data.pop('specialist_contacts')
+    def get_sc_and_categories(self, validated_data):
+        sc = validated_data.pop('specialist_contacts')
         categories = validated_data.pop('categories')
 
+        return validated_data, json.loads(sc) if sc else None, json.loads(categories) if categories else None
+
+    def create(self, validated_data):
+        validated_data, specialist_contacts, categories = self.get_sc_and_categories(validated_data)
         specialist = super(CreateMasterSerializer, self).create(validated_data)
 
-        for sc in specialist_contacts:
-            SpecialistContact.objects.create(specialist=specialist, **sc)
+        if specialist_contacts:
+            for sc in specialist_contacts:
+                SpecialistContact.objects.create(specialist=specialist, **sc)
 
-        for c_slug in categories:
-            try:
-                category = Category.objects.get(slug=c_slug.replace('"', ''))
-                specialist.categories.add(category)
-            except Category.DoesNotExist:
-                raise ValidationError(dict(
-                    success=False,
-                    message='Категория с slug %s не найдена' % c_slug
-                ))
+        if categories:
+            for c_slug in categories:
+                try:
+                    category = Category.objects.get(slug=c_slug.replace('"', ''))
+                    specialist.categories.add(category)
+                except Category.DoesNotExist:
+                    raise ValidationError(dict(
+                        success=False,
+                        message='Категория с slug %s не найдена' % c_slug
+                    ))
 
         specialist.save()
 
@@ -258,13 +257,11 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 class EditMasterSerializer(CreateMasterSerializer):
 
     def update(self, instance, validated_data):
-        validated_data.pop('specialist_contacts')
-        request_data = self.context['view'].request.data
-        categories = validated_data.pop('categories')
+        validated_data, specialist_contacts, categories = self.get_sc_and_categories(validated_data)
 
-        if 'specialist_contacts' in request_data:
-            for sc in request_data['specialist_contacts']:
-                if 'id' in sc:
+        if specialist_contacts:
+            for sc in specialist_contacts:
+                if 'id' in sc and sc['id'] is not None:
                     specialist_contact = SpecialistContact.objects.get(pk=sc['id'])
                     specialist_contact.phone = sc['phone']
 
@@ -272,19 +269,20 @@ class EditMasterSerializer(CreateMasterSerializer):
                 else:
                     SpecialistContact.objects.create(specialist=instance, **sc)
 
-        for c_slug in categories:
-            try:
-                category = Category.objects.get(slug=c_slug)
+        if categories:
+            for c_slug in categories:
+                try:
+                    category = Category.objects.get(slug=c_slug)
 
-                if category in instance.categories.all():
-                    instance.categories.remove(category)
-                else:
-                    instance.categories.add(category)
-            except Category.DoesNotExist:
-                raise ValidationError(dict(
-                    success='False',
-                    message='Категория с slug %s не найдена' % c_slug
-                ))
+                    if category in instance.categories.all():
+                        instance.categories.remove(category)
+                    else:
+                        instance.categories.add(category)
+                except Category.DoesNotExist:
+                    raise ValidationError(dict(
+                        success='False',
+                        message='Категория с slug %s не найдена' % c_slug
+                    ))
 
         instance.save()
         super(EditMasterSerializer, self).update(instance, validated_data)
