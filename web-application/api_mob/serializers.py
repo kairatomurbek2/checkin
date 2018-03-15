@@ -225,7 +225,10 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     def run_validation(self, data=empty):
         qd = data.copy()
-        qd['tags'] = qd['tags'].strip('"')
+
+        if 'tags' in qd:
+            qd['tags'] = qd['tags'].strip('"')
+
         return super().run_validation(qd)
 
     def create(self, validated_data):
