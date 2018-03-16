@@ -18,6 +18,7 @@ from api_mob.serializers import CategoryMainSerializer, CategorySerializer, Mast
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
     EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer, ReservationEditSerializer
 from api_mob.social_auth import SocialAuth
+from main.choices import MODERATION
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
     ScheduleSetting
@@ -272,10 +273,22 @@ class CreateMasterViewApi(generics.CreateAPIView):
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
-    permission_classes = (IsSpecialist, )
+    # permission_classes = (IsSpecialist, )
 
     def get(self, request, *args, **kwargs):
-        serializer_obj = EditMasterSerializer(instance=self.get_object())
+        spec = self.get_object()
+
+        if not spec or spec.status == MODERATION:
+            msg = 'Невозможно выполнить операцию до создания специалиста.' if not spec else 'Ваша заявка на создание ' \
+                                                                                            'специалиста находится на' \
+                                                                                            ' модерации. '
+
+            return JsonResponse(dict(
+                success=False,
+                message=msg
+            ))
+
+        serializer_obj = EditMasterSerializer(instance=spec)
         return JsonResponse(serializer_obj.representation())
 
     def perform_update(self, serializer):
@@ -283,7 +296,7 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
             super(EditMasterViewApi, self).perform_update(serializer)
 
     def get_object(self):
-        return Specialist.objects.filter(user=self.request.user).first()
+        return Specialist.all_objects.filter(user=self.request.user).first()
 
 
 class MasterScheduleViewApi(generics.ListAPIView):
