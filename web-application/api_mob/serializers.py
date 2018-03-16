@@ -279,9 +279,11 @@ class EditMasterSerializer(CreateMasterSerializer):
 
     def representation(self):
         new_data = self.data.copy()
+        categories = self.instance.categories.all()
 
-        new_data['categories'] = [c.slug for c in self.instance.categories.all()]
+        new_data['categories'] = [c.slug for c in categories]
         new_data['specialist_contacts'] = [dict(id=sc.pk, phone=str(sc.phone)) for sc in self.instance.specialist_contacts.all()]
+        new_data['category_names'] = [c.name for c in categories]
 
         return new_data
 

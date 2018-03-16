@@ -295,6 +295,13 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
         with transaction.atomic():
             super(EditMasterViewApi, self).perform_update(serializer)
 
+    def update(self, request, *args, **kwargs):
+        super(EditMasterViewApi, self).update(request, *args, **kwargs)
+
+        return JsonResponse(dict(
+            success=True, message='Ваш профиль обновлен'
+        ))
+
     def get_object(self):
         return Specialist.all_objects.filter(user=self.request.user).first()
 
