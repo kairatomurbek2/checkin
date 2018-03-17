@@ -243,7 +243,8 @@ class CreateMasterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
         if categories:
             if is_edit:
-                specialist.categories.all().delete()
+                specialist.categories.clear()
+                specialist.save()
 
             for c_slug in categories:
                 try:
