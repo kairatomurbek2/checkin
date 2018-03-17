@@ -28,6 +28,19 @@ from django.urls import reverse
 MOBILE_IMAGE_CROP_SIZE = "150x150"
 
 
+def create_schedule_setting(specialist=None, company=None):
+    monday = WorkDay.objects.create()
+    tuesday = WorkDay.objects.create()
+    wednesday = WorkDay.objects.create()
+    thursday = WorkDay.objects.create()
+    friday = WorkDay.objects.create()
+    saturday = WorkDay.objects.create()
+    sunday = WorkDay.objects.create()
+
+    ScheduleSetting.objects.create(specialist=specialist, company=company, monday=monday, tuesday=tuesday, wednesday=wednesday,
+                                   thursday=thursday, friday=friday, saturday=saturday, sunday=sunday)
+
+
 class CategoryManager(models.Manager):
     def get_queryset(self):
         return super(CategoryManager, self).get_queryset().filter(is_active=True)
@@ -254,6 +267,8 @@ class Specialist(models.Model):
             mail = EmailMessage('Успешная регистрация специалиста', message, to=[self.user.email])
             mail.content_subtype = 'html'
             mail.send()
+
+            create_schedule_setting(specialist=self)
 
         if self.photo and crop_data:
             img = Image.open(self.photo)

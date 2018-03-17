@@ -9,7 +9,7 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi, \
     CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi, \
     MasterScheduleViewApi, ReservationCreateViewApi, MasterReservationsListViewApi, MasterReservationEditViewApi, \
-    UserInfoViewApi
+    UserInfoViewApi, MobileScheduleSettingUpdateView
 
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -37,6 +37,8 @@ urlpatterns = [
     url(r'^masters/$', MastersListView.as_view(), name='masters_api_v1'),
     url(r'^master/create/$', CreateMasterViewApi.as_view(), name='master_create_api'),
     url(r'^master/edit/$', EditMasterViewApi.as_view(), name='master_edit_api'),
+    url(r'^master/schedule/edit/$', MobileScheduleSettingUpdateView.as_view(),
+        name='schedule_edit_api_v1'),
     url(r'^companies/$', CompaniesListView.as_view(), name='companies_api_v1'),
     url(r'^companies/(?P<slug>[-_\w]+)/$', CompaniesDetailViewApi.as_view(), name='companies_api_v1_detail'),
     url(r'^companies/(?P<company__slug>[-_\w]+)/specialists/$', MasterCompanyListViewApi.as_view(),
@@ -56,9 +58,5 @@ urlpatterns = [
         name='add_rating_for_company'),
     url(r'^favorite/add/(?P<slug>[-_\w]+)/$', FavoriteAddViewApi.as_view(), name='favorites_api'),
     url(r'^favorite/$', ProfileFavoriteListViewApi.as_view(), name='favorite_list_api'),
-    url(r'^work_day/(?P<specialist__slug>[-_\w]+)/add/$', ScheduleSettingAddView.as_view(),
-        name='schedule_setting_add'),
-    url(r'^work_day/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/update/$', ScheduleSettingUpdateView.as_view(),
-        name='schedule_setting_edit'),
     url(r'^user/info$', UserInfoViewApi.as_view(), name='user_info')
 ]

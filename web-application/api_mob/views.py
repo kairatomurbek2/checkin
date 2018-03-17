@@ -275,6 +275,10 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     serializer_class = EditMasterSerializer
     # permission_classes = (IsSpecialist, )
 
+    def __init__(self):
+        super(EditMasterViewApi, self).__init__()
+        self.instance = None
+
     def get(self, request, *args, **kwargs):
         spec = self.get_object()
 
@@ -293,13 +297,14 @@ class EditMasterViewApi(generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         with transaction.atomic():
-            super(EditMasterViewApi, self).perform_update(serializer)
+            self.instance = serializer.save()
 
     def update(self, request, *args, **kwargs):
         super(EditMasterViewApi, self).update(request, *args, **kwargs)
 
         return JsonResponse(dict(
-            success=True, message='Ваш профиль обновлен'
+            success=True, message='Ваш профиль обновлен',
+            avatar=self.instance.mobile_photo.url if self.instance.mobile_photo else None
         ))
 
     def get_object(self):
@@ -388,3 +393,12 @@ class UserInfoViewApi(APIView):
         return JsonResponse(data)
 
 
+class MobileScheduleSettingUpdateView(generics.UpdateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsSpecialist, )
+
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def get_queryset(self):
+        return ScheduleSetting.objects.filter(specialist__user=self.request.user)

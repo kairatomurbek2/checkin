@@ -1,8 +1,9 @@
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db import transaction
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 
-from webapp.models import Company, CompanyContact, Reservation
+from webapp.models import Company, CompanyContact, Reservation, Specialist, create_schedule_setting
 from webapp.firebase import FirebaseHelper
 
 # from main.settings_local import FIREBASE_URL, FIREBASE_SECRET, FIREBASE_USER_EMAIL
@@ -58,3 +59,13 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
             firebase_helper.reservation_new(data=data)
         else:
             firebase_helper.reservation_changed(data=data)
+
+
+def specialist_companies_changed(sender, instance, **kwargs):
+    with transaction.atomic():
+        if kwargs['action'] == 'post_add':
+            for pk in list(kwargs['pk_set']):
+                create_schedule_setting(specialist=instance, company=Company.objects.get(pk=pk))
+
+
+m2m_changed.connect(specialist_companies_changed, sender=Specialist.company.through)
