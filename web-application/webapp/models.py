@@ -27,6 +27,16 @@ from django.urls import reverse
 
 MOBILE_IMAGE_CROP_SIZE = "150x150"
 
+DAYS = {
+    'monday': 'Понедельник',
+    'tuesday': 'Вторник',
+    'wednesday': 'Среда',
+    'thursday': 'Четверг',
+    'friday': 'Пятница',
+    'saturday': 'Суббота',
+    'sunday': 'Воскресенье',
+}
+
 
 def create_schedule_setting(specialist=None, company=None):
     monday = WorkDay.objects.create()
@@ -348,6 +358,16 @@ class WorkDay(models.Model):
     class Meta:
         verbose_name = _('Рабочий день')
         verbose_name_plural = _('Рабочие дни')
+
+    def to_dict(self, week_day, week_day_title):
+        return {
+            'week_day': week_day,
+            'week_day_title': week_day_title,
+            'time': self.time,
+            'interval': self.interval,
+            'live_recording': self.live_recording,
+            'lunch_settings': self.lunch_settings,
+        }
 
 
 class ScheduleSetting(models.Model):

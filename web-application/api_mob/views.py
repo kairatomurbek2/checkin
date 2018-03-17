@@ -21,7 +21,7 @@ from api_mob.social_auth import SocialAuth
 from main.choices import MODERATION
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
-    ScheduleSetting
+    ScheduleSetting, DAYS
 from rest_framework import status
 
 
@@ -393,12 +393,25 @@ class UserInfoViewApi(APIView):
         return JsonResponse(data)
 
 
-class MobileScheduleSettingUpdateView(generics.UpdateAPIView):
+class MobileScheduleSettingUpdateView(APIView):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsSpecialist, )
 
     def get(self, request, *args, **kwargs):
-        pass
+        data = []
+
+        for s in self.get_queryset():
+            company = s.company
+            times = [
+                (getattr(s, d)).to_dict(d, DAYS[d]) for d in DAYS
+            ]
+
+            item = {'id': s.pk, 'company_name': company.name if company else '',
+                    'times': times}
+
+            data.append(item)
+
+        return JsonResponse(data, safe=False)
 
     def get_queryset(self):
         return ScheduleSetting.objects.filter(specialist__user=self.request.user)
