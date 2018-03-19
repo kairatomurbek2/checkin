@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.http import JsonResponse
@@ -412,6 +414,43 @@ class MobileScheduleSettingUpdateView(APIView):
             data.append(item)
 
         return JsonResponse(data, safe=False)
+
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            try:
+                data = json.loads(request.body.decode('utf-8'))
+
+                for schedule in data:
+                    try:
+                        schedule_setting = ScheduleSetting.objects.get(pk=schedule['id'])
+
+                        for time in schedule['times']:
+                            day = getattr(schedule_setting, time['week_day'], None)
+
+                            if day:
+                                day.lunch_settings = time['lunch_settings']
+                                day.time = time['time']
+                                day.interval = time['interval']
+                                day.live_recording = time['live_recording']
+
+                                day.save()
+
+                    except ScheduleSetting.DoesNotExist:
+                        return JsonResponse(dict(
+                            success=False,
+                            message='Расписание с id %s не найдено.' % schedule['id']
+                        ), status=400)
+
+                return JsonResponse(dict(
+                    success=True,
+                    message='Расписание успешно обновлено.'
+                ))
+
+            except json.JSONDecodeError:
+                return JsonResponse(dict(
+                    success=False,
+                    message='Ошибка при парсинге json. Убедитесь что отправляете запрос с Content-Type:application/json'
+                ), status=400)
 
     def get_queryset(self):
         return ScheduleSetting.objects.filter(specialist__user=self.request.user)
