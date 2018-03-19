@@ -78,7 +78,7 @@ class CompanyCreateForm(forms.ModelForm):
 
 class CompanyUpdateForm(forms.ModelForm):
     name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Название учреждения')}))
-    email = forms.EmailField(required=True,
+    email = forms.EmailField(required=False,
                              widget=forms.EmailInput(attrs={'placeholder': _('Эл. адрес компании')}))
     website = forms.URLField(required=False, widget=forms.URLInput(attrs={'placeholder': _('Веб-сайт')}))
     street_address = forms.CharField(required=False,
