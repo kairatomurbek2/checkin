@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
-from api.views import ScheduleSettingAddView, ScheduleSettingUpdateView
+from api.views import ScheduleSettingAddView, ScheduleSettingUpdateView, ReservationListViewUser
 from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrieveView, MastersListView, \
     CompaniesListView, MasterDetailViewApi, MasterReviewsListViewApi, CompaniesDetailViewApi, \
     MasterCompanyListViewApi, CompanyReviewsListApi, FacebookLogin, GoogleLogin, RatingAddSpecialistViewApi, \
@@ -59,5 +59,6 @@ urlpatterns = [
         name='add_rating_for_company'),
     url(r'^favorite/add/(?P<slug>[-_\w]+)/$', FavoriteAddViewApi.as_view(), name='favorites_api'),
     url(r'^favorite/$', ProfileFavoriteListViewApi.as_view(), name='favorite_list_api'),
-    url(r'^user/info$', UserInfoViewApi.as_view(), name='user_info')
+    url(r'^user/info/$', UserInfoViewApi.as_view(), name='user_info'),
+    url(r'^user/reservations/$', ReservationListViewUser.as_view(), name='user_reservations')
 ]
