@@ -268,6 +268,8 @@ FIREBASE_URL = 'https://checkin-kg.firebaseio.com'
 FIREBASE_SECRET = 'w6wF4M8FEE385fmGJYOzhhTIXisKFDjGM2drdSbs'
 FIREBASE_USER_EMAIL = 'chekin.kg@gmail.com'
 
+INVITE_DAYS_LIMIT = 12
+
 try:
     from settings_local import *
 except ImportError:
