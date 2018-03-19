@@ -48,6 +48,7 @@ urlpatterns = [
     url(r'^companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),
         name='company_reviews_api_v1'),
     url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/profile/$', UserDetailsViewApi.as_view(), name='user_detail_api'),
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
