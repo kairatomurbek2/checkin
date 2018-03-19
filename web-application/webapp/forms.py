@@ -55,7 +55,7 @@ ContactFormSet = forms.inlineformset_factory(Specialist, SpecialistContact, form
 
 class CompanyCreateForm(forms.ModelForm):
     name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Название учреждения')}))
-    email = forms.EmailField(required=True,
+    email = forms.EmailField(required=False,
                              widget=forms.EmailInput(attrs={'placeholder': _('Эл. адрес компании')}))
     website = forms.URLField(required=False, widget=forms.URLInput(attrs={'placeholder': _('Веб-сайт')}))
     phone = PhoneNumberField(required=True, widget=forms.TextInput(attrs={'placeholder': _('Введите номер телефона')}))
