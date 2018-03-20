@@ -379,6 +379,7 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
 
 class UserInfoViewApi(APIView):
     authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         user = request.user
