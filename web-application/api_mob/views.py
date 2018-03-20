@@ -388,7 +388,7 @@ class UserInfoViewApi(APIView):
             'success': True,
             'is_specialist': specialist is not None,
             'name': specialist.full_name if specialist else user.username,
-            'phone': [p.phone for p in specialist.specialist_contacts.all()] if specialist else None,
+            'phone': [str(p.phone) for p in specialist.specialist_contacts.all()] if specialist else None,
             'avatar': specialist.mobile_photo.url if specialist and specialist.mobile_photo else None,
             'tags': [str(t) for t in specialist.tags.all()] if specialist else None,
             'slug': specialist.slug if specialist else None
