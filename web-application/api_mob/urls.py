@@ -1,3 +1,4 @@
+from allauth.account.views import confirm_email
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
@@ -47,6 +48,7 @@ urlpatterns = [
         name='company_certificates_api_v1'),
     url(r'^companies/(?P<company_slug>[-_\w]+)/reviews/$', CompanyReviewsListApi.as_view(),
         name='company_reviews_api_v1'),
+    url(r'^rest-auth/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^rest-auth/profile/$', UserDetailsViewApi.as_view(), name='user_detail_api'),
