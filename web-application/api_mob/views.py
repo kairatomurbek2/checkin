@@ -378,7 +378,7 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
 
 
 class UserInfoViewApi(APIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (SessionAuthentication, )
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
@@ -390,7 +390,8 @@ class UserInfoViewApi(APIView):
             'name': specialist.full_name if specialist else user.username,
             'phone': [p.phone for p in specialist.specialist_contacts.all()] if specialist else None,
             'avatar': specialist.mobile_photo.url if specialist and specialist.mobile_photo else None,
-            'tags': [str(t) for t in specialist.tags.all()] if specialist else None
+            'tags': [str(t) for t in specialist.tags.all()] if specialist else None,
+            'slug': specialist.slug if specialist else None
         }
 
         return JsonResponse(data)
