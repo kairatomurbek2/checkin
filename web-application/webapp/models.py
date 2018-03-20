@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import collections
 import uuid
 
 from PIL import Image
@@ -27,15 +28,15 @@ from django.urls import reverse
 
 MOBILE_IMAGE_CROP_SIZE = "150x150"
 
-DAYS = {
-    'monday': 'Понедельник',
-    'tuesday': 'Вторник',
-    'wednesday': 'Среда',
-    'thursday': 'Четверг',
-    'friday': 'Пятница',
-    'saturday': 'Суббота',
-    'sunday': 'Воскресенье',
-}
+DAYS = collections.OrderedDict()
+
+DAYS['monday'] = 'Понедельник'
+DAYS['tuesday'] = 'Вторник'
+DAYS['wednesday'] = 'Среда'
+DAYS['thursday'] = 'Четверг'
+DAYS['friday'] = 'Пятница'
+DAYS['saturday'] = 'Суббота'
+DAYS['sunday'] = 'Воскресенье'
 
 
 def create_schedule_setting(specialist=None, company=None):
