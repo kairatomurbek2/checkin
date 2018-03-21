@@ -50,10 +50,12 @@ class ScheduleSettingSerializer(serializers.ModelSerializer):
     friday = WorkDaySerializer()
     saturday = WorkDaySerializer()
     sunday = WorkDaySerializer()
+    hidden = serializers.BooleanField(required=False)
 
     class Meta:
         model = ScheduleSetting
-        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company')
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company',
+                  'hidden')
 
     def create(self, validated_data, *args, **kwargs):
         if 'monday' in validated_data or 'tuesday' in validated_data or 'wednesday' in validated_data \
@@ -102,10 +104,12 @@ class ScheduleSettingUpdateSerializer(serializers.ModelSerializer):
     friday = WorkDayUpdateSerializer()
     saturday = WorkDayUpdateSerializer()
     sunday = WorkDayUpdateSerializer()
+    hidden = serializers.BooleanField(required=False)
 
     class Meta:
         model = ScheduleSetting
-        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company')
+        fields = ('id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'company',
+                  'hidden')
 
     def update(self, instance, validated_data):
         company = validated_data['company']

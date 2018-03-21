@@ -325,9 +325,9 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
 
     def get_interval(self, obj):
         interval = obj.interval
-        interval_parts = interval.split(':')
+        interval_parts = interval.split(':') if interval else None
 
-        if len(interval_parts) == 1:
+        if interval_parts is None or len(interval_parts) == 1:
             return interval
 
         return str(int(interval_parts[0]) * 60 + int(interval_parts[1]))
@@ -339,9 +339,9 @@ class WorkDayWithReservationsSerializer(serializers.ModelSerializer):
         matching_day = None
         reservations = []
 
-        time_parts = instance.time.split('-')
+        time_parts = instance.time.split('-') if instance.time else None
 
-        if len(time_parts) == 2:
+        if time_parts is not None and len(time_parts) == 2:
 
             start_time_parts = time_parts[0].split(':')
             end_time_parts = time_parts[1].split(':')

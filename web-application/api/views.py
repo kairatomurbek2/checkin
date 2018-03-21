@@ -43,9 +43,14 @@ class ScheduleSettingListAPIViewView(generics.ListAPIView):
     serializer_class = ScheduleSettingFullSerializer
     lookup_field = 'specialist__slug'
     pagination_class = None
+    authentication_classes = (TokenAuthentication, )
 
     def get_queryset(self):
-        return ScheduleSetting.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+        user = self.request.user
+        manager = ScheduleSetting.objects if user and user.is_authenticated and Specialist.objects.filter(slug=self.kwargs['specialist__slug'],
+                                                                                                          user=user).exists() else ScheduleSetting.public_objects
+
+        return manager.filter(specialist__slug=self.kwargs['specialist__slug'])
 
 
 class ReservationListView(generics.ListAPIView):

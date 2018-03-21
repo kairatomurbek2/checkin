@@ -378,7 +378,13 @@ class WorkDay(models.Model):
         return self
 
 
+class PublicScheduleSettingManager(models.Manager):
+    def get_queryset(self):
+        return super(PublicScheduleSettingManager, self).get_queryset().filter(hidden=False)
+
+
 class ScheduleSetting(models.Model):
+
     specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
                                    null=True)
     company = models.ForeignKey(Company, related_name='schedule_setting_company', null=True, blank=True)
@@ -389,6 +395,9 @@ class ScheduleSetting(models.Model):
     friday = models.ForeignKey(WorkDay, verbose_name=_('Пятница'), related_name='fridays', null=True, blank=True)
     saturday = models.ForeignKey(WorkDay, verbose_name=_('Суббота'), related_name='saturdays', null=True, blank=True)
     sunday = models.ForeignKey(WorkDay, verbose_name=_('Воскресенье'), related_name='sundays', null=True, blank=True)
+    hidden = models.BooleanField(verbose_name=_('Скрыто?'), default=False)
+    public_objects = PublicScheduleSettingManager()
+    objects = models.Manager()
 
     class Meta:
         verbose_name = _('Настройка расписание')

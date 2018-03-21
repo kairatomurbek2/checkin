@@ -320,7 +320,7 @@ class MasterScheduleViewApi(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return ScheduleSetting.objects.filter(specialist__slug=self.kwargs['specialist__slug'])
+        return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'])
 
     def get_serializer_context(self):
         context = super(MasterScheduleViewApi, self).get_serializer_context()
