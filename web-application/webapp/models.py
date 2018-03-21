@@ -112,7 +112,6 @@ class Company(models.Model):
     phone = PhoneNumberField(verbose_name=_('Номер телефона'))
     short_phone = models.CharField(max_length=6, blank=True, null=True, verbose_name=('Короткий номер'))
     email = models.EmailField(verbose_name=_('Эл. адрес'), null=True, blank=True)
-    legal_data = models.TextField(verbose_name=_('Юридистические данные'), max_length=500, blank=True, null=True)
     website = models.URLField(verbose_name=_('Веб-сайт'), blank=True, null=True)
     categories = models.ManyToManyField(Category, related_name='categories', verbose_name=_('Категории'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))

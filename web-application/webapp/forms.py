@@ -72,7 +72,7 @@ class CompanyCreateForm(forms.ModelForm):
             'info': RedactorEditor(),
             'company_tags': TagWidget()
         }
-        fields = ['logo', 'slug', 'name', 'street_address', 'short_info', 'phone', 'short_phone', 'legal_data', 'website',
+        fields = ['logo', 'slug', 'name', 'street_address', 'short_info', 'phone', 'short_phone', 'website',
                   'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
 
 
@@ -94,7 +94,7 @@ class CompanyUpdateForm(forms.ModelForm):
             'info': RedactorEditor(),
             'company_tags': TagWidget()
         }
-        fields = ['logo', 'name', 'street_address', 'short_phone', 'short_info', 'legal_data', 'website',
+        fields = ['logo', 'name', 'street_address', 'short_phone', 'short_info', 'website',
                   'categories', 'info', 'email', 'company_tags', 'latitude', 'longitude']
 
 
