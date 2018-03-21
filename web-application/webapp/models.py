@@ -369,6 +369,14 @@ class WorkDay(models.Model):
             'lunch_settings': self.lunch_settings,
         }
 
+    def truncate(self):
+        self.time = None
+        self.interval = None
+        self.live_recording = None
+        self.lunch_settings = None
+
+        return self
+
 
 class ScheduleSetting(models.Model):
     specialist = models.ForeignKey(Specialist, related_name='schedule_setting_specialist', verbose_name=_('Специалист'),
@@ -385,6 +393,15 @@ class ScheduleSetting(models.Model):
     class Meta:
         verbose_name = _('Настройка расписание')
         verbose_name_plural = _('Настройка расписаний')
+
+    def truncate_fields(self):
+        self.monday.truncate().save()
+        self.tuesday.truncate().save()
+        self.wednesday.truncate().save()
+        self.thursday.truncate().save()
+        self.friday.truncate().save()
+        self.saturday.truncate().save()
+        self.sunday.truncate().save()
 
 
 class RatingManager(models.Manager):

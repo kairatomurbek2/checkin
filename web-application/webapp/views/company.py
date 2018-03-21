@@ -279,11 +279,11 @@ class SpecialistSearchView(BaseFormView):
         email = form.cleaned_data['email']
         if not Specialist.objects.filter(
                 Q(user__first_name__icontains=email, company=company) | Q(user__email=email, company=company) |
-                Q(user__last_name__icontains=email, company=company) | Q(full_name=email, company=company)):
+                Q(user__last_name__icontains=email, company=company) | Q(full_name__icontains=email, company=company)):
             if email:
                 return Specialist.objects.filter(
-                    Q(user__first_name=email) | Q(user__email=email) | Q(user__last_name__icontains=email) | Q(
-                        full_name=email))
+                    Q(user__first_name__icontains=email) | Q(user__email=email) | Q(user__last_name__icontains=email) | Q(
+                        full_name__icontains=email))
 
     def invite_form_valid(self, invite_form):
         invite = self.__create_invite(invite_form)

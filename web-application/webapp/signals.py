@@ -3,7 +3,7 @@ from django.db import transaction
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 
-from webapp.models import Company, CompanyContact, Reservation, Specialist, create_schedule_setting
+from webapp.models import Company, CompanyContact, Reservation, Specialist, create_schedule_setting, ScheduleSetting
 from webapp.firebase import FirebaseHelper
 
 # from main.settings_local import FIREBASE_URL, FIREBASE_SECRET, FIREBASE_USER_EMAIL
@@ -64,6 +64,11 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
 def specialist_companies_changed(sender, instance, **kwargs):
     with transaction.atomic():
         if kwargs['action'] == 'post_add':
+            spec_schedule = ScheduleSetting.objects.filter(specialist=instance, company=None).first()
+
+            if spec_schedule is not None:
+                spec_schedule.truncate_fields()
+
             for pk in list(kwargs['pk_set']):
                 create_schedule_setting(specialist=instance, company=Company.objects.get(pk=pk))
 
