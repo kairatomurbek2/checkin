@@ -2,6 +2,8 @@ import datetime
 import json
 import threading
 from smtplib import SMTPException
+
+from django.db import transaction
 from django.db.models import Q
 from allauth.account.models import EmailAddress
 from django.conf import settings
@@ -143,27 +145,33 @@ class CompanyCreateView(CreateView):
         return reverse('company_detail', args=(self.object.slug,))
 
     def form_valid(self, form):
-        image_crop_data = self.request.POST.get('image-crop-data')
-        crop_data_json = json.loads(image_crop_data) if image_crop_data else None
+        with transaction.atomic():
+            image_crop_data = self.request.POST.get('image-crop-data')
+            crop_data_json = json.loads(image_crop_data) if image_crop_data else None
 
-        context = self.get_context_data()
-        formset = context['formset']
-        company = form.save(commit=False)
-        employee = Employees(user=self.request.user, owner=True)
-        employee.save()
-        company.edited_at = datetime.datetime.now()
-        company.edited_by = self.request.user
-        company.save(crop_data=crop_data_json)
-        company.user.add(employee)
-        company.save()
+            context = self.get_context_data()
+            formset = context['formset']
+            company = form.save(commit=False)
 
-        if formset.is_valid():
-            formset.instance = company
-            formset.save()
-        form.save_m2m()
-        thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company,))
-        thread.start()
-        return super(CompanyCreateView, self).form_valid(form)
+            employee = Employees.objects.filter(user=self.request.user, owner=True).first()
+
+            if not employee:
+                employee = Employees(user=self.request.user, owner=True)
+                employee.save()
+
+            company.edited_at = datetime.datetime.now()
+            company.edited_by = self.request.user
+            company.save(crop_data=crop_data_json)
+            company.user.add(employee)
+            company.save()
+
+            if formset.is_valid():
+                formset.instance = company
+                formset.save()
+            form.save_m2m()
+            thread = threading.Thread(target=CompanyCreateView.send_email_notification, args=(company,))
+            thread.start()
+            return super(CompanyCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, self.error_message)
