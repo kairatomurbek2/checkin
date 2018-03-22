@@ -72,9 +72,6 @@
 
             <div class="shedule_block">
                 {% include 'messages.html' %}
-                {% if company.longitude and company.latitude %}
-                    <div id="map" style="width:100%; height:300px; margin-bottom: 10px;"></div>
-                {% endif %}
                 <div class="p_description">
                     <div>
                         <h4>О Компании</h4>
@@ -95,6 +92,10 @@
                 </div>
 
                 {% include 'company/specialist_of_company.html' %}
+
+                {% if company.longitude and company.latitude %}
+                    <div id="map" style="width:100%; height:300px; margin-bottom: 10px;"></div>
+                {% endif %}
             </div>
 
 
