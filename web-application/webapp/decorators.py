@@ -4,6 +4,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy as _
+
+from main.settings import SPECIALIST_CREATE_PERMISSION_DENIED, COMPANY_CREATE_PERMISSION_DENIED
 from webapp.models import Company, Specialist, Rating, Employees
 from django.db.models import Q
 
@@ -119,7 +121,7 @@ def user_specialist_create_check(function):
             return HttpResponseRedirect('/accounts/login/')
         specialist = Specialist.all_objects.filter(user=request.user).count()
         if specialist >= 1:
-            raise Http404("Page not found")
+            raise PermissionDenied(SPECIALIST_CREATE_PERMISSION_DENIED)
         else:
             return function(request, *args, **kwargs)
 
@@ -132,7 +134,7 @@ def user_company_create_check(function):
             return HttpResponseRedirect('/accounts/login/')
         company = Company.objects.filter(user__user=request.user, user__owner=True).count()
         if company >= 1:
-            raise Http404("Page not found")
+            raise PermissionDenied(COMPANY_CREATE_PERMISSION_DENIED)
         else:
             return function(request, *args, **kwargs)
 
