@@ -283,22 +283,24 @@ class SpecialistSearchView(BaseFormView):
         return self.render_to_response({'form': form, 'users': self.users, 'invite_form': invite_form})
 
     def __get_users(self, form):
-        company = Company.objects.get(slug=self.kwargs['company_slug'])
         email = form.cleaned_data['email']
-        if not Specialist.objects.filter(
-                Q(user__first_name__icontains=email, company=company) | Q(user__email=email, company=company) |
-                Q(user__last_name__icontains=email, company=company) | Q(full_name__icontains=email, company=company)):
-            if email:
-                return Specialist.objects.filter(
-                    Q(user__first_name__icontains=email) | Q(user__email=email) | Q(user__last_name__icontains=email) | Q(
-                        full_name__icontains=email))
+
+        if email:
+            return Specialist.objects.filter(
+                Q(user__first_name__icontains=email) | Q(user__email=email) | Q(user__last_name__icontains=email) | Q(
+                    full_name__icontains=email))
 
     def invite_form_valid(self, invite_form):
-        invite = self.__create_invite(invite_form)
-        company = Company.objects.get(slug=self.kwargs['company_slug'])
         spec = invite_form.cleaned_data['user']
-        user = User.objects.filter(user_specialists=spec).first()
-        self.__send_email_to_user(invite, user)
+        company = Company.objects.get(slug=self.kwargs['company_slug'])
+
+        if spec.company.all().count() == 2:
+            messages.error(self.request, Messages.UserInvite.specialist_companies_limit)
+        else:
+            invite = self.__create_invite(invite_form)
+            user = User.objects.filter(user_specialists=spec).first()
+            self.__send_email_to_user(invite, user)
+
         return HttpResponseRedirect(company.get_absolute_url())
 
     def __create_invite(self, invite_form):
