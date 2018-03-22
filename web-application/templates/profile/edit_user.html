@@ -10,6 +10,7 @@
                 {{ form.first_name }}
                 {{ form.last_name }}
                 {{ form.sex }}
+                <input value="{{ request.user.email }}" disabled />
                 {#                <label>#}
                 {#                    Сменить адрес электронной почты#}
                 {#                    <input type="email" value="Musefuse.m@gmail.com">#}
