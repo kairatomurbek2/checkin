@@ -3,8 +3,11 @@ from django.db.models import Q
 import django_filters
 from django.utils.translation import ugettext_lazy as _
 from django import forms
+from datetime import date
+
+from api_mob.exceptions import ValidationError
 from webapp import models
-from webapp.models import Specialist, Category, Company
+from webapp.models import Specialist, Category, Company, Reservation
 
 
 def categories(request):
@@ -74,3 +77,23 @@ class CompaniesListFilterAPI(django_filters.FilterSet):
         return queryset.filter(
             Q(name__icontains=value) | Q(short_info__icontains=value) | Q(company_tags__name__icontains=value)
         ).distinct()
+
+
+class MasterReservationsFilter(django_filters.FilterSet):
+    date_time_start = django_filters.DateFilter(label=_('Дата от'), method='filter_from_date')
+    date_time_end = django_filters.DateFilter(label=_('Дата до'), method='filter_to_date')
+
+    class Meta:
+        model = Reservation
+        fields = ('status', )
+
+    def filter_from_date(self, queryset, name, value):
+        today = date.today()
+
+        if (value - today).days < 0:
+            raise ValidationError('Неверное указана дата.')
+
+        return queryset.filter(date_time_reservation__gte=value)
+
+    def filter_to_date(self, queryset, name, value):
+        return queryset.filter(date_time_reservation__lte=value)

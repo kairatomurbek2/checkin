@@ -12,8 +12,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from api.views import ReservationListView
-from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI
+from api_mob.exceptions import ValidationError as CustomValidationError
+from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter
 from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
@@ -25,6 +25,8 @@ from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
     ScheduleSetting, DAYS
 from rest_framework import status
+
+from webapp.serializers import ReservationFullSerializer
 
 
 class CustomTokenAuthentication(TokenAuthentication):
@@ -362,8 +364,22 @@ class ReservationCreateViewApi(generics.CreateAPIView):
         serializer.save(specialist=specialist, user=self.request.user)
 
 
-class MasterReservationsListViewApi(ReservationListView):
-    authentication_classes = (TokenAuthentication,)
+class MasterReservationsListViewApi(generics.ListAPIView):
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsSpecialist, )
+    serializer_class = ReservationFullSerializer
+    filter_class = MasterReservationsFilter
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except CustomValidationError as e:
+            return JsonResponse(dict(
+                success=False, message=str(e)
+            ), status=400)
+
+    def get_queryset(self):
+        return Reservation.objects.filter(specialist__user=self.request.user).order_by('date_time_reservation')
 
 
 class MasterReservationEditViewApi(generics.UpdateAPIView):
