@@ -142,7 +142,7 @@ class CompanySerializer(serializers.ModelSerializer, TaggitSerializer):
         fields = (
             'id', 'name', 'slug', 'logo_url', 'company_tags', 'street_address', 'info', 'email', 'latitude',
             'longitude',
-            'legal_data', 'rating', 'review_count', 'specialist_count', 'categories', 'contacts')
+            'rating', 'review_count', 'specialist_count', 'categories', 'contacts')
 
     def get_review_count(self, obj):
         review_count = obj.rating_company.all().count()
