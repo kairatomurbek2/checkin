@@ -1,8 +1,12 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Checkin</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link href="{% static "css/main.css" %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="error-page">
@@ -15,11 +19,9 @@
         <div class="cloud x5"></div>
     </div>
     <div class='c'>
-        <div class='_404'>404</div>
-        <hr>
-        <div class='_1'>THE PAGE</div>
-        <div class='_2'>WAS NOT FOUND</div>
-        <a class='error-page-btn' href='#'>BACK TO HOME</a>
+        {% block content %}
+
+        {% endblock %}
     </div>
 </div>
 </body>

@@ -3099,7 +3099,7 @@ div.master:nth-child(3n)
   background: $main-color
   color: #fff
   font-family: 'GothamRegular', sans-serif
-  max-height: 700px
+  height: 100vh
   overflow: hidden
 
 .c
@@ -3124,12 +3124,14 @@ div.master:nth-child(3n)
   letter-spacing: 12px
   font-size: 4em
   line-height: 80%
+  padding: 20px 0 15px
 
 ._2
   text-align: center
   display: block
   position: relative
   font-size: 20px
+  padding-bottom: 15px
 
 .text
   font-size: 70px
@@ -3147,13 +3149,12 @@ div.master:nth-child(3n)
   position: relative
   display: inline-block
   width: 358px
-  padding: 5px
+  padding: 8px 5px 5px
   z-index: 5
   font-size: 25px
   margin: 0 auto
-  color: #33cc99
+  color: $main-color
   text-decoration: none
-  margin-right: 10px
 
 .right
   float: right
@@ -3192,7 +3193,7 @@ hr
   -moz-border-radius: 100px
   position: absolute
   margin: 120px auto 20px
-  z-index: -1
+  z-index: 1
   transition: ease 1s
   &:after, &:before
     content: ''

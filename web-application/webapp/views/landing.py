@@ -1,5 +1,4 @@
 from dal import autocomplete
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
@@ -10,6 +9,9 @@ from webapp.models import Company, Specialist, FavoriteSpecialist
 
 class HomeView(TemplateView):
     template_name = 'general/home.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class TagAutocomplete(autocomplete.Select2QuerySetView):

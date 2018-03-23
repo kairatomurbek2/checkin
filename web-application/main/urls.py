@@ -17,6 +17,8 @@ urlpatterns = [
                   url(r'^api/v1/', include('api_mob.urls'), name='api_v1'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+urlpatterns += static(settings.STATIC_URL, document_rrot=settings.STATIC_ROOT)
+
 
 handler404 = 'webapp.views.base_views.handle_404'
 handler500 = 'webapp.views.base_views.handle_500'
