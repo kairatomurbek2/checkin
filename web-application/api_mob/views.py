@@ -365,7 +365,7 @@ class ReservationCreateViewApi(generics.CreateAPIView):
 
 
 class MasterReservationsListViewApi(generics.ListAPIView):
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsSpecialist, )
     serializer_class = ReservationFullSerializer
     filter_class = MasterReservationsFilter
