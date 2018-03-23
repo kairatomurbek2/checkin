@@ -31,15 +31,13 @@ def handle_500(request):
 
 
 def handle_403(request, exception):
-    reason = 'other'
+    message = 'У вас нет доступа к этой странице'
 
     if str(exception) == SPECIALIST_CREATE_PERMISSION_DENIED:
-        reason = SPECIALIST_CREATE_PERMISSION_DENIED
+        message = 'Вы уже специалист'
     elif str(exception) == COMPANY_CREATE_PERMISSION_DENIED:
-        reason = COMPANY_CREATE_PERMISSION_DENIED
+        message = 'Вы не можете зарегистрировать более одного учреждения'
 
     return render(request, '403.html', {
-        'reason': reason,
-        'specialist_create_pd': SPECIALIST_CREATE_PERMISSION_DENIED,
-        'company_create_pd': COMPANY_CREATE_PERMISSION_DENIED,
+        'message': message,
     }, status=403)
