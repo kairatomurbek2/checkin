@@ -392,6 +392,12 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.save(edited_by=self.request.user)
 
+    def update(self, request, *args, **kwargs):
+        super(MasterReservationEditViewApi, self).update(request, *args, **kwargs)
+        return JsonResponse(dict(
+            success=True, message='Заявка успешно обновлена.'
+        ))
+
 
 class UserInfoViewApi(APIView):
     authentication_classes = (TokenAuthentication, )
