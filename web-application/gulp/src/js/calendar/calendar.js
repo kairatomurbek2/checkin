@@ -33,6 +33,7 @@ Vue.component('timepicker', {
             if (this.options.day === 'monday') {
                 this.applyTimesAsMonday(value);
             }
+
         },
         options: function (options) {
             if (this.options.daySchedule.interval.indexOf(":") !== -1) {
@@ -225,7 +226,9 @@ Vue.component('lunch-timepicker', {
     data: function () {
         return {
             interval: 10,
-            picker: ''
+            picker: '',
+            minTime: '',
+            maxTime: '',
         }
     },
 
@@ -243,32 +246,48 @@ Vue.component('lunch-timepicker', {
         this.picker = picker.pickatime('picker');
     },
     watch: {
+        value: function(value) {
+            if (this.options.start) {
+                this.options.schedule.lunch_settings.start = value;
+            } else {
+                this.options.schedule.lunch_settings.end = value;
+            }
+        },
         options: function (options) {
             if (!options.schedule.lunchState) {
                 options.schedule.lunch_settings.start = '';
                 options.schedule.lunch_settings.end = '';
                 return;
             }
-            let dayTime = options.schedule.time;
-            let lunchTime = options.schedule.lunch_settings;
-            let time = {
-                start: lunchTime.start || dayTime.start || '10:00',
-                end: lunchTime.end || dayTime.end || '16:00'
-            };
-            let startTime = {hours: +time.start.split(":")[0], minutes: +time.start.split(":")[1]};
-            let endTime = {hours: +time.end.split(":")[0], minutes: +time.end.split(":")[1]};
-            this.picker.set({ enable: true });
-            if (options.start) {
-                this.picker.set({
-                    min: [+dayTime.start.split(":")[0], +dayTime.start.split(":")[1]],
-                    max: [endTime.hours, endTime.minutes]
-                })
-            } else {
-                this.picker.set({
-                    min: [startTime.hours, startTime.minutes],
-                    max: [+dayTime.end.split(":")[0], +dayTime.end.split(":")[1]]
-                })
+            // fix
+            this.minTime = this.$root.parseTime(options.schedule.time.start);
+            this.maxTime = this.$root.parseTime(options.schedule.time.end);
+            let nowVal = this.$root.parseTime(this.value);            
+            if (!this.minTime) {
+                this.minTime = {
+                    hours: 10,
+                    minutes: 0
+                }
             }
+            if (!this.maxTime) {
+                this.maxTime = {
+                    hours: 16,
+                    minutes: 0
+                }
+            }
+            if (this.$root.compareScheduleTimes(this.minTime, nowVal)) {
+                this.value = options.schedule.time.start;
+            }
+            
+            if (this.$root.compareScheduleTimes(nowVal, this.maxTime)) {
+                this.value = options.schedule.time.end;
+            }
+            this.picker.set({enable: true})
+            this.picker.set({
+                min: [this.minTime.hours, this.minTime.minutes],
+                max: [this.maxTime.hours, this.maxTime.minutes],
+                interval: this.interval
+            })
         }
     },
     destroyed: function () {
