@@ -22,7 +22,8 @@
                         </span>
                             <label for="upload">
                                 <input type='file' id="upload" name="photo">
-                            </label>   
+                            </label>
+                            {{ form.photo.errors|striptags }}
                         </a>
 
                         <div class="master_desc">
