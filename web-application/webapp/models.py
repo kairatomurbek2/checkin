@@ -18,7 +18,7 @@ from redactor.fields import RedactorField
 from sorl.thumbnail import ImageField, get_thumbnail
 from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION, ACTIVE
+from main.choices import STATUS_CHOICES, SEX_CHOICES, RATING_CHOICES, STATUS_CHOICES_RESERVATION, MODERATION
 from main.media_path import category_image_upload_path, company_path, certificate_path, specialist_path, \
     category_icon_upload_path, specialist_mobile_path, mobile_company_path
 from django.contrib.auth.models import User
@@ -215,7 +215,7 @@ class Specialist(models.Model):
     short_info = models.TextField(verbose_name=_('Краткая информация'), max_length=250, blank=True, null=True)
     info = RedactorField(verbose_name=_('Подробная информация'), null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='specialist_categories', verbose_name=_('Категории'))
-    status = models.CharField(choices=STATUS_CHOICES, max_length=2, default=ACTIVE, verbose_name=_('Статус'))
+    status = models.CharField(choices=STATUS_CHOICES, max_length=2, default=MODERATION, verbose_name=_('Статус'))
     message_decline = models.TextField(max_length=500, verbose_name=_('Сообщение для отказа в регистрции'), blank=True,
                                        null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создан'))
