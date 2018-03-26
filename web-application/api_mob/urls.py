@@ -29,7 +29,7 @@ urlpatterns = [
         name='masters_certificates_api_v1'),
     url(r'^masters/(?P<specialist__slug>[-_\w]+)/schedule/$', MasterScheduleViewApi.as_view(),
         name='masters_schedule_api_v1'),
-    url(r'^masters/(?P<specialist__slug>[-_\w]+)/reservation/create$', ReservationCreateViewApi.as_view(),
+    url(r'^masters/(?P<specialist__slug>[-_\w]+)/reservation/create/$', ReservationCreateViewApi.as_view(),
         name='masters_reservation_create_api_v1'),
     url(r'^reservation/(?P<pk>[-_\d]+)/edit/$', MasterReservationEditViewApi.as_view(),
         name='masters_reservation_edit_api_v1'),
