@@ -287,10 +287,6 @@ class Specialist(models.Model):
                                 crop_data['y'] + crop_data['height']))
             cropped.save(self.photo.path)
 
-        if self.photo:
-            resized = get_thumbnail(self.photo, MOBILE_IMAGE_CROP_SIZE)
-            self.mobile_photo.save(resized.name, ContentFile(resized.read()), False)
-
     class Meta:
         verbose_name = _('Специалист')
         verbose_name_plural = _('Специалисты')
