@@ -350,7 +350,7 @@ class ReservationCreateViewApi(generics.CreateAPIView):
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
 
         check_reservation = Reservation.objects.filter(
-            date_time_reservation=validated_data['date_time_reservation']).first()
+            date_time_reservation=validated_data['date_time_reservation'], specialist=specialist).first()
 
         if check_reservation:
             msg = Messages.AddReservation.you_already_reserved if check_reservation.user == self.request.user \
