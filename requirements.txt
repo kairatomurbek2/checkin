@@ -49,3 +49,4 @@ python-firebase
 django-ckeditor==5.4.0
 faker
 django-cleanup
+pyfcm

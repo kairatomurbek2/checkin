@@ -6,6 +6,7 @@ from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from sorl.thumbnail import get_thumbnail
 
+from main.settings import FCM_PRIVATE_KEY
 from webapp.models import Company, CompanyContact, Reservation, Specialist, create_schedule_setting, ScheduleSetting, \
     MOBILE_IMAGE_CROP_SIZE
 from webapp.firebase import FirebaseHelper
@@ -25,7 +26,7 @@ def create_company_phone(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Reservation)
 def create_or_change_reservation(sender, instance, created, **kwargs):
     firebase_helper = FirebaseHelper(firebase_url=settings.FIREBASE_URL, firebase_secret=settings.FIREBASE_SECRET,
-                                     firebase_email=settings.FIREBASE_USER_EMAIL)
+                                     firebase_email=settings.FIREBASE_USER_EMAIL, fcm_key=FCM_PRIVATE_KEY)
 
     if created or instance.status in [CONFIRMED, REFUSED]:
         specialist = instance.specialist
@@ -60,9 +61,9 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
         }
 
         if created:
-            firebase_helper.reservation_new(data=data)
+            firebase_helper.reservation_new(data=data, notification_title='Новое уведомление', notification_body=msg)
         else:
-            firebase_helper.reservation_changed(data=data)
+            firebase_helper.reservation_changed(data=data, notification_title='Новое уведомление', notification_body=msg)
 
 
 @receiver(post_save, sender=Specialist)
