@@ -2,7 +2,7 @@ from dal import autocomplete
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 from webapp.models import Category, Company, Certificate, CompanyContact, Specialist, SpecialistContact, Rating, \
-    ScheduleSetting, Reservation, WorkDay, Employees
+    ScheduleSetting, Reservation, WorkDay, Employees, FCMToken
 from django import forms
 from mptt.forms import TreeNodeMultipleChoiceField
 from django.contrib.flatpages.models import FlatPage
@@ -114,3 +114,4 @@ admin.site.register(WorkDay)
 admin.site.register(Employees)
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
+admin.site.register(FCMToken)

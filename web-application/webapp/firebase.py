@@ -1,3 +1,5 @@
+import json
+
 from firebase import firebase
 from pyfcm import FCMNotification
 
@@ -13,14 +15,29 @@ class FirebaseHelper(object):
     def _post(self, namespace, data):
         return self.firebase_obj.post(namespace, data)
 
-    def reservation_new(self, data, notification_title='', notification_body=''):
+    def reservation_new(self, data, notification_title='', notification_body='', devices_ids=[]):
         self._post(namespace='/reservation/new', data=data)
-        return self._send_notification(notification_title, notification_body)
+        return self._send_notification(notification_title, notification_body, devices_ids=devices_ids)
 
-    def reservation_changed(self, data, notification_title='', notification_body=''):
+    def reservation_changed(self, data, notification_title='', notification_body='', devices_ids=[]):
         self._post(namespace='/reservation/changed', data=data)
-        return self._send_notification(notification_title, notification_body)
+        return self._send_notification(notification_title, notification_body, devices_ids=devices_ids)
 
-    def _send_notification(self, title, body):
+    def _send_notification(self, title, body, devices_ids):
         notification = FCMNotification(api_key=self.fcm_key)
-        return notification.notify_topic_subscribers(topic_name="reservations", message_title=title, message_body=body)
+        payload = {
+            'priority': 'high',
+            'registration_ids': devices_ids,
+            'content_available': True,
+            'notification': {
+                'title': title,
+                'body': body,
+                'sound': 'default',
+                'click_action': 'mynotes'
+            },
+            'data': {
+                'type': 'mynotes'
+            }
+        }
+
+        return notification.do_request(payload=json.dumps(payload), timeout=4000)

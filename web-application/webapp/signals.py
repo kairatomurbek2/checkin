@@ -60,10 +60,14 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
             'status': str(instance.status)
         }
 
+        devices_ids = [t.firebase_id for t in user.fcm_tokens.all()]
+
         if created:
-            firebase_helper.reservation_new(data=data, notification_title='Новое уведомление', notification_body=msg)
+            firebase_helper.reservation_new(data=data, notification_title='Новое уведомление', notification_body=msg,
+                                            devices_ids=devices_ids)
         else:
-            firebase_helper.reservation_changed(data=data, notification_title='Новое уведомление', notification_body=msg)
+            firebase_helper.reservation_changed(data=data, notification_title='Новое уведомление', notification_body=msg,
+                                                devices_ids=devices_ids)
 
 
 @receiver(post_save, sender=Specialist)

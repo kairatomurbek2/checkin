@@ -23,7 +23,7 @@ from api_mob.social_auth import SocialAuth
 from main.choices import MODERATION
 from main.parameters import Messages
 from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecialist, Certificate, Reservation, \
-    ScheduleSetting, DAYS
+    ScheduleSetting, DAYS, FCMToken
 from rest_framework import status
 
 from webapp.serializers import ReservationFullSerializer
@@ -481,7 +481,29 @@ class MobileScheduleSettingUpdateView(APIView):
 
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
-    permission_classes = ()
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user).order_by('date_time_reservation')
+
+
+class UpdateFCMTokenUpdateView(APIView):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        device_id = request.POST.get('device_id')
+        firebase_id = request.POST.get('firebase_id')
+
+        token = FCMToken.objects.filter(user=request.user, device_id=device_id).first()
+
+        if not token:
+            FCMToken.objects.create(device_id=device_id, firebase_id=firebase_id, user=request.user)
+        else:
+            token.firebase_id = firebase_id
+            token.save()
+
+        return JsonResponse(dict(
+            success=True,
+            message='Настройки FCM успешно обновлены.'
+        ))

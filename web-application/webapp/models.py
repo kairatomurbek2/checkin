@@ -490,3 +490,13 @@ class FavoriteSpecialist(models.Model):
     class Meta:
         verbose_name = _("Избранный специалист")
         verbose_name_plural = _("Избранные специалисты")
+
+
+class FCMToken(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='fcm_tokens')
+    device_id = models.CharField(verbose_name='ID устройства', max_length=1000)
+    firebase_id = models.CharField(verbose_name='Токен Firebase устройства', max_length=1000)
+
+    class Meta:
+        verbose_name = _("FCM токен")
+        verbose_name_plural = _("FCM токены")
