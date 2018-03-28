@@ -10,7 +10,7 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     RatingAddCompanyViewApi, FavoriteAddViewApi, ProfileFavoriteListViewApi, UserDetailsViewApi, \
     CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi, \
     MasterScheduleViewApi, ReservationCreateViewApi, MasterReservationsListViewApi, MasterReservationEditViewApi, \
-    UserInfoViewApi, MobileScheduleSettingUpdateView
+    UserInfoViewApi, MobileScheduleSettingUpdateView, UserReservationsListViewApi
 
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -62,5 +62,5 @@ urlpatterns = [
     url(r'^favorite/add/(?P<slug>[-_\w]+)/$', FavoriteAddViewApi.as_view(), name='favorites_api'),
     url(r'^favorite/$', ProfileFavoriteListViewApi.as_view(), name='favorite_list_api'),
     url(r'^user/info/$', UserInfoViewApi.as_view(), name='user_info'),
-    url(r'^user/reservations/$', ReservationListViewUser.as_view(), name='user_reservations')
+    url(r'^user/reservations/$', UserReservationsListViewApi.as_view(), name='user_reservations')
 ]

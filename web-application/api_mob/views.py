@@ -478,3 +478,10 @@ class MobileScheduleSettingUpdateView(APIView):
 
     def get_queryset(self):
         return ScheduleSetting.objects.filter(specialist__user=self.request.user)
+
+
+class UserReservationsListViewApi(MasterReservationsListViewApi):
+    permission_classes = ()
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user).order_by('date_time_reservation')
