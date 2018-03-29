@@ -39,6 +39,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
                 'date': date_time[0],
                 'time': date_time[1]
             })
+            push_receiver = instance.specialist.user
         else:
             message_template = Messages.Firebase.reservation_confirmed if instance.status == CONFIRMED else \
                 Messages.Firebase.reservation_refused
@@ -48,6 +49,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
                 'date': date_time[0],
                 'time': date_time[1]
             })
+            push_receiver = instance.user
 
         data = {
             'id': instance.pk,
@@ -60,7 +62,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
             'status': str(instance.status)
         }
 
-        devices_ids = [t.firebase_id for t in user.fcm_tokens.all()]
+        devices_ids = [t.firebase_id for t in push_receiver.fcm_tokens.all()]
 
         if created:
             firebase_helper.reservation_new(data=data, notification_title='Новое уведомление', notification_body=msg,
