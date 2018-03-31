@@ -15,10 +15,9 @@ class MasterOwnerOrReadOnly(permissions.BasePermission):
             if 'specialist__slug' not in view.kwargs:
                 return False
 
-            try:
-                specialist = Specialist.all_objects.get(Q(slug=view.kwargs['specialist__slug'], user=request.user) |
-                                                        Q(slug=view.kwargs['specialist__slug'],
-                                                          company__user__user=request.user, company__user__administrator=True))
-                return specialist
-            except Specialist.DoesNotExist:
-                return False
+            specialist = Specialist.all_objects.filter(Q(slug=view.kwargs['specialist__slug'], user=request.user) |
+                                                       Q(slug=view.kwargs['specialist__slug'],
+                                                         company__user__user=request.user,
+                                                         company__user__administrator=True)).first()
+
+            return specialist is not None
