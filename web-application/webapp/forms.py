@@ -31,6 +31,7 @@ class MasterCreateForm(forms.ModelForm):
                                  widget=forms.Textarea(attrs={'placeholder': _('Краткая информация'), 'rows': 4}))
 
     sex = forms.ChoiceField(required=False, choices=SEX_CHOICES, widget=forms.Select)
+    photo = forms.ImageField(required=False)
 
     class Meta:
         model = Specialist

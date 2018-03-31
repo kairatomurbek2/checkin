@@ -206,7 +206,7 @@ class Specialist(models.Model):
     user = models.ForeignKey(User, related_name='user_specialists', verbose_name=_('Пользователь'))
     company = models.ManyToManyField(Company, related_name='company_specialists', verbose_name=_('Учреждение'),
                                      blank=True)
-    photo = models.ImageField(verbose_name=_('Фото'), upload_to=specialist_path)
+    photo = models.ImageField(verbose_name=_('Фото'), upload_to=specialist_path, null=True, blank=True)
     mobile_photo = models.ImageField(verbose_name=_('Фото для мобильного приложение'), upload_to=specialist_mobile_path)
     full_name = models.CharField(verbose_name=_('ФИО'), max_length=250)
     sex = models.CharField(verbose_name=_('Пол'), choices=SEX_CHOICES, max_length=10, blank=True, null=True)
