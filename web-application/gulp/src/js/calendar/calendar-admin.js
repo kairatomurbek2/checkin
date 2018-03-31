@@ -1169,6 +1169,7 @@ let app = new Vue({
                 };
                 this.$http.put(url, body, options).then(response => {
                     alert("Вы успешно обновили расписание");
+                    this.toggleContent(true, false);
                 }, error => {
                     console.error(error);
                 });
