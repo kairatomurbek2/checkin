@@ -48,7 +48,9 @@
                     {% for obj in reservations|filter_reservations_by_company_wt:company_slug %}
                         <tr>
                             <td>
-                                {{ obj.specialist.full_name }}
+                                <a href="{% url "master_detail" master_slug=obj.specialist.slug %}" target="_blank">
+                                    {{ obj.specialist.full_name }}
+                                </a>
                             </td>
                             <td>
                                 <span>{{ obj.created_at }}</span>
