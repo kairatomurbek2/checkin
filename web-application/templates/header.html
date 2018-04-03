@@ -104,6 +104,13 @@
                                     </li>
                                 {% endfor %}
                             {% endif %}
+                            {% if administrator %}
+                                <li>
+                                    {% get_admin_company request.user as company %}
+                                    <a href="{% url 'company_reservations_table' company_slug=company.slug %}">Все
+                                        записи</a>
+                                </li>
+                            {% endif %}
                             <li>
                                 <a href="{% url 'reservation_list' request.user.username %}">Мои записи</a>
                             </li>

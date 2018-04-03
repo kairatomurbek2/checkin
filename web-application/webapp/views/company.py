@@ -31,6 +31,7 @@ from webapp.forms import CertFormSet, PhoneFormSet
 from webapp.models import Company, Category, Specialist, Invite, Rating, Employees, Reservation
 from webapp.views.base_views import BaseFormView
 from webapp.views.filters import CompanyFilter, ReservationFilter, SpecialistFilter, CompanySpecialistFilter
+from webapp.views.specialist import ReservationTableListView
 
 
 class CompanySpecialistList(ListView):
@@ -529,3 +530,17 @@ class AddMasterCompany(LoginRequiredMixin, FormView):
         specialist = Specialist.objects.create(full_name=full_name, short_info=short_info, info=info, photo=photo,
                                                user=user, street_address=street_address, sex=sex)
         return specialist
+
+
+class CompanyReservationTableListView(ReservationTableListView):
+
+    template_name = 'company/reservation_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyReservationTableListView, self).get_context_data(**kwargs)
+        context['company_slug'] = self.kwargs['company_slug']
+
+        return context
+
+    def _get_reservation_list(self):
+        return Reservation.objects.filter(specialist__company__slug=self.kwargs['company_slug']).order_by('-created_at')

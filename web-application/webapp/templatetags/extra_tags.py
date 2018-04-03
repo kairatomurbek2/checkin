@@ -1,10 +1,15 @@
 from django import template
 from django.http import Http404
 from django.template import TemplateDoesNotExist
+from django.utils import timezone
 
-from webapp.models import Employees, Company, Specialist
+from webapp.models import Company, Specialist, ScheduleSetting
 
 register = template.Library()
+
+DAYS = [
+    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+]
 
 
 @register.assignment_tag
@@ -73,3 +78,35 @@ def get_form_errors(errors_dict):
     for field, errors in errors_dict.items():
         output.append('\n'.join('  * %s' % e for e in errors))
     return output
+
+
+@register.assignment_tag
+def get_admin_company(user):
+    return user_administrator(user).first()
+
+
+def reservation_time_belongs_to_company_wt(reservation, company_slug):
+    reservation_dt = timezone.localtime(reservation.date_time_reservation)
+    weekday = DAYS[reservation_dt.weekday()]
+    schedule = ScheduleSetting.objects.filter(company__slug=company_slug, specialist=reservation.specialist).first()
+    reservation_hour = reservation_dt.hour
+
+    if schedule:
+        weekday_obj = getattr(schedule, weekday)
+        time = weekday_obj.time
+
+        if time:
+            parts = time.split('-')
+
+            if len(parts) > 0:
+                from_hour = int(parts[0].split(':')[0])
+                to_hour = int(parts[1].split(':')[0])
+
+                return from_hour <= reservation_hour <= to_hour
+
+    return False
+
+
+@register.filter
+def filter_reservations_by_company_wt(reservations, company_slug):
+    return filter(lambda i: reservation_time_belongs_to_company_wt(i, company_slug), reservations)
