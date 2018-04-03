@@ -44,7 +44,11 @@
                 {% for reservation in reservations %}
                     <li>
                         <div>
-                            <p>{{ reservation.specialist }}</p>
+                            <p>
+                                <a href="{% url "master_detail" master_slug=reservation.specialist.slug %}" target="_blank">
+                                    {{ reservation.specialist }}
+                                </a>
+                            </p>
                         </div>
 
                         <div>
