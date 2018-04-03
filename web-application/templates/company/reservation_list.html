@@ -85,14 +85,10 @@
                                 {% endif %}
                             </td>
                             <td class="center">
-                                {% if obj.status == 'armored' %}
-
-                                    <button type="submit" class="button disagree"
-                                            onclick="cancelReservation({{ obj.id }}, '{{ obj.specialist.slug }}')">
-                                        Отменить
-                                    </button>
-
-                                {% endif %}
+                                <button type="submit" class="button disagree"
+                                        onclick="cancelReservation({{ obj.id }}, '{{ obj.specialist.slug }}')">
+                                    Отменить
+                                </button>
                             </td>
                         </tr>
                         {% empty %}
