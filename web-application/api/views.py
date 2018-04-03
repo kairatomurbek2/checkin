@@ -6,7 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from api.permissions import MasterOwnerOrReadOnly
+from api.permissions import MasterOwnerOrReadOnly, ReservationOwnerOrSpecialistCompanyAdmin
 from webapp.models import Company, Specialist, ScheduleSetting, Reservation
 from webapp.serializers import CompanyShortSerializer, SpecialistShortSerializer, ScheduleSettingFullSerializer, \
     ReservationFullSerializer, ReservationCreteSerializer, ReservationSerializer, ScheduleSettingSerializer, \
@@ -138,3 +138,10 @@ class ScheduleSettingUpdateView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         specialist = get_object_or_404(Specialist, slug=self.kwargs['specialist__slug'])
         return ScheduleSetting.objects.filter(specialist=specialist, pk=self.kwargs['pk'])
+
+
+class ReservationCancelView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated, ReservationOwnerOrSpecialistCompanyAdmin)
+    authentication_classes = (TokenAuthentication, )
+    lookup_field = 'pk'
+    queryset = Reservation.objects.all()
