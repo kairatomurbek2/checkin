@@ -26,5 +26,9 @@ urlpatterns = [
         name='reservation_master_create'),
     url(r'^reservation/cancel/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/$',
         ReservationCancelView.as_view(),
-        name='reservation_cancel')
+        name='reservation_cancel'),
+    url(r'^reservation/status/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/$',
+        specialist_status_reservation(ReservationStatusView.as_view()),
+        name='reservation_status')
+
 ]
