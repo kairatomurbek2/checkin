@@ -93,8 +93,10 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'checkin_db',
+        'USER': 'checkin',
+        'PASSWORD': '3B4q2C5d'
     }
 }
 
