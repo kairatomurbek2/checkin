@@ -43,12 +43,14 @@
                         <th class="center">Время запиcи</th>
                         <th class="center">Контакты</th>
                         <th class="center">Статус</th>
+                        <th></th>
                     </tr>
                     {% autopaginate reservation_filter.qs 50 as reservations %}
                     {% for obj in reservations|filter_reservations_by_company_wt:company_slug %}
                         <tr>
                             <td>
-                                <a href="{% url "master_company" company_slug=company_slug master_slug=obj.specialist.slug %}" target="_blank">
+                                <a href="{% url "master_company" company_slug=company_slug master_slug=obj.specialist.slug %}"
+                                   target="_blank">
                                     {{ obj.specialist.full_name }}
                                 </a>
                             </td>
@@ -82,8 +84,18 @@
                                     <div class="non_confirmed">Отказано</div>
                                 {% endif %}
                             </td>
+                            <td class="center">
+                                {% if obj.status == 'armored' %}
+
+                                    <button type="submit" class="button disagree"
+                                            onclick="cancelReservation({{ obj.id }}, '{{ obj.specialist.slug }}')">
+                                        Отменить
+                                    </button>
+
+                                {% endif %}
+                            </td>
                         </tr>
-                    {% empty %}
+                        {% empty %}
                         <p class="no_result">Нет записей</p>
                     {% endfor %}
                 </table>
@@ -121,6 +133,24 @@
                     }
                 }
             });
+        }
+
+        function cancelReservation(id, slug) {
+            if (confirm('Вы подтверждаете?')) {
+                $.ajax({
+                    url: '/api/reservation/cancel/' + slug + '/' + id + '/',
+                    method: 'delete',
+                    headers: {
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Authorization': 'Token {{request.session.token_key}}'
+                    },
+                    success: function (response) {
+                        if (response.status === 'refused') {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
         }
     </script>
 {% endblock %}

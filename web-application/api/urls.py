@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import CompanyListView, SpecialistListView, ScheduleSettingListAPIViewView, ReservationListView, \
     ReservationCreateView, ReservationStatusView, ScheduleSettingAddView, ScheduleSettingUpdateView, \
-    ReservationListViewUser
+    ReservationListViewUser, ReservationCancelView
 from webapp.decorators import login_check, specialist_status_reservation
 
 router = DefaultRouter()
@@ -24,7 +24,7 @@ urlpatterns = [
         name='reservation_user_list_api'),
     url(r'^reservation/add/(?P<specialist__slug>[-_\w]+)/$', login_check(ReservationCreateView.as_view()),
         name='reservation_master_create'),
-    url(r'^reservation/status/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/$',
-        specialist_status_reservation(ReservationStatusView.as_view()),
-        name='reservation_status')
+    url(r'^reservation/cancel/(?P<specialist__slug>[-_\w]+)/(?P<pk>[0-9]+)/$',
+        ReservationCancelView.as_view(),
+        name='reservation_cancel')
 ]

@@ -38,6 +38,7 @@
                         <span>Время записи</span>
                         <span>Контакты</span>
                         <span>Статус</span>
+                        <span></span>
                     </div>
                 </li>
                 {% autopaginate reservation_filter.qs 50 as reservations %}
@@ -73,6 +74,16 @@
                                 <span class="non_confirmed">Отказано</span>
                             {% endif %}
                         </div>
+                        <div>
+                        {% if reservation.status == 'armored' %}
+
+                                <button type="submit" class="button disagree"
+                                        onclick="cancelReservation({{ reservation.id }}, '{{ reservation.specialist.slug }}')">
+                                    Отменить
+                                </button>
+
+                        {% endif %}
+                        </div>
                     </li>
                 {% empty %}
                     <p class="no_result">Нет записей</p>
@@ -81,4 +92,26 @@
             {% paginate %}
         </div>
     </main>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function cancelReservation(id, slug) {
+            if (confirm('Вы подтверждаете?')) {
+                $.ajax({
+                    url: '/api/reservation/cancel/' + slug + '/' + id + '/',
+                    method: 'delete',
+                    headers: {
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Authorization': 'Token {{request.session.token_key}}'
+                    },
+                    success: function (response) {
+                        if (response.status === 'refused') {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        }
+    </script>
 {% endblock %}
