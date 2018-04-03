@@ -72,6 +72,7 @@ header
   display: flex
   list-style: none
   font-size: 14px
+  z-index: 15
   a
     text-decoration: none
     color: $dark-color
@@ -664,6 +665,11 @@ main
           height: auto
           a
             color: $ldark-color
+      h4
+        display: block
+        height: auto
+      & > span:first-of-type
+        height: auto
       .total_review
         color: $main-color
         text-align: center
@@ -1647,16 +1653,12 @@ h4
     & > span:first-of-type
       font-size: 14px
       color: #0FD2CD
+      display: block
       width: 100%
       height: 40px
-      display: -webkit-flex
-      display: -moz-flex
-      display: -ms-flex
-      display: -o-flex
-      display: flex
-      align-items: center
-      justify-content: center
+      padding-top: 6px
       text-align: center
+      overflow: hidden
     & > span:last-of-type
       width: 85px
       height: 1px
