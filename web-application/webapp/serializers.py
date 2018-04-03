@@ -172,10 +172,14 @@ class DateTimeFieldWihTZ(serializers.DateTimeField):
 class ReservationFullSerializer(serializers.ModelSerializer):
     date_time_reservation = DateTimeFieldWihTZ(format="%d.%m.%Y %H:%M")
     created_at = DateTimeFieldWihTZ(format="%d.%m.%Y")
+    specialist_full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Reservation
-        fields = ('id', 'full_name', 'date_time_reservation', 'status', 'phone', 'created_at')
+        fields = ('id', 'full_name', 'date_time_reservation', 'status', 'phone', 'created_at', 'specialist_full_name')
+
+    def get_specialist_full_name(self, obj):
+        return obj.specialist.full_name
 
 
 class SpecialistForReservation(serializers.ModelSerializer):
