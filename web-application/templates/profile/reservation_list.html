@@ -75,14 +75,10 @@
                             {% endif %}
                         </div>
                         <div>
-                        {% if reservation.status == 'armored' %}
-
-                                <button type="submit" class="button disagree"
-                                        onclick="cancelReservation({{ reservation.id }}, '{{ reservation.specialist.slug }}')">
-                                    Отменить
-                                </button>
-
-                        {% endif %}
+                            <button type="submit" class="button disagree"
+                                    onclick="cancelReservation({{ reservation.id }}, '{{ reservation.specialist.slug }}')">
+                                Отменить
+                            </button>
                         </div>
                     </li>
                 {% empty %}
