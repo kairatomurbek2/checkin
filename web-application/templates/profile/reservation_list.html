@@ -106,9 +106,7 @@
                         'Authorization': 'Token {{request.session.token_key}}'
                     },
                     success: function (response) {
-                        if (response.status === 'refused') {
-                            window.location.reload();
-                        }
+                        window.location.reload();
                     }
                 });
             }
