@@ -379,7 +379,7 @@ class MasterReservationsListViewApi(generics.ListAPIView):
             ), status=400)
 
     def get_queryset(self):
-        return Reservation.objects.filter(specialist__user=self.request.user).order_by('created_at')
+        return Reservation.objects.filter(specialist__user=self.request.user).order_by('-created_at')
 
 
 class MasterReservationEditViewApi(generics.UpdateAPIView):
@@ -484,6 +484,7 @@ class UserReservationsListViewApi(MasterReservationsListViewApi):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, )
     serializer_class = UserReservationFullSerializer
+    filter_class = MasterReservationsFilter
 
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user).order_by('date_time_reservation')
