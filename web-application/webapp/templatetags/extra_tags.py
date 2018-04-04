@@ -1,4 +1,5 @@
 from django import template
+from django.db.models import Q
 from django.http import Http404
 from django.template import TemplateDoesNotExist
 from django.utils import timezone
@@ -110,3 +111,9 @@ def reservation_time_belongs_to_company_wt(reservation, company_slug):
 @register.filter
 def filter_reservations_by_company_wt(reservations, company_slug):
     return filter(lambda i: reservation_time_belongs_to_company_wt(i, company_slug), reservations)
+
+
+@register.filter
+def user_can_edit_master_schedule(master, current_user):
+    return master.status == 'AC' and (master.user == current_user or master.company.filter(Q(user__owner=True) | Q(user__administrator=True),
+                                                                                           user__user=current_user))
