@@ -16,9 +16,8 @@ class MasterOwnerOrReadOnly(permissions.BasePermission):
                 return False
 
             specialist = Specialist.all_objects.filter(Q(slug=view.kwargs['specialist__slug'], user=request.user) |
-                                                       Q(slug=view.kwargs['specialist__slug'],
-                                                         company__user__user=request.user,
-                                                         company__user__administrator=True)).first()
+                                                       Q(Q(company__user__administrator=True) | Q(company__user__owner=True), slug=view.kwargs['specialist__slug'],
+                                                         company__user__user=request.user)).first()
 
             return specialist is not None
 
