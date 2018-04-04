@@ -26,7 +26,7 @@ from webapp.models import Category, Specialist, Company, Rating, FavoriteSpecial
     ScheduleSetting, DAYS, FCMToken
 from rest_framework import status
 
-from webapp.serializers import ReservationFullSerializer
+from webapp.serializers import ReservationFullSerializer, UserReservationFullSerializer
 
 
 class CustomTokenAuthentication(TokenAuthentication):
@@ -482,6 +482,8 @@ class MobileScheduleSettingUpdateView(APIView):
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
     permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, )
+    serializer_class = UserReservationFullSerializer
 
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user).order_by('date_time_reservation')
