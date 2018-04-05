@@ -483,7 +483,7 @@ class MobileScheduleSettingUpdateView(APIView):
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
     permission_classes = (IsAuthenticated, )
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (SessionAuthentication, )
     serializer_class = UserReservationFullSerializer
     filter_class = MasterReservationsFilter
 
@@ -494,7 +494,7 @@ class UserReservationsListViewApi(MasterReservationsListViewApi):
         params = {
             'user': self.request.user,
             'date_time_reservation__gte': today
-        } if date_time_start is None else {
+        } if date_time_start is None or date_time_start == '' else {
             'user': self.request.user
         }
 
