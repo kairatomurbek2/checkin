@@ -91,9 +91,9 @@ class MasterReservationsFilter(django_filters.FilterSet):
         return queryset.filter(date_time_reservation__gte=value)
 
     def filter_to_date(self, queryset, name, value):
-        today = date.today()
-
-        if (value - today).days < 0:
-            raise ValidationError('Неверное указана дата.')
+        # today = date.today()
+        #
+        # if (value - today).days < 0:
+        #     raise ValidationError('Неверное указана дата.')
 
         return queryset.filter(date_time_reservation__lte=value)
