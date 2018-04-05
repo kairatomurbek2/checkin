@@ -829,10 +829,10 @@ var app = new Vue({
 
             let start = new Date(this.range.current);
             let end = new Date(this.range.current).setDate(new Date(this.range.current).getDate() + this.period);
-            if (new Date(end).getTime() >= new Date(this.range.end).getTime()) {
-                start = new Date(this.range.end).setDate(new Date(this.range.end).getDate() - this.period);
-                end = new Date(this.range.end);
-            }
+            // if (new Date(end).getTime() >= new Date(this.range.end).getTime()) {
+            //     start = new Date(this.range.end).setDate(new Date(this.range.end).getDate() - this.period);
+            //     end = new Date(this.range.end);
+            // }
             this.range.current = end;
             this.fillRange(start, end);
         },
@@ -843,10 +843,11 @@ var app = new Vue({
 
             let start = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - (this.period * 2));
             let end = new Date(this.range.current).setDate(new Date(this.range.current).getDate() - this.period);
-            if (new Date(start).getTime() <= new Date(this.range.start).getTime()) {
-                start = new Date(this.range.start);
-                end = new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period);
-            }
+            // if (new Date(start).getTime() <= new Date(this.range.start).getTime()) {
+            //     start = new Date(this.range.start);
+            //     end = new Date(this.range.start).setDate(new Date(this.range.start).getDate() + this.period);
+            // }
+
             this.range.current = end;
             this.fillRange(start, end);
         },
