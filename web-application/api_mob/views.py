@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -487,7 +488,9 @@ class UserReservationsListViewApi(MasterReservationsListViewApi):
     filter_class = MasterReservationsFilter
 
     def get_queryset(self):
-        return Reservation.objects.filter(user=self.request.user).order_by('date_time_reservation')
+        today = datetime.today()
+
+        return Reservation.objects.filter(user=self.request.user, date_time_reservation__gte=today).order_by('date_time_reservation')
 
 
 class UpdateFCMTokenUpdateView(APIView):
