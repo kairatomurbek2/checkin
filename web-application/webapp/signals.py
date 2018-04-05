@@ -35,7 +35,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
 
         if created:
             msg = Messages.Firebase.new_reservation.format(**{
-                'user': instance.user.username,
+                'user': '%s %s' % (instance.user.last_name, instance.user.first_name),
                 'date': date_time[0],
                 'time': date_time[1]
             })
@@ -45,7 +45,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
                 Messages.Firebase.reservation_refused
 
             msg = message_template.format(**{
-                'specialist': instance.specialist.user.username,
+                'specialist': instance.specialist.full_name,
                 'date': date_time[0],
                 'time': date_time[1]
             })
