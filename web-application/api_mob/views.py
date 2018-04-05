@@ -483,7 +483,7 @@ class MobileScheduleSettingUpdateView(APIView):
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
     permission_classes = (IsAuthenticated, )
-    authentication_classes = (SessionAuthentication, )
+    authentication_classes = (TokenAuthentication, )
     serializer_class = UserReservationFullSerializer
     filter_class = MasterReservationsFilter
 
