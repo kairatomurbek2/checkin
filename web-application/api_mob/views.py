@@ -488,7 +488,7 @@ class UserReservationsListViewApi(MasterReservationsListViewApi):
     filter_class = MasterReservationsFilter
 
     def get_queryset(self):
-        today = datetime.today()
+        today = datetime.now()
         date_time_start = self.request.GET.get('date_time_start', None)
 
         params = {
