@@ -483,14 +483,22 @@ class MobileScheduleSettingUpdateView(APIView):
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
     permission_classes = (IsAuthenticated, )
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (SessionAuthentication, )
     serializer_class = UserReservationFullSerializer
     filter_class = MasterReservationsFilter
 
     def get_queryset(self):
         today = datetime.today()
+        date_time_start = self.request.GET.get('date_time_start', None)
 
-        return Reservation.objects.filter(user=self.request.user, date_time_reservation__gte=today).order_by('date_time_reservation')
+        params = {
+            'user': self.request.user,
+            'date_time_reservation__gte': today
+        } if date_time_start is None else {
+            'user': self.request.user
+        }
+
+        return Reservation.objects.filter(**params).order_by('date_time_reservation')
 
 
 class UpdateFCMTokenUpdateView(APIView):
