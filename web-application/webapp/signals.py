@@ -35,7 +35,7 @@ def create_or_change_reservation(sender, instance, created, **kwargs):
 
         if created:
             msg = Messages.Firebase.new_reservation.format(**{
-                'user': '%s %s' % (instance.user.last_name, instance.user.first_name),
+                'user': instance.full_name,
                 'date': date_time[0],
                 'time': date_time[1]
             })
