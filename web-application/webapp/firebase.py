@@ -30,10 +30,10 @@ class FirebaseHelper(object):
             'registration_ids': devices_ids,
             'content_available': True,
             'notification': {
-                'title': title,
-                'body': body,
-                'sound': 'default',
-                'click_action': 'mynotes'
+                # 'title': title,
+                # 'body': body,
+                # 'sound': 'default',
+                # 'click_action': 'mynotes'
             },
             'data': {
                 'type': 'mynotes'
