@@ -152,7 +152,7 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, self.success_message)
-        return reverse('master_detail', args=(self.object.slug,))
+        return reverse('master_edit', args=(self.object.slug,))
 
     def form_valid(self, form):
         image_crop_data = self.request.POST.get('image-crop-data')
