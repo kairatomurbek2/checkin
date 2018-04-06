@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -181,6 +181,14 @@ class MasterEditView(LoginRequiredMixin, UpdateView):
 class MasterDetailView(TemplateView):
     template_name = 'specialist/master_detail.html'
     model = Specialist
+
+    def get(self, request, *args, **kwargs):
+        if self.model.objects.filter(slug=self.kwargs.get('master_slug'), user=request.user).exists():
+            return HttpResponseRedirect(redirect_to=reverse('master_reservation', kwargs={
+                'master_slug': self.kwargs.get('master_slug')
+            }))
+
+        return super(MasterDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(MasterDetailView, self).get_context_data(**kwargs)

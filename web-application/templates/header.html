@@ -98,7 +98,10 @@
                             {% endfor %}
                             {% if request.user.user_specialists.exists %}
                                 {% for specialist in request.user.user_specialists.all %}
-                                    <li><a href="{% url 'master_detail' specialist.slug %}">Личный кабинет</a>
+                                    <li>
+                                        <a href="{% url "master_edit" specialist.slug %}">
+                                            Редактировать мои данные
+                                        </a>
                                     </li>
                                     <li><a href="{% url 'master_reservation' specialist.slug %}">Список записей</a>
                                     </li>
