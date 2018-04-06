@@ -488,7 +488,7 @@ class AddMasterCompany(LoginRequiredMixin, FormView):
         user_form = forms.CompanyUserAddForm(self.request.POST, prefix='user_form')
         form = forms.MasterCreateForm(self.request.POST, self.request.FILES, prefix='form')
         if user_form.is_valid() and form.is_valid():
-            user = self._create_user(user_form)
+            user = self._create_user(user_form, full_name=form.cleaned_data['full_name'])
             specialist = self._create_specialist(form, user)
             specialist.company.add(company)
             specialist.status = ACTIVE
@@ -509,10 +509,11 @@ class AddMasterCompany(LoginRequiredMixin, FormView):
         messages.add_message(self.request, messages.ERROR, self.error_message)
         return self.render_to_response(self.get_context_data(user_form=user_form, form=form))
 
-    def _create_user(self, user_form):
+    def _create_user(self, user_form, full_name):
         password = user_form.cleaned_data['password1']
         fm_email = user_form.cleaned_data['email']
         user = user_form.save()
+        user.first_name = full_name
         user.set_password(password)
         user.username = fm_email.replace("@", "").replace(".", "")
         user.save()
