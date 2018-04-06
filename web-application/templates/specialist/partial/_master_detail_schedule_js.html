@@ -1,0 +1,17 @@
+{% load staticfiles %}
+
+<script src="{% static 'js/calendar-master.js' %}"></script>
+<script>
+    let masterUser = false;
+    let companies = [];
+    {% if request.user == master.user or user.id in owners or user.id in administrator %}
+        masterUser = true;
+    {% endif %}
+    {% for company in master.company.all %}
+        companies.push({
+            name: '{{ company.name }}',
+            id: {{company.id}}
+        })
+    {% endfor %}
+    app.getDataFromDjango(masterUser, '{{master.slug}}', '{{csrf_token}}', companies, '{{request.session.token_key}}');
+</script>

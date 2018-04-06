@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail extra_tags %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+{% endblock %}
+{% block content %}
+    <!-- VUE App -->
+        {% include "specialist/partial/_master_detail_schedule.html" %}
+    <!-- VUE App End -->
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+    <script src="{% static 'js/vue-resource.min.js' %}"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDVN7Mto5wI6rLXRHN-AeK4Ic1FQFJmJPg",
+            authDomain: "checkin-kg.firebaseapp.com",
+            databaseURL: "https://checkin-kg.firebaseio.com",
+            projectId: "checkin-kg",
+            storageBucket: "checkin-kg.appspot.com",
+            messagingSenderId: "24641190033"
+        };
+        firebase.initializeApp(config);
+    </script>
+    {% include "specialist/partial/_master_detail_schedule_js.html" %}
+{% endblock %}
+

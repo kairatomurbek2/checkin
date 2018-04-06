@@ -297,7 +297,7 @@ class ReservationTableListView(LoginRequiredMixin, ListView):
 
 
 class ReservationListView(LoginRequiredMixin, TemplateView):
-    template_name = 'specialist/master_detail_reservition.html'
+    template_name = 'specialist/master_detail_reservation.html'
     model = Specialist
 
     def get_context_data(self, **kwargs):
