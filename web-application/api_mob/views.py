@@ -15,7 +15,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api_mob.exceptions import ValidationError as CustomValidationError
-from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter
+from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter, \
+    CompanyReservationsFilter
 from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist, IsAdminOfCompany
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
@@ -560,3 +561,14 @@ class CompanyAdminUpdateView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class CompanyReservationsListView(MasterReservationsListViewApi):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, IsAdminOfCompany)
+    serializer_class = ReservationFullSerializer
+    filter_class = CompanyReservationsFilter
+
+    def get_queryset(self):
+        company = Company.objects.filter(user__user=self.request.user, user__administrator=True).first()
+        return Reservation.objects.filter(specialist__company=company).order_by('-created_at')

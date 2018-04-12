@@ -91,9 +91,11 @@ class MasterReservationsFilter(django_filters.FilterSet):
         return queryset.filter(date_time_reservation__gte=value)
 
     def filter_to_date(self, queryset, name, value):
-        # today = date.today()
-        #
-        # if (value - today).days < 0:
-        #     raise ValidationError('Неверное указана дата.')
-
         return queryset.filter(date_time_reservation__lte=value)
+
+
+class CompanyReservationsFilter(MasterReservationsFilter):
+    specialist_slug = django_filters.CharFilter(label=_('Slug специалиста'), method='spec_slug')
+
+    def spec_slug(self, queryset, name, value):
+        return queryset.filter(specialist__slug=value)
