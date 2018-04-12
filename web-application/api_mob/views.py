@@ -4,18 +4,19 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.http import JsonResponse
+from django.views.generic import ListView
 from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api_mob.exceptions import ValidationError as CustomValidationError
 from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter
-from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist
+from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist, IsAdminOfCompany
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
@@ -521,3 +522,15 @@ class UpdateFCMTokenUpdateView(APIView):
             success=True,
             message='Настройки FCM успешно обновлены.'
         ))
+
+
+# tablet version / administrator
+
+class CompanySpecialistListView(ListAPIView):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, IsAdminOfCompany)
+    serializer_class = MasterSerializer
+    filter_class = MastersListFilterAPI
+
+    def get_queryset(self):
+        return Specialist.objects.filter(company__user__user=self.request.user, company__user__administrator=True)

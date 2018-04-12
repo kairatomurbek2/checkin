@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-from webapp.models import Reservation, Specialist
+from webapp.models import Reservation, Specialist, Company
 
 
 class IsReservationBelongsToSpecialist(BasePermission):
@@ -18,3 +18,8 @@ class IsReservationBelongsToSpecialist(BasePermission):
 class IsSpecialist(BasePermission):
     def has_permission(self, request, view):
         return Specialist.objects.filter(user=request.user).exists() if request.user.is_authenticated else False
+
+
+class IsAdminOfCompany(BasePermission):
+    def has_permission(self, request, view):
+        return Company.objects.filter(user__user=request.user, user__administrator=True).exists()
