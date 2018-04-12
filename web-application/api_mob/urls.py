@@ -11,7 +11,7 @@ from api_mob.views import CategoryMainListView, CategoryListView, CategoryRetrie
     CertificatesSpecialistListViewApi, CertificatesCompanyListViewApi, CreateMasterViewApi, EditMasterViewApi, \
     MasterScheduleViewApi, ReservationCreateViewApi, MasterReservationsListViewApi, MasterReservationEditViewApi, \
     UserInfoViewApi, MobileScheduleSettingUpdateView, UserReservationsListViewApi, UpdateFCMTokenUpdateView, \
-    CompanySpecialistListView, CompanySpecialistScheduleView
+    CompanySpecialistListView, CompanySpecialistScheduleView, CompanyAdminUpdateView
 
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -68,4 +68,6 @@ urlpatterns = [
     url(r'^tablet/company/specialists/$', CompanySpecialistListView.as_view(), name='tablet_company_specialists'),
     url(r'^tablet/company/specialist/(?P<specialist__slug>[-_\w]+)/schedule/$', CompanySpecialistScheduleView.as_view(),
                                                                                 name='tablet_company_specialist_schedule'),
+    url(r'^tablet/company/admin/update/$', CompanyAdminUpdateView.as_view(),
+        name='tablet_company_admin_update'),
 ]

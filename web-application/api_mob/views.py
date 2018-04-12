@@ -9,7 +9,7 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -20,7 +20,8 @@ from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist, 
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
-    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer, ReservationEditSerializer
+    EditMasterSerializer, ReservationCreateSerializer, MobileScheduleSettingFullSerializer, ReservationEditSerializer, \
+    UserUpdateSerializer
 from api_mob.social_auth import SocialAuth
 from main.choices import MODERATION
 from main.parameters import Messages
@@ -542,3 +543,20 @@ class CompanySpecialistScheduleView(MasterScheduleViewApi):
     def get_queryset(self):
         company = Company.objects.filter(user__user=self.request.user, user__administrator=True).first()
         return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'], company=company)
+
+
+class CompanyAdminUpdateView(UpdateAPIView):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, IsAdminOfCompany)
+    serializer_class = UserUpdateSerializer
+
+    def update(self, request, *args, **kwargs):
+        super(CompanyAdminUpdateView, self).update(request, *args, **kwargs)
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Профиль успешно обновлен.'
+        })
+
+    def get_object(self):
+        return self.request.user

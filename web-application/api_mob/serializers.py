@@ -441,3 +441,12 @@ class ReservationEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ('status', )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'password')
