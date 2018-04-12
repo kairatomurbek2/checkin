@@ -543,24 +543,25 @@ class CompanySpecialistScheduleView(MasterScheduleViewApi):
     permission_classes = (IsAuthenticated, IsAdminOfCompany)
 
     def get(self, request, *args, **kwargs):
-        schedule = {}
-        obj = self.get_object()
+        data = []
 
-        if obj:
-            company = obj.company
+        for s in self.get_queryset():
+            company = s.company
             times = [
-                (getattr(obj, d)).to_dict(d, DAYS[d]) for d in DAYS
+                (getattr(s, d)).to_dict(d, DAYS[d]) for d in DAYS
             ]
 
-            schedule = {'id': obj.pk, 'company_name': company.name if company else '',
-                        'times': times}
+            item = {'id': s.pk, 'company_name': company.name if company else '',
+                    'times': times}
 
-        return JsonResponse(schedule)
+            data.append(item)
 
-    def get_object(self):
+        return JsonResponse(data, safe=False)
+
+    def get_queryset(self):
         company = Company.objects.filter(user__user=self.request.user, user__administrator=True).first()
         return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'],
-                                                     company=company).first()
+                                                     company=company)
 
 
 class CompanyAdminUpdateView(UpdateAPIView):
