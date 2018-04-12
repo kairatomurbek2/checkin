@@ -534,3 +534,11 @@ class CompanySpecialistListView(ListAPIView):
 
     def get_queryset(self):
         return Specialist.objects.filter(company__user__user=self.request.user, company__user__administrator=True)
+
+
+class CompanySpecialistScheduleView(MasterScheduleViewApi):
+    permission_classes = (IsAuthenticated, IsAdminOfCompany)
+
+    def get_queryset(self):
+        company = Company.objects.filter(user__user=self.request.user, user__administrator=True).first()
+        return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'], company=company)
