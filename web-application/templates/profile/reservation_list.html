@@ -36,7 +36,9 @@
                     <div>
                         <span>Специалист</span>
                         <span>Время записи</span>
-                        <span>Контакты</span>
+                        <span>Контакты специалиста</span>
+                        <span>ФИО</span>
+                        <span>Номер телефона</span>
                         <span>Статус</span>
                         <span></span>
                     </div>
@@ -61,6 +63,12 @@
                             {% for contact in reservation.specialist.specialist_contacts.all %}
                                 <span>{{ contact.phone }}</span>
                             {% endfor %}
+                        </div>
+                        <div>
+                            <span>{{ reservation.full_name }}</span>
+                        </div>
+                        <div>
+                            <span>{{ reservation.phone }}</span>
                         </div>
 
                         <div class="applicant_status">
