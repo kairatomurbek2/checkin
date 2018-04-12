@@ -281,6 +281,7 @@ class CreateMasterViewApi(generics.CreateAPIView):
 class EditMasterViewApi(generics.RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = EditMasterSerializer
+
     # permission_classes = (IsSpecialist, )
 
     def __init__(self):
@@ -370,7 +371,7 @@ class ReservationCreateViewApi(generics.CreateAPIView):
 
 class MasterReservationsListViewApi(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsSpecialist, )
+    permission_classes = (IsSpecialist,)
     serializer_class = ReservationFullSerializer
     filter_class = MasterReservationsFilter
 
@@ -404,8 +405,8 @@ class MasterReservationEditViewApi(generics.UpdateAPIView):
 
 
 class UserInfoViewApi(APIView):
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         user = request.user
@@ -424,8 +425,8 @@ class UserInfoViewApi(APIView):
 
 
 class MobileScheduleSettingUpdateView(APIView):
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsSpecialist, )
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsSpecialist,)
 
     def get(self, request, *args, **kwargs):
         data = []
@@ -485,8 +486,8 @@ class MobileScheduleSettingUpdateView(APIView):
 
 
 class UserReservationsListViewApi(MasterReservationsListViewApi):
-    permission_classes = (IsAuthenticated, )
-    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = UserReservationFullSerializer
     filter_class = MasterReservationsFilter
 
@@ -505,8 +506,8 @@ class UserReservationsListViewApi(MasterReservationsListViewApi):
 
 
 class UpdateFCMTokenUpdateView(APIView):
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         device_id = request.POST.get('device_id')
@@ -529,7 +530,7 @@ class UpdateFCMTokenUpdateView(APIView):
 # tablet version / administrator
 
 class CompanySpecialistListView(ListAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsAdminOfCompany)
     serializer_class = MasterSerializer
     filter_class = MastersListFilterAPI
@@ -541,13 +542,29 @@ class CompanySpecialistListView(ListAPIView):
 class CompanySpecialistScheduleView(MasterScheduleViewApi):
     permission_classes = (IsAuthenticated, IsAdminOfCompany)
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
+        schedule = {}
+        obj = self.get_object()
+
+        if obj:
+            company = obj.company
+            times = [
+                (getattr(obj, d)).to_dict(d, DAYS[d]) for d in DAYS
+            ]
+
+            schedule = {'id': obj.pk, 'company_name': company.name if company else '',
+                        'times': times}
+
+        return JsonResponse(schedule)
+
+    def get_object(self):
         company = Company.objects.filter(user__user=self.request.user, user__administrator=True).first()
-        return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'], company=company)
+        return ScheduleSetting.public_objects.filter(specialist__slug=self.kwargs['specialist__slug'],
+                                                     company=company).first()
 
 
 class CompanyAdminUpdateView(UpdateAPIView):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsAdminOfCompany)
     serializer_class = UserUpdateSerializer
 
@@ -564,7 +581,7 @@ class CompanyAdminUpdateView(UpdateAPIView):
 
 
 class CompanyReservationsListView(MasterReservationsListViewApi):
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsAdminOfCompany)
     serializer_class = ReservationFullSerializer
     filter_class = CompanyReservationsFilter
