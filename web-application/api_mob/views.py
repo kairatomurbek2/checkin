@@ -17,7 +17,8 @@ from rest_framework.response import Response
 from api_mob.exceptions import ValidationError as CustomValidationError
 from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter, \
     CompanyReservationsFilter
-from api_mob.permissions import IsReservationBelongsToSpecialist, IsSpecialist, IsAdminOfCompany
+from api_mob.permissions import IsReservationBelongsToSpecialistOrCompany, IsSpecialist, IsAdminOfCompany, \
+    IsSpecialistOrAdminOfCompany
 from api_mob.serializers import CategoryMainSerializer, CategorySerializer, MasterSerializer, CompaniesSerializer, \
     RatingSerializer, CompanySerializer, RatingCreteSerializer, FavoriteSpecialistSerializer, \
     CustomUserDetailsSerializer, CertificatesSerializer, CreateMasterSerializer, \
@@ -390,7 +391,7 @@ class MasterReservationsListViewApi(generics.ListAPIView):
 class MasterReservationEditViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationEditSerializer
-    permission_classes = (IsReservationBelongsToSpecialist, IsAdminOfCompany)
+    permission_classes = (IsReservationBelongsToSpecialistOrCompany, )
     lookup_field = 'pk'
     queryset = Reservation.objects.all()
 
@@ -426,7 +427,7 @@ class UserInfoViewApi(APIView):
 
 class MobileScheduleSettingUpdateView(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsSpecialist, IsAdminOfCompany)
+    permission_classes = (IsSpecialistOrAdminOfCompany, )
 
     def get(self, request, *args, **kwargs):
         data = []
