@@ -578,6 +578,15 @@ class CompanyAdminUpdateView(UpdateAPIView):
             'message': 'Профиль успешно обновлен.'
         })
 
+    def perform_update(self, serializer):
+        super(CompanyAdminUpdateView, self).perform_update(serializer)
+        password = self.request.POST.get('password')
+
+        if password not in [None, '']:
+            instance = serializer.instance
+            instance.set_password(password)
+            instance.save()
+
     def get_object(self):
         return self.request.user
 
