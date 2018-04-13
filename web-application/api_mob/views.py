@@ -390,7 +390,7 @@ class MasterReservationsListViewApi(generics.ListAPIView):
 class MasterReservationEditViewApi(generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     serializer_class = ReservationEditSerializer
-    permission_classes = (IsReservationBelongsToSpecialist,)
+    permission_classes = (IsReservationBelongsToSpecialist, IsAdminOfCompany)
     lookup_field = 'pk'
     queryset = Reservation.objects.all()
 
@@ -426,7 +426,7 @@ class UserInfoViewApi(APIView):
 
 class MobileScheduleSettingUpdateView(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsSpecialist,)
+    permission_classes = (IsSpecialist, IsAdminOfCompany)
 
     def get(self, request, *args, **kwargs):
         data = []
