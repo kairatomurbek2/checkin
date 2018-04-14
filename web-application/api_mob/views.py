@@ -578,7 +578,7 @@ class CompanyAdminUpdateView(UpdateAPIView):
             return JsonResponse({
                 'success': False,
                 'message': 'Текущий пароль неверен.'
-            })
+            }, status=400)
 
         return JsonResponse({
             'success': True,
