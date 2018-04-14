@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from django.db import transaction
 from django.http import JsonResponse
 from django.views.generic import ListView
@@ -14,7 +15,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from api_mob.exceptions import ValidationError as CustomValidationError
+from api_mob.exceptions import ValidationError as CustomValidationError, WrongCurrentPassword
 from api_mob.filters import MastersListFilterAPI, CompaniesListFilterAPI, MasterReservationsFilter, \
     CompanyReservationsFilter
 from api_mob.permissions import IsReservationBelongsToSpecialistOrCompany, IsSpecialist, IsAdminOfCompany, \
@@ -571,7 +572,13 @@ class CompanyAdminUpdateView(UpdateAPIView):
     serializer_class = UserUpdateSerializer
 
     def update(self, request, *args, **kwargs):
-        super(CompanyAdminUpdateView, self).update(request, *args, **kwargs)
+        try:
+            super(CompanyAdminUpdateView, self).update(request, *args, **kwargs)
+        except WrongCurrentPassword:
+            return JsonResponse({
+                'success': False,
+                'message': 'Текущий пароль неверен.'
+            })
 
         return JsonResponse({
             'success': True,
@@ -583,7 +590,12 @@ class CompanyAdminUpdateView(UpdateAPIView):
         password = self.request.POST.get('password')
 
         if password not in [None, '']:
+            current_password = self.request.POST.get('current_password')
             instance = serializer.instance
+
+            if current_password != instance.password:
+                raise WrongCurrentPassword()
+
             instance.set_password(password)
             instance.save()
 
