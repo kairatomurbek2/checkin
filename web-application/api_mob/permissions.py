@@ -13,7 +13,7 @@ class IsReservationBelongsToSpecialistOrCompany(BasePermission):
             company = Company.objects.filter(user__user=request.user, user__administrator=True).first()
 
             if company:
-                return reservation.specialist.company == company
+                return company in reservation.specialist.company.all()
 
             return reservation.specialist.user == request.user
         except Reservation.DoesNotExist:
