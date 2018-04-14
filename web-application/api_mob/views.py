@@ -586,18 +586,21 @@ class CompanyAdminUpdateView(UpdateAPIView):
         })
 
     def perform_update(self, serializer):
-        super(CompanyAdminUpdateView, self).perform_update(serializer)
         password = self.request.POST.get('password')
 
         if password not in [None, '']:
             current_password = self.request.POST.get('current_password')
             instance = serializer.instance
 
-            if current_password != instance.password:
+            if not instance.check_password(current_password):
                 raise WrongCurrentPassword()
 
             instance.set_password(password)
             instance.save()
+
+            del serializer.validated_data['password']
+
+        super(CompanyAdminUpdateView, self).perform_update(serializer)
 
     def get_object(self):
         return self.request.user
